@@ -1,1 +1,3 @@
 ==Readme==
+
+Import in XCode:
