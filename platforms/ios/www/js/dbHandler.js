@@ -193,8 +193,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
                     var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
                     
                     $('#mydate').val(dateStringForMyDate);
-                    var timeStringForMyTime = curTime.getHours()+":"+curTime.getMinutes();
-                    
+                    var currentMinutes = curTime.getMinutes();
+                                  if(parseInt(currentMinutes) < 10){
+                                  currentMinutes = "0"+currentMinutes;
+                                  }
+                     var currentHours = curTime.getHours();
+                                  if(parseInt(currentHours) < 10){
+                                  currentHours = "0"+currentHours;
+                                  }
+                    var timeStringForMyTime = currentHours+":"+currentMinutes;
+                                  
                     $('#mytime').val(timeStringForMyTime);
                     
                     var eventType = $(this).val();
