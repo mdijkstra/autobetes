@@ -13,6 +13,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
     this.listHistoryFoodEvents = listHistoryFoodEvents;
     this.listCurrentEvents = listCurrentEvents;
     this.listHistoryActivityEvents = listHistoryActivityEvents;
+    this.sendEvents = sendEvents;
+    //this.sendHistoryEvents = sendHistoryEvents;
     if (!window.openDatabase) {
         // not all mobile devices support databases  if it does not, the following alert will display
         // indicating the device will not be albe to run this application
@@ -30,24 +32,27 @@ function dbHandler(shortName, version, displayName, maxSize) {
         
 
 
-        /* to drop the table
+        //to drop the table
+           /*
          tx.executeSql( 'DROP TABLE IF EXISTS Event',
          [],nullHandler,errorHandler);
-         */
-        // tx.executeSql( 'DROP TABLE IF EXISTS FoodEventInstance;',
-        //[],nullHandler,errorHandler);
+         
+         tx.executeSql( 'DROP TABLE IF EXISTS FoodEventInstance;',
+        [],nullHandler,errorHandler);
 
-        //tx.executeSql( 'DROP TABLE IF EXISTS ActivityEventInstance;',
-        //[],nullHandler,errorHandler);
-
+        tx.executeSql( 'DROP TABLE IF EXISTS ActivityEventInstance;',
+        [],nullHandler,errorHandler);
+                    */
+                   
+                   
         //execute queries for creation of the table
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Event(eventName TEXT NOT NULL PRIMARY KEY, eventType TEXT NOT NULL)',
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Event(name TEXT NOT NULL PRIMARY KEY, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)',
                 [], nullHandler, errorHandler);
 
-        tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(eventName))',
+        tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))',
                 [], nullHandler, errorHandler);
 
-        tx.executeSql('CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(eventName))',
+        tx.executeSql('CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))',
                 [], nullHandler, errorHandler);
 
 
@@ -83,8 +88,95 @@ function dbHandler(shortName, version, displayName, maxSize) {
         }, errorHandler, nullHandler);
 
     }
+    
+    function listAllEvents() {
+        var db = openDatabase(shortName, version, displayName, maxSize);
+        db.transaction(function(transaction) {
+                       transaction.executeSql('SELECT * FROM Event ORDER BY name ASC;', [],
+                                              showList, errorHandler);
+                       }, errorHandler, nullHandler);
+    }
+    
+    function listEventsOfEventType(eventType) {
+        var db = openDatabase(shortName, version, displayName, maxSize);
+        db.transaction(function(transaction) {
+                       transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY name ASC;', [eventType],
+                                              showList, errorHandler);
+                       }, errorHandler, nullHandler);
+        
+    }
+    /*
+    function sendHistoryEvents(){
+        var db = openDatabase(shortName, version, displayName, maxSize);
+        db.transaction(function(transaction) {
+        transaction.executeSql('SELECT * FROM FoodEventInstance where beenSent = 0;', [],
+                sendHistoryEventsResults, errorHandler);
+         }, errorHandler, nullHandler);
+        
+        db.transaction(function(transaction) {
+        transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0;', [],
+           sendHistoryEventsResults, errorHandler);
+       }, errorHandler, nullHandler);
+        
+    }
+          */
+   
+    
+    
+    function sendEvents(){
+        alert('start sending');
+        var db = openDatabase(shortName, version, displayName, maxSize);
+        db.transaction(function(transaction) {
+         transaction.executeSql('SELECT * FROM Event where beenSent = 0;', [],
+               sendEventResults, errorHandler);
+        }, errorHandler, nullHandler);
+    }
+    
+    function sendEventResults(transaction, result){
+        if (result !== null && result.rows !== null) {
+            
+            for (var i = 0; i < result.rows.length; i++) {
+                
+                var row = result.rows.item(i);
+                alert('try to send '+ row.name);
+                var eventObject = {
+                    'name' : row.name,
+                    'owner': 'test',
+                    'eventType': row.eventType
+                };
+                alert('call add new record');
+                addNewRecord('http://localhost:8080/api/v1/event', eventObject, function(){
+                             alert('that went quite well');
+                });
+            }
+        }
+    }
+    
+    
+    
+    /*
+    function sendHistoryEventsResults(transaction, result){
+        if (result !== null && result.rows !== null) {
+            
+            for (var i = 0; i < result.rows.length; i++) {
+            var row = result.rows.item(i);
+                var eventHistoryObject = {
+                    'owner' : 'test',
+                    'event' : row.event,
+                    'beginTime': row.beginTime,
+                    'amount': row.amount
+                };
+                
+                addNewRecord('/api/v1/EventHistory', eventHistoryObject, function() {
+                    
+                });
+            
+            }
+            
+        }
+    }
+     */
 
-//CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(eventName))
     function editEvent(id, type) {
         var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
         var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
@@ -107,8 +199,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
             unixEndTime += 86400000;//add one day in milliseconds
         }
         var db = openDatabase(shortName, version, displayName, maxSize);
-        //alert('addEvent : '+ eventName+' , eventType: '+eventType);
-        //editActivityEvent(id, $('#startEventName3').text(), $('#slider-4').val(), unixBeginTime, unixEndTime);
         if (type === 'activity') {
             
             db.transaction(function(transaction) {
@@ -149,22 +239,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
     }
 
-    function listAllEvents() {
-        var db = openDatabase(shortName, version, displayName, maxSize);
-        db.transaction(function(transaction) {
-            transaction.executeSql('SELECT * FROM Event ORDER BY eventName ASC;', [],
-                    showList, errorHandler);
-        }, errorHandler, nullHandler);
-    }
-
-    function listEventsOfEventType(eventType) {
-        var db = openDatabase(shortName, version, displayName, maxSize);
-        db.transaction(function(transaction) {
-            transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY eventName ASC;', [eventType],
-                    showList, errorHandler);
-        }, errorHandler, nullHandler);
-
-    }
 
     function showList(transaction, result) {
         if (result !== null && result.rows !== null) {
@@ -173,7 +247,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
             $('#event-list').html('');
             for (var i = 0; i < result.rows.length; i++) {
                 var row = result.rows.item(i);
-                var eventButton = $('<A HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all">' + row.eventName + '</A>');
+                var eventButton = $('<A HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all">' + row.name + '</A>');
                 eventButton.val(row.eventType);
                 
                 $('#event-list').append(eventButton);
@@ -392,10 +466,39 @@ function dbHandler(shortName, version, displayName, maxSize) {
         var db = openDatabase(shortName, version, displayName, maxSize);
 
         db.transaction(function(transaction) {
-            transaction.executeSql('INSERT INTO Event(eventName, eventType) VALUES (?,?)', [eventName, eventType],
+            transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType],
                     nullHandler, errorHandler);
         });
     }
+    
+    function addNewRecord(url, data, callback) {
+        
+        //alert(data.name+" "+data.owner+" "+data.eventType);
+        alert('url:'+url);
+        alert('jsonObject' + JSON.stringify(data));
+        
+        $.ajax({
+               type: 'POST',
+               url: url,
+               data: JSON.stringify(data),
+               async: false,
+               contentType: 'application/json',
+               success: function(data, textStatus, request) {
+                    alert('sending succeeded');
+                    //callback(data, textStatus, request);
+               },
+               error: function(request, textStatus, error) {
+                    alert(request);
+                    alert(textStatus);
+                    alert(error);
+                    console.log(error);
+               }
+            });
+        
+        alert('end add new record');
+        
+    }
+    
 // this is called when an error happens in a transaction
     function errorHandler(transaction, error) {
         alert('Error: ' + error.message + ' code: ' + error.code);
@@ -475,6 +578,7 @@ function parseButtonData(context) {
         }
     }
 }
+
 
 function insertDataInEditScreen(bd) {
     //insert button data into editscreenActivity
