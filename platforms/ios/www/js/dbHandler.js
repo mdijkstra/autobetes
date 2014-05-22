@@ -669,7 +669,8 @@ function insertDataInEditScreen(bd) {
     $('#mydate2').val(bd.dateStringForMyDate);
     
     $('#beginTime').val(bd.beginTime);
-    $('#slider-4').val(bd.intensity).slider('refresh');
+    console.log(bd.intensity);
+    $('#slider-3').val(bd.intensity).slider('refresh');
     
     if(bd.type ==='activity'){
         //activity has an endtime
