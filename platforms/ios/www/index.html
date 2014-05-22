@@ -10,9 +10,8 @@
         <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
         <script src="js/jquery.js"></script>
         <script src="js/jquery.mobile-1.4.2.js"></script>
-        <script src="js/bootstrap.min.js"></script>
         <script src="js/dbHandler.js"></script>
-        <script src="js/molgenis.js"></script>
+        <script src="js/restclient.js"></script>
         <script src="js/autobetes.js"></script>
         <script src="js/date.js"></script>
         
@@ -164,6 +163,7 @@
                 <H1><a href="#home">Home</a></H1>
                 <div data-role="navbar">
                     <ul>
+                        <li><a href="#" name="historyEventTypeSelected">All</a></li>
                         <li><a href="#" name="historyEventTypeSelected">Food</a></li>
                         <li><a href="#" name="historyEventTypeSelected">Activity</a></li>
                     </ul>
@@ -258,6 +258,9 @@
         
         var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
         
+        $(function() {
+          onDeviceReady();
+        })
         
         //var db = null;
         /*
@@ -278,11 +281,14 @@
         document.addEventListener("deviceready", onDeviceReady, false);
 
 
+
         // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
         //
          function onDeviceReady() {
              ///alert((navigator.network.connection.type).toUpperCase());
-             getToken();
+             
+            
+            getToken();
              //db.sendEvents();
              document.addEventListener("offline", function(e) {
                  alert("offline");
@@ -303,24 +309,14 @@
         }
     
     function getToken(){
-        alert('start getting token');
-        var username = 'admin';
-        var password = 'admin';
-		$.ajax({
-               type: 'POST',
-               dataType : 'json',
-               url : 'http://localhost:8080/api/v1/login',
-               contentType : 'application/json',
-               async : true,
-               data: JSON.stringify({username: 'admin', password: 'admin'}),
-               success : function(loginResult) {
-               alert(loginResult.token);
-               },
-               error : function(){
-               alert('error');
-               }
-        });
-    }
+        alert('get token');
+        var restClient = new top.molgenis.RestClient();
+        
+       restClient.login('admin', 'admin', function(result){
+                alert(result.username);
+            });
+        
+           }
     
 
         function hrefToId(href) {
@@ -328,7 +324,7 @@
         }
 
         function getEvents(eventType) {
-            console.log('>> getEvents now()!!');
+            //console.log('>> getEvents now()!!');
             
             if (eventType !== null && eventType !== undefined) {
                 
@@ -394,11 +390,24 @@
             var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
             $('[name=startEventTypeSelected]').removeClass('ui-btn-active');
             $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
+            //console.log('in selectTabMenu, eventType: ' + eventType);
             getEvents(eventType);
         }
+    
+    function selectHistoryTabMenu() {
+        console.log('select history tab');
+        var selectedTabIndex = $(document).data('selectedTabIndex');
+        var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
+        var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+        $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
+        $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
+        //console.log('index: ' + index + ', eventType: ' + eventType);
+        db.listHistoryEvents(eventType);
+    }
 
 
         $('[name=startEventTypeSelected]').click(function() {
+                                                 console.log('start event tab selected');
             var eventType = $(this).html() === 'All' ? null : $(this).html();
             var index = 0;
             if (eventType === 'Food')
@@ -413,13 +422,10 @@
         });
         
         $('[name=historyEventTypeSelected]').click(function() {
-            //alert($(this).html());
-            if($(this).html() === 'Food'){
-                db.listHistoryFoodEvents();
-            }
-            else{
-                db.listHistoryActivityEvents();
-            }
+            //console.log('history tab selected');
+            //console.log($(this).html());
+             db.listHistoryEvents($(this).html());
+            
         });
 
         $(document).on('pageshow', '#start', function() {
@@ -431,6 +437,15 @@
                        
                 db.listCurrentEvents();
         });
+        
+        $(document).on('pageshow', '#history', function() {
+            
+            
+            selectHistoryTabMenu();
+            //db.listCurrentEvents();
+         });
+        
+        
                
         $('#homeStartButton').click(function() {
             $(document).removeData('selectedTabIndex');
@@ -444,9 +459,6 @@
            
         });
         
-        $('#historyButton').click(function(){
-           db.listHistoryFoodEvents();
-        });
         
         
         

@@ -4,15 +4,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
     this.version = version;
     this.displayName = displayName;
     this.maxSize = maxSize;
-
-
+    var results = [];
+    
     //add methods to objects
     this.addEvent = addEvent;
     this.listEventsOfEventType = listEventsOfEventType;
     this.listAllEvents = listAllEvents;
-    this.listHistoryFoodEvents = listHistoryFoodEvents;
+    
+    this.listHistoryEvents = listHistoryEvents;
     this.listCurrentEvents = listCurrentEvents;
-    this.listHistoryActivityEvents = listHistoryActivityEvents;
+    
     this.sendEvents = sendEvents;
     //this.sendHistoryEvents = sendHistoryEvents;
     if (!window.openDatabase) {
@@ -61,33 +62,99 @@ function dbHandler(shortName, version, displayName, maxSize) {
    
 
     function listCurrentEvents() {
-        
+        $('.event-list2').html('');//empty list
         var db = openDatabase(shortName, version, displayName, maxSize);
         db.transaction(function(transaction) {
             transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', [],
                     showEventInstanceList, errorHandler);
         }, errorHandler, nullHandler);
     }
+    
+    function fillResultsArray(transaction, result){
+        //this method pushes the results in the array subsequently,
+        //in order to perform a sorting later on. This method only
+        //gets executed when all the event instances need to be listed.
+        //In that case both tables, activityeventinstance and foodeventinstance, need to be called in sql
+        //and so sql cannot order it
+        
+        if (result !== null && result.rows !== null) {
+            
+            for (var i = 0; i < result.rows.length; i++) {
+               
+                var row = result.rows.item(i);
+                results.push(row);
+            }
+            
+            
+        }
+    }
+    
+    function fillResultsArray2(transaction, result){
+        //is called
+        if (result !== null && result.rows !== null) {
+            
+            for (var i = 0; i < result.rows.length; i++) {
+                console.log('push item:');
+                var row = result.rows.item(i);
+                results.push(row);
+            }
+            
+            
+        }
+        
+        //sort array
+        
+        results.sort(function(a,b){
+            return parseInt(b.beginTime) - parseInt(a.beginTime);
+         });
 
-    function listHistoryFoodEvents() {
+        //fill the view list
+        showEventInstanceList('inputIsArray', results);
+        
+    }
+
+    function listHistoryEvents(type) {
+        results = [];
+        $('.event-list2').html('');//empty list
         var db = openDatabase(shortName, version, displayName, maxSize);
-
+        
+        if(type === 'Food'){
         db.transaction(function(transaction) {
             transaction.executeSql('SELECT * FROM FoodEventInstance where deleted = 0 ORDER BY beginTime DESC;', [],
                     showEventInstanceList, errorHandler);
         }, errorHandler, nullHandler);
-
-    }
-
-    function listHistoryActivityEvents() {
-        var db = openDatabase(shortName, version, displayName, maxSize);
-
+            
+        }
+        else if(type === 'Activity'){
         db.transaction(function(transaction) {
+         transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NOT NULL and deleted = 0 ORDER BY beginTime DESC;', [],
+                      showEventInstanceList, errorHandler);
+         }, errorHandler, nullHandler);
+        }
+        
+        else if(type === 'All' || type === null){
+            //because transaction occurs asynchronously the code after both transactions will be called before the array is filled,
+            //so the second transaction has a diffrent method in where the post-transaction-code resides
+            
+            //fill array results with food event instances
+            db.transaction(function(transaction) {
+                           transaction.executeSql('SELECT * FROM FoodEventInstance where deleted = 0 ORDER BY beginTime DESC;', [],
+                       fillResultsArray, errorHandler);
+              }, errorHandler, nullHandler);
+            //array is filled with food event instances
+            //now fill the array with activity event instances
+            
+            db.transaction(function(transaction) {
             transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NOT NULL and deleted = 0 ORDER BY beginTime DESC;', [],
-            showEventInstanceList, errorHandler);
-        }, errorHandler, nullHandler);
-
+                        fillResultsArray2, errorHandler);
+            }, errorHandler, nullHandler);
+             
+        }
+        
+            
     }
+
+   
     
     function listAllEvents() {
         var db = openDatabase(shortName, version, displayName, maxSize);
@@ -325,17 +392,32 @@ function dbHandler(shortName, version, displayName, maxSize) {
         }
     }
     
-    function showEventInstanceList(transaction, result) {
-        //make sure list is empty
-        $('.event-list2').html('');
+    function showEventInstanceList(inputType, result) {
         //html tags for the opening of the list
-        var html = '<ul id="list" class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';//open list
+        
+        
+        var html = '<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';//open list
         html += '<li class="ui-li-has-alt ui-first-child">';//open list item
         var type;
         var endedActivity = 'false';
-        for (var i = 0; i < result.rows.length; i++) {
+        
+        var arrayLength;
+        if(inputType === 'inputIsArray'){
+            arrayLength = result.length;
+        }
+        else{
+            arrayLength = result.rows.length;
+        }
+        
+        for (var i = 0; i < arrayLength; i++) {
             //progress results
-            var row = result.rows.item(i);
+            var row;
+            if(inputType === 'inputIsArray'){
+                row = result[i];
+            }
+            else{
+                row = result.rows.item(i);
+            }
             if(row.intensity){
                 type = 'activity';
                 if(row.endTime !== null){
@@ -352,7 +434,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
             html += makeEventButton(row);
             //end list item
             html += '</li>';
-            if (i + 1 < result.rows.length) {
+            if (i + 1 < arrayLength) {
                 //there is a next item so new <li> can be set 
                 html += '<li class="ui-li-has-alt">';
             }
@@ -367,11 +449,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
         $(function() {
             $('.endActivity').click(function() {
 
-
+                
                 var bd = new parseButtonData(this);//button data object
 
                 insertDataInEditScreen(bd);
-
+                
 
                 //remove startbutton wich can be present
                 if ($('#startButton2')) {
@@ -387,8 +469,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
                 editEventButton.click(function() {
                     //edit event
                     
-                    editEvent(bd.id, type);
+                    editEvent(bd.id, bd.type);
                     //refresh the right list
+                    /*
                     if(type ==='activity'){
                         if(endedActivity === 'true'){
                             listHistoryActivityEvents();
@@ -400,7 +483,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
                     else{
                         listHistoryFoodEvents();
                     }
-                    
+                    */
 
                 });
 
@@ -424,7 +507,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
                     else{
                         
                         deleteFoodEvent(parseInt($(this).text()));
-                        listHistoryFoodEvents();
+                        listHistoryEvents('food');
                     }
                     
                 }
@@ -584,6 +667,7 @@ function insertDataInEditScreen(bd) {
     //insert button data into editscreenActivity
     $('#startEventName2').html(bd.eventName);
     $('#mydate2').val(bd.dateStringForMyDate);
+    
     $('#beginTime').val(bd.beginTime);
     $('#slider-4').val(bd.intensity).slider('refresh');
     
@@ -591,9 +675,11 @@ function insertDataInEditScreen(bd) {
         //activity has an endtime
         $('#endTimeField').show();
         $('#endTime').val(bd.endTime);
+        $('#quantity2').text('Intensity');
     }
     else{
         $('#endTimeField').hide();
+        $('#quantity2').text('Amount');
     }
 
 }
