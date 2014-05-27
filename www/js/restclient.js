@@ -101,6 +101,30 @@
 		
 		return result;
 	};
+ 
+ molgenis.RestClient.prototype.add = function(url, data, callback) {
+ 
+ $.ajax({
+        type: 'POST',
+        headers: {'x-molgenis-token': self.token},
+        url: url,
+        data: JSON.stringify(data),
+        async: false,
+        contentType: 'application/json',
+        success: function(data, textStatus, request) {
+        	callback(data, textStatus, request);
+        },
+        error: function(request, textStatus, error) {
+        	console.log(request);
+        	console.log(textStatus);
+        	console.log(error); 
+        
+        }
+        });
+ 
+ 
+ }
+
 	
 	molgenis.RestClient.prototype.login = function(username, password, callback) {
 		$.ajax({
@@ -115,7 +139,8 @@
 				callback.success({
 					username: loginResult.username,
 					firstname: loginResult.firstname,
-					lastname: loginResult.lastname
+					lastname: loginResult.lastname,
+                    token: loginResult.token
 				});
 			},
 			error : callback.error
@@ -124,11 +149,12 @@
 	
 	molgenis.RestClient.prototype.logout = function(callback) {
 		$.ajax({
-			url : '/api/v1/logout',
+			url : 'http://localhost:8080/api/v1/logout',
 			async : true,
 			headers: {'x-molgenis-token': self.token},
 			success : function() {
 				self.token = null;
+				
 				callback();
 			}
 		});

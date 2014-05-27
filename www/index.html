@@ -98,7 +98,8 @@
                 </table>
                 <div class="ui-field-contain">
                     <label id="quantity" for="slider-2">Amount</label>
-                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="0" max="10" value="1" step="1">
+                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="1">
+                    <p><span id="intensityToText" style="display: none, color: blue">text</span></p>
                 </div>
             </div><!-- /content -->
         </div><!-- /page -->
@@ -171,6 +172,7 @@
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
+                
                 <div class="event-list2" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
                     
                 </div>
@@ -244,8 +246,10 @@
                 
                 <div class="ui-field-contain">
                     <label id="quantity2" for="slider-3">Amount</label>
-                    <input type="range" name="slider-3" id="slider-3" data-highlight="true" min="0" max="10" value="1" step="1" >
+                    <input type="range" name="slider-3" id="slider-3" data-highlight="true" min="1" max="10" value="1" step="1" >
+                    <p><span id="intensityToText2" style="display: none, color:blue">Light</span></p>
                 </div>
+               
             </div><!-- /content -->
         </div>
         
@@ -257,7 +261,8 @@
       
         
         var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
-        
+        var restClient = new top.molgenis.RestClient();
+        var token;
         $(function() {
           onDeviceReady();
         })
@@ -289,12 +294,13 @@
              
             
             getToken();
-             //db.sendEvents();
+            
              document.addEventListener("offline", function(e) {
                  alert("offline");
              }, false);
                                        
              document.addEventListener("online", function(e) {
+            	 db.sendDbData();
                  alert("online");
              }, false);
              
@@ -304,19 +310,24 @@
             //$('#slider-3').parent().page();
             $('#editScreen').page();
             $('#editScreenActivity').page();
+            $('#start2').page();
             //$('#slider-3').slider('refresh');
             //checkConnection();
         }
     
     function getToken(){
-        alert('get token');
-        var restClient = new top.molgenis.RestClient();
         
-       restClient.login('admin', 'admin', function(result){
-                alert(result.username);
+        
+        
+       restClient.login('admin', 'admin', {
+                        success: function(result){
+                            
+                        token = result.token;
+
+                        }
+                
             });
-        
-           }
+                   }
     
 
         function hrefToId(href) {
@@ -328,7 +339,7 @@
             
             if (eventType !== null && eventType !== undefined) {
                 
-                db.listEventsOfEventType(eventType);
+                db.listEventsOfEventType(eventType.toLowerCase());
                 /*request = {
                     'q': {
                         'q': [{
@@ -395,8 +406,8 @@
         }
     
     function selectHistoryTabMenu() {
-        console.log('select history tab');
-        var selectedTabIndex = $(document).data('selectedTabIndex');
+        
+        var selectedTabIndex = $(document).data('selectedTabIndex2');
         var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
         var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
         $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
@@ -422,8 +433,17 @@
         });
         
         $('[name=historyEventTypeSelected]').click(function() {
-            //console.log('history tab selected');
-            //console.log($(this).html());
+             var eventType = $(this).html() === 'All' ? null : $(this).html();
+             var index = 0;
+            if (eventType === 'Food')
+                  index = 1;
+              else if (eventType === 'Activity')
+                   index = 2;
+                $(document).data('selectedTabIndex2', {
+              'index': index,
+               'eventType': eventType
+            });
+                                                   
              db.listHistoryEvents($(this).html());
             
         });
@@ -447,17 +467,23 @@
         
         
                
-        $('#homeStartButton').click(function() {
-            $(document).removeData('selectedTabIndex');
+        $('#homeStartButton').click(function() {                   
+           
             selectTabMenu();
         });
 
         $('#addEvent').click(function() {
             //alert('start adding');
             
-            db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val());
+            db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
            
         });
+        $('#historyButton').click(function() {
+                $(document).removeData('selectedTabIndex2');
+                selectHistoryTabMenu();
+                $('.event-list2').html('');//empty list
+            
+         });
         
         
         
