@@ -52,11 +52,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}, errorHandler, successCallBack);
 
 	function listCurrentEvents() {
-		$('.event-list2').html('');
+		$('.event-list3').html('');
 		//empty list
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', [], showEventInstanceList, errorHandler);
+			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', [], showCurrentEvents, errorHandler);
 		}, errorHandler, nullHandler);
 	}
 
@@ -336,6 +336,65 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			$('#searchEventsInputForm').hide();
 		}
 	}
+	
+	function showCurrentEvents(inputType, result) {
+		//html tags for the opening of the list
+
+		var html = '<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';
+		//open list
+		html += '<li class="ui-li-has-alt ui-first-child">';
+		//open list item
+		var type;
+		var endedActivity = 'false';
+
+		var arrayLength = result.rows.length;
+	
+		for (var i = 0; i < arrayLength; i++) {
+			//progress results
+			var row = result.rows.item(i);
+			
+			
+			
+
+			//add button to html
+			html += makeEventButton(row, 'running');
+			//end list item
+			html += '</li>';
+			if (i + 1 < arrayLength) {
+				//there is a next item so new <li> can be set
+				html += '<li class="ui-li-has-alt">';
+			}
+		}
+		//close list tag
+		html += "</ul>";
+
+		$('.event-list3').append(html);
+		//add functionality to end activity button
+		
+		$(function() {
+			$('.endEvent').click(function() {
+
+				var bd = new parseButtonData(this);
+				//button data object
+
+				insertDataInEditScreen(bd);
+
+				//remove startbutton wich can be present
+				if ($('#startButton2')) {
+					$('#startButton2').remove();
+				}
+				var editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Save" + '</A>');
+
+				$('#editScreen').append(editEventButton);
+				editEventButton.click(function() {
+				//edit event
+				editEvent(bd.id, bd.type);
+	
+				
+				});
+			});
+		});
+	}
 
 	function showEventInstanceList(inputType, result) {
 		//html tags for the opening of the list
@@ -374,7 +433,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			//food activity, current event and ended event
 
 			//add button to html
-			html += makeEventButton(row);
+			html += makeEventButton(row, 'ended');
 			//end list item
 			html += '</li>';
 			if (i + 1 < arrayLength) {
@@ -390,8 +449,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//if button be clicked, data will be extracted, editScreenActivity will be opened
 		//and the data will be inserted
 		$(function() {
-			$('.endActivity').click(function() {
-
+			$('.editEvent').click(function() {
+				
 				var bd = new parseButtonData(this);
 				//button data object
 
@@ -401,12 +460,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				if ($('#startButton2')) {
 					$('#startButton2').remove();
 				}
-				var editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Edit" + '</A>');
-				if (endedActivity === 'false' && type === 'activity') {
-					//user is about to end the activity, therefor the button displays end instead of edit
-					editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + "End" + '</A>');
-				}
-
+				var editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Save" + '</A>');
+				
 				$('#editScreen').append(editEventButton);
 				editEventButton.click(function() {
 					//edit event
@@ -767,12 +822,12 @@ function setIntensityText(selector, value) {
 
 }
 
-function makeEventButton(row) {
+function makeEventButton(row, buttonType) {
 	//
 	var date = new Date(row.beginTime);
 	var minutes = parseInt(date.getMinutes());
 	//make string to display the date
-	var dateString = '<p><span id="day">' + date.getDate() + '</span>- <span id="month">' + (date.getMonth() + 1) + '</span>- <span id="year">' + date.getFullYear() + '</span></p>';
+	var dateString = '<span id="day">' + date.getDate() + '</span>-<span id="month">' + (date.getMonth() + 1) + '</span>-<span id="year">' + date.getFullYear() + '</span>';
 
 	if (minutes < 10) {
 		//show minutes correct
@@ -782,10 +837,10 @@ function makeEventButton(row) {
 	var timeString;
 	if (row.endTime === null) {
 		//going activity, dont display endTime
-		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span></strong></p>';
+		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span></strong><br>'+dateString+'</p>';
 	} else if (row.amount) {
 		//event is food
-		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span></strong></p>';
+		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span></strong><br>'+dateString+'</p>';
 	} else {
 		//ended activity, display endtime to
 		var endDate = new Date(row.endTime);
@@ -793,9 +848,10 @@ function makeEventButton(row) {
 		if (endMinutes < 10) {
 			endMinutes = "0" + endMinutes;
 		}
-		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span> - <span id="endHours">' + endDate.getHours() + '</span>:<span id="endMinutes">' + endMinutes + '</span></strong></p></a>';
+		timeString = '<p class="ui-li-aside"><strong><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span> - <span id="endHours">' + endDate.getHours() + '</span>:<span id="endMinutes">' + endMinutes + '</span></strong><br>'+dateString+'</p>';
 
 	}
+	
 
 	var amountOrIntensityString;
 	var type;
@@ -810,12 +866,32 @@ function makeEventButton(row) {
 	}
 
 	//make html button
-	var html = '<a href="#editScreen" class="endActivity ui-btn"><p style="display: none">' + row.id + '</p>';
+	var html = "";
+	if(buttonType === "ended"){
+		//event has ended so editting will be enabled
+		html += '<a href="#editScreen" class="editEvent ui-btn"><p style="display: none">' + row.id + '</p>';
+	}
+	else{
+		//event not ended, so editting is not preferably, button does nothing
+		html += '<a class="editEvent ui-btn"><p style="display: none">' + row.id + '</p>';
+	}
 	html += '<h3>' + row.event + '</h3>';
 	html += amountOrIntensityString;
-	html += dateString;
 	html += timeString;
+	//html += dateString;
 	html += '</a>';
-	html += '<a href="#" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" title="Delete"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+	if(buttonType === "ended"){
+		//append delete button
+		html += '<a href="#" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" title="Delete"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+	}
+	else{
+		//append an end button,
+		html += '<a href="#editScreen" class="endEvent ui-btn ui-icon-stop"  title="End"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p>';
+		html += '<h3 style="display: none">' + row.event + '</h3>';
+		html += '<p id="intensity" style="display: none">' + row.intensity + '</span>';
+		html += '<p style="display: none"><span id="day">' + date.getDate() + '</span>- <span id="month">' + (date.getMonth() + 1) + '</span>- <span id="year">' + date.getFullYear() + '</span></p>';
+		html += '<p style="display: none"><span id="beginHours">' + date.getHours() + '</span>:<span id="beginMinutes">' + minutes + '</span></p>';
+		html += '</a>';
+	}
 	return html;
 }

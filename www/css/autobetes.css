@@ -43,3 +43,14 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     font-size: inherit;
     margin-bottom: .75em;
 }
+
+.ui-icon-stop{
+	background: url('images/stopSign.png')no-repeat;   
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    margin: 0 !important;
+    align: center;
+    background-position: center center;
+    background-size: 18px 18px;
+}
+
