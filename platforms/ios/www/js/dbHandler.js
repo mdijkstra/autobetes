@@ -137,6 +137,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function listAllEvents() {
+		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
 			transaction.executeSql('SELECT * FROM Event ORDER BY name ASC;', [], showList, errorHandler);
@@ -144,6 +145,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function listEventsOfEventType(eventType) {
+		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
 			transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY name ASC;', [eventType], showList, errorHandler);
@@ -248,7 +250,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		if (result !== null && result.rows !== null) {
 			$('#startHelpText').html('Choose event to start:');
 			$('#searchEventsInputForm').show();
-			$('#event-list').html('');
+			
 			for (var i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
 				var eventButton = $('<A HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all">' + row.name + '</A>');
@@ -257,76 +259,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				$('#event-list').append(eventButton);
 
 				eventButton.click(function() {
-					//window.location.href = "#start2";
-					var curTime = new Date();
-					var month = curTime.getMonth() + 1;
-					var day = curTime.getDate();
-					if (month < 10) {
-						month = "0" + month;
-					}
-					if (day < 10) {
-						day = "0" + day;
-					}
-					var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
-
-					$('#mydate').val(dateStringForMyDate);
-					var currentMinutes = curTime.getMinutes();
-					if (parseInt(currentMinutes) < 10) {
-						currentMinutes = "0" + currentMinutes;
-					}
-					var currentHours = curTime.getHours();
-					if (parseInt(currentHours) < 10) {
-						currentHours = "0" + currentHours;
-					}
-					var timeStringForMyTime = currentHours + ":" + currentMinutes;
-
-					$('#mytime').val(timeStringForMyTime);
-
-					var eventType = $(this).val();
-					$('#startEventName').html($(this).html());
-
-					if (eventType === 'food') {
-						$('#quantity').html('Amount');
-						$('#intensityToText').hide();
-
-					} else {
-						$('#quantity').html('Intensity');
-						setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
-
-						$('#slider-2').change(function() {
-
-							setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
-						});
-						$('#intensityToText').show();
-						/*
-						 $('#slider-2').val().change(function(){
-						 alert('change');
-						 //$('#quantity').html('Intensity'+ $('#slider-2').value());
-						 });*/
-					}
-					if ($('#startButton')) {
-						$('#startButton').remove();
-					}
-					var startEventButton = $('<A data-rel="back" id="startButton" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Start" + '</A>');
-
-					$('#start2').append(startEventButton);
-					startEventButton.click(function() {
-
-						var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-						var unixTime = Date.parse(timeAndDate).getTime();
-
-						if (eventType === 'food') {
-							addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-							listCurrentEvents();
-							//refresh list of current events
-						} else {
-							addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-							listCurrentEvents();
-							//refresh list of current events
-						}
-						return;
-
-					});
+					fillAddEventScreen(this);
 				});
 
 			}
@@ -486,9 +419,31 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 			});
 		});
+		
 		$(function() {
 			$('.deleteEvent').click(function() {
+				var eventName = $(this).find('#eventName').text();
+				var eventID = parseInt($(this).find('#eventID').text());
+				var eventType = $(this).find('#eventType').text();
+				
+				$('#dialogText').html('Are you sure you want to delete '+ eventName+'?');
+				
+				
+					$('#dialogConfirmButton').click(function() {
+						var selectedTabIndex = $(document).data('selectedTabIndex2');
+						var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+						if (eventType === 'Activity') {
+							deleteActivity(eventID);
+							listHistoryEvents(selectedTab);
+						}
+						 else {
 
+							deleteFoodEvent(eventID);
+							listHistoryEvents(selectedTab);
+						}
+					});
+				
+				/*
 				if (confirm("Are you sure you want to delete this event?") === true) {
 					var selectedTabIndex = $(document).data('selectedTabIndex2');
 					var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
@@ -513,6 +468,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 					}
 
 				}
+				*/
 
 			});
 		});
@@ -547,11 +503,32 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//i could not manage to keep the db connection global, so connection need to
 		//be openned every call
 		var db = openDatabase(shortName, version, displayName, maxSize);
-
 		db.transaction(function(transaction) {
-			transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
-		});
-		sendDbData();
+			transaction.executeSql('SELECT * FROM Event where name = ?;', [eventName], function(transaction, result){
+				if(result.rows.length > 0){
+					alert('Event allready exists')
+				}
+				else{
+					db.transaction(function(transaction) {
+						transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
+					});
+					
+					//show new event in button on top of the list
+					$('#recentAddedEventButton').text(eventName);
+					$('#recentAddedEventButton').val(eventType);
+					$('#presentBoolean').text('show');
+					$('#recentlyAddedEvent').show();
+					
+					$('#recentAddedEventButton').click(function() {
+						fillAddEventScreen(this);
+					});
+					window.history.back();
+					sendDbData();
+				}
+			}, errorHandler);
+		}, errorHandler, nullHandler);
+		
+		
 	}
 
 	function sendEvents(transaction, result){
@@ -567,17 +544,26 @@ function dbHandler(shortName, version, displayName, maxSize) {
 						'eventType': row.eventType
 				};
 
-				restClient.add('http://localhost:8080/api/v1/event', eventObject, function(data, textStatus, request){
-					if(textStatus === 'success'){
-						//row successfully sent, now row has to be updated with beenSent = 1
-
-						var db = openDatabase(shortName, version, displayName, maxSize);
-						db.transaction(function(transaction) {
-							transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.name], nullHandler, errorHandler);
-						});
-					}
-				});
+				restClient.add('http://localhost:8080/api/v1/event', eventObject, callbackSuccess, callbackError);
 			}
+		}
+	}
+	
+	function callbackError(request, textStatus, error){
+		console.log(request);
+		console.log(textStatus);
+		console.log(error);
+	}
+	
+	function callbackSuccess(data, textStatus, request){
+		console.log('went ok');
+		if(textStatus === 'success'){
+			//row successfully sent, now row has to be updated with beenSent = 1
+
+			var db = openDatabase(shortName, version, displayName, maxSize);
+			db.transaction(function(transaction) {
+				transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.name], nullHandler, errorHandler);
+			}, request, textStatus, error);
 		}
 	}
 
@@ -659,7 +645,100 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function nullHandler() {
 	}
 
-	;
+	function fillAddEventScreen(context){
+		//window.location.href = "#start2";
+		var curTime = new Date();
+		var month = curTime.getMonth() + 1;
+		var day = curTime.getDate();
+		if (month < 10) {
+			month = "0" + month;
+		}
+		if (day < 10) {
+			day = "0" + day;
+		}
+		var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
+
+		$('#mydate').val(dateStringForMyDate);
+		var currentMinutes = curTime.getMinutes();
+		if (parseInt(currentMinutes) < 10) {
+			currentMinutes = "0" + currentMinutes;
+		}
+		var currentHours = curTime.getHours();
+		if (parseInt(currentHours) < 10) {
+			currentHours = "0" + currentHours;
+		}
+		var timeStringForMyTime = currentHours + ":" + currentMinutes;
+
+		$('#mytime').val(timeStringForMyTime);
+
+		var eventType = $(context).val();
+		$('#startEventName').html($(context).html());
+		$('#slider-2').val('1').slider('refresh');
+		if (eventType === 'food') {
+			$('#quantity').html('Amount');
+			$('#intensityToText').hide();
+			$('#slider-2').attr('step', '0.25');
+			
+		} else {
+			$('#slider-2').attr('step', '1');
+			$('#quantity').html('Intensity');
+			setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
+
+			$('#slider-2').change(function() {
+
+				setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
+			});
+			$('#intensityToText').show();
+			/*
+			 $('#slider-2').val().change(function(){
+			 alert('change');
+			 //$('#quantity').html('Intensity'+ $('#slider-2').value());
+			 });*/
+		}
+		if ($('#startButton')) {
+			$('#startButton').remove();
+		}
+		var startEventButton = $('<A href="#home" id="startButton" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Start" + '</A>');
+
+		$('#start2').append(startEventButton);
+		startEventButton.click(function() {
+
+			var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
+			var unixTime = Date.parse(timeAndDate).getTime();
+
+			if (eventType === 'food') {
+				addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
+				listCurrentEvents();
+				//refresh list of current events
+			} else {
+				addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
+				listCurrentEvents();
+				//refresh list of current events
+			}
+			//set text on home screen, regarding which event is added
+			
+			var addedText = "Added "+$('#startEventName').html();
+
+			if(addedText === $('#addedText').html()){
+				//alter the added text in order to apply only the last intverval function
+				addedText = addedText+' ';
+				$('#addedText').html(addedText);
+				alert($('#addedText').html());
+			}
+			else{
+				$('#addedText').html(addedText);
+			}
+			window.setInterval(function(){
+				if($('#addedText').html() === addedText){
+					//the added text has been unaltered on the screen for the intervaltime 
+					$('#addedText').html(' ')
+					}
+				}, 4000);
+				
+			return;
+
+		});
+	}
 
 }
 
@@ -739,6 +818,7 @@ function insertDataInEditScreen(bd) {
 		$('#endTime').val(bd.endTime);
 		$('#quantity2').text('Intensity');
 		$('#intensityToText2').show();
+		$('#slider-3').attr('step', '1');
 		setIntensityText('#intensityToText2', parseInt(bd.intensity));
 
 		$('#slider-3').change(function() {
@@ -747,6 +827,7 @@ function insertDataInEditScreen(bd) {
 		});
 
 	} else {
+		$('#slider-3').attr('step', '0.25');
 		$('#intensityToText2').hide();
 		$('#endTimeField').hide();
 		$('#quantity2').text('Amount');
@@ -882,7 +963,7 @@ function makeEventButton(row, buttonType) {
 	html += '</a>';
 	if(buttonType === "ended"){
 		//append delete button
-		html += '<a href="#" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" title="Delete"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+		html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.event+'</p><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
 	}
 	else{
 		//append an end button,
@@ -895,3 +976,4 @@ function makeEventButton(row, buttonType) {
 	}
 	return html;
 }
+

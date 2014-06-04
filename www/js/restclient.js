@@ -102,7 +102,7 @@
 		return result;
 	};
  
- molgenis.RestClient.prototype.add = function(url, data, callback) {
+ molgenis.RestClient.prototype.add = function(url, data, callback, errorHandler) {
  
  $.ajax({
         type: 'POST',
@@ -115,10 +115,7 @@
         	callback(data, textStatus, request);
         },
         error: function(request, textStatus, error) {
-        	console.log(request);
-        	console.log(textStatus);
-        	console.log(error); 
-        
+        	errorHandler(request, textStatus, error)
         }
         });
  
