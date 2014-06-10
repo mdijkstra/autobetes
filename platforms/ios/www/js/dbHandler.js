@@ -10,10 +10,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.addEvent = addEvent;
 	this.listEventsOfEventType = listEventsOfEventType;
 	this.listAllEvents = listAllEvents;
-
+	this.editEvent = editEvent;
 	this.listHistoryEvents = listHistoryEvents;
 	this.listCurrentEvents = listCurrentEvents;
-
+	this.setRightScreen = setRightScreen;
 	this.sendDbData = sendDbData;
 	//this.sendHistoryEvents = sendHistoryEvents;
 	if (!window.openDatabase) {
@@ -43,7 +43,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		*/
 
 		//execute queries for creation of the table
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(name TEXT NOT NULL PRIMARY KEY, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)', [], nullHandler, errorHandler);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)', [], nullHandler, errorHandler);
 
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))', [], nullHandler, errorHandler);
 
@@ -140,7 +140,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM Event ORDER BY name ASC;', [], showList, errorHandler);
+			transaction.executeSql('SELECT * FROM Event ORDER BY lower(name) ASC;', [], showList, errorHandler);
 		}, errorHandler, nullHandler);
 	}
 
@@ -148,7 +148,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY name ASC;', [eventType], showList, errorHandler);
+			transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY lower(name) ASC;', [eventType], showList, errorHandler);
 		}, errorHandler, nullHandler);
 
 	}
@@ -185,8 +185,18 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}, errorHandler, nullHandler);
 	}
 
-
-	function editEvent(id, type) {
+	function editEvent(eventKey, eventName, eventType){
+		var db = openDatabase(shortName, version, displayName, maxSize);
+		db.transaction(function(transaction) {
+			transaction.executeSql('UPDATE Event SET name=?, eventType =? WHERE id =?', [eventName, eventType, eventKey], nullHandler, errorHandler);
+		});
+		
+		$('#presentBoolean').text('show');
+		$('#recentlyAddedEvent').show();
+		$('#eventNameToBePrivileged').text(eventName);
+	}
+	
+	function editEventInstance(id, type) {
 		var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
 		var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
 
@@ -253,20 +263,69 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			
 			for (var i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
-				var eventButton = $('<A HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all">' + row.name + '</A>');
-				eventButton.val(row.eventType);
-
+				
+				if($('#presentBoolean').text() === 'show' && $('#eventNameToBePrivileged').text() === row.name ){
+				
+				//the item need to be presented as a special button on top of the list, not in the list itself
+				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span>';
+				//show new event in button on top of the list
+				$('#recentAddedEventButton').html(buttonText);
+				$('#recentAddedEventButton').val(row.eventType);
+				
+				
+				//ensure next call this button is not presented
+				$('#presentBoolean').text('hide');
+				
+				}
+				else{
+					//item need to be presented in the list
+					var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span></A>');
+					eventButton.val(row.eventType);
 				$('#event-list').append(eventButton);
 
 				eventButton.click(function() {
-					fillAddEventScreen(this);
+					setRightScreen(this);
 				});
 
+			}
 			}
 		} else {
 			//nothing in db
 			$('#startHelpText').html('Event list empty. Please press + to add a new event.');
 			$('#searchEventsInputForm').hide();
+		}
+		if($('#editModeButton').val() ==="on"){
+    		$('.eventButtons').attr("style","background: #8df3e6 !important");
+    		
+        }
+	}
+	
+	function setRightScreen(context){
+		
+		if($('#editModeButton').val() ==="on"){
+			window.location.href = '#newEvent';
+			var eventKey = $(context).find('#eventKey').text();
+			$('#eventKey').text(eventKey);
+			$('#newEvent').find("#headerName").text("Edit");
+			$('#newEvent').find('#newEventName').val($(context).find("#name").text());
+			
+			var eventType = $(context).find('#eventType').text();
+			
+			if(eventType === "food"){
+            	$("#radio-choice-h-2a").prop("checked", true);
+            	$("#radio-choice-h-2b").prop("checked",false);
+            	$("input[type='radio']").checkboxradio("refresh");
+			}
+			else{
+				$("#radio-choice-h-2b").prop("checked", true);
+				$("#radio-choice-h-2a").prop("checked", false);
+            	$("input[type='radio']").checkboxradio("refresh");
+			}
+			
+		}
+		else{
+			window.location.href = '#start2';
+			fillAddEventScreen(context);
 		}
 	}
 	
@@ -321,7 +380,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				$('#editScreen').append(editEventButton);
 				editEventButton.click(function() {
 				//edit event
-				editEvent(bd.id, bd.type);
+				editEventInstance(bd.id, bd.type);
 	
 				
 				});
@@ -399,7 +458,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				editEventButton.click(function() {
 					//edit event
 
-					editEvent(bd.id, bd.type);
+					editEventInstance(bd.id, bd.type);
 					//refresh the right list
 					/*
 					 if(type ==='activity'){
@@ -512,17 +571,12 @@ function dbHandler(shortName, version, displayName, maxSize) {
 					db.transaction(function(transaction) {
 						transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
 					});
-					
-					//show new event in button on top of the list
-					$('#recentAddedEventButton').text(eventName);
-					$('#recentAddedEventButton').val(eventType);
+					//new added event need to be privileged
 					$('#presentBoolean').text('show');
 					$('#recentlyAddedEvent').show();
+					$('#eventNameToBePrivileged').text(eventName);
 					
-					$('#recentAddedEventButton').click(function() {
-						fillAddEventScreen(this);
-					});
-					window.history.back();
+					
 					sendDbData();
 				}
 			}, errorHandler);
@@ -560,10 +614,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		if(textStatus === 'success'){
 			//row successfully sent, now row has to be updated with beenSent = 1
 
-			var db = openDatabase(shortName, version, displayName, maxSize);
 			db.transaction(function(transaction) {
-				transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.name], nullHandler, errorHandler);
-			}, request, textStatus, error);
+				transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.id], nullHandler, errorHandler);
+			});
 		}
 	}
 
@@ -672,16 +725,22 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		$('#mytime').val(timeStringForMyTime);
 
 		var eventType = $(context).val();
-		$('#startEventName').html($(context).html());
-		$('#slider-2').val('1').slider('refresh');
+		$('#startEventName').html($(context).find('#name').text());
+		
 		if (eventType === 'food') {
 			$('#quantity').html('Amount');
 			$('#intensityToText').hide();
+			
+			$('#slider-2').attr('min', '0.25');
 			$('#slider-2').attr('step', '0.25');
+			$('#slider-2').val('1').slider('refresh');
 			
 		} else {
-			$('#slider-2').attr('step', '1');
 			$('#quantity').html('Intensity');
+			
+			$('#slider-2').attr('min', '1');
+			$('#slider-2').attr('step', '1');
+			$('#slider-2').val('1').slider('refresh');
 			setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
 
 			$('#slider-2').change(function() {
@@ -723,7 +782,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				//alter the added text in order to apply only the last intverval function
 				addedText = addedText+' ';
 				$('#addedText').html(addedText);
-				alert($('#addedText').html());
+				
 			}
 			else{
 				$('#addedText').html(addedText);
@@ -810,7 +869,7 @@ function insertDataInEditScreen(bd) {
 	$('#mydate2').val(bd.dateStringForMyDate);
 
 	$('#beginTime').val(bd.beginTime);
-	$('#slider-3').val(bd.intensity).slider('refresh');
+	
 
 	if (bd.type === 'activity') {
 		//activity has an endtime
@@ -818,7 +877,11 @@ function insertDataInEditScreen(bd) {
 		$('#endTime').val(bd.endTime);
 		$('#quantity2').text('Intensity');
 		$('#intensityToText2').show();
+		
 		$('#slider-3').attr('step', '1');
+		$('#slider-3').attr('min', '1');
+		$('#slider-3').val(bd.intensity).slider('refresh');
+		
 		setIntensityText('#intensityToText2', parseInt(bd.intensity));
 
 		$('#slider-3').change(function() {
@@ -828,6 +891,9 @@ function insertDataInEditScreen(bd) {
 
 	} else {
 		$('#slider-3').attr('step', '0.25');
+		$('#slider-3').attr('min', '0.25');
+		$('#slider-3').val(bd.intensity).slider('refresh');
+		
 		$('#intensityToText2').hide();
 		$('#endTimeField').hide();
 		$('#quantity2').text('Amount');

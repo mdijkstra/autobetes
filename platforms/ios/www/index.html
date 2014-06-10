@@ -66,7 +66,10 @@
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
                 <h1>Start Event</a></h1>
-                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+                <div class="ui-btn-right">
+                <a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
+                <a id="newEventButton" href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+                </div>
             	<div data-role="navbar">
                     <ul>
                         <li><a href="#" name="startEventTypeSelected">All</a></li>
@@ -74,17 +77,16 @@
                         <li><a href="#" name="startEventTypeSelected">Activity</a></li>
                     </ul>
                 </div><!-- /navbar -->
-            </div>
-            <div data-role="main" class="ui-content" >
-            	
-                
-                <p id="startHelpText">Choose event to start:</p>
                 <form id="searchEventsInputForm">
                     <input data-type="search" id="filterControlgroup-input">
                 </form>
+            </div>
+            <div data-role="main" class="ui-content" >
+            	
             	<div id="recentlyAddedEvent" style="display: none">
+            		<span id="eventNameToBePrivileged" style="display: none" ></span>
             		<span id="presentBoolean" style="display: none" >show</span>
-            		<A id="recentAddedEventButton" HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all" style="background: #adf4b4">Kebap</A>
+            		<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all" style="background: #adf4b4"></A>
             	</div>
                 <div id="event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
                 </div>
@@ -143,7 +145,7 @@
         <div data-role="page" id="newEvent">
             <div data-role="header">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1>New Event</H1>
+                <H1 id="headerName">New Event</H1>
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
@@ -156,7 +158,8 @@
                     </fieldset>
                 </div>
                 <input id="newEventName" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Event name">
-                <a id="addEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
+                <a id="addOrEditEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left" data-rel="back">Add</a>
+            	<p id="eventKey" style="display: none"><p>
             </div><!-- /content -->
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
@@ -168,6 +171,8 @@
 	</div><!-- /navbar -->
 </div><!-- /footer -->
         </div><!-- /page -->
+        
+        
         <div data-role="page" data-id="settingsHeader" id="settings">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
@@ -233,7 +238,7 @@
         <div data-role="page" id="editScreen">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1>Edit Event</H1>
+                <H1>Edit</H1>
                 
             </div><!-- /header -->
 
@@ -356,6 +361,7 @@
         $('#editScreen').page();
         $('#editScreenActivity').page();
         $('#start2').page();
+        $('#newEvent').page();
        
         var token;
         
@@ -423,71 +429,20 @@
 
         function getEvents(eventType) {
         	
-        	//when a new event is added, we want to show it on
-        	//top of the list once, therefore this if
-        	var presentBoolean = $('#presentBoolean').text();
-        	if(presentBoolean === 'hide'){
-        		$('#recentlyAddedEvent').hide();
-        	}
-        	else{
-        		$('#presentBoolean').text('hide');
-        	}
             
         	
             if (eventType !== null && eventType !== undefined) {
                 
                 db.listEventsOfEventType(eventType.toLowerCase());
-                /*request = {
-                    'q': {
-                        'q': [{
-                                'field': 'eventType',
-                                'operator': 'EQUALS',
-                                'value': eventType
-                            }],
-                        'num': 1000
-                    }
-                };*/
-            
                 
             }
             else{
                 db.listAllEvents();
             }
-            
-           
-           
-            /*
-            restApi.getAsync('/api/v1/event', request, function(data) {
-                console.log(JSON.stringify(data));
-
-                if (0 === data.items.length) {
-                    $('#startHelpText').html('Event list empty. Please press + to add a new event.');
-                    $('#searchEventsInputForm').hide();
-                } else {
-                    $('#startHelpText').html('Choose event to start:');
-                    $('#searchEventsInputForm').show();
-                }
-                $('#event-list').html('');
-                $.each(data.items, function(i, event) {
-                    var eventButton = $('<A HREF="#" CLASS="ui-btn ui-shadow ui-corner-all">' + event.name + '</A>');
-                    $('#event-list').append(eventButton);
-                    eventButton.click(function() {
-                        window.location.href = "#start2";
-                        $('#startEventName').html(event.name);
-                        $('#startEventButton').click(function() {
-                            var eventHistoryObject = {
-                                'owner': $('#userId').val(),
-                                'event': hrefToId(event.href)
-                            };
-                            addNewRecord('/api/v1/EventHistory', eventHistoryObject, function() {
-                                window.location.href = "#home";
-                                alert('Event added!');
-                            });
-                        });
-                    });
-    //console.log(JSON.stringify(event.name));
-                });
-            });*/
+          //hide the green button on top
+        	if($('#presentBoolean').text() === 'hide'){
+        		$('#recentlyAddedEvent').hide();
+        	}
             
         }
 
@@ -499,7 +454,9 @@
             $('[name=startEventTypeSelected]').removeClass('ui-btn-active');
             $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
             //console.log('in selectTabMenu, eventType: ' + eventType);
+            
             getEvents(eventType);
+          
         }
     
     function selectHistoryTabMenu() {
@@ -515,7 +472,7 @@
 
 
         $('[name=startEventTypeSelected]').click(function() {
-                                                 console.log('start event tab selected');
+            
             var eventType = $(this).html() === 'All' ? null : $(this).html();
             var index = 0;
             if (eventType === 'Food')
@@ -553,29 +510,11 @@
                 'eventType': null
             });
         	
+        	
             selectTabMenu();
         });
       
 
-        $(document).on('pageshow', '#newEvent', function() {
-        	/*
-        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
-        	that was active in 'Event view' (blue bars in top of screen)
-        	*/
-        	var selectedTabIndex = $(document).data('selectedTabIndex');
-            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-           
-            if(index === 0 || index === 1){
-            	$("#radio-choice-h-2a").attr("checked",true);
-                $("input[type='radio']").checkboxradio("refresh");
-            }
-            else{
-        		$("#radio-choice-h-2b").attr("checked",true);
-            	$("input[type='radio']").checkboxradio("refresh");
-        	}
-        	//empty eventname field
-            $('#newEventName').val('');
-        });
         
         $(document).on('pageshow', '#home', function() {
                        
@@ -589,15 +528,37 @@
             //db.listCurrentEvents();
          });
         
+        $(document).on('pagehide', '#newEvent', function(){
+        	//empty eventname field
+            $('#newEventName').val('');
+        });
+        $(document).on('pagehide', '#start', function(){
+        	//ensure the button with the new event(in green) will be hidden
+        	$('#recentlyAddedEvent').hide();
+        	//get out of edit mode
+        	$('#editModeButton').val('off');
+    		$('#editModeButton').attr("style","");
+    		$('.eventButtons').attr("style","");
+    		
+        });
+        
         
                
         
 
-        $('#addEvent').click(function() {
+        $('#addOrEditEvent').click(function() {
             //alert('start adding');
-            
-            db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
-            
+            var eventName = $('#newEventName').val();
+            var eventType = $('[name="radio-choice-h-2"]:checked').val().toLowerCase();
+            if($('#addOrEditEvent').text() === 'Add'){
+            	//add event
+            	db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
+            }
+            else{
+            	//edit event 
+            	var eventKey = $('#eventKey').text();
+            	db.editEvent(eventKey, eventName, eventType);
+            }
            
         });
         $('#historyButton').click(function() {
@@ -607,6 +568,63 @@
             
          });
         
+        $('#editModeButton').click(function(){
+        	
+        	if($('#editModeButton').val() ==="on"){
+        		//editmode was on, now need to be turned off
+        		$('#editModeButton').val('off');
+        		$('#editModeButton').attr("style","");
+        		$('.eventButtons').attr("style","");
+        		
+        		//change buttontext to Add on newEvent screen
+        		$('#addOrEditEvent').text('Add');
+        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
+        	}
+        	else{
+        		//editmode was off, now need to be turned on
+        		$('#editModeButton').val('on');
+        		$('#editModeButton').attr("style","background: #8df3e6 !important");
+        		$('.eventButtons').attr("style","background: #8df3e6 !important");
+        		
+        		//change buttontext to Edit on newEvent screen
+        		$('#addOrEditEvent').text('Save');
+        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline');
+
+        		
+        	}
+        	
+        	
+        });
+        
+        $('#newEventButton').click(function(){
+        	$('#addOrEditEvent').text('Add');
+        	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
+			$('#headerName').text('New Event');
+			
+			/*
+        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
+        	that was active in 'Event view' (blue bars in top of screen)
+        	*/
+        	var selectedTabIndex = $(document).data('selectedTabIndex');
+            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
+           
+            if(index === 0 || index === 1){
+            	
+            	$("#radio-choice-h-2a").prop("checked", true);
+            	$("#radio-choice-h-2b").prop("checked",false);
+                $("input[type='radio']").checkboxradio("refresh");
+            }
+            else{
+            	
+        		$("#radio-choice-h-2b").prop("checked", true);
+        		$("#radio-choice-h-2a").prop("checked", false);
+            	$("input[type='radio']").checkboxradio("refresh");
+        	}
+        })
+        $('#recentAddedEventButton').click(function(){
+					
+			db.setRightScreen(this);
+		});
         
         
         
