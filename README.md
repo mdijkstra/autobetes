@@ -13,3 +13,10 @@ To compile:
 2 - Go in the terminal to the project directory
 3 - type: phonegap build ios
 4 - App is compiled, hit run in Xcode to run
+
+If the data model changes:
+1 - Search for comment "Uncomment to drop the tables"
+2 - Type in terminal: phonegap build ios
+3 - Comment the drop tables code again
+4 - phonegap build ios
+5 - Stop/run app
