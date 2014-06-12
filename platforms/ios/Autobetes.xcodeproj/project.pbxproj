@@ -41,6 +41,7 @@
 		73BA8D6B6B634617A5CE8A88 /* CDVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A23F48A071E420885F31D2D /* CDVConnection.m */; };
 		F0294A4573AD4D14A653E277 /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 318972AD1A044B8690928C9E /* CDVReachability.m */; };
 		00A8E152409745B6AF910D71 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53821A023A0A42E88EDC27B6 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E66BBFDB43914BBDAE25A570 /* CDVStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 904D67C9C4C64E7A87EAFF2F /* CDVStatusBar.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,8 @@
 		3344BF6C23B8400D81FF485D /* CDVConnection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVConnection.h"; path = "org.apache.cordova.network-information/CDVConnection.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		0E6C53DFF56848BC95CC4BBB /* CDVReachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVReachability.h"; path = "org.apache.cordova.network-information/CDVReachability.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		53821A023A0A42E88EDC27B6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = 4; };
+		904D67C9C4C64E7A87EAFF2F /* CDVStatusBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVStatusBar.m"; path = "org.apache.cordova.statusbar/CDVStatusBar.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		549E8AA213914099923E6A51 /* CDVStatusBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVStatusBar.h"; path = "org.apache.cordova.statusbar/CDVStatusBar.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +239,8 @@
 				318972AD1A044B8690928C9E /* CDVReachability.m */,
 				3344BF6C23B8400D81FF485D /* CDVConnection.h */,
 				0E6C53DFF56848BC95CC4BBB /* CDVReachability.h */,
+				904D67C9C4C64E7A87EAFF2F /* CDVStatusBar.m */,
+				549E8AA213914099923E6A51 /* CDVStatusBar.h */,
 			);
 			name = Plugins;
 			path = "Autobetes/Plugins";
@@ -432,6 +437,7 @@
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
 				73BA8D6B6B634617A5CE8A88 /* CDVConnection.m in Sources */,
 				F0294A4573AD4D14A653E277 /* CDVReachability.m in Sources */,
+				E66BBFDB43914BBDAE25A570 /* CDVStatusBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

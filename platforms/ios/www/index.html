@@ -30,8 +30,8 @@
 
         <!-- Start of first page -->
         <div data-role="page" id="home">
-
-            <div data-role="header" data-position="inline">
+			
+            <div data-role="header" data-position="inline" data-position="fixed">
                 <h1>Autobetes</h1>
                 <a href="#settings" data-role="button" data-icon="gear" data-iconshadow="false"
                    data-direction="reverse" data-transition="flip"
@@ -39,45 +39,73 @@
             </div>
 
             <div role="main" id="mainScreen" class="ui-content">
-                <a id = "homeStartButton" href="#start" class="ui-btn ui-icon-plus ui-btn-icon-left">Start</a>
+                <a id = "homeStartButton" href="#start" class="ui-btn ui-icon-plus ui-btn-icon-left">Start event</a>
                 <a id="historyButton" href="#history" class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
-                <H3>Current activito:</H3>
+                <p id="addedText"> <p>
+                <H3>Current activity:</H3>
                 
                 <div class="event-list3" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
                     
                 </div>
             </div><!-- /content -->
+			
+			
+			<div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
 
         </div><!-- /page -->
 
         <div data-role="page" id="start">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <h1><a href="#home" class='ui-btn ui-icon-home ui-btn-icon-notext' data-iconpos="top"></a></h1>
-                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
-                <div data-role="navbar">
+                <h1>Start Event</a></h1>
+                <div class="ui-btn-right">
+                <a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
+                <a id="newEventButton" href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+                </div>
+            	<div data-role="navbar">
                     <ul>
                         <li><a href="#" name="startEventTypeSelected">All</a></li>
                         <li><a href="#" name="startEventTypeSelected">Food</a></li>
                         <li><a href="#" name="startEventTypeSelected">Activity</a></li>
                     </ul>
                 </div><!-- /navbar -->
-            </div><!-- /header -->
-            
-            <div role="main" class="ui-content">
-                <p id="startHelpText">Choose event to start:</p>
                 <form id="searchEventsInputForm">
                     <input data-type="search" id="filterControlgroup-input">
                 </form>
+            </div>
+            <div data-role="main" class="ui-content" >
+            	
+            	<div id="recentlyAddedEvent" style="display: none">
+            		<span id="eventNameToBePrivileged" style="display: none" ></span>
+            		<span id="presentBoolean" style="display: none" >show</span>
+            		<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all" style="background: #adf4b4"></A>
+            	</div>
                 <div id="event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
                 </div>
             </div><!-- /content -->
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
         </div><!-- /page -->
 
         <div data-role="page" id="start2">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1><a href="#home">Home</a></H1>
+                <H1>Add Event</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
 
@@ -98,40 +126,58 @@
                 </table>
                 <div class="ui-field-contain">
                     <label id="quantity" for="slider-2">Amount</label>
-                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="1">
+                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
                     <p><span id="intensityToText" style="display: none, color: blue">text</span></p>
                 </div>
             </div><!-- /content -->
+            
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
         </div><!-- /page -->
         <div data-role="page" id="newEvent">
             <div data-role="header">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1><a href="#home">Home</a></H1>
+                <H1 id="headerName">New Event</H1>
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
                 <div>
                     <fieldset id="eventType" data-role="controlgroup" data-type="horizontal" style="text-align: center">
-                        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="Food" checked="checked">
+                        <input  type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="Food">
                         <label for="radio-choice-h-2a">Food</label>
                         <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="Activity">
                         <label for="radio-choice-h-2b">Activity</label>
                     </fieldset>
                 </div>
                 <input id="newEventName" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Event name">
-                <a id="addEvent" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
+                <a id="addOrEditEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left" data-rel="back">Add</a>
+            	<p id="eventKey" style="display: none"><p>
             </div><!-- /content -->
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
         </div><!-- /page -->
+        
+        
         <div data-role="page" data-id="settingsHeader" id="settings">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1><a href="#home">Home</a></H1>
-                <div data-role="navbar">
-                    <ul>
-                        <li><a href="#" class="ui-btn-active">Settings</a></li>
-                        <li><a href="#settingsEvents">Events</a></li>
-                    </ul>
-                </div><!-- /navbar -->
+                <H1>Settings</H1>
+                
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
@@ -141,27 +187,12 @@
             </div><!-- /content -->
         </div><!-- /page -->
 
-        <div data-role="page" data-id="settingsHeader" id="settingsEvents">
-            <div data-role="header">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1><a href="#home">Home</a></H1>
-                <div data-role="navbar">
-                    <ul>
-                        <li><a href="#settings">Settings</a></li>
-                        <li><a href="#" class="ui-btn-active">Events</a></li>
-                    </ul>
-                </div><!-- /navbar -->
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                <P>Events:</P>
-            </div><!-- /content -->
-        </div><!-- /page -->
+       
 
         <div data-role="page" id="history">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1><a href="#home">Home</a></H1>
+                <H1>History</H1>
                 <div data-role="navbar">
                     <ul>
                         <li><a href="#" name="historyEventTypeSelected">All</a></li>
@@ -192,23 +223,22 @@
                     </div>
                 </div>
             </div>
-            <!-- <table data-role="table" id="event-history-table" data-mode="reflow" class="ui-responsive">
-            <thead><tr>
-            <th data-priority="persist">Event</th>
-            <th data-priority="1">Start</th>
-            <th data-priority="2">Stop</th>
-            </tr></thead>
-            <tbody>
-            </tbody>
-            </table>
-            -->
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
         </div>
         
         
         <div data-role="page" id="editScreen">
-            <div data-role="header">
+            <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1><a href="#home">Home</a></H1>
+                <H1>Edit</H1>
                 
             </div><!-- /header -->
 
@@ -249,14 +279,80 @@
                     <input type="range" name="slider-3" id="slider-3" data-highlight="true" min="1" max="10" value="1" step="1" >
                     <p><span id="intensityToText2" style="display: none, color:blue">Light</span></p>
                 </div>
-               
+              
             </div><!-- /content -->
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
         </div>
         
-      
+           <div data-role="page" id="report">
+            <div data-role="header" data-position="fixed">
+                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+                <H1>Reports</H1>
+                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+            </div><!-- /header -->
 
+            
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Input</a></li>
+			<li><a href="#report" class="ui-btn-active ui-state-persist">Report</a></li>
+			<li><a href="#pumpSettings">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+        </div><!-- /page -->
+
+         <div data-role="page" id="pumpSettings">
+            <div data-role="header" data-position="fixed">
+                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+                <H1>Pump settings</H1>
+                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+            </div><!-- /header -->
+
+            
+            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Input</a></li>
+			<li><a href="#report">Report</a></li>
+			<li><a href="#pumpSettings" class="ui-btn-active ui-state-persist">Pump settings</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+        </div><!-- /page -->		
+        
         <!-- /content -->
     <!-- /page -->
+    
+    <div data-role="page" id="deleteDialog" data-position="window">
+    	<div data-role="header">
+    		<h1>Delete event</h1>
+    	</div>
+    	<div data-role="content">
+    		<p id="dialogText"></p>
+    		<a id="dialogConfirmButton" data-role="button" data-rel="back" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+    			<span class="ui-btn-inner ui-btn-corner-all">
+    				<span class="ui-btn-text">Yes</span>
+    			</span>
+    		</a>
+    		<a data-role="button" data-rel="back" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+    			<span class="ui-btn-inner ui-btn-corner-all">
+    				<span class="ui-btn-text">No</span>
+    			</span>
+    		</a>
+    	</div>
+    </div>
     <script type="text/javascript" charset="utf-8">
       
         
@@ -265,28 +361,16 @@
         $('#editScreen').page();
         $('#editScreenActivity').page();
         $('#start2').page();
+        $('#newEvent').page();
        
         var token;
-        /*
+        
         $(function() {
           onDeviceReady();
         })
-        */
-        //var db = null;
-        /*
-        $(document).ready(function(){ 
-           //db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
-           db.listCurrentEvents();
-            alert('inside ready function');
-            navigator.notification.alert("PhoneGap is working", function(){}, "", "");
-           //$('#slider-3').parent().page();
-           $('#editScreen').page();
-           $('#editScreenActivity').page();
-           //$('#slider-3').slider('refresh');
-           //checkConnection();
-        });*/
         
-            // Wait for PhoneGap to load
+        
+        // Wait for PhoneGap to load
         // 
         document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -295,7 +379,6 @@
         // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
         //
          function onDeviceReady() {
-             ///alert((navigator.network.connection.type).toUpperCase());
              
             
             getToken();
@@ -313,81 +396,34 @@
         }
     
     function getToken(){
-        
-        
-        
+ 
        restClient.login('admin', 'admin', {
                         success: function(result){
                             
                         token = result.token;
-
+						
                         }
                 
             });
                    }
     
-
-        function hrefToId(href) {
-            return href.substring(href.lastIndexOf('/') + 1);
-        }
-
+		/*
+		*
+		*/
         function getEvents(eventType) {
-            //console.log('>> getEvents now()!!');
-            
+
             if (eventType !== null && eventType !== undefined) {
                 
                 db.listEventsOfEventType(eventType.toLowerCase());
-                /*request = {
-                    'q': {
-                        'q': [{
-                                'field': 'eventType',
-                                'operator': 'EQUALS',
-                                'value': eventType
-                            }],
-                        'num': 1000
-                    }
-                };*/
-            
                 
             }
             else{
                 db.listAllEvents();
             }
-            
-           
-           
-            /*
-            restApi.getAsync('/api/v1/event', request, function(data) {
-                console.log(JSON.stringify(data));
-
-                if (0 === data.items.length) {
-                    $('#startHelpText').html('Event list empty. Please press + to add a new event.');
-                    $('#searchEventsInputForm').hide();
-                } else {
-                    $('#startHelpText').html('Choose event to start:');
-                    $('#searchEventsInputForm').show();
-                }
-                $('#event-list').html('');
-                $.each(data.items, function(i, event) {
-                    var eventButton = $('<A HREF="#" CLASS="ui-btn ui-shadow ui-corner-all">' + event.name + '</A>');
-                    $('#event-list').append(eventButton);
-                    eventButton.click(function() {
-                        window.location.href = "#start2";
-                        $('#startEventName').html(event.name);
-                        $('#startEventButton').click(function() {
-                            var eventHistoryObject = {
-                                'owner': $('#userId').val(),
-                                'event': hrefToId(event.href)
-                            };
-                            addNewRecord('/api/v1/EventHistory', eventHistoryObject, function() {
-                                window.location.href = "#home";
-                                alert('Event added!');
-                            });
-                        });
-                    });
-    //console.log(JSON.stringify(event.name));
-                });
-            });*/
+          //hide the green button on top of the list
+        	if($('#presentBoolean').text() === 'hide'){
+        		$('#recentlyAddedEvent').hide();
+        	}
             
         }
 
@@ -399,7 +435,9 @@
             $('[name=startEventTypeSelected]').removeClass('ui-btn-active');
             $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
             //console.log('in selectTabMenu, eventType: ' + eventType);
+            
             getEvents(eventType);
+          
         }
     
     function selectHistoryTabMenu() {
@@ -415,7 +453,7 @@
 
 
         $('[name=startEventTypeSelected]').click(function() {
-                                                 console.log('start event tab selected');
+            
             var eventType = $(this).html() === 'All' ? null : $(this).html();
             var index = 0;
             if (eventType === 'Food')
@@ -426,6 +464,7 @@
                 'index': index,
                 'eventType': eventType
             });
+            
             getEvents(eventType);
         });
         
@@ -446,10 +485,18 @@
         });
 
         $(document).on('pageshow', '#start', function() {
-                       
+        	//set tab index on the "All" tab when the page will be showed
+        	$(document).data('selectedTabIndex', {
+                'index': 0,
+                'eventType': null
+            });
+        	
+        	
             selectTabMenu();
         });
+      
 
+        
         $(document).on('pageshow', '#home', function() {
                        
                 db.listCurrentEvents();
@@ -462,17 +509,37 @@
             //db.listCurrentEvents();
          });
         
+        $(document).on('pagehide', '#newEvent', function(){
+        	//empty eventname field
+            $('#newEventName').val('');
+        });
+        $(document).on('pagehide', '#start', function(){
+        	//ensure the button with the new event(in green) will be hidden
+        	$('#recentlyAddedEvent').hide();
+        	//get out of edit mode
+        	$('#editModeButton').val('off');
+    		$('#editModeButton').attr("style","");
+    		$('.eventButtons').attr("style","");
+    		
+        });
+        
         
                
-        $('#homeStartButton').click(function() {                   
-           
-            selectTabMenu();
-        });
+        
 
-        $('#addEvent').click(function() {
+        $('#addOrEditEvent').click(function() {
             //alert('start adding');
-            
-            db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
+            var eventName = $('#newEventName').val();
+            var eventType = $('[name="radio-choice-h-2"]:checked').val().toLowerCase();
+            if($('#addOrEditEvent').text() === 'Add'){
+            	//add event
+            	db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
+            }
+            else{
+            	//edit event 
+            	var eventKey = $('#eventKey').text();
+            	db.editEvent(eventKey, eventName, eventType);
+            }
            
         });
         $('#historyButton').click(function() {
@@ -482,6 +549,63 @@
             
          });
         
+        $('#editModeButton').click(function(){
+        	
+        	if($('#editModeButton').val() ==="on"){
+        		//editmode was on, now need to be turned off
+        		$('#editModeButton').val('off');
+        		$('#editModeButton').attr("style","");
+        		$('.eventButtons').attr("style","");
+        		
+        		//change buttontext to Add on newEvent screen
+        		$('#addOrEditEvent').text('Add');
+        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
+        	}
+        	else{
+        		//editmode was off, now need to be turned on
+        		$('#editModeButton').val('on');
+        		$('#editModeButton').attr("style","background: #8df3e6 !important");
+        		$('.eventButtons').attr("style","background: #8df3e6 !important");
+        		
+        		//change buttontext to Edit on newEvent screen
+        		$('#addOrEditEvent').text('Save');
+        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline');
+
+        		
+        	}
+        	
+        	
+        });
+        
+        $('#newEventButton').click(function(){
+        	$('#addOrEditEvent').text('Add');
+        	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
+			$('#headerName').text('New Event');
+			
+			/*
+        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
+        	that was active in 'Event view' (blue bars in top of screen)
+        	*/
+        	var selectedTabIndex = $(document).data('selectedTabIndex');
+            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
+           
+            if(index === 0 || index === 1){
+            	
+            	$("#radio-choice-h-2a").prop("checked", true);
+            	$("#radio-choice-h-2b").prop("checked",false);
+                $("input[type='radio']").checkboxradio("refresh");
+            }
+            else{
+            	
+        		$("#radio-choice-h-2b").prop("checked", true);
+        		$("#radio-choice-h-2a").prop("checked", false);
+            	$("input[type='radio']").checkboxradio("refresh");
+        	}
+        })
+        $('#recentAddedEventButton').click(function(){
+					
+			db.setRightScreen(this);
+		});
         
         
         
