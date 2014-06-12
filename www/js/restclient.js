@@ -102,8 +102,7 @@
 		return result;
 	};
  
- molgenis.RestClient.prototype.add = function(url, data, callback) {
- 
+ molgenis.RestClient.prototype.add = function(url, data, callback, errorHandler) {
  $.ajax({
         type: 'POST',
         headers: {'x-molgenis-token': self.token},
@@ -111,14 +110,12 @@
         data: JSON.stringify(data),
         async: false,
         contentType: 'application/json',
-        success: function(data, textStatus, request) {
-        	callback(data, textStatus, request);
+        success: function(data, textStatus, response) {
+        	callback(data, textStatus, response);
         },
         error: function(request, textStatus, error) {
-        	console.log(request);
-        	console.log(textStatus);
-        	console.log(error); 
-        
+        	console.log("ERROR:" + error);
+        	errorHandler(request, textStatus, error)
         }
         });
  

@@ -10,12 +10,12 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.addEvent = addEvent;
 	this.listEventsOfEventType = listEventsOfEventType;
 	this.listAllEvents = listAllEvents;
-
+	this.editEvent = editEvent;
 	this.listHistoryEvents = listHistoryEvents;
 	this.listCurrentEvents = listCurrentEvents;
-
+	this.setRightScreen = setRightScreen;
 	this.sendDbData = sendDbData;
-	//this.sendHistoryEvents = sendHistoryEvents;
+	
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
 		// indicating the device will not be albe to run this application
@@ -43,7 +43,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		*/
 
 		//execute queries for creation of the table
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(name TEXT NOT NULL PRIMARY KEY, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)', [], nullHandler, errorHandler);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)', [], nullHandler, errorHandler);
 
 		tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))', [], nullHandler, errorHandler);
 
@@ -51,21 +51,28 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}, errorHandler, successCallBack);
 
+	/*
+	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
+	 * showCurrentEvents to insert the info in the DOM
+	 */
 	function listCurrentEvents() {
 		$('.event-list3').html('');
 		//empty list
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', [], showCurrentEvents, errorHandler);
+			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', []
+			, showCurrentEvents, errorHandler);
 		}, errorHandler, nullHandler);
 	}
-
+	/*
+	 * This method pushes the results in the array subsequently,
+	 * in order to perform a sorting later on. This method only
+	 * gets executed when all the event instances need to be listed.
+	 * In that case both tables, activityeventinstance and foodeventinstance, need to be called in sql
+	 * and so sql cannot order it
+	 */
 	function fillResultsArray(transaction, result) {
-		//this method pushes the results in the array subsequently,
-		//in order to perform a sorting later on. This method only
-		//gets executed when all the event instances need to be listed.
-		//In that case both tables, activityeventinstance and foodeventinstance, need to be called in sql
-		//and so sql cannot order it
+		
 
 		if (result !== null && result.rows !== null) {
 
@@ -77,9 +84,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 		}
 	}
-
+	/*
+	 * This method will be executed after fillResultsArray. So then both
+	 * queries are executed and stored in the array. This method then sorts
+	 * the array and calls showEventInstanceList.
+	 */
 	function fillResultsArray2(transaction, result) {
-		//is called
+		//push results in array
 		if (result !== null && result.rows !== null) {
 
 			for (var i = 0; i < result.rows.length; i++) {
@@ -91,7 +102,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 
 		//sort array
-
 		results.sort(function(a, b) {
 			return parseInt(b.beginTime) - parseInt(a.beginTime);
 		});
@@ -100,7 +110,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		showEventInstanceList('inputIsArray', results);
 
 	}
-
+	/*
+	 * This method selects all the EventInstances regarding the given event type. 
+	 */
 	function listHistoryEvents(type) {
 
 		results = [];
@@ -135,41 +147,34 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 
 	}
-
-	function listAllEvents() {
-		var db = openDatabase(shortName, version, displayName, maxSize);
-		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM Event ORDER BY name ASC;', [], showList, errorHandler);
-		}, errorHandler, nullHandler);
-	}
-
-	function listEventsOfEventType(eventType) {
-		var db = openDatabase(shortName, version, displayName, maxSize);
-		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY name ASC;', [eventType], showList, errorHandler);
-		}, errorHandler, nullHandler);
-
-	}
-
 	/*
-	 function sendHistoryEvents(){
-	 var db = openDatabase(shortName, version, displayName, maxSize);
-	 db.transaction(function(transaction) {
-	 transaction.executeSql('SELECT * FROM FoodEventInstance where beenSent = 0;', [],
-	 sendHistoryEventsResults, errorHandler);
-	 }, errorHandler, nullHandler);
-
-	 db.transaction(function(transaction) {
-	 transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0;', [],
-	 sendHistoryEventsResults, errorHandler);
-	 }, errorHandler, nullHandler);
-
-	 }
+	* This method selects all the events stored in the db
+	*/
+	function listAllEvents() {
+		$('#event-list').html('');
+		var db = openDatabase(shortName, version, displayName, maxSize);
+		db.transaction(function(transaction) {
+			transaction.executeSql('SELECT * FROM Event ORDER BY lower(name) ASC;', [], showList, errorHandler);
+		}, errorHandler, nullHandler);
+	}
+	/*
+	 * This method selects all events of a certain eventType
 	 */
+	function listEventsOfEventType(eventType) {
+		$('#event-list').html('');
+		var db = openDatabase(shortName, version, displayName, maxSize);
+		db.transaction(function(transaction) {
+			transaction.executeSql('SELECT * FROM Event where eventType = ? ORDER BY lower(name) ASC;', [eventType], showList, errorHandler);
+		}, errorHandler, nullHandler);
 
+	}
+	/*
+	 * This method selects all the data from every table, and calls other methods to send the data to the server
+	 */
 	function sendDbData() {
 		
 		var db = openDatabase(shortName, version, displayName, maxSize);
+		
 		db.transaction(function(transaction) {
 			transaction.executeSql('SELECT * FROM Event where beenSent = 0;', [], sendEvents, errorHandler);
 		}, errorHandler, nullHandler);
@@ -182,12 +187,34 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0 and endTime IS NOT NULL;', [], sendActivityEventInstance, errorHandler);
 		}, errorHandler, nullHandler);
 	}
-
-
-	function editEvent(id, type) {
+	/*
+	 * This method edits a certain event, given the eventKey(primary key), the new eventName
+	 * and the eventType(which can be altered as well).
+	 */
+	function editEvent(eventKey, eventName, eventType){
+		var db = openDatabase(shortName, version, displayName, maxSize);
+		db.transaction(function(transaction) {
+			transaction.executeSql('UPDATE Event SET name=?, eventType =? WHERE id =?', [eventName, eventType, eventKey], nullHandler, errorHandler);
+		});
+		//present the edited button on top of the list with a green background
+		//indicate that the green button on top needs to be shown
+		$('#presentBoolean').text('show');
+		//show div
+		$('#recentlyAddedEvent').show();
+		//tag certain event to be presented on top. The method showlist handles
+		//this privilege
+		$('#eventNameToBePrivileged').text(eventName);
+		
+	}
+	/*
+	 * 
+	 */
+	function editEventInstance(id, type) {
+		//extract time and date from html
 		var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
+		//convert to unix timestamp
 		var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
-
+		//same with end time
 		var endTimeAndDate = $('#mydate2').val() + " " + $('#endTime').val();
 		var unixEndTime = Date.parse(endTimeAndDate).getTime();
 
@@ -195,10 +222,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//convert to date objects for comparison
 		var beginDate = new Date(unixBeginTime);
 		var endDate = new Date(unixEndTime);
-
+		
 		if (beginDate.getHours() > endDate.getHours()) {
-			//end time is before begin time, so we automatically supose that
-			//endt time is next day
+			//end time is before begin time, so we automatically suppose that
+			//end time is next day
 			unixEndTime += 86400000;
 			//add one day in milliseconds
 		} else if (beginDate.getHours() === endDate.getHours() && beginDate.getMinutes() > endDate.getMinutes()) {
@@ -206,6 +233,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			unixEndTime += 86400000;
 			//add one day in milliseconds
 		}
+		//update event instance in database
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		if (type === 'activity') {
 
@@ -218,9 +246,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				transaction.executeSql('UPDATE FoodEventInstance SET event=?, amount= ?, beginTime= ?, beenSent = 0 WHERE id = ?', [$('#startEventName2').text(), $('#slider-3').val(), unixBeginTime, id], nullHandler, errorHandler);
 			});
 		}
+		//send db data to server
 		sendDbData();
 	}
-
+	/*
+	 * This method sets deleted on 1(true) of the given id and thereby basically
+	 * in-activates the record
+	 */
 	function deleteActivity(id) {
 
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -231,7 +263,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		});
 		sendDbData();
 	}
-
+	/*
+	 * Same as deleteActivity
+	 */
 	function deleteFoodEvent(id) {
 
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -243,97 +277,89 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		sendDbData();
 
 	}
-
+	/*
+	 * This method is a callback function. It iterates the result array and present every
+	 * item as a button on the page
+	 */
 	function showList(transaction, result) {
 		if (result !== null && result.rows !== null) {
-			$('#startHelpText').html('Choose event to start:');
-			$('#searchEventsInputForm').show();
-			$('#event-list').html('');
+			
 			for (var i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
-				var eventButton = $('<A HREF="#start2" CLASS="ui-btn ui-shadow ui-corner-all">' + row.name + '</A>');
-				eventButton.val(row.eventType);
-
+				
+				if($('#presentBoolean').text() === 'show' && $('#eventNameToBePrivileged').text() === row.name ){
+				//the item need to be presented as a special button on top of the list, not in the list itself
+				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span>';
+				//show new event in button on top of the list
+				$('#recentAddedEventButton').html(buttonText);
+				$('#recentAddedEventButton').val(row.eventType);
+				
+				
+				//ensure next call this button is not presented
+				$('#presentBoolean').text('hide');
+				
+				}
+				else{
+					//item just needs to be presented in the list
+					var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span></A>');
+					eventButton.val(row.eventType);
 				$('#event-list').append(eventButton);
-
+				//set click function
 				eventButton.click(function() {
-					//window.location.href = "#start2";
-					var curTime = new Date();
-					var month = curTime.getMonth() + 1;
-					var day = curTime.getDate();
-					if (month < 10) {
-						month = "0" + month;
-					}
-					if (day < 10) {
-						day = "0" + day;
-					}
-					var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
-
-					$('#mydate').val(dateStringForMyDate);
-					var currentMinutes = curTime.getMinutes();
-					if (parseInt(currentMinutes) < 10) {
-						currentMinutes = "0" + currentMinutes;
-					}
-					var currentHours = curTime.getHours();
-					if (parseInt(currentHours) < 10) {
-						currentHours = "0" + currentHours;
-					}
-					var timeStringForMyTime = currentHours + ":" + currentMinutes;
-
-					$('#mytime').val(timeStringForMyTime);
-
-					var eventType = $(this).val();
-					$('#startEventName').html($(this).html());
-
-					if (eventType === 'food') {
-						$('#quantity').html('Amount');
-						$('#intensityToText').hide();
-
-					} else {
-						$('#quantity').html('Intensity');
-						setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
-
-						$('#slider-2').change(function() {
-
-							setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
-						});
-						$('#intensityToText').show();
-						/*
-						 $('#slider-2').val().change(function(){
-						 alert('change');
-						 //$('#quantity').html('Intensity'+ $('#slider-2').value());
-						 });*/
-					}
-					if ($('#startButton')) {
-						$('#startButton').remove();
-					}
-					var startEventButton = $('<A data-rel="back" id="startButton" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Start" + '</A>');
-
-					$('#start2').append(startEventButton);
-					startEventButton.click(function() {
-
-						var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-						var unixTime = Date.parse(timeAndDate).getTime();
-
-						if (eventType === 'food') {
-							addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-							listCurrentEvents();
-							//refresh list of current events
-						} else {
-							addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-							listCurrentEvents();
-							//refresh list of current events
-						}
-						return;
-
-					});
+					setRightScreen(this);
 				});
 
 			}
+			}
 		} else {
 			//nothing in db
-			$('#startHelpText').html('Event list empty. Please press + to add a new event.');
-			$('#searchEventsInputForm').hide();
+		}
+		if($('#editModeButton').val() ==="on"){
+			//edit mode is on, background needs to be changed to make that clear
+			//to the user
+    		$('.eventButtons').attr("style","background: #8df3e6 !important");
+    		
+        }
+	}
+	/*
+	 * This method gets called when an event button is clicked. When the edit mode is on
+	 * the screen in where the user can modify the event will be set. When de edit mode
+	 * is not on, the start2(start event) screen will be set.
+	 */
+	function setRightScreen(context){
+		
+		if($('#editModeButton').val() ==="on"){
+			//edit mode is on, the screen newEvent will be used
+			
+			window.location.href = '#newEvent';
+			//get eventKey
+			var eventKey = $(context).find('#eventKey').text();
+			//set eventKey
+			$('#eventKey').text(eventKey);
+			//set header name
+			$('#newEvent').find("#headerName").text("Edit");
+			//set name of event 
+			$('#newEvent').find('#newEventName').val($(context).find("#name").text());
+			
+			//get event type
+			var eventType = $(context).find('#eventType').text();
+			//set the fieldset right
+			if(eventType === "food"){
+            	$("#radio-choice-h-2a").prop("checked", true);
+            	$("#radio-choice-h-2b").prop("checked",false);
+            	$("input[type='radio']").checkboxradio("refresh");
+			}
+			else{
+				$("#radio-choice-h-2b").prop("checked", true);
+				$("#radio-choice-h-2a").prop("checked", false);
+            	$("input[type='radio']").checkboxradio("refresh");
+			}
+			
+		}
+		else{
+			//edit mode is off. open start2 screen
+			window.location.href = '#start2';
+			fillAddEventScreen(context);
 		}
 	}
 	
@@ -388,7 +414,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				$('#editScreen').append(editEventButton);
 				editEventButton.click(function() {
 				//edit event
-				editEvent(bd.id, bd.type);
+				editEventInstance(bd.id, bd.type);
 	
 				
 				});
@@ -466,7 +492,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				editEventButton.click(function() {
 					//edit event
 
-					editEvent(bd.id, bd.type);
+					editEventInstance(bd.id, bd.type);
 					//refresh the right list
 					/*
 					 if(type ==='activity'){
@@ -486,9 +512,31 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 			});
 		});
+		
 		$(function() {
 			$('.deleteEvent').click(function() {
+				var eventName = $(this).find('#eventName').text();
+				var eventID = parseInt($(this).find('#eventID').text());
+				var eventType = $(this).find('#eventType').text();
+				
+				$('#dialogText').html('Are you sure you want to delete '+ eventName+'?');
+				
+				
+					$('#dialogConfirmButton').click(function() {
+						var selectedTabIndex = $(document).data('selectedTabIndex2');
+						var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+						if (eventType === 'Activity') {
+							deleteActivity(eventID);
+							listHistoryEvents(selectedTab);
+						}
+						 else {
 
+							deleteFoodEvent(eventID);
+							listHistoryEvents(selectedTab);
+						}
+					});
+				
+				/*
 				if (confirm("Are you sure you want to delete this event?") === true) {
 					var selectedTabIndex = $(document).data('selectedTabIndex2');
 					var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
@@ -513,6 +561,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 					}
 
 				}
+				*/
 
 			});
 		});
@@ -547,11 +596,27 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//i could not manage to keep the db connection global, so connection need to
 		//be openned every call
 		var db = openDatabase(shortName, version, displayName, maxSize);
-
 		db.transaction(function(transaction) {
-			transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
-		});
-		sendDbData();
+			transaction.executeSql('SELECT * FROM Event where name = ?;', [eventName], function(transaction, result){
+				if(result.rows.length > 0){
+					alert('Event allready exists')
+				}
+				else{
+					db.transaction(function(transaction) {
+						transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
+					});
+					//new added event need to be privileged
+					$('#presentBoolean').text('show');
+					$('#recentlyAddedEvent').show();
+					$('#eventNameToBePrivileged').text(eventName);
+					
+					
+					sendDbData();
+				}
+			}, errorHandler);
+		}, errorHandler, nullHandler);
+		
+		
 	}
 
 	function sendEvents(transaction, result){
@@ -567,17 +632,25 @@ function dbHandler(shortName, version, displayName, maxSize) {
 						'eventType': row.eventType
 				};
 
-				restClient.add('http://localhost:8080/api/v1/event', eventObject, function(data, textStatus, request){
-					if(textStatus === 'success'){
-						//row successfully sent, now row has to be updated with beenSent = 1
-
-						var db = openDatabase(shortName, version, displayName, maxSize);
-						db.transaction(function(transaction) {
-							transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.name], nullHandler, errorHandler);
-						});
-					}
-				});
+				restClient.add('http://localhost:8080/api/v1/event', eventObject, callbackSuccess, callbackError);
 			}
+		}
+	}
+	
+	function callbackError(request, textStatus, error){
+		console.log(request);
+		console.log(textStatus);
+		console.log(error);
+	}
+	
+	function callbackSuccess(data, textStatus, request){
+		console.log('went ok');
+		if(textStatus === 'success'){
+			//row successfully sent, now row has to be updated with beenSent = 1
+
+			db.transaction(function(transaction) {
+				transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.id], nullHandler, errorHandler);
+			});
 		}
 	}
 
@@ -659,7 +732,106 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function nullHandler() {
 	}
 
-	;
+	function fillAddEventScreen(context){
+		//window.location.href = "#start2";
+		var curTime = new Date();
+		var month = curTime.getMonth() + 1;
+		var day = curTime.getDate();
+		if (month < 10) {
+			month = "0" + month;
+		}
+		if (day < 10) {
+			day = "0" + day;
+		}
+		var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
+
+		$('#mydate').val(dateStringForMyDate);
+		var currentMinutes = curTime.getMinutes();
+		if (parseInt(currentMinutes) < 10) {
+			currentMinutes = "0" + currentMinutes;
+		}
+		var currentHours = curTime.getHours();
+		if (parseInt(currentHours) < 10) {
+			currentHours = "0" + currentHours;
+		}
+		var timeStringForMyTime = currentHours + ":" + currentMinutes;
+
+		$('#mytime').val(timeStringForMyTime);
+
+		var eventType = $(context).val();
+		$('#startEventName').html($(context).find('#name').text());
+		
+		if (eventType === 'food') {
+			$('#quantity').html('Amount');
+			$('#intensityToText').hide();
+			
+			$('#slider-2').attr('min', '0.25');
+			$('#slider-2').attr('step', '0.25');
+			$('#slider-2').val('1').slider('refresh');
+			
+		} else {
+			$('#quantity').html('Intensity');
+			
+			$('#slider-2').attr('min', '1');
+			$('#slider-2').attr('step', '1');
+			$('#slider-2').val('1').slider('refresh');
+			setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
+
+			$('#slider-2').change(function() {
+
+				setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
+			});
+			$('#intensityToText').show();
+			/*
+			 $('#slider-2').val().change(function(){
+			 alert('change');
+			 //$('#quantity').html('Intensity'+ $('#slider-2').value());
+			 });*/
+		}
+		if ($('#startButton')) {
+			$('#startButton').remove();
+		}
+		var startEventButton = $('<A href="#home" id="startButton" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Start" + '</A>');
+
+		$('#start2').append(startEventButton);
+		startEventButton.click(function() {
+
+			var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
+			var unixTime = Date.parse(timeAndDate).getTime();
+
+			if (eventType === 'food') {
+				addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
+				listCurrentEvents();
+				//refresh list of current events
+			} else {
+				addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
+				listCurrentEvents();
+				//refresh list of current events
+			}
+			//set text on home screen, regarding which event is added
+			
+			var addedText = "Added "+$('#startEventName').html();
+
+			if(addedText === $('#addedText').html()){
+				//alter the added text in order to apply only the last intverval function
+				addedText = addedText+' ';
+				$('#addedText').html(addedText);
+				
+			}
+			else{
+				$('#addedText').html(addedText);
+			}
+			window.setInterval(function(){
+				if($('#addedText').html() === addedText){
+					//the added text has been unaltered on the screen for the intervaltime 
+					$('#addedText').html(' ')
+					}
+				}, 4000);
+				
+			return;
+
+		});
+	}
 
 }
 
@@ -731,7 +903,7 @@ function insertDataInEditScreen(bd) {
 	$('#mydate2').val(bd.dateStringForMyDate);
 
 	$('#beginTime').val(bd.beginTime);
-	$('#slider-3').val(bd.intensity).slider('refresh');
+	
 
 	if (bd.type === 'activity') {
 		//activity has an endtime
@@ -739,6 +911,11 @@ function insertDataInEditScreen(bd) {
 		$('#endTime').val(bd.endTime);
 		$('#quantity2').text('Intensity');
 		$('#intensityToText2').show();
+		
+		$('#slider-3').attr('step', '1');
+		$('#slider-3').attr('min', '1');
+		$('#slider-3').val(bd.intensity).slider('refresh');
+		
 		setIntensityText('#intensityToText2', parseInt(bd.intensity));
 
 		$('#slider-3').change(function() {
@@ -747,6 +924,10 @@ function insertDataInEditScreen(bd) {
 		});
 
 	} else {
+		$('#slider-3').attr('step', '0.25');
+		$('#slider-3').attr('min', '0.25');
+		$('#slider-3').val(bd.intensity).slider('refresh');
+		
 		$('#intensityToText2').hide();
 		$('#endTimeField').hide();
 		$('#quantity2').text('Amount');
@@ -882,7 +1063,7 @@ function makeEventButton(row, buttonType) {
 	html += '</a>';
 	if(buttonType === "ended"){
 		//append delete button
-		html += '<a href="#" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" title="Delete"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+		html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.event+'</p><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
 	}
 	else{
 		//append an end button,
@@ -895,3 +1076,4 @@ function makeEventButton(row, buttonType) {
 	}
 	return html;
 }
+
