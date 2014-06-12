@@ -29,10 +29,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// if it does not exist, it will create it and return a databaseobject stored in variable db
 	var db = openDatabase(shortName, version, displayName, maxSize);
 
-	// this line will try to create the table User in the database justcreated/openned
+	// This function is called when the application is started. It /*drops and*/ creates all tables
 	db.transaction(function(tx) {
 
-		//to drop the table
+		// Uncomment to drop the tables
 		/*
 		tx.executeSql( 'DROP TABLE IF EXISTS Event',
 		[],nullHandler,errorHandler);
