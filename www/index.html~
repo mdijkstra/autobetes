@@ -41,7 +41,7 @@
             <div role="main" id="mainScreen" class="ui-content">
                 <a id = "homeStartButton" href="#start" class="ui-btn ui-icon-plus ui-btn-icon-left">Start</a>
                 <a id="historyButton" href="#history" class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
-                <H3>Current activito:</H3>
+                <H3>Current activity:</H3>
                 
                 <div class="event-list3" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
                     
@@ -267,11 +267,13 @@
         $('#start2').page();
        
         var token;
+        
         /*
         $(function() {
           onDeviceReady();
         })
         */
+        
         //var db = null;
         /*
         $(document).ready(function(){ 
