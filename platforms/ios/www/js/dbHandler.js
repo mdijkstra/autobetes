@@ -15,7 +15,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.listCurrentEvents = listCurrentEvents;
 	this.setRightScreen = setRightScreen;
 	this.sendDbData = sendDbData;
-	//this.sendHistoryEvents = sendHistoryEvents;
+	
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
 		// indicating the device will not be albe to run this application
@@ -51,21 +51,28 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}, errorHandler, successCallBack);
 
+	/*
+	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
+	 * showCurrentEvents to insert the info in the DOM
+	 */
 	function listCurrentEvents() {
 		$('.event-list3').html('');
 		//empty list
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', [], showCurrentEvents, errorHandler);
+			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', []
+			, showCurrentEvents, errorHandler);
 		}, errorHandler, nullHandler);
 	}
-
+	/*
+	 * This method pushes the results in the array subsequently,
+	 * in order to perform a sorting later on. This method only
+	 * gets executed when all the event instances need to be listed.
+	 * In that case both tables, activityeventinstance and foodeventinstance, need to be called in sql
+	 * and so sql cannot order it
+	 */
 	function fillResultsArray(transaction, result) {
-		//this method pushes the results in the array subsequently,
-		//in order to perform a sorting later on. This method only
-		//gets executed when all the event instances need to be listed.
-		//In that case both tables, activityeventinstance and foodeventinstance, need to be called in sql
-		//and so sql cannot order it
+		
 
 		if (result !== null && result.rows !== null) {
 
@@ -77,9 +84,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 		}
 	}
-
+	/*
+	 * This method will be executed after fillResultsArray. So then both
+	 * queries are executed and stored in the array. This method then sorts
+	 * the array and calls showEventInstanceList.
+	 */
 	function fillResultsArray2(transaction, result) {
-		//is called
+		//push results in array
 		if (result !== null && result.rows !== null) {
 
 			for (var i = 0; i < result.rows.length; i++) {
@@ -91,7 +102,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 
 		//sort array
-
 		results.sort(function(a, b) {
 			return parseInt(b.beginTime) - parseInt(a.beginTime);
 		});
@@ -100,7 +110,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		showEventInstanceList('inputIsArray', results);
 
 	}
-
+	/*
+	 * This method selects all the EventInstances regarding the given event type. 
+	 */
 	function listHistoryEvents(type) {
 
 		results = [];
@@ -135,7 +147,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 
 	}
-
+	/*
+	* This method selects all the events stored in the db
+	*/
 	function listAllEvents() {
 		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -143,7 +157,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			transaction.executeSql('SELECT * FROM Event ORDER BY lower(name) ASC;', [], showList, errorHandler);
 		}, errorHandler, nullHandler);
 	}
-
+	/*
+	 * This method selects all events of a certain eventType
+	 */
 	function listEventsOfEventType(eventType) {
 		$('#event-list').html('');
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -152,26 +168,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}, errorHandler, nullHandler);
 
 	}
-
 	/*
-	 function sendHistoryEvents(){
-	 var db = openDatabase(shortName, version, displayName, maxSize);
-	 db.transaction(function(transaction) {
-	 transaction.executeSql('SELECT * FROM FoodEventInstance where beenSent = 0;', [],
-	 sendHistoryEventsResults, errorHandler);
-	 }, errorHandler, nullHandler);
-
-	 db.transaction(function(transaction) {
-	 transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0;', [],
-	 sendHistoryEventsResults, errorHandler);
-	 }, errorHandler, nullHandler);
-
-	 }
+	 * This method selects all the data from every table, and calls other methods to send the data to the server
 	 */
-
 	function sendDbData() {
 		
 		var db = openDatabase(shortName, version, displayName, maxSize);
+		
 		db.transaction(function(transaction) {
 			transaction.executeSql('SELECT * FROM Event where beenSent = 0;', [], sendEvents, errorHandler);
 		}, errorHandler, nullHandler);
@@ -184,22 +187,34 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0 and endTime IS NOT NULL;', [], sendActivityEventInstance, errorHandler);
 		}, errorHandler, nullHandler);
 	}
-
+	/*
+	 * This method edits a certain event, given the eventKey(primary key), the new eventName
+	 * and the eventType(which can be altered as well).
+	 */
 	function editEvent(eventKey, eventName, eventType){
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
 			transaction.executeSql('UPDATE Event SET name=?, eventType =? WHERE id =?', [eventName, eventType, eventKey], nullHandler, errorHandler);
 		});
-		
+		//present the edited button on top of the list with a green background
+		//indicate that the green button on top needs to be shown
 		$('#presentBoolean').text('show');
+		//show div
 		$('#recentlyAddedEvent').show();
+		//tag certain event to be presented on top. The method showlist handles
+		//this privilege
 		$('#eventNameToBePrivileged').text(eventName);
+		
 	}
-	
+	/*
+	 * 
+	 */
 	function editEventInstance(id, type) {
+		//extract time and date from html
 		var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
+		//convert to unix timestamp
 		var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
-
+		//same with end time
 		var endTimeAndDate = $('#mydate2').val() + " " + $('#endTime').val();
 		var unixEndTime = Date.parse(endTimeAndDate).getTime();
 
@@ -207,10 +222,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//convert to date objects for comparison
 		var beginDate = new Date(unixBeginTime);
 		var endDate = new Date(unixEndTime);
-
+		
 		if (beginDate.getHours() > endDate.getHours()) {
-			//end time is before begin time, so we automatically supose that
-			//endt time is next day
+			//end time is before begin time, so we automatically suppose that
+			//end time is next day
 			unixEndTime += 86400000;
 			//add one day in milliseconds
 		} else if (beginDate.getHours() === endDate.getHours() && beginDate.getMinutes() > endDate.getMinutes()) {
@@ -218,6 +233,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			unixEndTime += 86400000;
 			//add one day in milliseconds
 		}
+		//update event instance in database
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		if (type === 'activity') {
 
@@ -230,9 +246,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				transaction.executeSql('UPDATE FoodEventInstance SET event=?, amount= ?, beginTime= ?, beenSent = 0 WHERE id = ?', [$('#startEventName2').text(), $('#slider-3').val(), unixBeginTime, id], nullHandler, errorHandler);
 			});
 		}
+		//send db data to server
 		sendDbData();
 	}
-
+	/*
+	 * This method sets deleted on 1(true) of the given id and thereby basically
+	 * in-activates the record
+	 */
 	function deleteActivity(id) {
 
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -243,7 +263,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		});
 		sendDbData();
 	}
-
+	/*
+	 * Same as deleteActivity
+	 */
 	function deleteFoodEvent(id) {
 
 		var db = openDatabase(shortName, version, displayName, maxSize);
@@ -255,17 +277,17 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		sendDbData();
 
 	}
-
+	/*
+	 * This method is a callback function. It iterates the result array and present every
+	 * item as a button on the page
+	 */
 	function showList(transaction, result) {
 		if (result !== null && result.rows !== null) {
-			$('#startHelpText').html('Choose event to start:');
-			$('#searchEventsInputForm').show();
 			
 			for (var i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
 				
 				if($('#presentBoolean').text() === 'show' && $('#eventNameToBePrivileged').text() === row.name ){
-				
 				//the item need to be presented as a special button on top of the list, not in the list itself
 				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span>';
 				//show new event in button on top of the list
@@ -278,11 +300,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				
 				}
 				else{
-					//item need to be presented in the list
+					//item just needs to be presented in the list
 					var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventKey" style="display: none">'+row.id+'</span></A>');
 					eventButton.val(row.eventType);
 				$('#event-list').append(eventButton);
-
+				//set click function
 				eventButton.click(function() {
 					setRightScreen(this);
 				});
@@ -291,26 +313,37 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			}
 		} else {
 			//nothing in db
-			$('#startHelpText').html('Event list empty. Please press + to add a new event.');
-			$('#searchEventsInputForm').hide();
 		}
 		if($('#editModeButton').val() ==="on"){
+			//edit mode is on, background needs to be changed to make that clear
+			//to the user
     		$('.eventButtons').attr("style","background: #8df3e6 !important");
     		
         }
 	}
-	
+	/*
+	 * This method gets called when an event button is clicked. When the edit mode is on
+	 * the screen in where the user can modify the event will be set. When de edit mode
+	 * is not on, the start2(start event) screen will be set.
+	 */
 	function setRightScreen(context){
 		
 		if($('#editModeButton').val() ==="on"){
+			//edit mode is on, the screen newEvent will be used
+			
 			window.location.href = '#newEvent';
+			//get eventKey
 			var eventKey = $(context).find('#eventKey').text();
+			//set eventKey
 			$('#eventKey').text(eventKey);
+			//set header name
 			$('#newEvent').find("#headerName").text("Edit");
+			//set name of event 
 			$('#newEvent').find('#newEventName').val($(context).find("#name").text());
 			
+			//get event type
 			var eventType = $(context).find('#eventType').text();
-			
+			//set the fieldset right
 			if(eventType === "food"){
             	$("#radio-choice-h-2a").prop("checked", true);
             	$("#radio-choice-h-2b").prop("checked",false);
@@ -324,6 +357,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			
 		}
 		else{
+			//edit mode is off. open start2 screen
 			window.location.href = '#start2';
 			fillAddEventScreen(context);
 		}

@@ -106,6 +106,7 @@
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
                 <H1>Add Event</H1>
+                
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
 
@@ -369,21 +370,8 @@
           onDeviceReady();
         })
         
-        //var db = null;
-        /*
-        $(document).ready(function(){ 
-           //db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
-           db.listCurrentEvents();
-            alert('inside ready function');
-            navigator.notification.alert("PhoneGap is working", function(){}, "", "");
-           //$('#slider-3').parent().page();
-           $('#editScreen').page();
-           $('#editScreenActivity').page();
-           //$('#slider-3').slider('refresh');
-           //checkConnection();
-        });*/
         
-            // Wait for PhoneGap to load
+        // Wait for PhoneGap to load
         // 
         document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -409,9 +397,7 @@
         }
     
     function getToken(){
-        
-        
-        
+ 
        restClient.login('admin', 'admin', {
                         success: function(result){
                             
@@ -420,17 +406,11 @@
                         }
                 
             });
-                   }
+       }
     
-
-        function hrefToId(href) {
-            return href.substring(href.lastIndexOf('/') + 1);
-        }
-
+		
         function getEvents(eventType) {
-        	
-            
-        	
+
             if (eventType !== null && eventType !== undefined) {
                 
                 db.listEventsOfEventType(eventType.toLowerCase());
@@ -439,7 +419,7 @@
             else{
                 db.listAllEvents();
             }
-          //hide the green button on top
+          //hide the green button on top of the list
         	if($('#presentBoolean').text() === 'hide'){
         		$('#recentlyAddedEvent').hide();
         	}
@@ -466,7 +446,6 @@
         var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
         $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
         $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-        //console.log('index: ' + index + ', eventType: ' + eventType);
         db.listHistoryEvents(eventType);
     }
 
@@ -502,48 +481,6 @@
              db.listHistoryEvents($(this).html());
             
         });
-
-        $(document).on('pageshow', '#start', function() {
-        	//set tab index on the "All" tab when the page will be showed
-        	$(document).data('selectedTabIndex', {
-                'index': 0,
-                'eventType': null
-            });
-        	
-        	
-            selectTabMenu();
-        });
-      
-
-        
-        $(document).on('pageshow', '#home', function() {
-                       
-                db.listCurrentEvents();
-        });
-        
-        $(document).on('pageshow', '#history', function() {
-            
-            
-            selectHistoryTabMenu();
-            //db.listCurrentEvents();
-         });
-        
-        $(document).on('pagehide', '#newEvent', function(){
-        	//empty eventname field
-            $('#newEventName').val('');
-        });
-        $(document).on('pagehide', '#start', function(){
-        	//ensure the button with the new event(in green) will be hidden
-        	$('#recentlyAddedEvent').hide();
-        	//get out of edit mode
-        	$('#editModeButton').val('off');
-    		$('#editModeButton').attr("style","");
-    		$('.eventButtons').attr("style","");
-    		
-        });
-        
-        
-               
         
 
         $('#addOrEditEvent').click(function() {
@@ -625,6 +562,43 @@
 					
 			db.setRightScreen(this);
 		});
+
+        $(document).on('pageshow', '#start', function() {
+        	//set tab index on the "All" tab when the page will be showed
+        	$(document).data('selectedTabIndex', {
+                'index': 0,
+                'eventType': null
+            });
+        	
+        	
+            selectTabMenu();
+        });
+      
+
+        
+        $(document).on('pageshow', '#home', function() {
+                       
+                db.listCurrentEvents();
+        });
+        
+        $(document).on('pageshow', '#history', function() {
+            selectHistoryTabMenu();
+            //db.listCurrentEvents();
+         });
+        
+        $(document).on('pagehide', '#newEvent', function(){
+        	//empty eventname field
+            $('#newEventName').val('');
+        });
+        $(document).on('pagehide', '#start', function(){
+        	//ensure the button with the new event(in green) will be hidden
+        	$('#recentlyAddedEvent').hide();
+        	//get out of edit mode
+        	$('#editModeButton').val('off');
+    		$('#editModeButton').attr("style","");
+    		$('.eventButtons').attr("style","");
+    		
+        });
         
         
         
