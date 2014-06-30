@@ -10,10 +10,19 @@
         <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
         <script src="js/jquery.js"></script>
         <script src="js/jquery.mobile-1.4.2.js"></script>
-        <script src="js/dbHandler.js"></script>
         <script src="js/restclient.js"></script>
-        <script src="js/autobetes.js"></script>
+        
         <script src="js/date.js"></script>
+        
+        <script src="js/controller/dbFunctions.js"></script>
+     
+        <script src="js/model/pageShowFunctions.js"></script>
+        <script src="js/model/pageHideFunctions.js"></script>
+        <script src="js/model/controllerFunctions.js"></script>
+        <script src= "js/model/callbackFunctions.js"></script>
+        <script src="js/model/onClickFunctions.js"></script>
+        
+        <script src= "js/view/viewFunctions.js"></script>
         
         <link rel="icon" href="img/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/autobetes.css" type="text/css">
@@ -52,6 +61,7 @@
 			
 			<div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
+	
 		<ul>
 			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
 			<li><a href="#report">Report</a></li>
@@ -105,6 +115,8 @@
         <div data-role="page" id="start2">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+                <p id="eventID" style="display: none"></p>
+                <p id="eventType2" style="display: none"></p>
                 <H1>Add Event</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
@@ -125,10 +137,13 @@
                     </tr>
                 </table>
                 <div class="ui-field-contain">
-                    <label id="quantity" for="slider-2">Amount</label>
-                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
-                    <p><span id="intensityToText" style="display: none, color: blue">text</span></p>
+                	
+                    <label id="amountSliderText-2" >Amount</label>
+                    <label id="quantitySliderText-2" style="display: none">Intensity: <span id="intensityToText">Light</span></label>
+                    <input class="numbersOnly" type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
+                    
                 </div>
+                <A href="#home" id="startEventInstanceButton" CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
             </div><!-- /content -->
             
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
@@ -271,13 +286,16 @@
                         </td>
                     <tr>
                     </table>
+                    
                 </div>
                
                 
                 <div class="ui-field-contain">
-                    <label id="quantity2" for="slider-3">Amount</label>
-                    <input type="range" name="slider-3" id="slider-3" data-highlight="true" min="1" max="10" value="1" step="1" >
-                    <p><span id="intensityToText2" style="display: none, color:blue">Light</span></p>
+                 <label id="amountSliderText-3" >Amount</label>
+                    <label id="quantitySliderText-3" style="display: none">Intensity: <span id="intensityToText2">Light</span></label>
+             
+                    <input class="numbersOnly" type="range" name="slider-3" id="slider-3" data-highlight="false" min="1" max="10" value="1" step="1" >
+                  
                 </div>
               
             </div><!-- /content -->
@@ -356,13 +374,26 @@
     <script type="text/javascript" charset="utf-8">
       
         
-        var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
+        //var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
+        var df = new dbFunctions('autoB', '1.0', 'Autobetes', 1000000);
         var restClient = new top.molgenis.RestClient();
+        //workaround to enable setting the value of the slider programmatically 
         $('#editScreen').page();
         $('#editScreenActivity').page();
         $('#start2').page();
         $('#newEvent').page();
-       
+       //workaround for the input field at the sliders, this ensures that input ar only integers with or without
+       //digits
+        jQuery('.numbersOnly').keyup(function () { 
+            this.value = this.value.replace(/[^0-9\.]/g,'1');
+        });
+        //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
+        $(document).on('blur', 'input, textarea', function() {
+            setTimeout(function() {
+                window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+            }, 0);
+        });
+        
         var token;
         
         $(function() {
@@ -405,207 +436,10 @@
                         }
                 
             });
-                   }
-    
-		/*
-		*
-		*/
-        function getEvents(eventType) {
-
-            if (eventType !== null && eventType !== undefined) {
-                
-                db.listEventsOfEventType(eventType.toLowerCase());
-                
-            }
-            else{
-                db.listAllEvents();
-            }
-          //hide the green button on top of the list
-        	if($('#presentBoolean').text() === 'hide'){
-        		$('#recentlyAddedEvent').hide();
-        	}
-            
-        }
-
-        function selectTabMenu() {
-            
-            var selectedTabIndex = $(document).data('selectedTabIndex');
-            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-            var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-            $('[name=startEventTypeSelected]').removeClass('ui-btn-active');
-            $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-            //console.log('in selectTabMenu, eventType: ' + eventType);
-            
-            getEvents(eventType);
-          
-        }
-    
-    function selectHistoryTabMenu() {
-        
-        var selectedTabIndex = $(document).data('selectedTabIndex2');
-        var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-        var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-        $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
-        $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-        //console.log('index: ' + index + ', eventType: ' + eventType);
-        db.listHistoryEvents(eventType);
-    }
+       }
 
 
-        $('[name=startEventTypeSelected]').click(function() {
-            
-            var eventType = $(this).html() === 'All' ? null : $(this).html();
-            var index = 0;
-            if (eventType === 'Food')
-                index = 1;
-            else if (eventType === 'Activity')
-                index = 2;
-            $(document).data('selectedTabIndex', {
-                'index': index,
-                'eventType': eventType
-            });
-            
-            getEvents(eventType);
-        });
         
-        $('[name=historyEventTypeSelected]').click(function() {
-             var eventType = $(this).html() === 'All' ? null : $(this).html();
-             var index = 0;
-            if (eventType === 'Food')
-                  index = 1;
-              else if (eventType === 'Activity')
-                   index = 2;
-                $(document).data('selectedTabIndex2', {
-              'index': index,
-               'eventType': eventType
-            });
-                                                   
-             db.listHistoryEvents($(this).html());
-            
-        });
-
-        $(document).on('pageshow', '#start', function() {
-        	//set tab index on the "All" tab when the page will be showed
-        	$(document).data('selectedTabIndex', {
-                'index': 0,
-                'eventType': null
-            });
-        	
-        	
-            selectTabMenu();
-        });
-      
-
-        
-        $(document).on('pageshow', '#home', function() {
-                       
-                db.listCurrentEvents();
-        });
-        
-        $(document).on('pageshow', '#history', function() {
-            
-            
-            selectHistoryTabMenu();
-            //db.listCurrentEvents();
-         });
-        
-        $(document).on('pagehide', '#newEvent', function(){
-        	//empty eventname field
-            $('#newEventName').val('');
-        });
-        $(document).on('pagehide', '#start', function(){
-        	//ensure the button with the new event(in green) will be hidden
-        	$('#recentlyAddedEvent').hide();
-        	//get out of edit mode
-        	$('#editModeButton').val('off');
-    		$('#editModeButton').attr("style","");
-    		$('.eventButtons').attr("style","");
-    		
-        });
-        
-        
-               
-        
-
-        $('#addOrEditEvent').click(function() {
-            //alert('start adding');
-            var eventName = $('#newEventName').val();
-            var eventType = $('[name="radio-choice-h-2"]:checked').val().toLowerCase();
-            if($('#addOrEditEvent').text() === 'Add'){
-            	//add event
-            	db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
-            }
-            else{
-            	//edit event 
-            	var eventKey = $('#eventKey').text();
-            	db.editEvent(eventKey, eventName, eventType);
-            }
-           
-        });
-        $('#historyButton').click(function() {
-                $(document).removeData('selectedTabIndex2');
-                selectHistoryTabMenu();
-                $('.event-list2').html('');//empty list
-            
-         });
-        
-        $('#editModeButton').click(function(){
-        	
-        	if($('#editModeButton').val() ==="on"){
-        		//editmode was on, now need to be turned off
-        		$('#editModeButton').val('off');
-        		$('#editModeButton').attr("style","");
-        		$('.eventButtons').attr("style","");
-        		
-        		//change buttontext to Add on newEvent screen
-        		$('#addOrEditEvent').text('Add');
-        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-        	}
-        	else{
-        		//editmode was off, now need to be turned on
-        		$('#editModeButton').val('on');
-        		$('#editModeButton').attr("style","background: #8df3e6 !important");
-        		$('.eventButtons').attr("style","background: #8df3e6 !important");
-        		
-        		//change buttontext to Edit on newEvent screen
-        		$('#addOrEditEvent').text('Save');
-        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline');
-
-        		
-        	}
-        	
-        	
-        });
-        
-        $('#newEventButton').click(function(){
-        	$('#addOrEditEvent').text('Add');
-        	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-			$('#headerName').text('New Event');
-			
-			/*
-        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
-        	that was active in 'Event view' (blue bars in top of screen)
-        	*/
-        	var selectedTabIndex = $(document).data('selectedTabIndex');
-            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-           
-            if(index === 0 || index === 1){
-            	
-            	$("#radio-choice-h-2a").prop("checked", true);
-            	$("#radio-choice-h-2b").prop("checked",false);
-                $("input[type='radio']").checkboxradio("refresh");
-            }
-            else{
-            	
-        		$("#radio-choice-h-2b").prop("checked", true);
-        		$("#radio-choice-h-2a").prop("checked", false);
-            	$("input[type='radio']").checkboxradio("refresh");
-        	}
-        })
-        $('#recentAddedEventButton').click(function(){
-					
-			db.setRightScreen(this);
-		});
         
         
         

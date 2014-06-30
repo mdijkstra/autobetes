@@ -13,8 +13,48 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.editEvent = editEvent;
 	this.listHistoryEvents = listHistoryEvents;
 	this.listCurrentEvents = listCurrentEvents;
+	this.addFoodEventInstance = addFoodEventInstance;
+	this.addActivityEventInstance = addActivityEventInstance;
 	this.setRightScreen = setRightScreen;
 	this.sendDbData = sendDbData;
+	
+	//add all the sql queries
+	//create statements
+	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, sID INTEGER, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER)';
+	var CREATE_EVENTINSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id INTEGER NOT NULL AUTO INCREMENT, DType TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, event INTEGER NOT NULL, PRIMARY KEY (`id`), CONSTRAINT FK_EventInstance_Event FOREIGN KEY (Event) REFERENCES Event (id))';
+	
+	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
+	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
+	
+	
+	//update statements
+	var SET_BEEN_SENT_EVENT = 'UPDATE Event SET beenSent = 1, sID =? WHERE id = ?';
+	var SET_BEEN_SENT_FOOD = 'UPDATE FoodEventInstance SET beenSent = 1, sID=? WHERE id = ?';
+	var SET_BEEN_SENT_ACTIVITY = 'UPDATE ActivityEventInstance SET beenSent = 1, sID=? WHERE id = ?';
+	var UPDATE_ACTIVITY = 'UPDATE ActivityEventInstance SET event=?, intensity= ?, beginTime= ?, endTime=?, beenSent = 0 WHERE id = ?';
+	var UPDATE_FOOD = 'UPDATE FoodEventInstance SET event=?, amount= ?, beginTime= ?, beenSent = 0 WHERE id = ?';
+	var DELETE_ACTIVITY = 'UPDATE ActivityEventInstance SET deleted = 1, beenSent = 0 WHERE id = ?';
+	var DELETE_FOOD = 'UPDATE FoodEventInstance SET deleted = 1, beenSent = 0 WHERE id = ?';
+	
+	//select statements
+	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT * FROM FoodEventInstance where deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT * FROM ActivityEventInstance where endTime IS NOT NULL and deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_ALL_EVENTS = 'SELECT * FROM Event ORDER BY lower(name) ASC;'
+	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? ORDER BY lower(name) ASC;';
+	var SELECT_UNSENT_EVENTS = 'SELECT * FROM Event where beenSent = 0;';
+	var SELECT_UNSENT_FOOD_INSTANCES =  'SELECT * FROM FoodEventInstance f, EVENT e WHERE f.eventID = e.id AND f.beenSent = 0 AND e.sID IS NOT NULL;';
+	var SELECT_UNSENT_ACTIVITY_INSTANCES = 'SELECT * FROM ActivityEventInstance a, EVENT e WHERE a.eventID = e.id AND beenSent = 0 AND endTime IS NOT NULL AND e.href IS NOT NULL;';
+	var SELECT_PARTICULAR_EVENT = 'SELECT * FROM Event where name = ?;';
+	
+	//insert statements
+	var ADD_FOOD = 'INSERT INTO FoodEventInstance(eventID, event, amount, beginTime) VALUES (?,?,?,?)';
+	var ADD_ACTIVITY = 'INSERT INTO ActivityEventInstance(eventID, event, intensity, beginTime) VALUES (?,?,?,?)';
+	var ADD_EVENT = 'INSERT INTO Event(name, eventType) VALUES (?,?)';
+	
+	
+	//add SQL queries
+	var LIST_CURRENT_EVENTS_QUERY = 'SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;';
 	
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
@@ -43,13 +83,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		*/
 
 		//execute queries for creation of the table
-		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0)', [], nullHandler, errorHandler);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, sID INTEGER, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER)', [], nullHandler, errorHandler);
 
-		tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))', [], nullHandler, errorHandler);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))', [], nullHandler, errorHandler);
 
-		tx.executeSql('CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, FOREIGN KEY(event) REFERENCES Event(name))', [], nullHandler, errorHandler);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))', [], nullHandler, errorHandler);
 
 	}, errorHandler, successCallBack);
+
 
 	/*
 	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
@@ -60,7 +101,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//empty list
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', []
+			transaction.executeSql(LIST_CURRENT_EVENTS_QUERY, []
 			, showCurrentEvents, errorHandler);
 		}, errorHandler, nullHandler);
 	}
@@ -73,7 +114,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 */
 	function fillResultsArray(transaction, result) {
 		
-
 		if (result !== null && result.rows !== null) {
 
 			for (var i = 0; i < result.rows.length; i++) {
@@ -139,7 +179,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			}, errorHandler, nullHandler);
 			//array is filled with food event instances
 			//now fill the array with activity event instances
-
 			db.transaction(function(transaction) {
 				transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NOT NULL and deleted = 0 ORDER BY beginTime DESC;', [], fillResultsArray2, errorHandler);
 			}, errorHandler, nullHandler);
@@ -180,12 +219,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}, errorHandler, nullHandler);
 		
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM FoodEventInstance where beenSent = 0;', [], sendFoodEventInstance, errorHandler);
+			transaction.executeSql('SELECT * FROM FoodEventInstance f, EVENT e WHERE f.eventID = e.id AND f.beenSent = 0 AND e.sID IS NOT NULL;', [], sendFoodEventInstance, errorHandler);
 		}, errorHandler, nullHandler);
 		
+		/*
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where beenSent = 0 and endTime IS NOT NULL;', [], sendActivityEventInstance, errorHandler);
+			transaction.executeSql('SELECT * FROM ActivityEventInstance a, EVENT e WHERE a.eventID = e.id AND beenSent = 0 AND endTime IS NOT NULL AND e.href IS NOT NULL;', [], sendActivityEventInstance, errorHandler);
 		}, errorHandler, nullHandler);
+		*/
 	}
 	/*
 	 * This method edits a certain event, given the eventKey(primary key), the new eventName
@@ -359,7 +400,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		else{
 			//edit mode is off. open start2 screen
 			window.location.href = '#start2';
-			fillAddEventScreen(context);
+			//set reference id of the event
+			var eventKey = $(context).find('#eventKey').text();
+			
+			fillAddEventScreen(context, eventKey);
 		}
 	}
 	
@@ -399,7 +443,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		
 		$(function() {
 			$('.endEvent').click(function() {
-
+				
 				var bd = new parseButtonData(this);
 				//button data object
 
@@ -474,6 +518,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//add functionality to end activity button
 		//if button be clicked, data will be extracted, editScreenActivity will be opened
 		//and the data will be inserted
+		
 		$(function() {
 			$('.editEvent').click(function() {
 				
@@ -515,12 +560,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		
 		$(function() {
 			$('.deleteEvent').click(function() {
+				//before event be deleted(inactivated) a confirm box pops up
+				//to ensure the user 
 				var eventName = $(this).find('#eventName').text();
 				var eventID = parseInt($(this).find('#eventID').text());
 				var eventType = $(this).find('#eventType').text();
 				
 				$('#dialogText').html('Are you sure you want to delete '+ eventName+'?');
-				
 				
 					$('#dialogConfirmButton').click(function() {
 						var selectedTabIndex = $(document).data('selectedTabIndex2');
@@ -536,62 +582,35 @@ function dbHandler(shortName, version, displayName, maxSize) {
 						}
 					});
 				
-				/*
-				if (confirm("Are you sure you want to delete this event?") === true) {
-					var selectedTabIndex = $(document).data('selectedTabIndex2');
-					var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-					//type of tab selected all, food, or activity
-
-					var eventID = parseInt($(this).find('#eventID').text());
-
-					if ($(this).find('#eventType').text() === 'Activity') {
-						deleteActivity(eventID);
-						if (endedActivity === 'false') {
-							listCurrentEvents();
-
-						} else {
-
-							listHistoryEvents(selectedTab);
-						}
-					} else {
-
-						deleteFoodEvent(eventID);
-
-						listHistoryEvents(selectedTab);
-					}
-
-				}
-				*/
 
 			});
 		});
 
 	}
 
-	function addFoodEventInstance(event, amount, beginTime) {
+	function addFoodEventInstance(event, amount, beginTime, eventKey) {
 		//could not manage to keep the db connection global, so connection need to
 		//be openned for every call
 		var db = openDatabase(shortName, version, displayName, maxSize);
 
 		db.transaction(function(transaction) {
-			transaction.executeSql('INSERT INTO FoodEventInstance(event, amount, beginTime) VALUES (?,?,?)', [event, amount, beginTime], nullHandler, errorHandler);
+			transaction.executeSql('INSERT INTO FoodEventInstance(eventID, event, amount, beginTime) VALUES (?,?,?,?)', [eventKey, event, amount, beginTime], nullHandler, errorHandler);
 		});
-		//alert('Event added');
 		sendDbData();
 	}
 
-	function addActivityEventInstance(event, intensity, beginTime) {
+	function addActivityEventInstance(event, intensity, beginTime, eventKey) {
 		//could not manage to keep the db connection global, so connection need to
 		//be openned for every call
 		var db = openDatabase(shortName, version, displayName, maxSize);
 
 		db.transaction(function(transaction) {
-			transaction.executeSql('INSERT INTO ActivityEventInstance(event, intensity, beginTime) VALUES (?,?,?)', [event, intensity, beginTime], nullHandler, errorHandler);
+			transaction.executeSql('INSERT INTO ActivityEventInstance(eventID, event, intensity, beginTime) VALUES (?,?,?,?)', [eventKey, event, intensity, beginTime], nullHandler, errorHandler);
 		});
 		sendDbData();
 
 	}
-
+	
 	function addEvent(eventName, eventType) {
 		//i could not manage to keep the db connection global, so connection need to
 		//be openned every call
@@ -603,15 +622,15 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				}
 				else{
 					db.transaction(function(transaction) {
-						transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], nullHandler, errorHandler);
+						transaction.executeSql('INSERT INTO Event(name, eventType) VALUES (?,?)', [eventName, eventType], function(){
+							sendDbData();
+						}, errorHandler);
 					});
 					//new added event need to be privileged
 					$('#presentBoolean').text('show');
 					$('#recentlyAddedEvent').show();
 					$('#eventNameToBePrivileged').text(eventName);
 					
-					
-					sendDbData();
 				}
 			}, errorHandler);
 		}, errorHandler, nullHandler);
@@ -632,7 +651,18 @@ function dbHandler(shortName, version, displayName, maxSize) {
 						'eventType': row.eventType
 				};
 
-				restClient.add('http://localhost:8080/api/v1/event', eventObject, callbackSuccess, callbackError);
+				restClient.add('http://localhost:8080/api/v1/event', eventObject,	function(data, textStatus, response){
+			    	var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
+					if(textStatus === 'success'){
+						var sID = parseInt(location.substr(location.lastIndexOf('/')+1));
+						console.log("sID: " + sID);
+			        	db.transaction(function(transaction) {
+							transaction.executeSql('UPDATE Event SET beenSent = 1, sID =? WHERE id = ?', [sID, row.id], nullHandler, errorHandler);
+						});
+						
+					}
+				}, callbackError);
+			
 			}
 		}
 	}
@@ -643,14 +673,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		console.log(error);
 	}
 	
-	function callbackSuccess(data, textStatus, request){
-		console.log('went ok');
+	function callbackSuccess(data, textStatus, response){
+    	var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
 		if(textStatus === 'success'){
 			//row successfully sent, now row has to be updated with beenSent = 1
-
-			db.transaction(function(transaction) {
-				transaction.executeSql('UPDATE Event SET beenSent = 1 WHERE name = ?', [row.id], nullHandler, errorHandler);
+			console.log("update event:"+ row);
+			console.log("href is:"+ location);
+        	db.transaction(function(transaction) {
+				transaction.executeSql('UPDATE Event SET beenSent = 1, sID =? WHERE id = ?', [location, row.id], nullHandler, errorHandler);
 			});
+			
 		}
 	}
 
@@ -660,6 +692,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			for (var i = 0; i < result.rows.length; i++) {
 
 				var row = result.rows.item(i);
+				console.log("the row object:"+ row.href)
+				
 				var eventObject = {
 						'event' : row.event,
 						'owner': '1',
@@ -668,14 +702,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 				};
 
-				restClient.add('http://localhost:8080/api/v1/foodEventInstanceFull', eventObject, function(data, textStatus, request){
+				restClient.add('http://localhost:8080/api/v1/foodEventInstanceFull', eventObject, function(data, textStatus, response){
 					if(textStatus === 'success'){
-						//row successfully sen, now row has to be updated with beenSent = 1
-
+						//row successfully sent, now row has to be updated with beenSent = 1
+						var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
 						var db = openDatabase(shortName, version, displayName, maxSize);
+						
 						db.transaction(function(transaction) {
-							transaction.executeSql('UPDATE FoodEventInstance SET beenSent = 1 WHERE id = ?', [row.id], nullHandler, errorHandler);
+							transaction.executeSql('UPDATE FoodEventInstance SET beenSent = 1, sID=? WHERE id = ?', [location, row.id], nullHandler, errorHandler);
 						});
+						
 					}
 				});
 			}
@@ -699,11 +735,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 				restClient.add('http://localhost:8080/api/v1/activityEventInstanceFull', eventObject, function(data, textStatus, request){
 					if(textStatus === 'success'){
-						//row successfully sen, now row has to be updated with beenSent = 1
-
+						//row successfully sent, now row has to be updated with beenSent = 1
+						var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
 						var db = openDatabase(shortName, version, displayName, maxSize);
 						db.transaction(function(transaction) {
-							transaction.executeSql('UPDATE ActivityEventInstance SET beenSent = 1 WHERE id = ?', [row.id], nullHandler, errorHandler);
+							transaction.executeSql('UPDATE ActivityEventInstance SET beenSent = 1, sID=? WHERE id = ?', [location, row.id], nullHandler, errorHandler);
 						});
 					}
 				});
@@ -711,41 +747,46 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			}
 		}
 	}
-	
-
-	function setHeader(xhr) {
-
-		xhr.setRequestHeader('x-molgenis-token', token);
-
-	}
 
 	// this is called when an error happens in a transaction
 	function errorHandler(transaction, error) {
 		alert('Error: ' + error.message + ' code: ' + error.code);
 
 	}
-
-	// this is called when a successful transaction happens
-	function successCallBack() {
+	function successCallBack(transaction, results){
+		
 	}
 
 	function nullHandler() {
 	}
-
-	function fillAddEventScreen(context){
-		//window.location.href = "#start2";
+	
+	/*
+	 * This method gets called when the user wants to start an event intstance. It retrieves the context,
+	 * which is the context of clicked button, and the eventKey which is the primary
+	 * key to the event.
+	 */
+	function fillAddEventScreen(context, eventKey){
+		//set the eventID which is the primary key of the event
+		$('#eventID').text(eventKey);
+		//set event name
+		$('#startEventName').html($(context).find('#name').text());
+		//get current time
 		var curTime = new Date();
 		var month = curTime.getMonth() + 1;
 		var day = curTime.getDate();
+		//make date string for the jquery datepicker plugin, to select
+		//the current time.
 		if (month < 10) {
+			//ensure month consist of 2 digits(necessary in jquery plugin
 			month = "0" + month;
 		}
 		if (day < 10) {
-			day = "0" + day;
+			day = "0" + day;//same as for month
 		}
 		var dateStringForMyDate = curTime.getFullYear() + "-" + month + '-' + day;
-
+		//set the current time
 		$('#mydate').val(dateStringForMyDate);
+		//make time string in the same fashion as the date string
 		var currentMinutes = curTime.getMinutes();
 		if (parseInt(currentMinutes) < 10) {
 			currentMinutes = "0" + currentMinutes;
@@ -755,12 +796,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			currentHours = "0" + currentHours;
 		}
 		var timeStringForMyTime = currentHours + ":" + currentMinutes;
-
 		$('#mytime').val(timeStringForMyTime);
-
-		var eventType = $(context).val();
-		$('#startEventName').html($(context).find('#name').text());
 		
+		//add event screen varies by event type
+		var eventType = $(context).val();
+		$('#eventType2').text(eventType);
 		if (eventType === 'food') {
 			$('#quantity').html('Amount');
 			$('#intensityToText').hide();
@@ -771,7 +811,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			
 		} else {
 			$('#quantity').html('Intensity');
-			
 			$('#slider-2').attr('min', '1');
 			$('#slider-2').attr('step', '1');
 			$('#slider-2').val('1').slider('refresh');
@@ -782,55 +821,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				setIntensityText('#intensityToText', parseInt($('#slider-2').val()));
 			});
 			$('#intensityToText').show();
-			/*
-			 $('#slider-2').val().change(function(){
-			 alert('change');
-			 //$('#quantity').html('Intensity'+ $('#slider-2').value());
-			 });*/
-		}
-		if ($('#startButton')) {
-			$('#startButton').remove();
-		}
-		var startEventButton = $('<A href="#home" id="startButton" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Start" + '</A>');
-
-		$('#start2').append(startEventButton);
-		startEventButton.click(function() {
-
-			var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-			var unixTime = Date.parse(timeAndDate).getTime();
-
-			if (eventType === 'food') {
-				addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-				listCurrentEvents();
-				//refresh list of current events
-			} else {
-				addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime);
-				listCurrentEvents();
-				//refresh list of current events
-			}
-			//set text on home screen, regarding which event is added
 			
-			var addedText = "Added "+$('#startEventName').html();
+		}
+		
 
-			if(addedText === $('#addedText').html()){
-				//alter the added text in order to apply only the last intverval function
-				addedText = addedText+' ';
-				$('#addedText').html(addedText);
-				
-			}
-			else{
-				$('#addedText').html(addedText);
-			}
-			window.setInterval(function(){
-				if($('#addedText').html() === addedText){
-					//the added text has been unaltered on the screen for the intervaltime 
-					$('#addedText').html(' ')
-					}
-				}, 4000);
-				
-			return;
-
-		});
 	}
 
 }
@@ -901,7 +895,6 @@ function insertDataInEditScreen(bd) {
 	//insert button data into editscreenActivity
 	$('#startEventName2').html(bd.eventName);
 	$('#mydate2').val(bd.dateStringForMyDate);
-
 	$('#beginTime').val(bd.beginTime);
 	
 
@@ -911,7 +904,6 @@ function insertDataInEditScreen(bd) {
 		$('#endTime').val(bd.endTime);
 		$('#quantity2').text('Intensity');
 		$('#intensityToText2').show();
-		
 		$('#slider-3').attr('step', '1');
 		$('#slider-3').attr('min', '1');
 		$('#slider-3').val(bd.intensity).slider('refresh');
@@ -927,7 +919,6 @@ function insertDataInEditScreen(bd) {
 		$('#slider-3').attr('step', '0.25');
 		$('#slider-3').attr('min', '0.25');
 		$('#slider-3').val(bd.intensity).slider('refresh');
-		
 		$('#intensityToText2').hide();
 		$('#endTimeField').hide();
 		$('#quantity2').text('Amount');
@@ -935,7 +926,9 @@ function insertDataInEditScreen(bd) {
 	}
 
 }
-
+/*
+ * Sets the right color according to the given value
+ */
 function setIntensityText(selector, value) {
 	switch(value) {
 		case 1:

@@ -18,6 +18,44 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.setRightScreen = setRightScreen;
 	this.sendDbData = sendDbData;
 	
+	//add all the sql queries
+	//create statements
+	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, sID INTEGER, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER)';
+	var CREATE_EVENTINSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id INTEGER NOT NULL AUTO INCREMENT, DType TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, event INTEGER NOT NULL, PRIMARY KEY (`id`), CONSTRAINT FK_EventInstance_Event FOREIGN KEY (Event) REFERENCES Event (id))';
+	
+	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
+	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
+	
+	
+	//update statements
+	var SET_BEEN_SENT_EVENT = 'UPDATE Event SET beenSent = 1, sID =? WHERE id = ?';
+	var SET_BEEN_SENT_FOOD = 'UPDATE FoodEventInstance SET beenSent = 1, sID=? WHERE id = ?';
+	var SET_BEEN_SENT_ACTIVITY = 'UPDATE ActivityEventInstance SET beenSent = 1, sID=? WHERE id = ?';
+	var UPDATE_ACTIVITY = 'UPDATE ActivityEventInstance SET event=?, intensity= ?, beginTime= ?, endTime=?, beenSent = 0 WHERE id = ?';
+	var UPDATE_FOOD = 'UPDATE FoodEventInstance SET event=?, amount= ?, beginTime= ?, beenSent = 0 WHERE id = ?';
+	var DELETE_ACTIVITY = 'UPDATE ActivityEventInstance SET deleted = 1, beenSent = 0 WHERE id = ?';
+	var DELETE_FOOD = 'UPDATE FoodEventInstance SET deleted = 1, beenSent = 0 WHERE id = ?';
+	
+	//select statements
+	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT * FROM FoodEventInstance where deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT * FROM ActivityEventInstance where endTime IS NOT NULL and deleted = 0 ORDER BY beginTime DESC;';
+	var SELECT_ALL_EVENTS = 'SELECT * FROM Event ORDER BY lower(name) ASC;'
+	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? ORDER BY lower(name) ASC;';
+	var SELECT_UNSENT_EVENTS = 'SELECT * FROM Event where beenSent = 0;';
+	var SELECT_UNSENT_FOOD_INSTANCES =  'SELECT * FROM FoodEventInstance f, EVENT e WHERE f.eventID = e.id AND f.beenSent = 0 AND e.sID IS NOT NULL;';
+	var SELECT_UNSENT_ACTIVITY_INSTANCES = 'SELECT * FROM ActivityEventInstance a, EVENT e WHERE a.eventID = e.id AND beenSent = 0 AND endTime IS NOT NULL AND e.href IS NOT NULL;';
+	var SELECT_PARTICULAR_EVENT = 'SELECT * FROM Event where name = ?;';
+	
+	//insert statements
+	var ADD_FOOD = 'INSERT INTO FoodEventInstance(eventID, event, amount, beginTime) VALUES (?,?,?,?)';
+	var ADD_ACTIVITY = 'INSERT INTO ActivityEventInstance(eventID, event, intensity, beginTime) VALUES (?,?,?,?)';
+	var ADD_EVENT = 'INSERT INTO Event(name, eventType) VALUES (?,?)';
+	
+	
+	//add SQL queries
+	var LIST_CURRENT_EVENTS_QUERY = 'SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;';
+	
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
 		// indicating the device will not be albe to run this application
@@ -53,6 +91,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}, errorHandler, successCallBack);
 
+
 	/*
 	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
 	 * showCurrentEvents to insert the info in the DOM
@@ -62,7 +101,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//empty list
 		var db = openDatabase(shortName, version, displayName, maxSize);
 		db.transaction(function(transaction) {
-			transaction.executeSql('SELECT * FROM ActivityEventInstance where endTime IS NULL and deleted = 0 ORDER BY beginTime DESC;', []
+			transaction.executeSql(LIST_CURRENT_EVENTS_QUERY, []
 			, showCurrentEvents, errorHandler);
 		}, errorHandler, nullHandler);
 	}
@@ -75,7 +114,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 */
 	function fillResultsArray(transaction, result) {
 		
-
 		if (result !== null && result.rows !== null) {
 
 			for (var i = 0; i < result.rows.length; i++) {
