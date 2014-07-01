@@ -105,6 +105,8 @@
         <div data-role="page" id="start2">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+                <p id="eventID" style="display: none"></p>
+                <p id="eventType2" style="display: none"></p>
                 <H1>Add Event</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
@@ -129,6 +131,7 @@
                     <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
                     <p><span id="intensityToText" style="display: none, color: blue">text</span></p>
                 </div>
+                <A href="#home" id="startEventInstanceButton" type CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
             </div><!-- /content -->
             
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
@@ -405,11 +408,9 @@
                         }
                 
             });
-                   }
+       }
     
-		/*
-		*
-		*/
+		
         function getEvents(eventType) {
 
             if (eventType !== null && eventType !== undefined) {
@@ -447,7 +448,6 @@
         var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
         $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
         $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-        //console.log('index: ' + index + ', eventType: ' + eventType);
         db.listHistoryEvents(eventType);
     }
 
@@ -483,48 +483,6 @@
              db.listHistoryEvents($(this).html());
             
         });
-
-        $(document).on('pageshow', '#start', function() {
-        	//set tab index on the "All" tab when the page will be showed
-        	$(document).data('selectedTabIndex', {
-                'index': 0,
-                'eventType': null
-            });
-        	
-        	
-            selectTabMenu();
-        });
-      
-
-        
-        $(document).on('pageshow', '#home', function() {
-                       
-                db.listCurrentEvents();
-        });
-        
-        $(document).on('pageshow', '#history', function() {
-            
-            
-            selectHistoryTabMenu();
-            //db.listCurrentEvents();
-         });
-        
-        $(document).on('pagehide', '#newEvent', function(){
-        	//empty eventname field
-            $('#newEventName').val('');
-        });
-        $(document).on('pagehide', '#start', function(){
-        	//ensure the button with the new event(in green) will be hidden
-        	$('#recentlyAddedEvent').hide();
-        	//get out of edit mode
-        	$('#editModeButton').val('off');
-    		$('#editModeButton').attr("style","");
-    		$('.eventButtons').attr("style","");
-    		
-        });
-        
-        
-               
         
 
         $('#addOrEditEvent').click(function() {
@@ -577,6 +535,45 @@
         	
         });
         
+        
+		$('#startEventInstanceButton').click(function() {
+			
+			var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
+			var unixTime = Date.parse(timeAndDate).getTime();
+
+			if ($('#eventType2').text() === 'food') {
+				db.addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
+				db.listCurrentEvents();
+				//refresh list of current events
+			} else {
+				db.addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
+				db.listCurrentEvents();
+				//refresh list of current events
+			}
+			//set text on home screen, regarding which event is added
+			
+			var addedText = "Added "+$('#startEventName').html();
+
+			if(addedText === $('#addedText').html()){
+				//alter the added text in order to apply only the last intverval function
+				addedText = addedText+' ';
+				$('#addedText').html(addedText);
+				
+			}
+			else{
+				$('#addedText').html(addedText);
+			}
+			window.setInterval(function(){
+				if($('#addedText').html() === addedText){
+					//the added text has been unaltered on the screen for the intervaltime 
+					$('#addedText').html(' ')
+					}
+				}, 4000);
+				
+			return;
+
+		});
+        
         $('#newEventButton').click(function(){
         	$('#addOrEditEvent').text('Add');
         	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
@@ -606,6 +603,43 @@
 					
 			db.setRightScreen(this);
 		});
+
+        $(document).on('pageshow', '#start', function() {
+        	//set tab index on the "All" tab when the page will be showed
+        	$(document).data('selectedTabIndex', {
+                'index': 0,
+                'eventType': null
+            });
+        	
+        	
+            selectTabMenu();
+        });
+      
+
+        
+        $(document).on('pageshow', '#home', function() {
+                       
+                db.listCurrentEvents();
+        });
+        
+        $(document).on('pageshow', '#history', function() {
+            selectHistoryTabMenu();
+            //db.listCurrentEvents();
+         });
+        
+        $(document).on('pagehide', '#newEvent', function(){
+        	//empty eventname field
+            $('#newEventName').val('');
+        });
+        $(document).on('pagehide', '#start', function(){
+        	//ensure the button with the new event(in green) will be hidden
+        	$('#recentlyAddedEvent').hide();
+        	//get out of edit mode
+        	$('#editModeButton').val('off');
+    		$('#editModeButton').attr("style","");
+    		$('.eventButtons').attr("style","");
+    		
+        });
         
         
         
