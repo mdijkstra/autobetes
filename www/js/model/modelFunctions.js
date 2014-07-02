@@ -2,7 +2,7 @@
 /*
  * 
  */
-function editEventInstance(id, type) {
+function updateEventInstance(id, type) {
 	//extract time and date from html
 	var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
 	//convert to unix timestamp
@@ -28,7 +28,7 @@ function editEventInstance(id, type) {
 		//add one day in milliseconds
 	}
 	//update event instance in database
-	df.updateEventInstance(type, $('#slider-3').val(),unixBeginTime,unixEndTime, id);
+	df.updateEventInstance(type, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
 	//send db data to server
 	df.sendDbData();
 }
@@ -50,12 +50,12 @@ function parseButtonData(context) {
 	if ($(context).find('#intensityInt').text() === '') {
 		//food event
 		this.intensity = $(context).find('#amount').text();
-		this.type = 'food';
+		this.type = FOOD;
 	} else {
 		//activity event
 		this.intensity = $(context).find('#intensityInt').text();
 		
-		this.type = 'activity';
+		this.type = ACTIVITY;
 	}
 	//modify data to make it compatible for jquery widgets
 	if (parseInt(this.month) < 10) {
@@ -100,50 +100,17 @@ function parseButtonData(context) {
 }
 
 
-/*
- * 
- */
-function editEventInstance(id, type) {
-	//extract time and date from html
-	var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
-	//convert to unix timestamp
-	var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
-	//same with end time
-	var endTimeAndDate = $('#mydate2').val() + " " + $('#endTime').val();
-	
-	var unixEndTime = Date.parse(endTimeAndDate).getTime();
-
-	//correct endtime if necessary(when end date is actually one day later
-	//convert to date objects for comparison
-	var beginDate = new Date(unixBeginTime);
-	var endDate = new Date(unixEndTime);
-	
-	if (beginDate.getHours() > endDate.getHours()) {
-		//end time is before begin time, so we automatically suppose that
-		//end time is next day
-		unixEndTime += 86400000;
-		//add one day in milliseconds
-	} else if (beginDate.getHours() === endDate.getHours() && beginDate.getMinutes() > endDate.getMinutes()) {
-		//same case as the if statement
-		unixEndTime += 86400000;
-		//add one day in milliseconds
-	}
-	//update event instance in database
-	df.updateEventInstance(type, $('#slider-3').val(),unixBeginTime,unixEndTime, id);
-	//send db data to server
-	df.sendDbData();
-}
 
 
-function getEvents(eventType) {
+function showEvents(eventType) {
 	$('#event-list').html('');
     if (eventType !== null && eventType !== undefined) {
         
-        df.listEventsOfEventType(eventType.toLowerCase());
+        df.listEventsOfEventType(eventType);
         
     }
     else{
-        df.listAllEvents();
+        df.showEvents();
     }
   //hide the green button on top of the list
 	if($('#presentBoolean').text() === 'hide'){
@@ -152,7 +119,7 @@ function getEvents(eventType) {
     
 }
 
-function selectTabMenu() {
+function showSelectedEvents() {
     
     var selectedTabIndex = $(document).data('selectedTabIndex');
     var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
@@ -161,7 +128,7 @@ function selectTabMenu() {
     $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
     //console.log('in selectTabMenu, eventType: ' + eventType);
     
-    getEvents(eventType);
+    showEvents(eventType);
   
 }
 
@@ -175,4 +142,27 @@ $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active')
 //empty list
 $('.event-list2').html('');
 df.listHistoryEvents(eventType);
+}
+
+function checkIfUserExists(){
+	
+	checkCallBack = function(transaction,result){
+		
+		if(result.rows.length > 0){
+			//user exists
+			
+			for (var i = 0; i < result.rows.length; i++) {
+
+				var row = result.rows.item(i);
+				
+			}
+		}
+		else{
+			//user does not exist
+			//open dialog
+			window.location.href =  '#registrationDialog';
+			
+		}
+	}
+	df.getUserInfo(checkCallBack);
 }

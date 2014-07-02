@@ -22,7 +22,7 @@
 			var eventType = $(context).find('#eventType').text();
 			//set the fieldset right
 			if(eventType === "food"){
-				console.
+				
             	$("#radio-choice-h-2a").prop("checked", true);
             	$("#radio-choice-h-2b").prop("checked",false);
             	$("input[type='radio']").checkboxradio("refresh");
@@ -36,11 +36,11 @@
 		}
 		else{
 			//edit mode is off. open start2 screen
-			window.location.href = '#start2';
+			window.location.href = '#start-event-instance-page';
 			//set reference id of the event
 			var eventID = $(context).find('#eventID').text();
 			
-			fillAddEventScreen(context, eventID);
+			setStartEventInstanceScreen(context, eventID);
 		}
 	}
 	
@@ -49,7 +49,7 @@
 	 * which is the context of clicked button, and the eventID which is the primary
 	 * key to the event.
 	 */
-	function fillAddEventScreen(context, eventID){
+	function setStartEventInstanceScreen(context, eventID){
 		//set the eventID which is the primary key of the event
 		$('#eventID').text(eventID);
 		//set event name
@@ -85,26 +85,26 @@
 		//add event screen varies by event type
 		var eventType = $(context).find('#eventType').text();
 		$('#eventType2').text(eventType);
-		if (eventType === 'food') {
-			$('#quantitySliderText-2').hide();
-			$('#amountSliderText-2').show();
-			$('#slider-2').attr('min', '0.25');
-			$('#slider-2').attr('step', '0.25');
-			$('#slider-2').val('1').slider('refresh');
+		if (eventType === FOOD) {
+			$('#start-event-instance-activity-quantity-slider-label').hide();
+			$('#start-event-instance-food-quantity-slider-label').show();
+			$('#start-event-instance-quantity-slider').attr('min', '0.25');
+			$('#start-event-instance-quantity-slider').attr('step', '0.25');
+			$('#start-event-instance-quantity-slider').val('1').slider('refresh');
 			
 		} else {
 			
-			$('#amountSliderText-2').hide();
-			$('#quantitySliderText-2').show();
-			$('#slider-2').attr('min', '1');
-			$('#slider-2').attr('step', '1');
-			$('#slider-2').val('1').slider('refresh');
-			setIntensityTextInScreen('#intensityToText', parseInt($('#slider-2').val()));
+			$('#start-event-instance-food-quantity-slider-label').hide();
+			$('#start-event-instance-activity-quantity-slider-label').show();
+			$('#start-event-instance-quantity-slider').attr('min', '1');
+			$('#start-event-instance-quantity-slider').attr('step', '1');
+			$('#start-event-instance-quantity-slider').val('1').slider('refresh');
+			setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
 			
 			
-			$('#slider-2').change(function() {
+			$('#start-event-instance-quantity-slider').change(function() {
 
-				setIntensityTextInScreen('#intensityToText', parseInt($('#slider-2').val()));
+				setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
 			});
 			
 			
@@ -114,37 +114,37 @@
 	}
 	
 	
-	function insertDataInEditScreen(bd) {
+	function setEditEventInstanceScreen(bd) {
 		//insert button data into editscreenActivity
-		$('#startEventName2').html(bd.eventName);
+		$('#edit-event-instance-name').html(bd.eventName);
 		$('#mydate2').val(bd.dateStringForMyDate);
 		$('#beginTime').val(bd.beginTime);
 		
 
-		if (bd.type === 'activity') {
+		if (bd.type === ACTIVITY) {
 			//activity has an endtime
 			$('#endTimeField').show();
 			$('#endTime').val(bd.endTime);
 			
-			$('#amountSliderText-3').hide();
-			$('#quantitySliderText-3').show();
-			$('#slider-3').attr('step', '1');
-			$('#slider-3').attr('min', '1');
-			$('#slider-3').val(bd.intensity).slider('refresh');
+			$('#edit-event-instance-food-quantity-slider-label').hide();
+			$('#edit-event-instance-activity-quantity-slider-label').show();
+			$('#edit-event-instance-quantity-slider').attr('step', '1');
+			$('#edit-event-instance-quantity-slider').attr('min', '1');
+			$('#edit-event-instance-quantity-slider').val(bd.intensity).slider('refresh');
 			
-			setIntensityTextInScreen('#intensityToText2', parseInt(bd.intensity));
+			setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(bd.intensity));
 
-			$('#slider-3').change(function() {
-				setIntensityTextInScreen('#intensityToText2', parseInt($('#slider-3').val()));
+			$('#edit-event-instance-quantity-slider').change(function() {
+				setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt($('#edit-event-instance-quantity-slider').val()));
 
 			});
 
 		} else {
-			$('#slider-3').attr('step', '0.25');
-			$('#slider-3').attr('min', '0.25');
-			$('#slider-3').val(bd.intensity).slider('refresh');
-			$('#quantitySliderText-3').hide();
-			$('#amountSliderText-3').show();
+			$('#edit-event-instance-quantity-slider').attr('step', '0.25');
+			$('#edit-event-instance-quantity-slider').attr('min', '0.25');
+			$('#edit-event-instance-quantity-slider').val(bd.intensity).slider('refresh');
+			$('#edit-event-instance-activity-quantity-slider-label').hide();
+			$('#edit-event-instance-food-quantity-slider-label').show();
 			$('#endTimeField').hide();
 			
 
@@ -203,7 +203,7 @@
 		$(selector).text(specs.text);
 	}
 	
-	function makeEventButton(row, buttonType) {
+	function makeEventInstanceButton(row, buttonType) {
 		//
 		var date = new Date(row.beginTime);
 		var minutes = parseInt(date.getMinutes());
@@ -238,13 +238,13 @@
 		var type;
 		if (row.intensity) {
 			//this event is an activity
-			type = 'Activity';
+			type = ACTIVITY;
 			var specs = getIntensityText(row.intensity);
 			
 			amountOrIntensityString = '<p class ="topic"><strong>Intensity:<span id="intensityInt" style="display:none">'+row.intensity+'</span> <span id="intensity" style="color:'+specs.color+'">' + specs.text + '</span></strong></p>';
 		} else {
 			//this event is not an activity
-			type = 'Food';
+			type = FOOD;
 			amountOrIntensityString = '<p class ="topic"><strong>Amount: <span id="amount">' + row.amount + '</span></strong></p>';
 		}
 
@@ -252,11 +252,11 @@
 		var html = "";
 		if(buttonType === "ended"){
 			//event has ended so editting will be enabled
-			html += '<a href="#editScreen" class="editEvent ui-btn"><p style="display: none">' + row.id + '</p>';
+			html += '<a href="#edit-event-instance-page" class="editEvent ui-btn"><p style="display: none">' + row.cid + '</p>';
 		}
 		else{
 			//event not ended, so editting is not preferably, button does nothing
-			html += '<a class="editEvent ui-btn"><p style="display: none">' + row.id + '</p>';
+			html += '<a class="editEvent ui-btn"><p style="display: none">' + row.cid + '</p>';
 		}
 		html += '<h3>' + row.name + '</h3>';
 		html += amountOrIntensityString;
@@ -265,12 +265,12 @@
 		html += '</a>';
 		if(buttonType === "ended"){
 			//append delete button
-			html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+			html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.cid + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
 		}
 		else{
 			
 			//append an end button,
-			html += '<a href="#editScreen" class="endEvent ui-btn ui-icon-stop"  title="End"><p id="eventID" style="display: none">' + row.id + '</p><p id="eventType" style="display: none">' + type + '</p>';
+			html += '<a href="#edit-event-instance-page" class="endEvent ui-btn ui-icon-stop"  title="End"><p id="eventID" style="display: none">' + row.cid + '</p><p id="eventType" style="display: none">' + type + '</p>';
 			html += '<h3 style="display: none">' + row.name + '</h3>';
 			html += '<p id="intensityInt" style="display: none">' + row.intensity + '</span>';
 			html += '<p style="display: none"><span id="day">' + date.getDate() + '</span>- <span id="month">' + (date.getMonth() + 1) + '</span>- <span id="year">' + date.getFullYear() + '</span></p>';

@@ -2,9 +2,9 @@ $(document).ready(function() {
 	$('[name=startEventTypeSelected]').click(function() {
 		var eventType = $(this).html() === 'All' ? null : $(this).html();
 		var index = 0;
-		if (eventType === 'Food')
+		if (eventType === FOOD)
 			index = 1;
-		else if (eventType === 'Activity')
+		else if (eventType === ACTIVITY)
 			index = 2;
 		$(document).data('selectedTabIndex', {
 			'index': index,
@@ -17,9 +17,9 @@ $(document).ready(function() {
 	$('[name=historyEventTypeSelected]').click(function() {
 		var eventType = $(this).html() === 'All' ? null : $(this).html();
 		var index = 0;
-		if (eventType === 'Food')
+		if (eventType === FOOD)
 			index = 1;
-		else if (eventType === 'Activity')
+		else if (eventType === ACTIVITY)
 			index = 2;
 		$(document).data('selectedTabIndex2', {
 			'index': index,
@@ -35,7 +35,8 @@ $(document).ready(function() {
 	$('#addOrEditEvent').click(function() {
 		//alert('start adding');
 		var eventName = $('#newEventName').val();
-		var eventType = $('[name="radio-choice-h-2"]:checked').val().toLowerCase();
+		var eventType = $('[name="radio-choice-h-2"]:checked').val();
+		console.log('te typs:'+eventType);
 		if($('#addOrEditEvent').text() === 'Add'){
 			//add event
 
@@ -98,14 +99,14 @@ $(document).ready(function() {
 		var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 		var unixTime = Date.parse(timeAndDate).getTime();
 
-		if ($('#eventType2').text() === 'food') {
+		if ($('#eventType2').text() === FOOD) {
 			
-			df.addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
-			df.listCurrentEvents();
+			df.addFoodEventInstance($('#startEventName').html(), $('#start-event-instance-quantity-slider').val(), unixTime, $('#eventID').text());
+			df.showCurrentActivityEventInstances();
 			//refresh list of current events
 		} else {
-			df.addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
-			df.listCurrentEvents();
+			df.addActivityEventInstance($('#startEventName').html(), $('#start-event-instance-quantity-slider').val(), unixTime, $('#eventID').text());
+			df.showCurrentActivityEventInstances();
 			//refresh list of current events
 		}
 		//set text on home screen, regarding which event is added
@@ -126,7 +127,7 @@ $(document).ready(function() {
 				//the added text has been unaltered on the screen for the intervaltime 
 				$('#addedText').html(' ')
 			}
-		}, 4000);
+		}, TIME_ADDED_TEXT_ON_HOME_SCREEN);
 
 		return;
 
@@ -161,4 +162,16 @@ $(document).ready(function() {
 
 		setRightScreen(this);
 	});
+});
+
+$('#registrationDialogOkButton').click(function(){
+	//get values
+	var email = $('#email').val();
+	var pumpId = $('#pumpId').val();
+	var password = $('#password').val();
+	var confirmPassword = $('#confirmPassword').val();
+	
+	//add tests to values
+	
+	df.addUser(email, pumpId, password);
 });

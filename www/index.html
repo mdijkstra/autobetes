@@ -7,31 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.css" />
         <!-- script src="/js/jquery-1.8.3.min.js"></script-->
-        <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
-        <script src="js/jquery.js"></script>
-        <script src="js/jquery.mobile-1.4.2.js"></script>
-        <script src="js/restclient.js"></script>
-        
-        <script src="js/date.js"></script>
-        
-        <script src="js/controller/dbFunctions.js"></script>
-     
-        <script src="js/model/pageShowFunctions.js"></script>
-        <script src="js/model/pageHideFunctions.js"></script>
-        <script src="js/model/controllerFunctions.js"></script>
-        <script src= "js/model/callbackFunctions.js"></script>
-        <script src="js/model/onClickFunctions.js"></script>
-        
-        <script src= "js/view/viewFunctions.js"></script>
-        
         <link rel="icon" href="img/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/autobetes.css" type="text/css">
-
-
-        <!--link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
-        <script src="/js/jquery-1.8.3.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/jquery.validate.min.js"></script> -->
     </head>
     <body>
 
@@ -112,12 +89,12 @@
 </div><!-- /footer -->
         </div><!-- /page -->
 
-        <div data-role="page" id="start2">
+        <div data-role="page" id="start-event-instance-page">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
                 <p id="eventID" style="display: none"></p>
                 <p id="eventType2" style="display: none"></p>
-                <H1>Add Event</H1>
+                <H1>Start event</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
 
@@ -138,9 +115,9 @@
                 </table>
                 <div class="ui-field-contain">
                 	
-                    <label id="amountSliderText-2" >Amount</label>
-                    <label id="quantitySliderText-2" style="display: none">Intensity: <span id="intensityToText">Light</span></label>
-                    <input class="numbersOnly" type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
+                    <label id="start-event-instance-food-quantity-slider-label" >Amount</label>
+                    <label id="start-event-instance-activity-quantity-slider-label" style="display: none">Intensity: <span id="intensityToText">Light</span></label>
+                    <input class="numbersOnly" type="range" name="start-event-instance-quantity-slider" id="start-event-instance-quantity-slider" data-highlight="true" min="1" max="10" value="1" step="0.25">
                     
                 </div>
                 <A href="#home" id="startEventInstanceButton" CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
@@ -174,7 +151,7 @@
                 </div>
                 <input id="newEventName" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Event name">
                 <a id="addOrEditEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left" data-rel="back">Add</a>
-            	<p id="eventKey" style="display: none"><p>
+            	<p id="cid" style="display: none"><p>
             </div><!-- /content -->
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
@@ -250,7 +227,7 @@
         </div>
         
         
-        <div data-role="page" id="editScreen">
+        <div data-role="page" id="edit-event-instance-page">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
                 <H1>Edit</H1>
@@ -258,7 +235,7 @@
             </div><!-- /header -->
 
             <div role="main" class="ui-content">
-                <H3 id="startEventName2">Begin</H3>
+                <H3 id="edit-event-instance-name">Begin</H3>
                 <!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
                 
                 
@@ -291,10 +268,10 @@
                
                 
                 <div class="ui-field-contain">
-                 <label id="amountSliderText-3" >Amount</label>
-                    <label id="quantitySliderText-3" style="display: none">Intensity: <span id="intensityToText2">Light</span></label>
+                 <label id="edit-event-instance-food-quantity-slider-label" >Amount</label>
+                    <label id="edit-event-instance-activity-quantity-slider-label" style="display: none">Intensity: <span id="intensity-slider-label-intensity-indication">Light</span></label>
              
-                    <input class="numbersOnly" type="range" name="slider-3" id="slider-3" data-highlight="false" min="1" max="10" value="1" step="1" >
+                    <input class="numbersOnly" type="range" name="edit-event-instance-quantity-slider" id="edit-event-instance-quantity-slider" data-highlight="false" min="1" max="10" value="1" step="1" >
                   
                 </div>
               
@@ -336,7 +313,7 @@
                 <H1>Pump settings</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
-
+            
             
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
@@ -371,80 +348,46 @@
     		</a>
     	</div>
     </div>
-    <script type="text/javascript" charset="utf-8">
-      
-        
-        //var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
-        var df = new dbFunctions('autoB', '1.0', 'Autobetes', 1000000);
-        var restClient = new top.molgenis.RestClient();
-        //workaround to enable setting the value of the slider programmatically 
-        $('#editScreen').page();
-        $('#editScreenActivity').page();
-        $('#start2').page();
-        $('#newEvent').page();
-       //workaround for the input field at the sliders, this ensures that input ar only integers with or without
-       //digits
-        jQuery('.numbersOnly').keyup(function () { 
-            this.value = this.value.replace(/[^0-9\.]/g,'1');
-        });
-        //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
-        $(document).on('blur', 'input, textarea', function() {
-            setTimeout(function() {
-                window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-            }, 0);
-        });
-        
-        var token;
-        
-        $(function() {
-          onDeviceReady();
-        })
-        
-        
-        // Wait for PhoneGap to load
-        // 
-        document.addEventListener("deviceready", onDeviceReady, false);
-
-
-
-        // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
-        //
-         function onDeviceReady() {
-             
-            
-            getToken();
-            
-             document.addEventListener("offline", function(e) {
-                 alert("offline");
-             }, false);
-                                       
-             document.addEventListener("online", function(e) {
-            	 db.sendDbData();
-                 alert("online");
-             }, false);
-             
-            
-        }
     
-    function getToken(){
- 
-       restClient.login('admin', 'admin', {
-                        success: function(result){
-                            
-                        token = result.token;
-						
-                        }
-                
-            });
-       }
-
-
+    <div data-role="page" id="registrationDialog" data-position="window">
+    	<div data-role="header">
+    		<h1>Register</h1>
+    	</div>
+    	<div data-role="content">
+    		
+    		<input id="email" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Email">
+    		<input id="pumpId" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Pump id">
+    		<input id="password" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Password">
+    		<input id="confirmPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Confirm password">
+    	
+    		<a id="registrationDialogOkButton" data-role="button" data-rel="back" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+    			<span class="ui-btn-inner ui-btn-corner-all">
+    				<span class="ui-btn-text">Ok</span>
+    			</span>
+    		</a>
+    		
+    	</div>
+    </div>
+    
+    
+    
+         <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.mobile-1.4.2.js"></script>
+        <script src="js/restclient.js"></script>
         
+        <script src="js/date.js"></script>
         
-        
-        
+        <script src="js/controller/dbFunctions.js"></script>
      
-    </script>
+        <script src="js/model/pageFunctions.js"></script>
+        <script src="js/model/modelFunctions.js"></script>
+        <script src= "js/model/callbackFunctions.js"></script>
+        <script src="js/model/onClickFunctions.js"></script>
+        
+        <script src= "js/view/viewFunctions.js"></script>
+        <script src= "js/view/callbackFunctions.js"></script>
+   		<script src="js/index.js"></script>
 
 
 </body>
