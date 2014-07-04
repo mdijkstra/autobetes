@@ -166,3 +166,26 @@ function checkIfUserExists(){
 	}
 	df.getUserInfo(checkCallBack);
 }
+
+function  login(){
+	 
+	var loginCallBack = function(transaction,result){
+		for (var i = 0; i < result.rows.length; i++) {
+			
+			var row = result.rows.item(i);
+			//try to log in with data
+			restClient.login(row.email, row.password, {
+		        success: function(result){
+		            
+		        token = result.token;
+				
+		        }
+
+			}, callBackLoginError);
+		}
+	}
+	
+	
+	df.getUserInfo(loginCallBack);
+	
+}

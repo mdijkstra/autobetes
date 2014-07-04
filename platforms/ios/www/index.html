@@ -1,37 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Autobetes App</title>
+        <title>Autobetes app</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/jquery.mobile-1.4.2.css" />
         <!-- script src="/js/jquery-1.8.3.min.js"></script-->
-        <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
-        <script src="js/jquery.js"></script>
-        <script src="js/jquery.mobile-1.4.2.js"></script>
-        <script src="js/restclient.js"></script>
-        
-        <script src="js/date.js"></script>
-        
-        <script src="js/controller/dbFunctions.js"></script>
-     
-        <script src="js/model/pageShowFunctions.js"></script>
-        <script src="js/model/pageHideFunctions.js"></script>
-        <script src="js/model/controllerFunctions.js"></script>
-        <script src= "js/model/callbackFunctions.js"></script>
-        <script src="js/model/onClickFunctions.js"></script>
-        
-        <script src= "js/view/viewFunctions.js"></script>
-        
         <link rel="icon" href="img/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/autobetes.css" type="text/css">
-
-
-        <!--link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
-        <script src="/js/jquery-1.8.3.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/jquery.validate.min.js"></script> -->
     </head>
     <body>
 
@@ -48,6 +25,7 @@
             </div>
 
             <div role="main" id="mainScreen" class="ui-content">
+            
                 <a id = "homeStartButton" href="#start" class="ui-btn ui-icon-plus ui-btn-icon-left">Start event</a>
                 <a id="historyButton" href="#history" class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
                 <p id="addedText"> <p>
@@ -75,7 +53,7 @@
         <div data-role="page" id="start">
             <div data-role="header" data-position="fixed">
                 <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <h1>Start Event</a></h1>
+                <h1>Start event</a></h1>
                 <div class="ui-btn-right">
                 <a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
                 <a id="newEventButton" href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
@@ -174,7 +152,7 @@
                 </div>
                 <input id="newEventName" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Event name">
                 <a id="addOrEditEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left" data-rel="back">Add</a>
-            	<p id="eventKey" style="display: none"><p>
+            	<p id="cid" style="display: none"><p>
             </div><!-- /content -->
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
@@ -336,7 +314,7 @@
                 <H1>Pump settings</H1>
                 <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
             </div><!-- /header -->
-
+            
             
             <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 	<div data-role="navbar">
@@ -371,82 +349,47 @@
     		</a>
     	</div>
     </div>
-    <script type="text/javascript" charset="utf-8">
-      
-        
-        
-        var df = new dbFunctions('autoB', '1.0', 'Autobetes', 1000000);
-        var restClient = new top.molgenis.RestClient();
-        //workaround to enable setting the value of the slider programmatically 
-        $('#edit-event-instance-page').page();
-        $('#editScreenActivity').page();
-        $('#start-event-instance-page').page();
-        $('#newEvent').page();
-       //workaround for the input field at the sliders, this ensures that input ar only integers with or without
-       //digits
-        jQuery('.numbersOnly').keyup(function () { 
-            this.value = this.value.replace(/[^0-9\.]/g,'1');
-        });
-        //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
-        $(document).on('blur', 'input, textarea', function() {
-            setTimeout(function() {
-                window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-            }, 0);
-        });
-        
-        var token;
-        var SERVER_URL = 'http://localhost:8080';
-        
-        
-        $(function() {
-          onDeviceReady();
-        })
-        
-        
-        // Wait for PhoneGap to load
-        // 
-        document.addEventListener("deviceready", onDeviceReady, false);
-
-
-
-        // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
-        //
-         function onDeviceReady() {
-             
-            
-            getToken();
-            
-             document.addEventListener("offline", function(e) {
-                 alert("offline");
-             }, false);
-                                       
-             document.addEventListener("online", function(e) {
-            	 db.sendDbData();
-                 alert("online");
-             }, false);
-             
-            
-        }
     
-    function getToken(){
- 
-       restClient.login('admin', 'admin', {
-                        success: function(result){
-                            
-                        token = result.token;
-						
-                        }
-                
-            });
-       }
-
-
+    <div data-role="page" id="registrationDialog" data-position="window">
+    	<div data-role="header">
+    		<h1>Register</h1>
+    	</div>
+    	<div data-role="content">
+    		
+    		<input id="email" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Email">
+    		<input id="pumpId" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Pump id">
+    		<input id="password" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Password">
+    		<input id="confirmPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Confirm password">
+    	
+    		<a id="registrationDialogOkButton" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+    			<span class="ui-btn-inner ui-btn-corner-all">
+    				<span class="ui-btn-text">Ok</span>
+    			</span>
+    		</a>
+    		
+    	</div>
+    </div>
+    
+    
+    
+         <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery.mobile-1.4.2.js"></script>
+        <script src="js/model/restclient.js"></script>   
+        <script src="js/date.js"></script>
         
-        
-        
-        
+        <script src="js/model/dbHandler.js"></script>
      
-    </script>
+        <script src="js/controller/pageFunctions.js"></script>
+        <script src="js/controller/controllerFunctions.js"></script>
+        <script src= "js/controller/callbackControllerFunctions.js"></script>
+        <script src="js/controller/onClickFunctions.js"></script>
+        
+        <script src= "js/view/viewFunctions.js"></script>
+        <script src= "js/view/callbackViewFunctions.js"></script>
+   		<script src= "js/handlebars-v1.3.0.js"></script>
+   		<script src="js/index.js"></script>
+   		
 
 
 </body>

@@ -1,4 +1,5 @@
- var df = new dbFunctions('autoB', '1.0', 'Autobetes', 1000000);
+
+var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
         var restClient = new top.molgenis.RestClient();
         //workaround to enable setting the value of the slider programmatically 
         $('#edit-event-instance-page').page();
@@ -22,9 +23,13 @@
         var SERVER_EVENT_URL = '/api/v1/event';
         var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
         var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
+        var UNAUTHORIZED = "Unauthorized";
         var FOOD = 'Food';
-        var ACTIVITY = 'Activity'
+        var ACTIVITY = 'Activity';
+        var ALL = 'All';
+        var EVENT_ALREADY_EXISTS = 'Event allready exists';
         var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
+        
         onDeviceReady();
      
         // Wait for PhoneGap to load
@@ -39,6 +44,8 @@
         
          function onDeviceReady() {
              
+        	 
+        	
             checkIfUserExists();
             getToken();
             
@@ -51,17 +58,26 @@
                  alert("online");
              }, false);
              
+             document.addEventListener("pause", function(e){
+            	 restClient.logout()
+             }, false);
+             
+             document.addEventListener("resume", function(e){
+            	 
+            	 restClient.login('admin', 'admin', {
+                     success: function(result){
+                        
+                     token = result.token;
+						
+                     }
+             
+         });
+             }, false);
             
         }
     
     function getToken(){
- 
-       restClient.login('admin', 'admin', {
-                        success: function(result){
-                            
-                        token = result.token;
-						
-                        }
-                
-            });
+    	
+       login();
+            
        }

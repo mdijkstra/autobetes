@@ -1,49 +1,87 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
-};
+var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
+        var restClient = new top.molgenis.RestClient();
+        //workaround to enable setting the value of the slider programmatically 
+        $('#edit-event-instance-page').page();
+        $('#editScreenActivity').page();
+        $('#start-event-instance-page').page();
+        $('#newEvent').page();
+       //workaround for the input field at the sliders, this ensures that input ar only integers with or without
+       //digits
+        jQuery('.numbersOnly').keyup(function () { 
+            this.value = this.value.replace(/[^0-9\.]/g,'1');
+        });
+        //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
+        $(document).on('blur', 'input, textarea', function() {
+            setTimeout(function() {
+                window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+            }, 0);
+        });
+        
+        var token;
+        var SERVER_URL = 'http://localhost:8080';
+        var SERVER_EVENT_URL = '/api/v1/event';
+        var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
+        var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
+        var FOOD = 'Food';
+        var ACTIVITY = 'Activity';
+        var ALL = 'All';
+        var EVENT_ALREADY_EXISTS = 'Event allready exists';
+        var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
+        
+        //onDeviceReady();
+     
+        // Wait for PhoneGap to load
+        // 
+        document.addEventListener("deviceready", onDeviceReady, false);
+        //window.location.data-rel ="dialog";
+        
+        //'<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'
+        // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+        //
+        
+        
+         function onDeviceReady() {
+             
+            checkIfUserExists();
+            getToken();
+            
+             document.addEventListener("offline", function(e) {
+                 alert("offline");
+             }, false);
+                                       
+             document.addEventListener("online", function(e) {
+            	 db.sendDbData();
+                 alert("online");
+             }, false);
+             
+             document.addEventListener("pause", function(e){
+            	 restClient.logout()
+             }, false);
+             
+             document.addEventListener("resume", function(e){
+            	 alert("reserumes");
+            	 restClient.login('admin', 'admin', {
+                     success: function(result){
+                        
+                     token = result.token;
+						
+                     }
+             
+         });
+             }, false);
+            
+        }
+    
+    function getToken(){
+    	
+       restClient.login('admin', 'admin', {
+                        success: function(result){
+                            
+                        token = result.token;
+						
+                        }
+                
+            });
+            
+       }

@@ -68,6 +68,8 @@
 			qs += (qs.length === 0 ? '?' : '&') + '_method=GET';
 		return resourceUri + qs;
 	};
+	
+	
 
 	molgenis.RestClient.prototype.getPrimaryKeyFromHref = function(href) {
 		return href.substring(href.lastIndexOf('/') + 1);
@@ -101,6 +103,7 @@
 		
 		return result;
 	};
+	
  
  molgenis.RestClient.prototype.add = function(url, data, callback, errorHandler) {
  $.ajax({
@@ -143,7 +146,7 @@
 	 }
 
 	
-	molgenis.RestClient.prototype.login = function(username, password, callback) {
+	molgenis.RestClient.prototype.login = function(username, password, callback, callbackLoginError) {
 		$.ajax({
 			type: 'POST',
 			dataType : 'json',
@@ -160,9 +163,34 @@
                     token: loginResult.token
 				});
 			},
-			error : callback.error
+			error : function(request, textStatus, error) {
+				callBackLoginError(request, textStatus, error);
+	        	
+	        }
 		});
 	};
+	
+	molgenis.RestClient.prototype.register = function(url, data, callback, errorHandler){
+		console.log("the url:" + url);
+		console.log(data);
+		 $.ajax({
+		        type: 'POST',
+		        url: url,
+		        dataType : 'json',
+		        async : true,
+		        data: JSON.stringify(data),
+		        contentType: 'application/json',
+		        success: function(data, textStatus, response) {
+		        	callback(data, textStatus, response);
+		        },
+		        error: function(request, textStatus, error) {
+		        	console.log("ERROR:" + error);
+		        	console.log(request);
+		        	console.log(textStatus);
+		        }
+		        });
+		
+	}
 	
 	molgenis.RestClient.prototype.logout = function(callback) {
 		$.ajax({

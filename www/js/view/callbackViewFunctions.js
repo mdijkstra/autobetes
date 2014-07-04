@@ -1,3 +1,10 @@
+/*
+var template;
+$(function(){
+	template = Handlebars.compile($("#entry-template").html());
+});
+*/
+	
 
 function showEventList(transaction, result) {
 	if (result !== null && result.rows !== null) {
@@ -25,7 +32,7 @@ function showEventList(transaction, result) {
 				//set click function
 				eventButton.click(function() {
 
-					setRightScreen(this);
+					setAddOrEditScreen(this);
 				});
 
 			}
@@ -43,9 +50,13 @@ function showEventList(transaction, result) {
 
 function showCurrentEventInstanceActivity(inputType, result) {
 	//html tags for the opening of the list
-
+	
+	
 	var html = '<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';
 	//open list
+	//var html = template(result);
+	
+	
 	html += '<li class="ui-li-has-alt ui-first-child">';
 	//open list item
 	var type;
@@ -56,8 +67,8 @@ function showCurrentEventInstanceActivity(inputType, result) {
 	for (var i = 0; i < arrayLength; i++) {
 		//progress results
 		var row = result.rows.item(i);
-
-
+		
+		
 		//add button to html
 		html += makeEventInstanceButton(row, 'running');
 		//end list item
@@ -69,7 +80,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 	}
 	//close list tag
 	html += "</ul>";
-
+	
 	$('.event-list3').append(html);
 	//add functionality to end activity button
 
@@ -205,146 +216,3 @@ function showEventInstanceList(inputType, result) {
 
 }
 
-function sendEvents(transaction, result){
-	if (result !== null && result.rows !== null) {
-
-		for (var i = 0; i < result.rows.length; i++) {
-
-			var row = result.rows.item(i);
-
-			var eventObject = {
-					'name' : row.name,
-					'owner': '1',
-					'eventType': row.eventType
-			};
-
-			restClient.add('http://localhost:8080/api/v1/event', eventObject,	function(data, textStatus, response){
-
-				if(textStatus === 'success'){
-					var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
-
-					var sid = parseInt(location.substr(location.lastIndexOf('/')+1));
-					df.setBeenSentEvent(row.cid);
-					df.setSidEvent(sid, row.cid)
-
-				}
-			}, callbackError);
-
-		}
-	}
-}
-
-function sendFoodEventInstance(transaction, result){
-
-	if (result !== null && result.rows !== null) {
-
-		for (var i = 0; i < result.rows.length; i++) {
-
-			var row = result.rows.item(i);
-
-			if(row.eventSID !== null){
-				//make sure foreign key ref(Event) is present
-				//var location = '/api/v1/event/'+row.sID;
-				if(row.instanceSID === null){
-					//instance not been sent before, create resource
-					console.log('sendRow');
-
-					console.log(row);
-					var eventObject = {
-							'owner': '1',
-							'beginTime': '1991-02-12 18:00:00',
-							'amount' : row.amount,
-							'event' : row.eventSID+""
-
-					};
-					var date = new Date(row.beginTime);
-					console.log(date);
-
-					restClient.add('http://localhost:8080/api/v1/FoodEventInstance', eventObject, function(data, textStatus, response){
-						if(textStatus === 'success'){
-							//row successfully sent, now row has to be updated with beenSent = 1
-							var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
-							var sid = parseInt(location.substr(location.lastIndexOf('/')+1));
-							console.log("rowid is: "+row.cid);
-							df.setBeenSentEventInstance(row.cid);
-							df.setSidEventInstance(sid, row.cid);
-
-						}
-					});
-
-				}
-				else{
-					//instance been sent before, update resource
-					console.log('update Row');
-					var url = 'http://localhost:8080/api/v1/FoodEventInstance/'+row.eventSID;
-					console.log(row);
-					var eventObject = {
-							'owner': '1',
-							'beginTime': '1991-02-12 18:00:00',
-							'amount' : row.amount,
-							'event' : row.eventSID+""
-
-					};
-
-					restClient.update(url, eventObject, function(data, textStatus, response){
-						if(textStatus === 'success'){
-							//row successfully sent, now row has to be updated with beenSent = 1
-
-							df.setBeenSentEventInstance(row.cid);
-
-						}
-					});
-				}
-			}
-		}
-	}
-}
-
-function sendActivityEventInstance(transaction, result){
-	if (result !== null && result.rows !== null) {
-
-		for (var i = 0; i < result.rows.length; i++) {
-
-			var row = result.rows.item(i);
-
-			var eventObject = {
-					'event' : row.event,
-					'owner': '1',
-					'beginTime': row.beginTime,
-					'intensity' : row.intensity,
-					'endTime' : row.endTime
-			};
-
-			restClient.add('http://localhost:8080/api/v1/activityEventInstanceFull', eventObject, function(data, textStatus, request){
-				if(textStatus === 'success'){
-					//row successfully sent, now row has to be updated with beenSent = 1
-					var location = response.getResponseHeader('Location');//Api returns new resource location when creating a new entity
-					var sid = parseInt(location.substr(location.lastIndexOf('/')+1));
-					df.setBeenSentActivityEventInstance(sid, row.cid);
-				}
-			});
-
-		}
-	}
-}
-
-function callbackError(request, textStatus, error){
-	console.log(request);
-	console.log(textStatus);
-	console.log(error);
-}
-
-
-function successCallBack(transaction, results){
-
-}
-
-// this is called when an error happens in a transaction
-function errorHandler(transaction, error) {
-	alert('Error: ' + error.message + ' code: ' + error.code);
-	console.log(error);
-
-}
-
-function nullHandler() {
-}

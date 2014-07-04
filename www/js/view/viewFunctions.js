@@ -3,7 +3,7 @@
 	 * the screen in where the user can modify the event will be set. When de edit mode
 	 * is not on, the start2(start event) screen will be set.
 	 */
-	function setRightScreen(context){
+	function setAddOrEditScreen(context){
 		
 		if($('#editModeButton').val() ==="on"){
 			//edit mode is on, the screen newEvent will be used

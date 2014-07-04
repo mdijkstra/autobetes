@@ -1,4 +1,4 @@
-function dbFunctions(shortName, version, displayName, maxSize) {
+function dbHandler(shortName, version, displayName, maxSize) {
 
 	this.shortName = shortName;
 	this.version = version;
@@ -25,6 +25,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	this.setSidEventInstance = setSidEventInstance;
 	this.getUserInfo = getUserInfo;
 	this.addUser = addUser;
+	this.editUser = editUser;
 	
 	
 	//add all the sql queries
@@ -57,6 +58,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	var UPDATE_ACTIVITY = 'UPDATE ActivityEventInstance SET intensity= ?, endTime=? WHERE cid = ?';
 	var UPDATE_FOOD = 'UPDATE FoodEventInstance SET amount= ? WHERE cid = ?';
 	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, beenSent = 0 WHERE cid = ?';
+	var EDIT_USER = 'UPDATE User SET email = ?, password = ? WHERE cid = 1';
 	
 	//select statements
 	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, e.cid, ev.name, a.endTime from Event ev join EventInstance e on ev.cid = e.event join ActivityEventInstance a on a.cid = e.cid WHERE e.deleted = 0 AND a.endTime IS NULL ORDER BY e.beginTime DESC;';
@@ -66,7 +68,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	var SELECT_ALL_EVENTS = 'SELECT * FROM Event ORDER BY lower(name) ASC;'
 	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? ORDER BY lower(name) ASC;';
 	var SELECT_PARTICULAR_EVENT = 'SELECT * FROM Event where name = ?;';
-	var SELECT_USER_INFO = 'SELECT * FROM User';
+	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';
 	
 	var SELECT_UNSENT_EVENTS = 'SELECT * FROM Event where beenSent = 0;';
 	var SELECT_UNSENT_FOOD_INSTANCES =  'SELECT i.cid, e.sid eventSID, i.beginTime, f.amount, i.sid instanceSID FROM Eventinstance i, FoodEventInstance f, Event e WHERE i.event = e.cid AND i.cid = f.cid AND i.beenSent = 0 AND e.sid IS NOT NULL;';
@@ -78,7 +80,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	var ADD_FOOD = 'INSERT INTO FoodEventInstance(cid, amount) VALUES (?,?)';
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEventInstance(cid, intensity) VALUES (?,?)';
 	var ADD_EVENT = 'INSERT INTO Event(name, eventType) VALUES (?,?)';
-	var ADD_USER = 'INSERT INTO User(email, pumpId, password) VALUES (?,?,?)'
+	var ADD_USER = 'INSERT INTO User(cid, email, pumpId, password) VALUES (1,?,?,?)'
 	
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
@@ -95,7 +97,11 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	db.transaction(function(tx) {
 
 		//to drop the table
-		/*
+		
+		 /*
+		 tx.executeSql( 'DROP TABLE IF EXISTS User;',
+		[],nullHandler,errorHandler);
+		
 		tx.executeSql( 'DROP TABLE IF EXISTS Event;',
 		[],nullHandler,errorHandler);
 		
@@ -108,8 +114,8 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 		
 		tx.executeSql( 'DROP TABLE IF EXISTS EventInstance;',
 				[],nullHandler,errorHandler);
+		
 		*/
-
 		//create tables if not exist
 		
 		tx.executeSql( CREATE_USER, [], nullHandler, errorHandler);
@@ -174,7 +180,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 		} else if (type === ACTIVITY) {
 			executeQuery(SELECT_ACTIVITY_EVENT_INSTANCES, [], showEventInstanceList);
 			
-		} else if (type === 'All' || type === null) {
+		} else if (type === ALL || type === null) {
 			executeQuery(SELECT_ALL_EVENT_INSTANCES, [], showEventInstanceList);
 			
 		}
@@ -210,7 +216,6 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 		executeQuery(SELECT_UNSENT_FOOD_INSTANCES, [], sendFoodEventInstanceToServer);
 		//executeQuery(SELECT_UNSENT_ACTIVITY_INSTANCES, [], sendActivityEventInstance);
 		
-		
 	}
 	
 	/*
@@ -224,7 +229,6 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	}
 	
 	function updateEventInstance(type, amount,beginTime,endTime, cid){
-		console.log('update query+'+ type+" "+ amount+" "+beginTime+" "+endTime+" "+ cid)
 		executeQuery(UPDATE_EVENT_INSTANCE, [beginTime, cid], nullHandler);
 		
 		
@@ -274,7 +278,7 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 		
 		var addEventFunction = function(transaction, result){
 			if(result.rows.length > 0){
-				alert('Event allready exists')
+				alert(EVENT_ALREADY_EXISTS)
 			}
 			else{
 				executeQuery(ADD_EVENT, [eventName, eventType], nullHandler);
@@ -293,5 +297,9 @@ function dbFunctions(shortName, version, displayName, maxSize) {
 	
 	function addUser(email, pumpId, password){
 		executeQuery(ADD_USER, [email, pumpId, password], nullHandler);
+	}
+	
+	function editUser(email, password){
+		executeQuery(EDIT_USER, [email, password], nullHandler);
 	}
 }
