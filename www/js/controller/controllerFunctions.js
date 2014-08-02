@@ -145,47 +145,68 @@ df.listHistoryEvents(eventType);
 }
 
 function checkIfUserExists(){
-	
-	checkCallBack = function(transaction,result){
+	console.log("checkIfUserExists");
+	var checkCallBack = function(transaction,result){
+		console.log("result2: ");
 		
-		if(result.rows.length > 0){
+		
+		if(result.rows.length > 0 && result.rows.item(0).email){
 			//user exists
-			
-			for (var i = 0; i < result.rows.length; i++) {
-
-				var row = result.rows.item(i);
-				
-			}
+			console.log("user exists");
+			login();
 		}
 		else{
 			//user does not exist
 			//open dialog
-			window.location.href =  '#registrationDialog';
+			console.log("user does not exists");
+			var currentPage = $.mobile.activePage[0].id;
+			if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG){
+				//allready registering logging in, do nothing
+				console.log("allready registering logging in, do nothing");
+			}else{
+				console.log("open login dialog")
+				window.location.href =  '#loginDialog';
+				
+			}
 			
 		}
 	}
 	df.getUserInfo(checkCallBack);
 }
 
-function  login(){
-	 
-	var loginCallBack = function(transaction,result){
-		for (var i = 0; i < result.rows.length; i++) {
-			
-			var row = result.rows.item(i);
-			//try to log in with data
-			restClient.login(row.email, row.password, {
-		        success: function(result){
-		            
-		        token = result.token;
-				
-		        }
+function login(){
+	console.log("try to log in");
 
-			}, callBackLoginError);
+	if($(document).data(IS_LOGGING_IN) === false){
+		$(document).data(IS_LOGGING_IN, true);
+		var loginCallBack = function(transaction,result){
+			console.log("login with: "+ JSON.stringify(result.rows.item(0)));
+
+
+
+
+			if(result.rows.length > 0){
+				var row = result.rows.item(0);
+				//try to log in with data
+				console.log("login with: "+ JSON.stringify(row));
+				restClient.login(row.email, row.password, {
+					success: function(result){
+						console.log("succesfully logged in!");
+						console.log("tokkie:"+ result.token);
+						$(document).data(IS_LOGGING_IN, false);
+						token = result.token;
+						synchronise();
+					}
+
+				}, callBackLoginError);
+			}
+
+
 		}
+
+		df.getUserInfo(loginCallBack);
 	}
-	
-	
-	df.getUserInfo(loginCallBack);
-	
+	else{
+		console.log("allready trying to log in");
+	}
 }

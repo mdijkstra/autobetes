@@ -356,10 +356,10 @@
     	</div>
     	<div data-role="content">
     		
-    		<input id="email" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Email">
-    		<input id="pumpId" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Pump id">
-    		<input id="password" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Password">
-    		<input id="confirmPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Confirm password">
+    		<input id="registerEmail" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Email">
+    		<input id="registerPumpId" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Pump id">
+    		<input id="registerPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Password">
+    		<input id="registerConfirmPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Confirm password">
     	
     		<a id="registrationDialogOkButton" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
     			<span class="ui-btn-inner ui-btn-corner-all">
@@ -370,9 +370,29 @@
     	</div>
     </div>
     
+        <div data-role="page" id="loginDialog" data-position="window">
+    	<div data-role="header">
+    		<h1>Login</h1>
+    	</div>
+    	<div data-role="content">
+    		
+    		<input id="loginEmail" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Email">
+    		<input id="loginPassword" type = "password" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Password"> 	
+    		<a id="loginDialogOkButton" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
+    			<span class="ui-btn-inner ui-btn-corner-all">
+    				<span class="ui-btn-text">Ok</span>
+    			</span>
+    		</a>
+    		
+    	</div>
+    </div>
+    <div data-role="dialog" id="messageDialog" title="asdf">
+  		<p id="messageText">dsfgdfgdffg</p>
+	</div>
     
     
          <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+         <script src="js/controller/synchronise.js"></script>
         <script src="js/jquery.js"></script>
         <script src="js/jquery.mobile-1.4.2.js"></script>
         <script src="js/model/restclient.js"></script>   

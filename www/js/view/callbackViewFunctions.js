@@ -14,7 +14,7 @@ function showEventList(transaction, result) {
 
 			if($('#presentBoolean').text() === 'show' && $('#eventNameToBePrivileged').text() === row.name ){
 				//the item need to be presented as a special button on top of the list, not in the list itself
-				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventID" style="display: none">'+row.cid+'</span>';
+				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventID" style="display: none">'+row.cId+'</span>';
 				//show new event in button on top of the list
 				$('#recentAddedEventButton').html(buttonText);
 				$('#recentAddedEventButton').val(row.eventType);
@@ -27,7 +27,7 @@ function showEventList(transaction, result) {
 			else{
 				
 				//item does not need to be special treated
-				var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventID" style="display: none">'+row.cid+'</span></A>');
+				var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventID" style="display: none">'+row.cId+'</span></A>');
 				$('#event-list').append(eventButton);
 				//set click function
 				eventButton.click(function() {
@@ -43,7 +43,7 @@ function showEventList(transaction, result) {
 	if($('#editModeButton').val() ==="on"){
 		//edit mode is on, background needs to be changed to make that clear
 		//to the user
-		$('.eventButtons').attr("style","background: #8df3e6 !important");
+		$('.eventButtons').attr("style","background: "+COLOR_EDIT_MODE+" !important");
 
 	}
 }
@@ -51,6 +51,7 @@ function showEventList(transaction, result) {
 function showCurrentEventInstanceActivity(inputType, result) {
 	//html tags for the opening of the list
 	
+	$('.event-list3').html("");
 	
 	var html = '<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';
 	//open list
@@ -70,7 +71,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 		
 		
 		//add button to html
-		html += makeEventInstanceButton(row, 'running');
+		html += makeEventInstanceButton(row, RUNNING);
 		//end list item
 		html += '</li>';
 		if (i + 1 < arrayLength) {
@@ -97,7 +98,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 			if ($('#startButton2')) {
 				$('#startButton2').remove();
 			}
-			var editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + "Save" + '</A>');
+			var editEventButton = $('<A data-rel="back" id="startButton2" type CLASS="ui-btn ui-shadow ui-corner-all">' + SAVE + '</A>');
 
 			$('#edit-event-instance-page').append(editEventButton);
 			editEventButton.click(function() {
@@ -117,25 +118,15 @@ function showEventInstanceList(inputType, result) {
 	var html = '<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">';
 	//open list
 	html += '<li class="ui-li-has-alt ui-first-child">';
-	//open list item
-	var type;
+	
 	var endedActivity = 'false';
 
-	var arrayLength;
-	if (inputType === 'inputIsArray') {
-		arrayLength = result.length;
-	} else {
-		arrayLength = result.rows.length;
-	}
+	
 
-	for (var i = 0; i < arrayLength; i++) {
-		//progress results
-		var row;
-		if (inputType === 'inputIsArray') {
-			row = result[i];
-		} else {
-			row = result.rows.item(i);
-		}
+	for (var i = 0; i < result.rows.length; i++) {
+		//process results
+		var row = result.rows.item(i);
+		
 		if (row.intensity) {
 			type = 'activity';
 			if (row.endTime !== null) {
@@ -149,10 +140,10 @@ function showEventInstanceList(inputType, result) {
 		//food activity, current event and ended event
 
 		//add button to html
-		html += makeEventInstanceButton(row, 'ended');
+		html += makeEventInstanceButton(row, ENDED);
 		//end list item
 		html += '</li>';
-		if (i + 1 < arrayLength) {
+		if (i + 1 < result.rows.length) {
 			//there is a next item so new <li> can be set
 			html += '<li class="ui-li-has-alt">';
 		}
@@ -164,8 +155,6 @@ function showEventInstanceList(inputType, result) {
 	//add functionality to end activity button
 	//if button be clicked, data will be extracted, editScreenActivity will be opened
 	//and the data will be inserted
-
-	
 		$('.editEvent').click(function() {
 
 			var bd = new parseButtonData(this);

@@ -88,17 +88,17 @@
 		if (eventType === FOOD) {
 			$('#start-event-instance-activity-quantity-slider-label').hide();
 			$('#start-event-instance-food-quantity-slider-label').show();
-			$('#start-event-instance-quantity-slider').attr('min', '0.25');
-			$('#start-event-instance-quantity-slider').attr('step', '0.25');
-			$('#start-event-instance-quantity-slider').val('1').slider('refresh');
+			$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
+			$('#start-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
+			$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_FOOD_QUANTITY_SLIDER).slider('refresh');
 			
 		} else {
 			
 			$('#start-event-instance-food-quantity-slider-label').hide();
 			$('#start-event-instance-activity-quantity-slider-label').show();
-			$('#start-event-instance-quantity-slider').attr('min', '1');
-			$('#start-event-instance-quantity-slider').attr('step', '1');
-			$('#start-event-instance-quantity-slider').val('1').slider('refresh');
+			$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
+			$('#start-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
+			$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER).slider('refresh');
 			setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
 			
 			
@@ -128,8 +128,8 @@
 			
 			$('#edit-event-instance-food-quantity-slider-label').hide();
 			$('#edit-event-instance-activity-quantity-slider-label').show();
-			$('#edit-event-instance-quantity-slider').attr('step', '1');
-			$('#edit-event-instance-quantity-slider').attr('min', '1');
+			$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
+			$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
 			$('#edit-event-instance-quantity-slider').val(bd.intensity).slider('refresh');
 			
 			setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(bd.intensity));
@@ -140,8 +140,8 @@
 			});
 
 		} else {
-			$('#edit-event-instance-quantity-slider').attr('step', '0.25');
-			$('#edit-event-instance-quantity-slider').attr('min', '0.25');
+			$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
+			$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
 			$('#edit-event-instance-quantity-slider').val(bd.intensity).slider('refresh');
 			$('#edit-event-instance-activity-quantity-slider-label').hide();
 			$('#edit-event-instance-food-quantity-slider-label').show();
@@ -252,11 +252,11 @@
 		var html = "";
 		if(buttonType === "ended"){
 			//event has ended so editting will be enabled
-			html += '<a href="#edit-event-instance-page" class="editEvent ui-btn"><p style="display: none">' + row.cid + '</p>';
+			html += '<a href="#edit-event-instance-page" class="editEvent ui-btn"><p style="display: none">' + row.cId + '</p>';
 		}
 		else{
 			//event not ended, so editting is not preferably, button does nothing
-			html += '<a class="editEvent ui-btn"><p style="display: none">' + row.cid + '</p>';
+			html += '<a class="editEvent ui-btn"><p style="display: none">' + row.cId + '</p>';
 		}
 		html += '<h3>' + row.name + '</h3>';
 		html += amountOrIntensityString;
@@ -265,12 +265,12 @@
 		html += '</a>';
 		if(buttonType === "ended"){
 			//append delete button
-			html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.cid + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+			html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.cId + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
 		}
 		else{
 			
 			//append an end button,
-			html += '<a href="#edit-event-instance-page" class="endEvent ui-btn ui-icon-stop"  title="End"><p id="eventID" style="display: none">' + row.cid + '</p><p id="eventType" style="display: none">' + type + '</p>';
+			html += '<a href="#edit-event-instance-page" class="endEvent ui-btn ui-icon-stop"  title="End"><p id="eventID" style="display: none">' + row.cId + '</p><p id="eventType" style="display: none">' + type + '</p>';
 			html += '<h3 style="display: none">' + row.name + '</h3>';
 			html += '<p id="intensityInt" style="display: none">' + row.intensity + '</span>';
 			html += '<p style="display: none"><span id="day">' + date.getDate() + '</span>- <span id="month">' + (date.getMonth() + 1) + '</span>- <span id="year">' + date.getFullYear() + '</span></p>';

@@ -1,5 +1,6 @@
 
-var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
+var df = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
+	$(document).data('isSynchronising', false);
         var restClient = new top.molgenis.RestClient();
         //workaround to enable setting the value of the slider programmatically 
         $('#edit-event-instance-page').page();
@@ -23,17 +24,38 @@ var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
         var SERVER_EVENT_URL = '/api/v1/event';
         var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
         var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
+        var REGISTER_URL = "/plugin/home/registerUser";
+        var FOODEVENTINSTANCE = "FoodEventInstance";
+        var ACTIVITYEVENTINSTANCE = "ActivityEventInstance";
+        var UNAUTHORIZED = "Unauthorized";
         var FOOD = 'Food';
+        var EVENT = "Event";
+        var INSTANCE = "Instance";
         var ACTIVITY = 'Activity';
+        var RUNNING = "running";
+        var SAVE = "Save";
         var ALL = 'All';
+        var ENDED = 'ended';
         var EVENT_ALREADY_EXISTS = 'Event allready exists';
         var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
         
-        //onDeviceReady();
+        var DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER = 3;
+        var DEFAULT_VALUE_FOOD_QUANTITY_SLIDER = 1;
+        var MIN_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
+        var MIN_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
+        var STEP_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
+        var STEP_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
+        
+        var TIMESTAMPPENALTY = 3600000;
+        
+        var COLOR_EDIT_MODE = "#8df3e6";
+        
+        
+        onDeviceReady();
      
         // Wait for PhoneGap to load
         // 
-        document.addEventListener("deviceready", onDeviceReady, false);
+        //document.addEventListener("deviceready", onDeviceReady, false);
         //window.location.data-rel ="dialog";
         
         //'<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'
@@ -42,16 +64,23 @@ var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
         
         
          function onDeviceReady() {
-             
-            checkIfUserExists();
-            getToken();
-            
+        	 
+        	//$( "#loginDialog" ).dialog();
+        	 //$.mobile.changePage("#messageDialog");
+        	 //$( "#messageDialog" ).dialog();
+            //checkIfUserExists();
+            //getToken();
+        	
+        	 
+        	 synchronise();
+        	 
+        	 
              document.addEventListener("offline", function(e) {
                  alert("offline");
              }, false);
                                        
              document.addEventListener("online", function(e) {
-            	 db.sendDbData();
+            	 synchronise();
                  alert("online");
              }, false);
              
@@ -60,7 +89,7 @@ var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
              }, false);
              
              document.addEventListener("resume", function(e){
-            	 alert("reserumes");
+            	 
             	 restClient.login('admin', 'admin', {
                      success: function(result){
                         
@@ -75,13 +104,6 @@ var df = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
     
     function getToken(){
     	
-       restClient.login('admin', 'admin', {
-                        success: function(result){
-                            
-                        token = result.token;
-						
-                        }
-                
-            });
+       //login();
             
        }

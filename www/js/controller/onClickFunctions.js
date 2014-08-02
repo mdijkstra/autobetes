@@ -45,7 +45,7 @@ $('#addOrEditEvent').click(function() {
 	else{
 		//edit event 
 		var eventID = $('#eventID').text();
-		df.editEvent(eventID, eventName, eventType);
+		df.updateEvent(eventID, eventName, eventType);
 	}
 
 	//present the edited button on top of the list with a green background
@@ -59,6 +59,7 @@ $('#addOrEditEvent').click(function() {
 
 });
 $('#historyButton').click(function() {
+	
 	$(document).removeData('selectedTabIndex2');
 	selectHistoryTabMenu();
 	$('.event-list2').html('');//empty list
@@ -66,7 +67,6 @@ $('#historyButton').click(function() {
 });
 
 $('#editModeButton').click(function(){
-
 	if($('#editModeButton').val() ==="on"){
 		//editmode was on, now need to be turned off
 		$('#editModeButton').val('off');
@@ -95,20 +95,17 @@ $('#editModeButton').click(function(){
 
 
 $('#startEventInstanceButton').click(function() {
-
+	
 	var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 	var unixTime = Date.parse(timeAndDate).getTime();
+	var eventId = $('#eventID').text();
+	var quantity = $('#start-event-instance-quantity-slider').val();
+	var eventType = $('#eventType2').text();
 
-	if ($('#eventType2').text() === FOOD) {
-
-		df.addFoodEventInstance($('#startEventName').html(), $('#start-event-instance-quantity-slider').val(), unixTime, $('#eventID').text());
-		df.showCurrentActivityEventInstances();
-		//refresh list of current events
-	} else {
-		df.addActivityEventInstance($('#startEventName').html(), $('#start-event-instance-quantity-slider').val(), unixTime, $('#eventID').text());
-		df.showCurrentActivityEventInstances();
-		//refresh list of current events
-	}
+	df.addEventInstance(quantity, unixTime, eventId, eventType);
+	df.showCurrentActivityEventInstances();
+	//refresh list of current events
+	
 	//set text on home screen, regarding which event is added
 
 	var addedText = "Added "+$('#startEventName').html();
@@ -122,7 +119,7 @@ $('#startEventInstanceButton').click(function() {
 	else{
 		$('#addedText').html(addedText);
 	}
-	window.setInterval(function(){
+	window.setTimeout(function(){
 		if($('#addedText').html() === addedText){
 			//the added text has been unaltered on the screen for the intervaltime 
 			$('#addedText').html(' ')
@@ -159,16 +156,24 @@ $('#newEventButton').click(function(){
 	}
 });
 $('#recentAddedEventButton').click(function(){
-
+	 synchronise();
 	setAddOrEditScreen(this);
 });
 
 $('#loginDialogOkButton').click(function(){
-	window.location.href =  '#home';
+	//window.location.href =  '#home';
+	
 	var email = $('#loginEmail').val();
 	var password = $('#loginPassword').val();
-	df.editUser(email, password);
-	login();
+	
+	var callbackFunction = function(){
+		console.log("email and password set, now try to log in");
+		login();
+		window.location.href =  '#home';
+	}
+	
+	df.updateUser(email, password, callbackFunction);
+	
 });
 
 $('#registrationDialogOkButton').click(function(){
@@ -190,11 +195,12 @@ $('#registrationDialogOkButton').click(function(){
 					email: email,
 					password: password
 			}
-			console.log("server url:"+ SERVER_URL+"/plugin/home/registerUser");
-			console.log(JSON.stringify(userData));
-			restClient.register(SERVER_URL+"/plugin/home/registerUser", userData,	function(data, textStatus, response){
-					console.log(data);
-					console.log(textStatus);
+			restClient.register(SERVER_URL+REGISTER_URL , userData,	function(data, textStatus, response){
+					//alert(data.message);
+					console.log(textStatus.message);
+					$("#messageText").html(data.message);
+					$( "#messageDialog" ).dialog();
+					
 					console.log(response);
 				
 			}, callbackError);
