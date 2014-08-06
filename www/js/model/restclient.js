@@ -126,7 +126,6 @@
  }
  
  molgenis.RestClient.prototype.update = function(url, data, callback, errorHandler) {
-	 console.log("the token:"+ self.token);
 	 $.ajax({
 	        type: 'POST',
 	        headers: {'x-molgenis-token': self.token},
@@ -172,8 +171,6 @@
 	};
 	
 	molgenis.RestClient.prototype.register = function(url, data, callback, errorHandler){
-		console.log("the url:" + url);
-		console.log(data);
 		 $.ajax({
 		        type: 'POST',
 		        url: url,
@@ -185,15 +182,16 @@
 		        	callback(data, textStatus, response);
 		        },
 		        error: function(request, textStatus, error) {
-		        	console.log("ERROR:" + error);
-		        	console.log(request);
-		        	console.log(textStatus);
+		        	errorHandler(request, textStatus, error);
 		        }
 		        });
 		
 	}
 	molgenis.RestClient.prototype.getToken = function(){
 		return self.token;
+	}
+	molgenis.RestClient.prototype.setToken = function(token){
+		return self.token = token;
 	}
 	
 	molgenis.RestClient.prototype.logout = function(callback) {

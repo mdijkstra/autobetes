@@ -1,5 +1,4 @@
 var synchronise = function(){
-
 	var currentTimeStamp = new Date().getTime();
 	
 	if(canMakeAjaxCall()){
@@ -7,7 +6,6 @@ var synchronise = function(){
 		$(document).data(IS_SYNCHRONISING, true);
 
 		df.getLastUpdateTimeStamp(function(transaction,result){
-
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
@@ -26,8 +24,7 @@ var synchronise = function(){
 			}
 
 			var callback1 = function(data, textStatus, response){
-
-				console.log(data);
+				
 				df.updateLastUpdateTimeStamp(currentTimeStamp);
 				iterateArrayRecursively(0, data);
 
@@ -49,13 +46,13 @@ var synchronise = function(){
 				//console.log("events");
 
 				df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
+					
 					pushEntitiesInArray(result);
 					//console.log("activity");
 
 					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
 						pushEntitiesInArray(result);
-						//console.log("food")
-						console.log(JSON.stringify(requestData));
+						
 						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
 					});
 				});
@@ -79,7 +76,6 @@ var iterateArrayRecursively = function(index, data){
 	if(index < data.length){
 
 		var entity = data[index];
-		console.log(entity);
 		var entityType;//event or instance
 		//convert boolean to integer, because sqlite cannot handle booleans
 		if(entity.deleted === true){
@@ -164,11 +160,9 @@ var iterateArrayRecursively = function(index, data){
 var canMakeAjaxCall = function(){
 	var isSynchronising = $(document).data(IS_SYNCHRONISING);
 	var isLoggingIn = $(document).data(IS_SYNCHRONISING);
-	console.log(restClient.getToken())
 	if(restClient.getToken() === undefined){
 		//there is no token
-		console.log("no token");
-		//checkIfUserExists();
+		checkIfUserExists();
 		return false;
 	}
 	else if(isSynchronising || isLoggingIn ){

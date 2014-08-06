@@ -12,6 +12,12 @@
                             "xml": "true",
                             "count": 1
                         }
+                    ],
+                    "QuartzCore.framework": [
+                        {
+                            "xml": "false",
+                            "count": 1
+                        }
                     ]
                 }
             },
@@ -33,6 +39,10 @@
                         {
                             "xml": "<preference name=\"StatusBarBackgroundColor\" value=\"#000000\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"ios-package\" value=\"Toast\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -44,6 +54,9 @@
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         },
         "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
+        },
+        "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         }
     },

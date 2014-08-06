@@ -7,7 +7,7 @@ var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
-var REGISTER_URL = "/plugin/home/registerUser";
+var REGISTER_URL = "/plugin/anonymous/registerUser";
 var FOODEVENTINSTANCE = "FoodEventInstance";
 var ACTIVITYEVENTINSTANCE = "ActivityEventInstance";
 var UNAUTHORIZED = "Unauthorized";
@@ -35,9 +35,34 @@ var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 3600000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var COLOR_EDIT_MODE = "#8df3e6";
+var ALLREADY_EXISTS = " allready exists"
+var USERISDISABLEDREGEX= /User is disabled/;
+var BADCREDENTIALSREGEX= /Bad credentials/;
+var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
+var REGISTRATIONFAILREGEX = /Registration failed/;
+var UNKNOWNUSERREGEX = /unknown user/;
+var CANNOT_OPEN_DATABASE = "Cannot open database";
+var CONNECTED_TO_INTERNET = "Connection";
+var ACTIVATE_ACOUNT_HEADER = "Inactive account";
+var ACTIVATE_ACOUNT_TEXT = "Your account is currently inactive, please click the link in the email to activate your account";
 
+var BAD_CREDENTIALS_HEADER = "Bad credentials";
+var BAD_CREDENTIALS_TEXT = "Wrong email and password combination";
+var ERROR_HEADER = "Error";
+var ERROR_TEXT = "An error occurred: ";
+var PASSWORDS_NOT_THE_SAME = 'Passwords are not the same';
+var INVALID_EMAIL = "Invalid email";
+var PLEASE_SYNC_WITH_PUMP = "Please synchronise the time settings of your insulin pump with those of your app!";
+var SERVER_CONNECTION_FAIL = "Currently unable to connect to server";
+var TRY_AGAIN_LATER = "Please try again later";
+var SUCCESSFULLY_LOGGED_IN = "Succesfully logged in";
+var CONNECT_TO_SERVER = "Connect to server";
+var SUCCEEDED = "Succeeded";
+var FAILED = "Failed";
+var ARE_YOU_SURE_DELETE = 'Are you sure you want to delete ';
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
+$(document).data(CONNECTED_TO_INTERNET, false);
 var restClient = new top.molgenis.RestClient();
 //workaround to enable setting the value of the slider programmatically 
 $('#edit-event-instance-page').page();
@@ -60,30 +85,55 @@ onDeviceReady();
 
 // Wait for PhoneGap to load
 // 
-//document.addEventListener("deviceready", onDeviceReady, false);
+document.addEventListener("deviceready", onDeviceReady, false);
 //window.location.data-rel ="dialog";
 
 //'<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'
 // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
 //
 
+function showMessageDialog(headerText, messageText){
+	console.log("open dialog");
+	$("#messageDialogHeader").html(headerText);
+	$("#messageDialogText").html(messageText);
+	$.mobile.changePage( "#messageDialog", { role: "dialog" } );
+}
+function toastMessage(messageText){
+	window.plugins.toast.showLongBottom(messageText, null, null);
+}
+function toastShortMessage(messageText){
+	window.plugins.toast.showShortBottom(messageText, null, null);
+}
 
 function onDeviceReady() {
-
-
+	window.location.href = 'http://apache.org';
+	setTimeout(function() {
+		history.back()
+    }, 5000);
 	//getToken();
-
+	/*
+	 var ref = window.open('http://apache.org', '_blank', 'location=yes');
+	 ref.addEventListener('loadstop', function(){toastMessage(alert('done loading'))})
+     // close InAppBrowser after 5 seconds
+     setTimeout(function() {
+         ref.close();
+     }, 5000);
+	//getToken();
+	*/
 	console.log("device ready");
 	checkIfUserExists();
 
-
+	
+	
 	document.addEventListener("offline", function(e) {
-		alert("offline");
+		//alert("offline");
+		$(document).data(CONNECTED_TO_INTERNET, false);
 	}, false);
 
 	document.addEventListener("online", function(e) {
+		$(document).data(CONNECTED_TO_INTERNET, true);
 		synchronise();
-		alert("online");
+		//alert("online");
 	}, false);
 
 	document.addEventListener("pause", function(e){

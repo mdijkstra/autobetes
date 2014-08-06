@@ -10,7 +10,38 @@ $(document).on('pageshow', '#start', function() {
 	showSelectedEvents();
 });
 
+$(document).on('pageshow', '#loginDialog', function(){
 
+	df.getUserInfo(function(transaction,result){
+		
+		
+		if(result.rows.length > 0 && result.rows.item(0).email){
+			//user exists
+			$('#loginEmail').val(result.rows.item(0).email);
+			$('#loginPassword').val(result.rows.item(0).password)
+		}
+		else{
+			$('#loginEmail').val('');
+			$('#loginPassword').val('');
+		}
+
+			
+		
+	});
+});
+
+$(document).on('pageshow', '#settings', function(){
+	df.getUserInfo(function(transaction,result){
+		if(result.rows.length > 0 && result.rows.item(0).email){
+			
+			$('#settingsPageAccount').html(result.rows.item(0).email);
+			$('#pumpSerial').val(result.rows.item(0).pumpId);
+		}
+		else{
+			
+		}
+	});
+});
 
 $(document).on('pageshow', '#home', function() {
 	synchronise();
@@ -40,4 +71,20 @@ $(document).on('pagehide', '#start', function(){
 	$('#editModeButton').attr("style","");
 	$('.eventButtons').attr("style","");
 
+});
+
+$(document).on('pageshow', '#report', function(){
+	//toastMessage('show report');
+	var ref = window.open('http://google.org', '_self', 'location=no');
+	setTimeout(function() {
+	
+		toastMessage('close screen');
+        ref.close();
+        window.location.href =  '#home';
+    }, 5000);
+    
+});
+
+$(document).on('pageshow', '#pumpSettings', function(){
+	
 });

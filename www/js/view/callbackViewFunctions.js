@@ -188,9 +188,9 @@ function showEventInstanceList(inputType, result) {
 			var eventName = $(this).find('#eventName').text();
 			var eventID = parseInt($(this).find('#eventID').text());
 			var eventType = $(this).find('#eventType').text();
-			$('#dialogText').html('Are you sure you want to delete '+ eventName+'?');
+			$('#dialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
 
-			$('#dialogConfirmButton').click(function() {
+			$('#deleteEventInstanceDialogConfirmButton').click(function() {
 				var selectedTabIndex = $(document).data('selectedTabIndex2');
 				var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
 				

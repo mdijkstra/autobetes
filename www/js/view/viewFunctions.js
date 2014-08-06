@@ -6,8 +6,9 @@
 	function setAddOrEditScreen(context){
 		
 		if($('#editModeButton').val() ==="on"){
-			//edit mode is on, the screen newEvent will be used
 			
+			$('#deleteEvent').show();
+			//edit mode is on, the screen newEvent will be used
 			window.location.href = '#newEvent';
 			//get eventID
 			var eventID = $(context).find('#eventID').text();
@@ -21,7 +22,7 @@
 			//get event type
 			var eventType = $(context).find('#eventType').text();
 			//set the fieldset right
-			if(eventType === "food"){
+			if(eventType === FOOD){
 				
             	$("#radio-choice-h-2a").prop("checked", true);
             	$("#radio-choice-h-2b").prop("checked",false);
@@ -35,6 +36,7 @@
 			
 		}
 		else{
+			$('#deleteEvent').hide();
 			//edit mode is off. open start2 screen
 			window.location.href = '#start-event-instance-page';
 			//set reference id of the event
@@ -265,7 +267,7 @@
 		html += '</a>';
 		if(buttonType === "ended"){
 			//append delete button
-			html += '<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.cId + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
+			html += '<a href="#deleteEventInstanceDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'+row.name+'</p><p id="eventID" style="display: none">' + row.cId + '</p><p id="eventType" style="display: none">' + type + '</p></a>';
 		}
 		else{
 			

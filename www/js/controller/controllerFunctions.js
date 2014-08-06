@@ -29,8 +29,7 @@ function updateEventInstance(id, type) {
 	}
 	//update event instance in database
 	df.updateEventInstance(type, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
-	//send db data to server
-	df.sendDbData();
+	
 }
 
 
@@ -145,26 +144,20 @@ df.listHistoryEvents(eventType);
 }
 
 function checkIfUserExists(){
-	console.log("checkIfUserExists");
 	var checkCallBack = function(transaction,result){
-		console.log("result2: ");
 		
 		
 		if(result.rows.length > 0 && result.rows.item(0).email){
 			//user exists
-			console.log("user exists");
 			login();
 		}
 		else{
 			//user does not exist
 			//open dialog
-			console.log("user does not exists");
 			var currentPage = $.mobile.activePage[0].id;
 			if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG){
 				//allready registering logging in, do nothing
-				console.log("allready registering logging in, do nothing");
 			}else{
-				console.log("open login dialog")
 				window.location.href =  '#loginDialog';
 				
 			}
@@ -175,27 +168,26 @@ function checkIfUserExists(){
 }
 
 function login(){
-	console.log("try to log in");
 
 	if($(document).data(IS_LOGGING_IN) === false){
 		$(document).data(IS_LOGGING_IN, true);
 		var loginCallBack = function(transaction,result){
-			console.log("login with: "+ JSON.stringify(result.rows.item(0)));
-
-
-
 
 			if(result.rows.length > 0){
 				var row = result.rows.item(0);
 				//try to log in with data
-				console.log("login with: "+ JSON.stringify(row));
 				restClient.login(row.email, row.password, {
 					success: function(result){
-						console.log("succesfully logged in!");
-						console.log("tokkie:"+ result.token);
+						
 						$(document).data(IS_LOGGING_IN, false);
 						token = result.token;
 						synchronise();
+						
+						var currentPage = $.mobile.activePage[0].id;
+						if(currentPage === LOGINDIALOG){
+							toastMessage(SUCCESSFULLY_LOGGED_IN);
+							$.mobile.back();//go to previous page
+						}
 					}
 
 				}, callBackLoginError);
@@ -207,6 +199,5 @@ function login(){
 		df.getUserInfo(loginCallBack);
 	}
 	else{
-		console.log("allready trying to log in");
 	}
 }

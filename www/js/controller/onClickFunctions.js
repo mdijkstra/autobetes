@@ -36,7 +36,6 @@ $('#addOrEditEvent').click(function() {
 	//alert('start adding');
 	var eventName = $('#newEventName').val();
 	var eventType = $('[name="radio-choice-h-2"]:checked').val();
-	console.log('te typs:'+eventType);
 	if($('#addOrEditEvent').text() === 'Add'){
 		//add event
 
@@ -58,6 +57,19 @@ $('#addOrEditEvent').click(function() {
 	$('#eventNameToBePrivileged').text(eventName);
 
 });
+
+$('#deleteEvent').click(function(){
+	var eventName = $('#newEventName').val();
+	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
+	
+	$('#deleteEventDialogConfirmButton').click(function() {
+		df.deleteEvent($('#eventID').text());
+		toastMessage("delete " + eventName);
+	});
+	
+});
+
+
 $('#historyButton').click(function() {
 	
 	$(document).removeData('selectedTabIndex2');
@@ -109,22 +121,8 @@ $('#startEventInstanceButton').click(function() {
 	//set text on home screen, regarding which event is added
 
 	var addedText = "Added "+$('#startEventName').html();
-
-	if(addedText === $('#addedText').html()){
-		//alter the added text in order to apply only the last intverval function
-		addedText = addedText+' ';
-		$('#addedText').html(addedText);
-
-	}
-	else{
-		$('#addedText').html(addedText);
-	}
-	window.setTimeout(function(){
-		if($('#addedText').html() === addedText){
-			//the added text has been unaltered on the screen for the intervaltime 
-			$('#addedText').html(' ')
-		}
-	}, TIME_ADDED_TEXT_ON_HOME_SCREEN);
+	
+	toastMessage(addedText)
 
 	return;
 
@@ -162,17 +160,24 @@ $('#recentAddedEventButton').click(function(){
 
 $('#loginDialogOkButton').click(function(){
 	//window.location.href =  '#home';
-	
 	var email = $('#loginEmail').val();
 	var password = $('#loginPassword').val();
+	//check if user switched account
+	df.getUserInfo(function(transaction, result){
+		if(result.rows.length > 0 && result.rows.item(0).email !== email){
+			//user switched account, so now reset db
+			
+			df.resetDBExceptUserTable();
+			restClient.setToken(null);//ensure that no token is saved of other account
+			
+		}
+		df.updateEmailAndPassword(email, password, function(){
+			login();
+			//window.location.href =  '#home';
+		});
+		
+	})
 	
-	var callbackFunction = function(){
-		console.log("email and password set, now try to log in");
-		login();
-		window.location.href =  '#home';
-	}
-	
-	df.updateUser(email, password, callbackFunction);
 	
 });
 
@@ -182,37 +187,71 @@ $('#registrationDialogOkButton').click(function(){
 	var pumpId = $('#registerPumpId').val();
 	var password = $('#registerPassword').val();
 	var confirmPassword = $('#registerConfirmPassword').val();
-
 	//add tests to values
 	//validate email 
 	var validationPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 	if(validationPattern.test(email)){
 		//validate password
 		if(password === confirmPassword){
-			df.addUser(email, pumpId, password);
-			window.location.href =  '#home';
+			//reset db to ensure that data from another account not will end up in this account, 
+			df.resetDBExceptUserTable();
+			
 			var userData = {
 					email: email,
 					password: password
 			}
-			restClient.register(SERVER_URL+REGISTER_URL , userData,	function(data, textStatus, response){
-					//alert(data.message);
-					console.log(textStatus.message);
-					$("#messageText").html(data.message);
-					$( "#messageDialog" ).dialog();
-					
-					console.log(response);
+			
+			toastShortMessage(CONNECT_TO_SERVER);
+			
+			var registerCallbackError = function(response, textStatus, error){
 				
-			}, callbackError);
+				if(response.responseText === ""){
+					//could not connect to server
+					showMessageDialog('Failed', SERVER_CONNECTION_FAIL+". "+TRY_AGAIN_LATER);
+
+				}
+				else{
+					toastShortMessage(response.responseText);
+				}
+			};
+			
+			var registerCallbackSuccess = function(data, textStatus, response){
+				if(response.responseJSON.success){
+					df.updateUser(email, pumpId, password);
+					$.mobile.back();//go to previous page
+					//alert(response.responseJSON.message);
+					setTimeout(function() {
+						//without this timeout the messageDialog appears only a fraction of a second before loginDialog,
+						//with this timeout it appears after loginDialog is loaded
+						showMessageDialog(SUCCEEDED, response.responseJSON.message + PLEASE_SYNC_WITH_PUMP);
+					}, 500)
+					//alert("Please synchronise the time settings of your insulin pump with those of your app!").
+					
+				}
+				else{
+					showMessageDialog(FAILED, response.responseJSON.message);
+				}
+				//alert(data.message);
+				
+				$("#messageText").html(data.message);
+				$( "#messageDialog" ).dialog();
+				
+			
+			
+		};
+			
+			
+			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{
-			alert('Passwords are not the same');
+			showMessageDialog('', PASSWORDS_NOT_THE_SAME);
+			
 			
 		}
 		
 	}
 	else{
-		alert('invalid email adres');
+		showMessageDialog('', INVALID_EMAIL);
 		
 	}
 	
