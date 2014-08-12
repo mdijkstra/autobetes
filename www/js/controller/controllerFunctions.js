@@ -1,9 +1,60 @@
-	
+function deleteEvent(eventName, eventId, eventType){
+//	before event be deleted(inactivated) a confirm box pops up
+	//to ensure the user 
+
+	$('#dialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
+
+	$('#deleteEventInstanceDialogConfirmButton').click(function() {
+		var selectedTabIndex = $(document).data('selectedTabIndex2');
+		var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+
+		df.deleteEventInstance(eventID);
+		df.listHistoryEvents(selectedTab);
+
+	});
+}
+
+function convertTimestampToTimeAndDate(timestamp){
+	var date = new Date(timestamp);
+	var month = (date.getMonth() + 1);
+	var day = date.getDate();
+	var year = date.getFullYear();
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+
+	if (minutes < 10) {
+
+		minutes = "0" + minutes;
+	}
+	if(hours < 10){
+
+		hours = "0"+ hours;
+	}
+	if (parseInt(month) < 10) {
+		month = "0" + month;
+	}
+
+	if (parseInt(day) < 10) {
+		day = "0" + day;
+	}
+	if (parseInt(hours) < 10) {
+		beginTime = "0" + beginTime;
+	}
+
+	var time = hours + ":" + minutes;
+	var date2 = year + "-" + month + '-' + day;
+
+	return {date: date2,
+		time: time}
+}
+
 /*
  * 
  */
-function updateEventInstance(id, type) {
-	//extract time and date from html
+function updateEventInstance() {
+	//extract values from DOM
+	var cId = $("#edit-event-instance-cId").text();
+	var eventType = $("#edit-event-instance-eventType").text();
 	var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
 	//convert to unix timestamp
 	var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
@@ -28,78 +79,9 @@ function updateEventInstance(id, type) {
 		//add one day in milliseconds
 	}
 	//update event instance in database
-	df.updateEventInstance(type, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
+	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
 	
 }
-
-
-
-function parseButtonData(context) {
-	//extract values
-	this.eventName = $(context).children("h3:first").text();
-	this.id = $(context).children('p:first').text();
-	
-	this.month = $(context).find('#month').text();
-	this.day = $(context).find('#day').text();
-	this.year = $(context).find('#year').text();
-	this.hours = $(context).find('#beginHours').text();
-	this.minutes = $(context).find('#beginMinutes').text();
-	this.beginTime = this.hours + ":" + this.minutes;
-
-	if ($(context).find('#intensityInt').text() === '') {
-		//food event
-		this.intensity = $(context).find('#amount').text();
-		this.type = FOOD;
-	} else {
-		//activity event
-		this.intensity = $(context).find('#intensityInt').text();
-		
-		this.type = ACTIVITY;
-	}
-	//modify data to make it compatible for jquery widgets
-	if (parseInt(this.month) < 10) {
-		this.month = "0" + this.month;
-	}
-
-	if (parseInt(this.day) < 10) {
-		this.day = "0" + this.day;
-	}
-	if (parseInt(this.hours) < 10) {
-		this.beginTime = "0" + this.beginTime;
-	}
-
-	this.dateStringForMyDate = this.year + "-" + this.month + '-' + this.day;
-
-	if ($(context).find('#endHours').text() === '') {
-		//button has no end time, so activity is still going, current time
-		//will be used as end time
-
-		var curTimePoint = new Date();
-		var curMinutes = parseInt(curTimePoint.getMinutes());
-		var curHour = parseInt(curTimePoint.getHours());
-		//modify data to make it compatible for jquery widgets
-		if (curMinutes < 10) {
-			curMinutes = "0" + curMinutes;
-		}
-		if (curHour < 10) {
-			curHour = "0" + curHour;
-		}
-
-		this.endTime = curHour + ":" + curMinutes;
-
-	} else {
-		//button has end time, so activity has allready ended
-		//parse end time string
-		this.endTime = $(context).find('#endHours').text() + ":" + $(context).find('#endMinutes').text();
-
-		if (parseInt($(context).find('#endHours').text()) < 10) {
-			endTime = "0" + this.endTime;
-		}
-	}
-}
-
-
-
 
 function showEvents(eventType) {
 	$('#event-list').html('');
@@ -139,7 +121,6 @@ var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventTy
 $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
 $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
 //empty list
-$('.event-list2').html('');
 df.listHistoryEvents(eventType);
 }
 

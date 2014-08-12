@@ -14,6 +14,7 @@ $('[name=startEventTypeSelected]').click(function() {
 	showEvents(eventType);
 });
 
+
 $('[name=historyEventTypeSelected]').click(function() {
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	var index = 0;
@@ -26,9 +27,24 @@ $('[name=historyEventTypeSelected]').click(function() {
 		'eventType': eventType
 	});
 
-	$('.event-list2').html('');
 	df.listHistoryEvents($(this).html());
 
+});
+
+$('#newEventPageEventType').change(function(){
+	
+		var eventType = $('[name="radio-choice-h-2"]:checked').val();
+		if(eventType === FOOD){
+			$('#newEventPageActivityInput').hide();
+			$('#newEventPageFoodInput').show();
+			
+		}
+		else{
+			
+			$('#newEventPageFoodInput').hide();
+			$('#newEventPageActivityInput').show();
+		}
+	
 });
 
 
@@ -36,15 +52,21 @@ $('#addOrEditEvent').click(function() {
 	//alert('start adding');
 	var eventName = $('#newEventName').val();
 	var eventType = $('[name="radio-choice-h-2"]:checked').val();
+	var carbs = $('#newEventPageCarbs').val();
+	var alcoholicUnits = $('#newEventPageAlcoholicUnits').val();
+	var power = $('#newEventPagePower').val();
+	
+	
 	if($('#addOrEditEvent').text() === 'Add'){
 		//add event
-
-		df.addEvent(eventName, eventType);
+		df.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
 	}
 	else{
 		//edit event 
 		var eventID = $('#eventID').text();
-		df.updateEvent(eventID, eventName, eventType);
+		df.updateEvent(eventID, eventName, eventType, carbs, alcoholicUnits, power);
+		
+		
 	}
 
 	//present the edited button on top of the list with a green background
@@ -145,16 +167,23 @@ $('#newEventButton').click(function(){
 		$("#radio-choice-h-2a").prop("checked", true);
 		$("#radio-choice-h-2b").prop("checked",false);
 		$("input[type='radio']").checkboxradio("refresh");
+		
+		$('#newEventPageActivityInput').hide();
+		$('#newEventPageFoodInput').show();
+			
+		
 	}
 	else{
 
 		$("#radio-choice-h-2b").prop("checked", true);
 		$("#radio-choice-h-2a").prop("checked", false);
 		$("input[type='radio']").checkboxradio("refresh");
+		
+		$('#newEventPageFoodInput').hide();
+		$('#newEventPageActivityInput').show();
 	}
 });
 $('#recentAddedEventButton').click(function(){
-	 synchronise();
 	setAddOrEditScreen(this);
 });
 

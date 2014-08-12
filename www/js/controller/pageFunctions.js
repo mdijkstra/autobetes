@@ -1,13 +1,18 @@
 $(document).on('pageshow', '#start', function() {
-	 synchronise();
 	//set tab index on the "All" tab when the page will be showed
 	$(document).data('selectedTabIndex', {
 		'index': 0,
 		'eventType': null
 	});
-
-
-	showSelectedEvents();
+	
+	if($(document).data(TOURMODE)){
+		//app is in tour modus
+		startEventScreenTour();
+	}
+	else{
+		synchronise();
+		showSelectedEvents();
+	}
 });
 
 $(document).on('pageshow', '#loginDialog', function(){
@@ -44,9 +49,16 @@ $(document).on('pageshow', '#settings', function(){
 });
 
 $(document).on('pageshow', '#home', function() {
-	synchronise();
-	$('.event-list3').html('');
-	df.showCurrentActivityEventInstances();
+	if($(document).data(TOURMODE)){
+		//app is in tour modus
+		
+		homeScreenTour();
+	}
+	else{
+		synchronise();
+		
+		df.showCurrentActivityEventInstances();
+	}
 });
 
 $(document).on('pageshow', '#history', function() {
@@ -56,11 +68,25 @@ $(document).on('pageshow', '#history', function() {
 });
 
 $(document).on('pagehide', '#newEvent', function(){
+	
+	
 	 synchronise();
 	//empty eventname field
 	$('#newEventName').val('');
+	$('#newEventPageCarbs').val('');
+	$('#newEventPageAlcoholicUnits').val('');
+	$('#newEventPagePower').val('');
+	//checkbox might have been disabled
+	$("#radio-choice-h-2a").checkboxradio('enable');
+	$("#radio-choice-h-2b").checkboxradio('enable');
+	
 });
 
+$(document).on('pageshow', '#newEvent', function(){
+	if($(document).data(TOURMODE)){
+		newEventScreenTour();
+	}
+})
 
 $(document).on('pagehide', '#start', function(){
 	 synchronise();

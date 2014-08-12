@@ -18,8 +18,10 @@ function successCallBack(transaction, results){
 
 // this is called when an error happens in a transaction
 function errorHandler(transaction, error) {
+	console.log(error.message);
 	toastShortMessage(ERROR_TEXT+ error.message);
 	console.log(error);
+	console.log(transaction);
 	/*
 	showMessageDialog(ERROR_HEADER, ERROR_TEXT+ error.message);
 	//alert('Error: ' + error.message + ' code: ' + error.code);

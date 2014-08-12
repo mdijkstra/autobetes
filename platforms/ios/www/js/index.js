@@ -20,6 +20,7 @@ var SAVE = "Save";
 var ALL = 'All';
 var TRUE = 'True';
 var ENDED = 'ended';
+var EDIT = "Edit";
 var EVENT_ALREADY_EXISTS = 'Event allready exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
 var LOGINDIALOG = "loginDialog";
@@ -60,9 +61,12 @@ var CONNECT_TO_SERVER = "Connect to server";
 var SUCCEEDED = "Succeeded";
 var FAILED = "Failed";
 var ARE_YOU_SURE_DELETE = 'Are you sure you want to delete ';
+var TOURMODE = "App is in guide tour modus";
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
+$(document).data(TOURMODE, false);
+
 var restClient = new top.molgenis.RestClient();
 //workaround to enable setting the value of the slider programmatically 
 $('#edit-event-instance-page').page();
@@ -106,7 +110,16 @@ function toastShortMessage(messageText){
 }
 
 function onDeviceReady() {
-	window.location.href = 'http://apache.org';
+	
+	
+	
+	//window.location.href = 'http://apache.org';
+	/*
+	setTimeout(function() {
+        ref.close();
+    }, 5000);
+	*/
+	//getToken();
 	/*
 	 var ref = window.open('http://apache.org', '_blank', 'location=yes');
 	 ref.addEventListener('loadstop', function(){toastMessage(alert('done loading'))})
