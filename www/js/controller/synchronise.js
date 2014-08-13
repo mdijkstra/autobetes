@@ -1,6 +1,6 @@
 var synchronise = function(){
 	var currentTimeStamp = new Date().getTime();
-	
+
 	if(canMakeAjaxCall()){
 		//device is not synchronising or logging in yet
 		$(document).data(IS_SYNCHRONISING, true);
@@ -24,7 +24,7 @@ var synchronise = function(){
 			}
 
 			var callback1 = function(data, textStatus, response){
-				
+
 				df.updateLastUpdateTimeStamp(currentTimeStamp);
 				iterateArrayRecursively(0, data);
 
@@ -46,13 +46,13 @@ var synchronise = function(){
 				//console.log("events");
 
 				df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
-					
+
 					pushEntitiesInArray(result);
 					//console.log("activity");
 
 					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
 						pushEntitiesInArray(result);
-						
+
 						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
 					});
 				});
@@ -160,7 +160,7 @@ var iterateArrayRecursively = function(index, data){
 var canMakeAjaxCall = function(){
 	var isSynchronising = $(document).data(IS_SYNCHRONISING);
 	var isLoggingIn = $(document).data(IS_SYNCHRONISING);
-	if(restClient.getToken() === undefined){
+	if(restClient.getToken() === null){
 		//there is no token
 		checkIfUserExists();
 		return false;
@@ -170,7 +170,7 @@ var canMakeAjaxCall = function(){
 		return false;
 	}
 	else{
-		//not doing one of the three
+		//can make ajax call
 		return true;
 	}
 }

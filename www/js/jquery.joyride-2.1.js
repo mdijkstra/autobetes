@@ -487,7 +487,6 @@
               leftAdjustment = settings.tipSettings.tipAdjustmentX ? parseInt(settings.tipSettings.tipAdjustmentX) : 0;
             
             if (methods.bottom()) {
-            	console.log("ikke kome hero2");
               settings.$next_tip.css({
                 top: (settings.$target.offset().top + nub_height + settings.$target.outerHeight() + topAdjustment),
                 left: settings.$target.offset().left + leftAdjustment});
@@ -495,10 +494,7 @@
               if (/right/i.test(settings.tipSettings.nubPosition)) {
                 settings.$next_tip.css('left', settings.$target.offset().left - settings.$next_tip.outerWidth() + settings.$target.outerWidth());
                 $nub.css({'left': '22px !important'});
-                console.log("ikke kome hero3");
               }
-              console.log($nub);
-              console.log(settings.tipSettings)
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'top');
 
             } else if (methods.top()) {
@@ -506,21 +502,15 @@
               settings.$next_tip.css({
                 top: (settings.$target.offset().top - settings.$next_tip.outerHeight() - nub_height + topAdjustment),
                 left: settings.$target.offset().left + leftAdjustment});
-              console.log("ikke kome hero4");
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'bottom');
 
             } else if (methods.right()) {
-            	console.log("ikke kome hero5");
               settings.$next_tip.css({
                 top: settings.$target.offset().top + topAdjustment,
                 left: (settings.$target.outerWidth() + settings.$target.offset().left + nub_width) + leftAdjustment});
-              console.log("dsfgdddd");
-              console.log($nub);
-              console.log(settings.tipSettings.nubPosition);
               methods.nub_position($nub, settings.tipSettings.nubPosition, 'left');
 
             } else if (methods.left()) {
-            	console.log("ikke kome hero6");
               settings.$next_tip.css({
                 top: settings.$target.offset().top + topAdjustment,
                 left: (settings.$target.offset().left - settings.$next_tip.outerWidth() - nub_width) + leftAdjustment});
@@ -530,7 +520,6 @@
             }
 
             if (!methods.visible(methods.corners(settings.$next_tip)) && settings.attempts < settings.tipSettings.tipLocationPattern.length) {
-            	console.log("ikke kome hero7");
               $nub.removeClass('bottom')
                 .removeClass('top')
                 .removeClass('right')
@@ -545,7 +534,6 @@
             }
 
         } else if (settings.$li.length) {
-        	console.log("ikke kome hero8");
           methods.pos_modal($nub);
 
         }

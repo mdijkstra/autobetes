@@ -4,24 +4,25 @@ function showEventList(transaction, result) {
 		var rows = [];
 		for (var i = 0; i < result.rows.length; i++) {
 			var row = result.rows.item(i);
-			
-			
-			if($('#presentBoolean').text() === 'show' && $('#eventNameToBePrivileged').text() === row.name ){
+
+
+			if($('#eventnameOfAddedOrEditedEvent').text() === row.name ){
+				console.log("ja ik ben er");
 				//new event has been made, name corresponds with name of this row item.
 				//the item need to be presented as a special button on top of the list, not in the list itself
-				var buttonText = '<span id="name">' + row.name + '</span><span id="eventType" style="display: none">'+row.eventType+'</span><span id="eventID" style="display: none">'+row.cId+'</span>';
+				var buttonText =  row.name + '<span id="eventID" style="display: none">'+row.cId+'</span>';
 				//show new event in button on top of the list
 				$('#recentAddedEventButton').html(buttonText);
 				$('#recentAddedEventButton').val(row.eventType);
 				//ensure next call this button is not presented
-				$('#presentBoolean').text('hide');
+				$('#eventnameOfAddedOrEditedEvent').text('');
 
 			}
 			else{
 				//push button in array
 				rows.push(row);
 			}
-			
+
 		}
 		var source = $("#event-list-template").html();
 		console.log(source);
@@ -36,7 +37,7 @@ function showEventList(transaction, result) {
 }
 
 function showCurrentEventInstanceActivity(inputType, result) {
-	
+
 	var buttons = [];
 	for (var i = 0; i < result.rows.length; i++) {
 		//progress results
@@ -59,26 +60,26 @@ function showCurrentEventInstanceActivity(inputType, result) {
 				beginYear : date.getFullYear(),
 				cId : row.cId,
 				eventType: row.eventType
-				
+
 		}
-		
+
 		//add button to array
 		buttons.push(button);
-		
+
 	}
-	
+
 	var source = $("#current-activity-event-list-template").html();
 	var template = Handlebars.compile(source);	
 	$('#current-activity-event-list').html(template(buttons));
-	
+
 }
 
 function showEventInstanceList(inputType, result) {
-	
+
 	var eventInstances = [];
 	for (var i = 0; i < result.rows.length; i++) {
 		//process results
-		
+
 		var row = result.rows.item(i);
 		var date = new Date(row.beginTime);
 		var minutes = parseInt(date.getMinutes());
@@ -122,7 +123,7 @@ function showEventInstanceList(inputType, result) {
 				endMinutes : endMinutes
 			});
 		}
-		
+
 	}
 	var source = $("#history-event-instance-list-template").html();
 	var template = Handlebars.compile(source);

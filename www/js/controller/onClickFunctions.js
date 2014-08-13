@@ -32,19 +32,19 @@ $('[name=historyEventTypeSelected]').click(function() {
 });
 
 $('#newEventPageEventType').change(function(){
-	
-		var eventType = $('[name="radio-choice-h-2"]:checked').val();
-		if(eventType === FOOD){
-			$('#newEventPageActivityInput').hide();
-			$('#newEventPageFoodInput').show();
-			
-		}
-		else{
-			
-			$('#newEventPageFoodInput').hide();
-			$('#newEventPageActivityInput').show();
-		}
-	
+
+	var eventType = $('[name="radio-choice-h-2"]:checked').val();
+	if(eventType === FOOD){
+		$('#newEventPageActivityInput').hide();
+		$('#newEventPageFoodInput').show();
+
+	}
+	else{
+
+		$('#newEventPageFoodInput').hide();
+		$('#newEventPageActivityInput').show();
+	}
+
 });
 
 
@@ -55,8 +55,8 @@ $('#addOrEditEvent').click(function() {
 	var carbs = $('#newEventPageCarbs').val();
 	var alcoholicUnits = $('#newEventPageAlcoholicUnits').val();
 	var power = $('#newEventPagePower').val();
-	
-	
+
+
 	if($('#addOrEditEvent').text() === 'Add'){
 		//add event
 		df.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
@@ -65,35 +65,33 @@ $('#addOrEditEvent').click(function() {
 		//edit event 
 		var eventID = $('#eventID').text();
 		df.updateEvent(eventID, eventName, eventType, carbs, alcoholicUnits, power);
-		
-		
+
+
 	}
 
-	//present the edited button on top of the list with a green background
-	//indicate that the green button on top needs to be shown
-	$('#presentBoolean').text('show');
+	
 	//show div
 	$('#recentlyAddedEvent').show();
 	//tag certain event to be presented on top. The method showlist handles
 	//this privilege
-	$('#eventNameToBePrivileged').text(eventName);
+	$('#eventnameOfAddedOrEditedEvent').text(eventName);
 
 });
 
 $('#deleteEvent').click(function(){
 	var eventName = $('#newEventName').val();
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
-	
+
 	$('#deleteEventDialogConfirmButton').click(function() {
 		df.deleteEvent($('#eventID').text());
 		toastMessage("delete " + eventName);
 	});
-	
+
 });
 
 
 $('#historyButton').click(function() {
-	
+
 	$(document).removeData('selectedTabIndex2');
 	selectHistoryTabMenu();
 	$('.event-list2').html('');//empty list
@@ -129,7 +127,7 @@ $('#editModeButton').click(function(){
 
 
 $('#startEventInstanceButton').click(function() {
-	
+
 	var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 	var unixTime = Date.parse(timeAndDate).getTime();
 	var eventId = $('#eventID').text();
@@ -139,11 +137,11 @@ $('#startEventInstanceButton').click(function() {
 	df.addEventInstance(quantity, unixTime, eventId, eventType);
 	df.showCurrentActivityEventInstances();
 	//refresh list of current events
-	
+
 	//set text on home screen, regarding which event is added
 
 	var addedText = "Added "+$('#startEventName').html();
-	
+
 	toastMessage(addedText)
 
 	return;
@@ -167,24 +165,21 @@ $('#newEventButton').click(function(){
 		$("#radio-choice-h-2a").prop("checked", true);
 		$("#radio-choice-h-2b").prop("checked",false);
 		$("input[type='radio']").checkboxradio("refresh");
-		
+
 		$('#newEventPageActivityInput').hide();
 		$('#newEventPageFoodInput').show();
-			
-		
+
+
 	}
 	else{
 
 		$("#radio-choice-h-2b").prop("checked", true);
 		$("#radio-choice-h-2a").prop("checked", false);
 		$("input[type='radio']").checkboxradio("refresh");
-		
+
 		$('#newEventPageFoodInput').hide();
 		$('#newEventPageActivityInput').show();
 	}
-});
-$('#recentAddedEventButton').click(function(){
-	setAddOrEditScreen(this);
 });
 
 $('#loginDialogOkButton').click(function(){
@@ -195,19 +190,19 @@ $('#loginDialogOkButton').click(function(){
 	df.getUserInfo(function(transaction, result){
 		if(result.rows.length > 0 && result.rows.item(0).email !== email){
 			//user switched account, so now reset db
-			
+
 			df.resetDBExceptUserTable();
 			restClient.setToken(null);//ensure that no token is saved of other account
-			
+
 		}
 		df.updateEmailAndPassword(email, password, function(){
 			login();
 			//window.location.href =  '#home';
 		});
-		
+
 	})
-	
-	
+
+
 });
 
 $('#registrationDialogOkButton').click(function(){
@@ -224,16 +219,16 @@ $('#registrationDialogOkButton').click(function(){
 		if(password === confirmPassword){
 			//reset db to ensure that data from another account not will end up in this account, 
 			df.resetDBExceptUserTable();
-			
+
 			var userData = {
 					email: email,
 					password: password
 			}
-			
+
 			toastShortMessage(CONNECT_TO_SERVER);
-			
+
 			var registerCallbackError = function(response, textStatus, error){
-				
+
 				if(response.responseText === ""){
 					//could not connect to server
 					showMessageDialog('Failed', SERVER_CONNECTION_FAIL+". "+TRY_AGAIN_LATER);
@@ -243,7 +238,7 @@ $('#registrationDialogOkButton').click(function(){
 					toastShortMessage(response.responseText);
 				}
 			};
-			
+
 			var registerCallbackSuccess = function(data, textStatus, response){
 				if(response.responseJSON.success){
 					df.updateUser(email, pumpId, password);
@@ -255,33 +250,33 @@ $('#registrationDialogOkButton').click(function(){
 						showMessageDialog(SUCCEEDED, response.responseJSON.message + PLEASE_SYNC_WITH_PUMP);
 					}, 500)
 					//alert("Please synchronise the time settings of your insulin pump with those of your app!").
-					
+
 				}
 				else{
 					showMessageDialog(FAILED, response.responseJSON.message);
 				}
 				//alert(data.message);
-				
+
 				$("#messageText").html(data.message);
 				$( "#messageDialog" ).dialog();
-				
-			
-			
-		};
-			
-			
+
+
+
+			};
+
+
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{
 			showMessageDialog('', PASSWORDS_NOT_THE_SAME);
-			
-			
+
+
 		}
-		
+
 	}
 	else{
 		showMessageDialog('', INVALID_EMAIL);
-		
+
 	}
-	
+
 });

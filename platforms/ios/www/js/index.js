@@ -62,6 +62,7 @@ var SUCCEEDED = "Succeeded";
 var FAILED = "Failed";
 var ARE_YOU_SURE_DELETE = 'Are you sure you want to delete ';
 var TOURMODE = "App is in guide tour modus";
+var LOGINPAGE = '#loginDialog';
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -97,43 +98,24 @@ document.addEventListener("deviceready", onDeviceReady, false);
 //
 
 function showMessageDialog(headerText, messageText){
-	console.log("open dialog");
+	
 	$("#messageDialogHeader").html(headerText);
 	$("#messageDialogText").html(messageText);
 	$.mobile.changePage( "#messageDialog", { role: "dialog" } );
 }
 function toastMessage(messageText){
+	console.log(messageText)
 	window.plugins.toast.showLongBottom(messageText, null, null);
 }
 function toastShortMessage(messageText){
+	console.log(messageText)
 	window.plugins.toast.showShortBottom(messageText, null, null);
 }
 
 function onDeviceReady() {
 	
-	
-	
-	//window.location.href = 'http://apache.org';
-	/*
-	setTimeout(function() {
-        ref.close();
-    }, 5000);
-	*/
-	//getToken();
-	/*
-	 var ref = window.open('http://apache.org', '_blank', 'location=yes');
-	 ref.addEventListener('loadstop', function(){toastMessage(alert('done loading'))})
-     // close InAppBrowser after 5 seconds
-     setTimeout(function() {
-         ref.close();
-     }, 5000);
-	//getToken();
-	*/
-	console.log("device ready");
 	checkIfUserExists();
 
-	
-	
 	document.addEventListener("offline", function(e) {
 		//alert("offline");
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -142,23 +124,15 @@ function onDeviceReady() {
 	document.addEventListener("online", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, true);
 		synchronise();
-		//alert("online");
+		
 	}, false);
 
 	document.addEventListener("pause", function(e){
-		restClient.logout()
+		restClient.logout();
 	}, false);
 
 	document.addEventListener("resume", function(e){
-		/*
-            	 restClient.login('admin', 'admin', {
-                     success: function(result){
-
-                     token = result.token;
-
-                     }
-
-         });*/
+		synchronise();
 	}, false);
 
 }

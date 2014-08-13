@@ -2,14 +2,16 @@ function homeScreenTour(){
 	console.log("homeScreenTour");
 	$('#homeScreenTour').joyride({
 		autoStart : true,
+		modal:true,
+		expose: true,
 		postRideCallback : function (index, tip) {
-			
+
 			window.location.href =  '#start';
 			//$(this).joyride({autoStart : false});
-		    $(this).joyride("destroy");
-		    
+			$(this).joyride("destroy");
+
 		}
-		
+
 	});
 }
 
@@ -23,20 +25,21 @@ function startEventScreenTour(){
 	$('#event-list').append(eventButton);
 	eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">Hamburger</span></A>');
 	$('#event-list').append(eventButton);
-	
+
 	$('#startEventScreenTour').joyride({
-		
+		modal:true,
+		expose: true,
 		autoStart : true,
 		postRideCallback : function(){
 			window.location.href =  '#newEvent';
 			$(this).joyride("destroy");
 		},
-		
+
 		preStepCallback : function(index, tip){
 			if(index === 3){
 				//$(this).joyride("setNubPositionTopRight");
 				$(this)[0].nubPosition = "top-right";
-				console.log($(this)[0]);
+
 			}
 		}
 	});
@@ -46,6 +49,8 @@ function newEventScreenTour(){
 	console.log("new event tour");
 	$('#newEventScreenTour').joyride({
 		autoStart : true,
+		modal:true,
+		expose: true,
 		postRideCallback : function(){
 			//window.location.href =  '#newEvent';
 			$(this).joyride("destroy");

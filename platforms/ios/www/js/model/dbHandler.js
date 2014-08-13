@@ -22,8 +22,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.deleteEvent = deleteEvent;
 	//this.setBeenSentEvent = setBeenSentEvent;
 	//this.setBeenSentEventInstance = setBeenSentEventInstance;
-	this.setSidEvent = setSidEvent;
-	this.setSidEventInstance = setSidEventInstance;
 	this.getUserInfo = getUserInfo;
 	this.addUser = addUser;
 	this.updateUser = updateUser;
@@ -42,15 +40,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	
 	//add all the sql queries
 	//create statements
-	/*
-	 * old data model
-	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, name TEXT NOT NULL, eventType TEXT NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER)';
-	var CREATE_EVENTINSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id INTEGER NOT NULL AUTO INCREMENT, DType TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, event INTEGER NOT NULL, PRIMARY KEY (`id`), CONSTRAINT FK_EventInstance_Event FOREIGN KEY (Event) REFERENCES Event (id))';
-	
-	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sId INTEGER, event TEXT NOT NULL, amount INTEGER NOT NULL, beginTime INTEGER NOT NULL, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
-	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id INTEGER PRIMARY KEY AUTOINCREMENT, eventID INTEGER, sID INTEGER, event TEXT NOT NULL, intensity INTEGER NOT NULL, beginTime INTEGER NOT NULL, endTime INTEGER, beenSent INTEGER DEFAULT 0, deleted INTEGER DEFAULT 0, timeStamp INTEGER, FOREIGN KEY(eventID) REFERENCES Event(id))';
-	*/
-	
 	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
 	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(cId INTEGER PRIMARY KEY, alcoholicUnits INTEGER, carbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(cId) REFERENCES Event(cId))';
 	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(cId INTEGER PRIMARY KEY, power INTEGER)';
@@ -65,10 +54,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//update statements
 	var SET_SID_EVENT = 'UPDATE Event SET sId = ? WHERE cId = ?';
 	var SET_SID_INSTANCE = 'UPDATE EventInstance SET sId = ? WHERE cId = ?';
-	//var SET_BEEN_SENT_EVENT_TRUE = 'UPDATE Event SET beenSent = 1 WHERE cId = ?';
-	//var SET_BEEN_SENT_EVENT_FALSE = 'UPDATE Event SET beenSent = 0, WHERE cId=?';
-	//var SET_BEEN_SENT_INSTANCE_TRUE = 'UPDATE EventInstance SET beenSent = 1 WHERE cId = ?';
-	//var SET_BEEN_SENT_INSTANCE_FALSE = 'UPDATE EventInstance SET beenSent = 0 WHERE cId =?';
 	
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE cId =?';
 	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=? WHERE cId=?';
@@ -96,10 +81,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.cId =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.cId =?;';
-	
-		
-	
-
 	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.cId = f.cId LEFT JOIN ActivityEvent a on e.cId = a.cId WHERE e.lastchanged >?'
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e join ActivityEventInstance a on e.cId = a.cId where e.lastchanged > ?;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e  join FoodEventInstance f on e.cId = f.cId where e.lastchanged > ?;';
@@ -244,16 +225,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		createTablesIfNotExists();
 	}
 
-	
-	function setSidEvent(sId, cId){
-		executeQuery(SET_SID_EVENT, [sId, cId], nullHandler);
-		
-	}
-	function setSidEventInstance(sId, cId){
-		executeQuery(SET_SID_INSTANCE, [sId, cId], nullHandler);
-	
-	}
-
 
 /*
 	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
@@ -349,19 +320,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}
 	
-	//TODO add new function synchronizeWithServer retrieveRecentChangesFromServer(); sendRecentChangesToServer
-	
-	/*
-	 * This method selects all the data from every table, and calls other methods to send the data to the server
-	 */
-	function sendDbData() {
-		
-		//var db = openDatabase(shortName, version, displayName, maxSize);
-		
-		//executeQuery(SELECT_UNSENT_EVENTS, [], sendEventsToServer);
-		//executeQuery(SELECT_UNSENT_FOOD_INSTANCES, [], sendFoodEventInstanceToServer);
-		//executeQuery(SELECT_UNSENT_ACTIVITY_INSTANCES, [], sendActivityEventInstance);
-		
 	}
 	
 	/*
@@ -575,12 +533,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function updateLastUpdateTimeStamp(lastchanged){
 		executeQuery(EDIT_LAST_UPDATE_TIMESTAMP, [lastchanged], nullHandler);
 	}
-	function updateEventIfServerTimeStampIsGreater(){
-		
-	}
-	function updateEventInstanceIfServerTimeStampIsGreater(){
 	
-	}
 	function getCurrentTimestamp(){
 		return new Date().getTime();
 		

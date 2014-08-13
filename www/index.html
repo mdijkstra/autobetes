@@ -93,8 +93,8 @@
 		<div data-role="main" class="ui-content">
 
 			<div id="recentlyAddedEvent" style="display: none">
-				<span id="eventNameToBePrivileged" style="display: none"></span> <span
-					id="presentBoolean" style="display: none">show</span> <A
+				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span><A
+					onclick="setAddOrEditScreen(this)"
 					id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all"
 					style="background: #adf4b4"></A>
 			</div>
@@ -195,10 +195,12 @@
 			<div>
 				<fieldset id="newEventPageEventType" data-role="controlgroup"
 					data-type="horizontal" style="text-align: center">
+					
 					<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a"
-						value="Food"> <label for="radio-choice-h-2a">Food</label>
+						value="Food"> <label class="radioChoiceNewEvent" for="radio-choice-h-2a">Food</label>
 					<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b"
-						value="Activity"> <label for="radio-choice-h-2b">Activity</label>
+						value="Activity"> <label class="radioChoiceNewEvent" for="radio-choice-h-2b">Activity</label>
+					
 				</fieldset>
 			</div>
 			
@@ -644,7 +646,7 @@
         <h2>Stop #1</h2>
         <p>She said hello you fool, i love you! Come enjoy the joyride!</p>
       </li>
-      <li data-id="historyButton" data-button="Close" class="custom">
+      <li data-id="historyButton" data-text="Next" class="custom">
         <h2>Stop #2</h2>
         <p>Hystory can be found here</p>
       </li>
@@ -676,7 +678,7 @@
      </ol>
      
      <ol id="newEventScreenTour">
-      <li data-id="radio-choice-h-2a" data-text="Next" class="custom">
+      <li data-class="radioChoiceNewEvent" data-text="Next" class="custom">
         <h2>Stop #1</h2>
         <p>Specify here the type of the event</p>
       </li>
