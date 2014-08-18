@@ -1,5 +1,5 @@
 
-$('[name=startEventTypeSelected]').click(function() {
+$('[name=event-list-navbar-buttons]').click(function() {
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	var index = 0;
 	if (eventType === FOOD)
@@ -15,7 +15,7 @@ $('[name=startEventTypeSelected]').click(function() {
 });
 
 
-$('[name=historyEventTypeSelected]').click(function() {
+$('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	var index = 0;
 	if (eventType === FOOD)
@@ -63,7 +63,7 @@ $('#addOrEditEvent').click(function() {
 	}
 	else{
 		//edit event 
-		var eventID = $('#eventID').text();
+		var eventID = $('#cid').text();
 		df.updateEvent(eventID, eventName, eventType, carbs, alcoholicUnits, power);
 
 
@@ -83,8 +83,12 @@ $('#deleteEvent').click(function(){
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
 
 	$('#deleteEventDialogConfirmButton').click(function() {
-		df.deleteEvent($('#eventID').text());
+		df.deleteEvent($('#id').text());
+		console.log("delete event:"+$('#cid').text() )
 		toastMessage("delete " + eventName);
+	});
+	$('#deleteEventDialogNoButton').click(function() {
+		populateEditEventScreen($('#cid').text());
 	});
 
 });
@@ -105,7 +109,7 @@ $('#editModeButton').click(function(){
 		$('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 
-		//change buttontext to Add on newEvent screen
+		//change buttontext to Add on make-new-event-page screen
 		$('#addOrEditEvent').text('Add');
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
 	}
@@ -115,7 +119,7 @@ $('#editModeButton').click(function(){
 		$('#editModeButton').attr("style","background: #8df3e6 !important");
 		$('.eventButtons').attr("style","background: #8df3e6 !important");
 
-		//change buttontext to Edit on newEvent screen
+		//change buttontext to Edit on make-new-event-page screen
 		$('#addOrEditEvent').text('Save');
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline');
 
@@ -130,9 +134,9 @@ $('#startEventInstanceButton').click(function() {
 
 	var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 	var unixTime = Date.parse(timeAndDate).getTime();
-	var eventId = $('#eventID').text();
+	var eventId = $('#start-event-instance-page-event-cId').text();
 	var quantity = $('#start-event-instance-quantity-slider').val();
-	var eventType = $('#eventType2').text();
+	var eventType = $('#start-event-instance-page-eventType').text();
 
 	df.addEventInstance(quantity, unixTime, eventId, eventType);
 	df.showCurrentActivityEventInstances();
@@ -183,7 +187,7 @@ $('#newEventButton').click(function(){
 });
 
 $('#loginDialogOkButton').click(function(){
-	//window.location.href =  '#home';
+	//window.location.href =  '#home-page';
 	var email = $('#loginEmail').val();
 	var password = $('#loginPassword').val();
 	//check if user switched account
@@ -197,7 +201,7 @@ $('#loginDialogOkButton').click(function(){
 		}
 		df.updateEmailAndPassword(email, password, function(){
 			login();
-			//window.location.href =  '#home';
+			//window.location.href =  '#home-page';
 		});
 
 	})

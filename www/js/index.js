@@ -63,17 +63,21 @@ var FAILED = "Failed";
 var ARE_YOU_SURE_DELETE = 'Are you sure you want to delete ';
 var TOURMODE = "App is in guide tour modus";
 var LOGINPAGE = '#loginDialog';
+var GUIDE_TOUR_HOMESCREEN_STOP_INT = "Start guide tour";
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
+
 $(document).data(TOURMODE, false);
+$(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 1);
+
 
 var restClient = new top.molgenis.RestClient();
 //workaround to enable setting the value of the slider programmatically 
 $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
-$('#newEvent').page();
+$('#make-new-event-page').page();
 //workaround for the input field at the sliders, this ensures that input ar only integers with or without
 //digits
 jQuery('.numbersOnly').keyup(function () { 
@@ -88,13 +92,8 @@ $(document).on('blur', 'input, textarea', function() {
 
 onDeviceReady();
 
-//Wait for PhoneGap to load
 
-document.addEventListener("deviceready", onDeviceReady, false);
-//window.location.data-rel ="dialog";
-
-//'<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'
-//PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
 
 
 function showMessageDialog(headerText, messageText){

@@ -3,24 +3,20 @@
  * the screen in where the user can modify the event will be set. When de edit mode
  * is not on, the start-event-instance-page screen will be set.
  */
-function setAddOrEditScreen(context){
-	//get eventID
-	var eventId = $(context).find('#eventID').text();
-
+function setAddOrEditScreen(eventId){
+	
 	if($('#editModeButton').val() ==="on"){
 		//include delete button so user can delete event
 		$('#deleteEvent').show();
 		//edit mode is on, the screen newEvent will be used
 		window.location.href = '#newEvent';
-		$("#radio-choice-h-2a").checkboxradio('disable');
-		$("#radio-choice-h-2b").checkboxradio('disable');
 		populateEditEventScreen(eventId);
 
 	}
 	else{
 
 		$('#deleteEvent').hide();
-		//edit mode is off. open start2 screen
+		//edit mode is off. open start-event-instance-page screen
 		window.location.href = '#start-event-instance-page';
 		populateStartEventInstanceScreen(eventId);
 	}
@@ -34,9 +30,8 @@ function populateEditEventInstancePage(cId, eventType) {
 			$('#edit-event-instance-cId').html(row.cId);
 			$('#edit-event-instance-eventType').html(row.eventType);
 			$('#edit-event-instance-name').html(row.name);
-			$('#mydate2').val(dateAndTime.date);
-			$('#beginTime').val(dateAndTime.time);
-
+			$('#edit-event-instance-page-begin-date-field').val(dateAndTime.date);
+			$('#edit-event-instance-page-begin-time-field').val(dateAndTime.time);
 
 			if (row.eventType === ACTIVITY) {
 				//activity has an endtime
@@ -51,8 +46,8 @@ function populateEditEventInstancePage(cId, eventType) {
 				}
 
 				$('#endTimeField').show();
-				$('#endTime').val(endDateAndTime.time);
-
+				$('#edit-event-instance-page-end-time-field').val(endDateAndTime.time);
+				$('#edit-event-instance-page-end-date-field').val(endDateAndTime.date);
 				$('#edit-event-instance-food-quantity-slider-label').hide();
 				$('#edit-event-instance-activity-quantity-slider-label').show();
 				$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
@@ -85,25 +80,23 @@ function populateEditEventInstancePage(cId, eventType) {
 
 function populateEditEventScreen(eventId){
 	df.getParticularEvent(eventId, function(transaction, result){
-
+		$("#radio-choice-h-2a").checkboxradio('disable');
+		$("#radio-choice-h-2b").checkboxradio('disable');
 
 		if(result.rows.length === 1){
 			var row = result.rows.item(0);
-			console.log(row);
-
-
 			//set eventID
-			$('#eventID').text(row.cId);
+			$('#cid').text(row.cId);
 			//set header name
-			$('#newEvent').find("#headerName").text(EDIT);
+			$('#make-new-event-page').find("#headerName").text(EDIT);
 			//set name of event 
-			$('#newEvent').find('#newEventName').val(row.name);
+			$('#make-new-event-page').find('#newEventName').val(row.name);
 
 			//set the fieldset right
 			if(row.eventType === FOOD){
-				$('#newEvent').find('#newEventPagePower').val("");
-				$('#newEvent').find('#newEventPageCarbs').val(row.carbs);
-				$('#newEvent').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
+				$('#make-new-event-page').find('#newEventPagePower').val("");
+				$('#make-new-event-page').find('#newEventPageCarbs').val(row.carbs);
+				$('#make-new-event-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
 
 				$("#radio-choice-h-2a").prop("checked", true);
 				$("#radio-choice-h-2b").prop("checked",false);
@@ -112,9 +105,9 @@ function populateEditEventScreen(eventId){
 				$('#newEventPageFoodInput').show();
 			}
 			else{
-				$('#newEvent').find('#newEventPagePower').val(row.power);
-				$('#newEvent').find('#newEventPageCarbs').val("");
-				$('#newEvent').find('#newEventPageAlcoholicUnits').val("");
+				$('#make-new-event-page').find('#newEventPagePower').val(row.power);
+				$('#make-new-event-page').find('#newEventPageCarbs').val("");
+				$('#make-new-event-page').find('#newEventPageAlcoholicUnits').val("");
 
 				$("#radio-choice-h-2b").prop("checked", true);
 				$("#radio-choice-h-2a").prop("checked", false);
@@ -139,7 +132,7 @@ function populateStartEventInstanceScreen(eventID){
 		if(result.rows.length === 1){
 			var row = result.rows.item(0);
 			//set the eventID which is the primary key of the event
-			$('#eventID').text(row.cId);
+			$('#start-event-instance-page-event-cId').text(row.cId);
 			//set event name
 			$('#startEventName').html(row.name);
 			//get current time
@@ -172,7 +165,7 @@ function populateStartEventInstanceScreen(eventID){
 
 			//add event screen varies by event type
 
-			$('#eventType2').text(row.eventType);
+			$('#start-event-instance-page-eventType').text(row.eventType);
 			if (row.eventType === FOOD) {
 				$('#start-event-instance-activity-quantity-slider-label').hide();
 				$('#start-event-instance-food-quantity-slider-label').show();
@@ -202,55 +195,77 @@ function populateStartEventInstanceScreen(eventID){
 
 }
 
-function getIntensityText(value){
-	var specs;
+function convertIntensityIntToTextAndColor(value){
+	var textAndColor;
 	switch(value) {
 	case 1:
-		specs = {color:'#CCFF33',text:'Very easy'};
+		textAndColor = {color:'#CCFF33',text:'Very easy'};
 
 		break;
 	case 2:
-		specs = {color:'#99FF33',text:'Somewhat easy'};
+		textAndColor = {color:'#99FF33',text:'Somewhat easy'};
 		break;
 	case 3:
-		specs = {color:'#33CC33',text:'Moderate'};
+		textAndColor = {color:'#33CC33',text:'Moderate'};
 		break;
 	case 4:
-		specs = {color:'#FF9933',text:'Somewhat hard'};
+		textAndColor = {color:'#FF9933',text:'Somewhat hard'};
 		break;
 	case 5:
-		specs = {color:'#FF6600',text:'Moderately hard'};
+		textAndColor = {color:'#FF6600',text:'Moderately hard'};
 		break;
 	case 6:
-		specs = {color:'#FF0000',text:'Hard'};
+		textAndColor = {color:'#FF0000',text:'Hard'};
 		break;
 	case 7:
-		specs = {color:'#FF0000',text:'Hard'};
+		textAndColor = {color:'#FF0000',text:'Hard'};
 		break;
 	case 8:
-		specs = {color:'#CC0000',text:'Very hard'};
+		textAndColor = {color:'#CC0000',text:'Very hard'};
 		break;
 	case 9:
-		specs = {color:'#A31919',text:'Very, very hard'};
+		textAndColor = {color:'#A31919',text:'Very, very hard'};
 		break;
 	case 10:
-		specs = {color:'#721212',text:'Maximal'};
+		textAndColor = {color:'#721212',text:'Maximal'};
 		break;
 
 	}
-	return specs;
+	return textAndColor;
 }
 
 /*
  * Sets the right interpretation of the given value, in the DOM element(selector)
  */
 function setIntensityTextInScreen(selector, value) {
-	var specs = getIntensityText(value);
+	var textAndColor = convertIntensityIntToTextAndColor(value);
 
 	$(selector).css({
-		'color' : specs.color
+		'color' : textAndColor.color
 	});
-	$(selector).text(specs.text);
+	$(selector).text(textAndColor.text);
+}
+
+
+function showEvents(eventType) {
+	if (eventType !== null && eventType !== undefined) {
+
+		df.listEventsOfEventType(eventType);
+
+	}
+	else{
+		df.showEvents();
+	}
+	//if user edits or adds an event it will be shown on top of the list in green.
+	//in the onclick(#addOrEditEvent) function the name will be set in the hidden span #eventnameOfAddedOrEditedEvent. 
+	//Once that name corresponds with the event in showlist it will set in the green button. The text in #eventnameOfAddedOrEditedEvent
+	//will be removed in order to hide the green button after the list is shown.
+	if($('#eventnameOfAddedOrEditedEvent').text() === ''){
+		//text is empty, ensure that button is hidden
+		$('#recentlyAddedEvent').hide();
+	}
+	
+
 }
 
 

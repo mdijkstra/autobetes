@@ -1,22 +1,5 @@
 
-
-function callbackError(response, textStatus, error){
-	console.log(response);
-	console.log(textStatus);
-	console.log(error);
-	//check if authorization is the problem. Can be caused by an failed login, or the token is expired
-
-	if(error === UNAUTHORIZED){
-		login();
-	}
-}
-
-
-function successCallBack(transaction, results){
-
-}
-
-//this is called when an error happens in a transaction
+//this method is called when an error happens in a transaction
 function errorHandler(transaction, error) {
 	console.log(error.message);
 	toastShortMessage(ERROR_TEXT+ error.message);
@@ -28,7 +11,7 @@ function errorHandler(transaction, error) {
 function nullHandler() {
 }
 /*
- * This method performs the right actions when login failse
+ * This method performs the right actions when login fails
  */
 function callBackLoginError(response, textStatus, error){
 	console.log(response);

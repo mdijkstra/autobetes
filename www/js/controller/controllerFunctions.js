@@ -6,7 +6,7 @@ function deleteEvent(eventName, eventId, eventType){
 	$('#deleteEventInstanceDialogConfirmButton').click(function() {
 		//user confirms
 		//delete instance
-		df.deleteEventInstance(eventID);
+		df.deleteEventInstance(eventId);
 		//refresh list in history
 		var selectedTabIndex = $(document).data('selectedTabIndex2');
 		var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
@@ -57,56 +57,22 @@ function updateEventInstance() {
 	//extract values from DOM
 	var cId = $("#edit-event-instance-cId").text();
 	var eventType = $("#edit-event-instance-eventType").text();
-	var beginTimeAndDate = $('#mydate2').val() + " " + $('#beginTime').val();
+	var beginTimeAndDate = $('#edit-event-instance-page-begin-date-field').val() + " " + $('#edit-event-instance-page-begin-time-field').val();
 	//convert to unix timestamp
 	var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
 	//same with end time
-	var endTimeAndDate = $('#mydate2').val() + " " + $('#endTime').val();
+	var endTimeAndDate = $('#edit-event-instance-page-end-date-field').val() + " " + $('#edit-event-instance-page-end-time-field').val();
 
 	var unixEndTime = Date.parse(endTimeAndDate).getTime();
 
-	//correct endtime if necessary(when end date is actually one day later
-	//convert to date objects for comparison
-	var beginDate = new Date(unixBeginTime);
-	var endDate = new Date(unixEndTime);
-
-	if (beginDate.getHours() > endDate.getHours()) {
-		//end time is before begin time, so we automatically suppose that
-		//end time is next day
-		unixEndTime += 86400000;
-		//add one day in milliseconds
-	} else if (beginDate.getHours() === endDate.getHours() && beginDate.getMinutes() > endDate.getMinutes()) {
-		//same case as the if statement
-		unixEndTime += 86400000;
-		//add one day in milliseconds
-	}
 	//update event instance in database
 	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
 
 }
 
-function showEvents(eventType) {
-	if (eventType !== null && eventType !== undefined) {
 
-		df.listEventsOfEventType(eventType);
-
-	}
-	else{
-		df.showEvents();
-	}
-	//if user edits or adds an event it will be shown on top of the list in green.
-	//in the onclick(#addOrEditEvent) function the name will be set in the hidden span #eventnameOfAddedOrEditedEvent. 
-	//Once that name corresponds with the event in showlist it will set in the green button. The text in #eventnameOfAddedOrEditedEvent
-	//will be removed in order to hide the green button after the list is shown.
-	if($('#eventnameOfAddedOrEditedEvent').text() === ''){
-		//text is empty, ensure that button is hidden
-		$('#recentlyAddedEvent').hide();
-	}
-	
-
-}
 /*
- * When user clicks an eventType in the startEventNavbar, this method gets called to 
+ * When user clicks an eventType in the event-list-navbar, this method gets called to 
  * find out the eventType and call showEvents.
  */
 function showSelectedEvents() {
@@ -117,23 +83,23 @@ function showSelectedEvents() {
 	//get eventType take null if nothing is selected
 	var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
 	//unhighlight all buttons
-	$('[name=startEventTypeSelected]').removeClass('ui-btn-active');
+	$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
 	//highlight the button that is selected
-	$('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
+	$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 	
 	showEvents(eventType);
 
 }
 /*
- * Same as above but now with event instances in history page
+ * Same as above but now with event instances in history-event-instance-page
  */
 function selectHistoryTabMenu() {
 
 	var selectedTabIndex = $(document).data('selectedTabIndex2');
 	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
 	var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-	$('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
-	$('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
+	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
+	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
 	df.listHistoryEvents(eventType);
 }
@@ -171,7 +137,7 @@ function login(){
 	if($(document).data(IS_LOGGING_IN) === false){
 		//ensure that app is not logging in multiple times simultaneously
 		$(document).data(IS_LOGGING_IN, true);
-		df.getUserInfo(transaction,result){
+		df.getUserInfo(function(transaction,result){
 
 			if(result.rows.length > 0){
 				var row = result.rows.item(0);
@@ -194,7 +160,7 @@ function login(){
 			}
 
 
-		}
+		});
 
 	}
 	else{

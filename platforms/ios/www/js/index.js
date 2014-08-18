@@ -37,7 +37,7 @@ var TIMESTAMPPENALTY = 3600000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var COLOR_EDIT_MODE = "#8df3e6";
 var ALLREADY_EXISTS = " allready exists"
-var USERISDISABLEDREGEX= /User is disabled/;
+	var USERISDISABLEDREGEX= /User is disabled/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
 var REGISTRATIONFAILREGEX = /Registration failed/;
@@ -66,7 +66,7 @@ var LOGINPAGE = '#loginDialog';
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
-$(document).data(TOURMODE, false);
+$(document).data(TOURMODE, true);
 
 var restClient = new top.molgenis.RestClient();
 //workaround to enable setting the value of the slider programmatically 
@@ -88,17 +88,17 @@ $(document).on('blur', 'input, textarea', function() {
 
 onDeviceReady();
 
-// Wait for PhoneGap to load
-// 
+//Wait for PhoneGap to load
+
 document.addEventListener("deviceready", onDeviceReady, false);
 //window.location.data-rel ="dialog";
 
 //'<a href="#deleteDialog" class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"><p id="eventName" style="display: none">'
-// PhoneGap is loaded and it is now safe to make calls PhoneGap methods
-//
+//PhoneGap is loaded and it is now safe to make calls PhoneGap methods
+
 
 function showMessageDialog(headerText, messageText){
-	
+
 	$("#messageDialogHeader").html(headerText);
 	$("#messageDialogText").html(messageText);
 	$.mobile.changePage( "#messageDialog", { role: "dialog" } );
@@ -113,7 +113,7 @@ function toastShortMessage(messageText){
 }
 
 function onDeviceReady() {
-	
+
 	checkIfUserExists();
 
 	document.addEventListener("offline", function(e) {
@@ -124,7 +124,7 @@ function onDeviceReady() {
 	document.addEventListener("online", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, true);
 		synchronise();
-		
+
 	}, false);
 
 	document.addEventListener("pause", function(e){

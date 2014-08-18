@@ -7,13 +7,16 @@ function showEventList(transaction, result) {
 
 
 			if($('#eventnameOfAddedOrEditedEvent').text() === row.name ){
-				console.log("ja ik ben er");
 				//new event has been made, name corresponds with name of this row item.
 				//the item need to be presented as a special button on top of the list, not in the list itself
-				var buttonText =  row.name + '<span id="eventID" style="display: none">'+row.cId+'</span>';
+				
 				//show new event in button on top of the list
-				$('#recentAddedEventButton').html(buttonText);
-				$('#recentAddedEventButton').val(row.eventType);
+				$('#recentAddedEventButton').html(row.name);
+				var cId = row.cId;
+				$('#recentAddedEventButton').click(function(){
+					setAddOrEditScreen(cId);
+				});
+				
 				//ensure next call this button is not presented
 				$('#eventnameOfAddedOrEditedEvent').text('');
 
@@ -25,7 +28,6 @@ function showEventList(transaction, result) {
 
 		}
 		var source = $("#event-list-template").html();
-		console.log(source);
 		var template = Handlebars.compile(source);
 		$("#event-list").html(template(rows));
 	} 
@@ -48,7 +50,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 			//show minutes correct
 			minutes = "0" + minutes;
 		}
-		var intensityTextAndColor = getIntensityText(row.intensity);
+		var intensityTextAndColor = convertIntensityIntToTextAndColor(row.intensity);
 		var button = {
 				name : row.name,
 				intensityText: intensityTextAndColor.text,
@@ -101,7 +103,7 @@ function showEventInstanceList(inputType, result) {
 			})
 		}
 		else{
-			var intensityTextAndColor = getIntensityText(row.intensity);
+			var intensityTextAndColor = convertIntensityIntToTextAndColor(row.intensity);
 			var endDate = new Date(row.beginTime);
 			var endMinutes = parseInt(date.getMinutes());
 			if (endMinutes < 10) {
