@@ -83,7 +83,7 @@ $('#deleteEvent').click(function(){
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
 
 	$('#deleteEventDialogConfirmButton').click(function() {
-		df.deleteEvent($('#id').text());
+		df.deleteEvent($('#cid').text());
 		console.log("delete event:"+$('#cid').text() )
 		toastMessage("delete " + eventName);
 	});

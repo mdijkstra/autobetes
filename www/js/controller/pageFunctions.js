@@ -15,7 +15,7 @@ $(document).on('pageshow', '#event-list-page', function() {
 	}
 });
 
-$(document).on('pageshow', '#loginDialog', function(){
+$(document).on('pageshow', '#login-page', function(){
 
 	df.getUserInfo(function(transaction,result){
 

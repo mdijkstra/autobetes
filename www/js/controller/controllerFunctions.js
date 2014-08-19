@@ -61,10 +61,13 @@ function updateEventInstance() {
 	//convert to unix timestamp
 	var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
 	//same with end time
-	var endTimeAndDate = $('#edit-event-instance-page-end-date-field').val() + " " + $('#edit-event-instance-page-end-time-field').val();
+	var unixEndTime = null;
+	if(eventType === ACTIVITY){
+		var endTimeAndDate = $('#edit-event-instance-page-end-date-field').val() + " " + $('#edit-event-instance-page-end-time-field').val();
 
-	var unixEndTime = Date.parse(endTimeAndDate).getTime();
-
+		var unixEndTime = Date.parse(endTimeAndDate).getTime();
+	}
+	console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
 	//update event instance in database
 	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
 
@@ -142,6 +145,7 @@ function login(){
 			if(result.rows.length > 0){
 				var row = result.rows.item(0);
 				//try to log in with data
+				/*
 				restClient.login(row.email, row.password, {
 					success: function(result){
 
@@ -157,6 +161,7 @@ function login(){
 					}
 
 				}, callBackLoginError);
+				*/
 			}
 
 

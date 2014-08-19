@@ -40,5 +40,4 @@
         <param name="wp-package" value="Notification" />
     </feature>
     <preference name="StatusBarOverlaysWebView" value="false" />
-    <gap:plugin name="org.apache.cordova.inappbrowser" />
 </widget>

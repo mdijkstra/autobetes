@@ -282,7 +282,7 @@
 			<div class="settingsList" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input">
 				<ul class="ui-listview" data-icon="false">
-					<li class="ui-first-child"><a href="#loginDialog"
+					<li class="ui-first-child"><a href="#login-page"
 						class="ui-btn">
 							<h3>Account</h3>
 							<p id="settingsPageAccount"></p>
@@ -624,7 +624,7 @@
 		</div>
 	</div>
 
-	<div data-role="page" id="loginDialog" data-position="window">
+	<div data-role="page" id="login-page" data-position="window">
 
 		<div data-role="header">
 			<a data-rel="back"
@@ -649,6 +649,10 @@
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
 				up</a>
+				<a id="guideTourButton" href="#home-page" data-role="button"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" onclick="$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);"
+				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide tour</a>
 
 
 		</div>

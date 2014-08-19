@@ -104,7 +104,7 @@ function showEventInstanceList(inputType, result) {
 		}
 		else{
 			var intensityTextAndColor = convertIntensityIntToTextAndColor(row.intensity);
-			var endDate = new Date(row.beginTime);
+			var endDate = new Date(row.endTime);
 			var endMinutes = parseInt(date.getMinutes());
 			if (endMinutes < 10) {
 				//show minutes correct

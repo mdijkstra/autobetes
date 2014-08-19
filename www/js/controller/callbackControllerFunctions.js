@@ -40,7 +40,7 @@ function callBackLoginError(response, textStatus, error){
 	else if(BADCREDENTIALSREGEX.test(response.responseText) || UNKNOWNUSERREGEX.test(response.responseText)){
 		//login failed, due to bad credentials(email password combination) or unknown account
 		//open 
-		//set timeout, so message dialog appears after #logindialog is opened
+		//set timeout, so message dialog appears after #loginpage is opened
 		toastMessage(BAD_CREDENTIALS_TEXT);
 
 
