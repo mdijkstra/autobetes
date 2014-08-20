@@ -122,8 +122,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// open db, create if not exists
 	var db = openDatabase(shortName, version, displayName, maxSize);
 
-	//resetDB();
-	createTablesIfNotExists();
+	resetDB();
+	//createTablesIfNotExists();
 
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function

@@ -126,6 +126,11 @@
 	}
 
 	molgenis.RestClient.prototype.update = function(url, data, callback, errorHandler) {
+		console.log(url);
+		console.log(JSON.stringify(data));
+		console.log(self.token);
+		console.log(callback);
+		console.log(errorHandler);
 		$.ajax({
 			type: 'POST',
 			headers: {'x-molgenis-token': self.token},
@@ -146,11 +151,11 @@
 	}
 
 
-	molgenis.RestClient.prototype.login = function(username, password, callback, callbackLoginError) {
+	molgenis.RestClient.prototype.login = function(url, username, password, callback, callbackLoginError) {
 		$.ajax({
 			type: 'POST',
 			dataType : 'json',
-			url : 'http://localhost:8080/api/v1/login',
+			url : url,
 			contentType : 'application/json',
 			async : true,
 			data: JSON.stringify({username: username, password: password}),
@@ -171,6 +176,7 @@
 	};
 
 	molgenis.RestClient.prototype.register = function(url, data, callback, errorHandler){
+		console.log("register url:"+ url+", data:"+ data)
 		$.ajax({
 			type: 'POST',
 			url: url,
@@ -199,9 +205,9 @@
 		return self.token = token;
 	}
 
-	molgenis.RestClient.prototype.logout = function(callback) {
+	molgenis.RestClient.prototype.logout = function(url, callback) {
 		$.ajax({
-			url : 'http://localhost:8080/api/v1/logout',
+			url : url,
 			async : true,
 			headers: {'x-molgenis-token': self.token},
 			success : function() {

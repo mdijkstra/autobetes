@@ -62,7 +62,7 @@ var SUCCEEDED = "Succeeded";
 var FAILED = "Failed";
 var ARE_YOU_SURE_DELETE = 'Are you sure you want to delete ';
 var TOURMODE = "App is in guide tour modus";
-var LOGINPAGE = '#loginDialog';
+var LOGINPAGE = '#login-page';
 var GUIDE_TOUR_HOMESCREEN_STOP_INT = "Start guide tour";
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);

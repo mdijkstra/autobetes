@@ -145,23 +145,24 @@ function login(){
 			if(result.rows.length > 0){
 				var row = result.rows.item(0);
 				//try to log in with data
-				/*
-				restClient.login(row.email, row.password, {
+				
+				restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 					success: function(result){
 
 						$(document).data(IS_LOGGING_IN, false);
 						token = result.token;
-						synchronise();
-
 						var currentPage = $.mobile.activePage[0].id;
 						if(currentPage === LOGINDIALOG){
 							toastMessage(SUCCESSFULLY_LOGGED_IN);
 							$.mobile.back();//go to previous page
 						}
+						synchronise();
+
+					
 					}
 
 				}, callBackLoginError);
-				*/
+				
 			}
 
 

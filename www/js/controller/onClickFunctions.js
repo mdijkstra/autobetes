@@ -210,11 +210,13 @@ $('#loginDialogOkButton').click(function(){
 });
 
 $('#registrationDialogOkButton').click(function(){
+	console.log("start registering");
 	//get values
 	var email = $('#registerEmail').val();
 	var pumpId = $('#registerPumpId').val();
 	var password = $('#registerPassword').val();
 	var confirmPassword = $('#registerConfirmPassword').val();
+	
 	//add tests to values
 	//validate email 
 	var validationPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
@@ -239,10 +241,11 @@ $('#registrationDialogOkButton').click(function(){
 
 				}
 				else{
+					console.log(response.responseText)
 					toastShortMessage(response.responseText);
 				}
 			};
-
+			
 			var registerCallbackSuccess = function(data, textStatus, response){
 				if(response.responseJSON.success){
 					df.updateUser(email, pumpId, password);
@@ -268,7 +271,7 @@ $('#registrationDialogOkButton').click(function(){
 
 			};
 
-
+			console.log("execute restclient.register");
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{

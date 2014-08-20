@@ -71,14 +71,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	//select statements
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
-	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, e.cId, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on a.cId = e.cId WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.cId, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on a.cId = e.cId WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent left join ActivityEventInstance a on a.cId = e.cId left join FoodEventInstance f on e.cId = f.cId WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
-	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.cId =?;';
-	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT * from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.cId =?;';
-	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.cId = f.cId LEFT JOIN ActivityEvent a on e.cId = a.cId WHERE e.lastchanged >?'
+	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.cId =?;';
+	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.cId =?;';
+	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT * FROM Event WHERE lastchanged > ?'
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e join ActivityEventInstance a on e.cId = a.cId where e.lastchanged > ?;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e  join FoodEventInstance f on e.cId = f.cId where e.lastchanged > ?;';
 	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? AND deleted=0 ORDER BY lower(name) ASC;';

@@ -2,8 +2,10 @@
 var df = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
 
 var token;
-var SERVER_URL = 'http://localhost:8080';
+var SERVER_URL = 'http://195.169.22.242';
 var SERVER_EVENT_URL = '/api/v1/event';
+var SERVER_LOGIN_URL = '/api/v1/login'
+var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
@@ -104,11 +106,11 @@ function showMessageDialog(headerText, messageText){
 }
 function toastMessage(messageText){
 	console.log(messageText)
-	window.plugins.toast.showLongBottom(messageText, null, null);
+	//window.plugins.toast.showLongBottom(messageText, null, null);
 }
 function toastShortMessage(messageText){
 	console.log(messageText)
-	window.plugins.toast.showShortBottom(messageText, null, null);
+	//window.plugins.toast.showShortBottom(messageText, null, null);
 }
 
 function onDeviceReady() {
@@ -127,7 +129,7 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
-		restClient.logout();
+		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 
 	document.addEventListener("resume", function(e){
