@@ -126,11 +126,7 @@
 	}
 
 	molgenis.RestClient.prototype.update = function(url, data, callback, errorHandler) {
-		console.log(url);
-		console.log(JSON.stringify(data));
-		console.log(self.token);
-		console.log(callback);
-		console.log(errorHandler);
+		
 		$.ajax({
 			type: 'POST',
 			headers: {'x-molgenis-token': self.token},
@@ -176,7 +172,7 @@
 	};
 
 	molgenis.RestClient.prototype.register = function(url, data, callback, errorHandler){
-		console.log("register url:"+ url+", data:"+ data)
+		//console.log("register url:"+ url+", data:"+ data)
 		$.ajax({
 			type: 'POST',
 			url: url,

@@ -106,11 +106,11 @@ function showMessageDialog(headerText, messageText){
 }
 function toastMessage(messageText){
 	console.log(messageText)
-	//window.plugins.toast.showLongBottom(messageText, null, null);
+	window.plugins.toast.showLongBottom(messageText, null, null);
 }
 function toastShortMessage(messageText){
 	console.log(messageText)
-	//window.plugins.toast.showShortBottom(messageText, null, null);
+	window.plugins.toast.showShortBottom(messageText, null, null);
 }
 
 function onDeviceReady() {
