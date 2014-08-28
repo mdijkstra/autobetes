@@ -116,14 +116,15 @@ $(document).on('pagehide', '#event-list-page', function(){
 $(document).on('pageshow', '#report-page', function(){
 
 	//toastMessage('show report');
-	var ref = window.open('http://google.org', '_self', 'location=no');
+	/*
+	var ref = window.open(SERVER_URL, '_self', 'location=no');
 	setTimeout(function() {
 
 		toastMessage('close screen');
 		ref.close();
 		window.location.href =  '#home-page';
 	}, 5000);
-
+	*/
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){

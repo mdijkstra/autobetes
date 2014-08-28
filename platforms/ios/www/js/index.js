@@ -2,8 +2,10 @@
 var df = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
 
 var token;
-var SERVER_URL = 'http://localhost:8080';
+var SERVER_URL = 'http://195.169.22.242';
 var SERVER_EVENT_URL = '/api/v1/event';
+var SERVER_LOGIN_URL = '/api/v1/login'
+var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
@@ -23,7 +25,8 @@ var ENDED = 'ended';
 var EDIT = "Edit";
 var EVENT_ALREADY_EXISTS = 'Event allready exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
-var LOGINDIALOG = "loginDialog";
+var LOGINDIALOG = "login-page";
+var HOMEPAGE = "home-page";
 var REGISTRATIONDIALOG = "registrationDialog";
 var DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER = 3;
 var DEFAULT_VALUE_FOOD_QUANTITY_SLIDER = 1;
@@ -127,7 +130,7 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
-		restClient.logout();
+		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 
 	document.addEventListener("resume", function(e){

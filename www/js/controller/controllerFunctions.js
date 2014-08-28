@@ -123,6 +123,7 @@ function checkIfUserExists(){
 			var currentPage = $.mobile.activePage[0].id;
 			if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG){
 				//allready registering logging in, do nothing
+				
 			}else{
 				window.location.href =  LOGINPAGE;
 
@@ -154,7 +155,8 @@ function login(){
 						var currentPage = $.mobile.activePage[0].id;
 						if(currentPage === LOGINDIALOG){
 							toastMessage(SUCCESSFULLY_LOGGED_IN);
-							$.mobile.back();//go to previous page
+							//$.mobile.back();//go to previous page
+							window.location.href =  "#"+HOMEPAGE;
 						}
 						synchronise();
 

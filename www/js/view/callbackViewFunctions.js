@@ -44,6 +44,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 	for (var i = 0; i < result.rows.length; i++) {
 		//progress results
 		var row = result.rows.item(i);
+		console.log(row);
 		var date = new Date(row.beginTime);
 		var minutes = parseInt(date.getMinutes());
 		if (minutes < 10) {

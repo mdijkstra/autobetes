@@ -78,9 +78,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.cId =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.cId =?;';
-	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT * FROM Event WHERE lastchanged > ?'
-	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e join ActivityEventInstance a on e.cId = a.cId where e.lastchanged > ?;';
-	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT * from EventInstance e  join FoodEventInstance f on e.cId = f.cId where e.lastchanged > ?;';
+	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.cId = f.cId left join ActivityEvent a on e.cId = a.cId WHERE lastchanged > ?'
+	/*
+	 * 	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, cEvent INTEGER NOT NULL, sEvent INTEGER, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (cEvent) REFERENCES Event (cId))';
+	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(cId INTEGER PRIMARY KEY, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
+	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(cId INTEGER PRIMARY KEY, endTime INTEGER, intensity INTEGER NOT NULL, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
+
+	 */
+		
+	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.Dtype, e.beginTime, e.cEvent, e.sEvent, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.cId = a.cId where e.lastchanged > ?;';
+	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.Dtype, e.beginTime, e.cEvent, e.sEvent, e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.cId = f.cId where e.lastchanged > ?;';
 	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? AND deleted=0 ORDER BY lower(name) ASC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
 	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';

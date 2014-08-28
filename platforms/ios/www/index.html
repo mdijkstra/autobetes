@@ -19,6 +19,9 @@
 	<div data-role="page" id="home-page">
 
 		<div data-role="header" data-position="inline" data-position="fixed">
+			<a
+				class="ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext ui-corner-all" onclick="synchronise()"></a>
+				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
 				data-iconshadow="false" data-direction="reverse"
@@ -56,7 +59,7 @@
 
 				<ul>
 					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
-					<li><a href="file:///Users/dionkoolhaas/AutobetesProject/index.html">Report</a></li>
+					<li><a href="#pumpSettings">Report</a></li>
 					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
@@ -166,7 +169,7 @@
 		</div>
 		<!-- /content -->
 
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -252,7 +255,7 @@
 			
 		</div>
 		<!-- /content -->
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -300,7 +303,7 @@
 
 		</div>
 		<!-- /content -->
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -381,7 +384,7 @@
 				</div>
 			</div>
 		</div>
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -458,7 +461,7 @@
 		</div>
 	
 		<!-- /content -->
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -481,9 +484,12 @@
 				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 		</div>
 		<!-- /header -->
+		<div role="main" class="ui-content">
+			<iframe src="google.nl" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>
+			
+		</div>
 
-
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -509,10 +515,10 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<iframe src="http://www.w3schools.com" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>
+			<iframe src="http://195.169.22.242/settings" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>
 			
 		</div>
-		<div data-role="footer" data-id="foo1" data-position="fixed"
+		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
@@ -656,6 +662,18 @@
 
 
 		</div>
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
 	</div>
 	<div data-role="page" id="guideTours" data-position="window">
 	

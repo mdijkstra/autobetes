@@ -24,10 +24,8 @@ var synchronise = function(){
 			}
 
 			var callback1 = function(data, textStatus, response){
-
-				df.updateLastUpdateTimeStamp(currentTimeStamp);
 				iterateArrayRecursively(0, data);
-
+				df.updateLastUpdateTimeStamp(currentTimeStamp);
 			}
 
 			var errorHandler1 = function(request, textStatus, error){
@@ -52,7 +50,7 @@ var synchronise = function(){
 
 					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
 						pushEntitiesInArray(result);
-
+						//console.log(JSON.stringify(requestData))
 						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
 					});
 				});
@@ -72,10 +70,11 @@ var synchronise = function(){
 }
 
 var iterateArrayRecursively = function(index, data){
-
+	
 	if(index < data.length){
 
 		var entity = data[index];
+		//console.log(JSON.stringify(entity));
 		var entityType;//event or instance
 		//convert boolean to integer, because sqlite cannot handle booleans
 		if(entity.deleted === true){
@@ -119,6 +118,12 @@ var iterateArrayRecursively = function(index, data){
 							//entity found
 							//console.log("entity found");
 							var row = result.rows.item(0);
+							
+							if(entity.name === "Appel"){
+							console.log("appel");
+							console.log(entity);
+							console.log(row);
+							};
 							//double check that server timestamp is equal or higher( timestamp of server should never
 							//be less, because then it would have been updated on the server)
 							if(entity.lastchanged >= row.lastchanged){
@@ -148,7 +153,14 @@ var iterateArrayRecursively = function(index, data){
 	else{
 		//index is equal to list, whole array has been iterated
 		$(document).data(IS_SYNCHRONISING, false);
-
+		//reload list
+		var currentPage = $.mobile.activePage[0].id;
+		if(currentPage === HOMEPAGE){
+			
+			setTimeout(function() {
+			df.showCurrentActivityEventInstances();
+			},1000);
+		}
 
 	}
 
