@@ -396,9 +396,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method gets called in the synchronisation method.It updates an entity, given the entity, its type(Event or EventInstance) and the row of the corresponding 
 	 * entity in the db.
 	 */
-	function serverUpdateEntity(entityType, entity, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
+	function serverUpdateEntity(entityType, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
 
-		if(entityType === EVENT){
+		if(entity.name){
+			//entity is event
 			//update event
 			executeQuery(SERVER_UPDATE_EVENT, [entity.sId, entity.name, entity.eventType, entity.lastchanged, entity.deleted, row.cId], nullHandler);
 

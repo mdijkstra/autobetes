@@ -120,18 +120,13 @@ var iterateArrayRecursively = function(index, data){
 							//console.log("entity found");
 							var row = result.rows.item(0);
 							
-							if(entity.name === "Appel"){
-							console.log("appel");
-							console.log(entity);
-							console.log(row);
-							};
 							//double check that server timestamp is equal or higher( timestamp of server should never
 							//be less, because then it would have been updated on the server)
 							if(entity.lastchanged >= row.lastchanged){
 								//console.log("server entity is more recent");
 								//server entity is more recent
 								//update entity
-								df.serverUpdateEntity(entityType, entity, row);
+								df.serverUpdateEntity(entityType, row);
 							}
 						}
 						iterateArrayRecursively(index+1, data);
