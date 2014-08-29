@@ -39,9 +39,10 @@ function convertTimestampToTimeAndDate(timestamp){
 	if (parseInt(day) < 10) {
 		day = "0" + day;
 	}
+	/*
 	if (parseInt(hours) < 10) {
 		beginTime = "0" + beginTime;
-	}
+	}*/
 
 	var time = hours + ":" + minutes;
 	var date2 = year + "-" + month + '-' + day;

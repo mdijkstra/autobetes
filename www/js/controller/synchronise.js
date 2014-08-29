@@ -74,7 +74,8 @@ var iterateArrayRecursively = function(index, data){
 	if(index < data.length){
 
 		var entity = data[index];
-		//console.log(JSON.stringify(entity));
+		
+		console.log(JSON.stringify(entity));
 		var entityType;//event or instance
 		//convert boolean to integer, because sqlite cannot handle booleans
 		if(entity.deleted === true){
@@ -100,7 +101,7 @@ var iterateArrayRecursively = function(index, data){
 					//no match on sId(that is the case when an entity has been made on another device
 					//and not been send to this device before), so this device can create this entity in db
 					//create entity
-					df.serverAddEntity(entityType, entity);
+					df.serverAddEntity(entity);
 					iterateArrayRecursively(index+1, data);
 				}
 				else{

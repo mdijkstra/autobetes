@@ -129,8 +129,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// open db, create if not exists
 	var db = openDatabase(shortName, version, displayName, maxSize);
 
-	//resetDB();
-	createTablesIfNotExists();
+	resetDB();
+	//createTablesIfNotExists();
 
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function
@@ -429,9 +429,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	/*
 	 * This method gets called in the synchronisation method when on another device an entity is defined. It stores the entity in db given the entity and entity type.
 	 */
-	function serverAddEntity(entityType,entity){
+	function serverAddEntity(entity){
 
-		if(entityType === EVENT){
+		if(entity.name){
+			//entity is event
 			//add event
 			var addFoodFunction = function(transaction, result){
 				executeQuery(ADD_FOOD, [result.insertId, entity.alcoholicUnits, entity.carbs],nullHandler);
@@ -466,7 +467,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 							executeQuery(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [result.insertId, entity.intensity, entity.endTime], nullHandler);
 						};
 
-						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, entity.cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addActivityFunction);
+						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addActivityFunction);
 					}
 					else{
 						var addFoodFunction = function(transaction, result){
