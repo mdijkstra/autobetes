@@ -84,7 +84,7 @@ $('#deleteEvent').click(function(){
 
 	$('#deleteEventDialogConfirmButton').click(function() {
 		df.deleteEvent($('#cid').text());
-		console.log("delete event:"+$('#cid').text() )
+		//console.log("delete event:"+$('#cid').text() )
 		toastMessage("delete " + eventName);
 	});
 	$('#deleteEventDialogNoButton').click(function() {
@@ -210,7 +210,7 @@ $('#loginDialogOkButton').click(function(){
 });
 
 $('#registrationDialogOkButton').click(function(){
-	console.log("start registering");
+	//console.log("start registering");
 	//get values
 	var email = $('#registerEmail').val();
 	var pumpId = $('#registerPumpId').val();
@@ -241,7 +241,7 @@ $('#registrationDialogOkButton').click(function(){
 
 				}
 				else{
-					console.log(response.responseText)
+					//console.log(response.responseText)
 					toastShortMessage(response.responseText);
 				}
 			};
@@ -271,7 +271,7 @@ $('#registrationDialogOkButton').click(function(){
 
 			};
 
-			console.log("execute restclient.register");
+			//console.log("execute restclient.register");
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{

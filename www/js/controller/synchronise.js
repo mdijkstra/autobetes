@@ -75,7 +75,7 @@ var iterateArrayRecursively = function(index, data){
 
 		var entity = data[index];
 		
-		console.log(JSON.stringify(entity));
+		//console.log(JSON.stringify(entity));
 		var entityType;//event or instance
 		//convert boolean to integer, because sqlite cannot handle booleans
 		if(entity.deleted === true){
@@ -126,7 +126,7 @@ var iterateArrayRecursively = function(index, data){
 								//console.log("server entity is more recent");
 								//server entity is more recent
 								//update entity
-								df.serverUpdateEntity(entityType, row);
+								df.serverUpdateEntity(entity, row);
 							}
 						}
 						iterateArrayRecursively(index+1, data);

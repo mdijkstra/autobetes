@@ -10,7 +10,7 @@ $(document).on('pageshow', '#event-list-page', function() {
 		startEventScreenTour();
 	}
 	else{
-		synchronise();
+		
 		showSelectedEvents();
 	}
 });
@@ -49,15 +49,17 @@ $(document).on('pageshow', '#settings-page', function(){
 });
 
 $(document).on('pageshow', '#home-page', function() {
+	
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
 		
 		homeScreenTour();
 	}
 	else{
-		synchronise();
+		
 
 		df.showCurrentActivityEventInstances();
+		
 	}
 });
 
@@ -68,7 +70,7 @@ $(document).on('pageshow', '#history-event-instance-page', function() {
 		historyEventInstancePageTour();
 	}
 	else{
-		synchronise();
+		
 		selectHistoryTabMenu();
 		//db.showCurrentActivityEventInstances();
 	}
@@ -79,7 +81,7 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 
 	}else{
 
-		synchronise();
+		
 		//empty eventname field
 		$('#newEventName').val('');
 		$('#newEventPageCarbs').val('');
@@ -93,7 +95,7 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 });
 
 $(document).on('pageshow', '#make-new-event-page', function(){
-	console.log("show new event");
+	//console.log("show new event");
 	if($(document).data(TOURMODE)){
 		newEventScreenTour();
 	}
@@ -103,7 +105,7 @@ $(document).on('pagehide', '#event-list-page', function(){
 	if($(document).data(TOURMODE)){
 
 	}else{
-		synchronise();
+		
 		//ensure the button with the new event(in green) will be hidden
 		$('#recentlyAddedEvent').hide();
 		//get out of edit mode

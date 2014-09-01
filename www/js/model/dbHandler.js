@@ -105,14 +105,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(cId INTEGER PRIMARY KEY AUTOINCREMENT, power INTEGER)';
 
 	var SELECT_PARTICULAR_EVENT = 'SELECT e.cId, e.sId, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.cId = f.cId LEFT JOIN ActivityEvent a on e.cId = a.cId WHERE e.cId =?'
-		//insert statements
-		var ADD_INSTANCE = 'INSERT INTO EventInstance(beginTime, cEvent, sEvent, lastchanged) VALUES (?,?,?,?)';
+	//insert statements
+	var ADD_INSTANCE = 'INSERT INTO EventInstance(beginTime, cEvent, sEvent, lastchanged) VALUES (?,?,?,?)';
 	var ADD_FOOD_INSTANCE = 'INSERT INTO FoodEventInstance(cId, amount) VALUES (?,?)';
 	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(cId, intensity) VALUES (?,?)';
 	var ADD_EVENT = 'INSERT INTO Event(name, eventType,lastchanged) VALUES (?,?,?)';
 	var ADD_FOOD = 'INSERT INTO FoodEvent(cId, alcoholicUnits, carbs) VALUES(?,?,?)';
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(cId, power) VALUES(?,?)'
-		var ADD_USER = 'INSERT INTO User(cId, email, pumpId, password) VALUES (1,?,?,?)';
+	var ADD_USER = 'INSERT INTO User(cId, email, pumpId, password) VALUES (1,?,?,?)';
 	var ADD_LAST_UPDATE_TIMESTAMP = 'INSERT INTO LastUpdate(cId, lastchanged) VALUES(1,0)';
 	var SERVER_ADD_EVENT = 'INSERT INTO Event(sId, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
 	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(sId, sEvent, cEvent, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?,?)';
@@ -145,21 +145,21 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * Resets all tables
 	 */
 	function resetDB(){
-		executeQuery( 'DROP TABLE IF EXISTS User;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS User;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS Event;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS Event;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
 
 		createTablesIfNotExists();
 	}
@@ -169,29 +169,29 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function createTablesIfNotExists(){
 		//create tables if not exist
 
-		executeQuery( CREATE_LAST_UPDATE, [], nullHandler);
+		executeQuery( CREATE_LAST_UPDATE, [], null);
 
-		executeQuery( CREATE_USER, [], nullHandler);
+		executeQuery( CREATE_USER, [], null);
 
-		executeQuery( CREATE_EVENT, [], nullHandler);
+		executeQuery( CREATE_EVENT, [], null);
 
 
-		executeQuery( CREATE_FOOD_EVENT, [], nullHandler);
+		executeQuery( CREATE_FOOD_EVENT, [], null);
 
-		executeQuery( CREATE_ACTIVITY_EVENT, [], nullHandler);
+		executeQuery( CREATE_ACTIVITY_EVENT, [], null);
 
-		executeQuery( CREATE_EVENT_INSTANCE, [], nullHandler);
+		executeQuery( CREATE_EVENT_INSTANCE, [], null);
 
-		executeQuery( CREATE_FOOD_EVENT_INSTANCE, [], nullHandler);
+		executeQuery( CREATE_FOOD_EVENT_INSTANCE, [], null);
 
-		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], nullHandler);
+		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], null);
 
 		//Create row with id 0 in table last update if not exists
 		executeQuery( SELECT_LAST_UPDATE_TIMESTAMP, [], function(transaction,result){
 			if(result.rows.length === 0){
 				//table contains no value
 				//create null timestamp so it can be modified later
-				executeQuery( ADD_LAST_UPDATE_TIMESTAMP, [], nullHandler);
+				executeQuery( ADD_LAST_UPDATE_TIMESTAMP, [], null);
 			}
 			else{
 				//table contains value
@@ -215,19 +215,19 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 */
 	function resetDBExceptUserTable(){
 
-		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS Event;', [], nullHandler);			
+		executeQuery( 'DROP TABLE IF EXISTS Event;', [], null);			
 
-		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
 
-		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], nullHandler);
+		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
 
 		createTablesIfNotExists();
 	}
@@ -334,7 +334,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * and the eventType(which can be altered as well).
 	 */
 	function updateEvent(cId, eventName, eventType, carbs, alcoholicUnits, power){
-		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),cId], nullHandler);
+		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),cId], null);
 		if(eventType === FOOD){
 			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, cId], synchronise);
 		}
@@ -384,10 +384,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 
 		if (type === ACTIVITY) {
-			executeQuery(UPDATE_ACTIVITY_INSTANCE, [amount, endTime, cId], nullHandler);
+			executeQuery(UPDATE_ACTIVITY_INSTANCE, [amount, endTime, cId], null);
 
 		} else {
-			executeQuery(UPDATE_FOOD_INSTANCE, [amount, cId], nullHandler);
+			executeQuery(UPDATE_FOOD_INSTANCE, [amount, cId], null);
 
 		}
 	}
@@ -396,18 +396,18 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method gets called in the synchronisation method.It updates an entity, given the entity, its type(Event or EventInstance) and the row of the corresponding 
 	 * entity in the db.
 	 */
-	function serverUpdateEntity(entityType, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
-
+	function serverUpdateEntity(entity, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
+		
 		if(entity.name){
 			//entity is event
 			//update event
-			executeQuery(SERVER_UPDATE_EVENT, [entity.sId, entity.name, entity.eventType, entity.lastchanged, entity.deleted, row.cId], nullHandler);
+			executeQuery(SERVER_UPDATE_EVENT, [entity.sId, entity.name, entity.eventType, entity.lastchanged, entity.deleted, row.cId], null);
 
 			if(entity.eventType === FOOD){
-				executeQuery(UPDATE_FOOD_EVENT, [entity.alcoholicUnits, entity.carbs, row.cId], nullHandler);
+				executeQuery(UPDATE_FOOD_EVENT, [entity.alcoholicUnits, entity.carbs, row.cId], null);
 			}
 			else{
-				executeQuery(UPDATE_ACTIVITY_EVENT, [entity.power, row.cId], nullHandler);
+				executeQuery(UPDATE_ACTIVITY_EVENT, [entity.power, row.cId], null);
 			}
 
 
@@ -415,14 +415,15 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 
 		else{
+			
 			//update event instance
-			executeQuery(SERVER_UPDATE_INSTANCE, [entity.sId, entity.sEvent, entity.beginTime, entity.deleted, entity.lastchanged, row.cId], nullHandler);
+			executeQuery(SERVER_UPDATE_INSTANCE, [entity.sId, entity.sEvent, entity.beginTime, entity.deleted, entity.lastchanged, row.cId], null);
 
 			if (entity.intensity) {
-				executeQuery(UPDATE_ACTIVITY_INSTANCE, [entity.intensity, entity.endTime, row.cId], nullHandler);
+				executeQuery(UPDATE_ACTIVITY_INSTANCE, [entity.intensity, entity.endTime, row.cId], null);
 
 			} else {
-				executeQuery(UPDATE_FOOD_INSTANCE, [entity.amount, row.cId], nullHandler);
+				executeQuery(UPDATE_FOOD_INSTANCE, [entity.amount, row.cId], null);
 
 			}
 		}
@@ -436,10 +437,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			//entity is event
 			//add event
 			var addFoodFunction = function(transaction, result){
-				executeQuery(ADD_FOOD, [result.insertId, entity.alcoholicUnits, entity.carbs],nullHandler);
+				executeQuery(ADD_FOOD, [result.insertId, entity.alcoholicUnits, entity.carbs],null);
 			};
 			var addActivityFunction = function(transaction, result){
-				executeQuery(ADD_ACTIVITY, [result.insertId, entity.power],nullHandler);
+				executeQuery(ADD_ACTIVITY, [result.insertId, entity.power],null);
 			};
 
 			
@@ -465,14 +466,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 					if (entity.intensity) {
 						var addActivityFunction = function(transaction, result){
-							executeQuery(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [result.insertId, entity.intensity, entity.endTime], nullHandler);
+							executeQuery(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [result.insertId, entity.intensity, entity.endTime], null);
 						};
 
 						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addActivityFunction);
 					}
 					else{
 						var addFoodFunction = function(transaction, result){
-							executeQuery(ADD_FOOD_INSTANCE, [result.insertId, entity.amount],nullHandler);
+							executeQuery(ADD_FOOD_INSTANCE, [result.insertId, entity.amount],null);
 						};
 
 						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addFoodFunction);
@@ -538,11 +539,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function addUser(email, pumpId, password){
-		executeQuery(ADD_USER, [email, pumpId, password], nullHandler);
+		executeQuery(ADD_USER, [email, pumpId, password], null);
 	}
 
 	function updateUser(email, pumpId, password){
-		executeQuery(EDIT_USER, [email, pumpId, password], nullHandler);
+		executeQuery(EDIT_USER, [email, pumpId, password], null);
 	}
 	function updateEmailAndPassword(email, password, callback){
 		executeQuery(UPDATE_EMAIL_AND_PASSWORD, [email, password], callback);
@@ -553,7 +554,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function updateLastUpdateTimeStamp(lastchanged){
-		executeQuery(EDIT_LAST_UPDATE_TIMESTAMP, [lastchanged], nullHandler);
+		executeQuery(EDIT_LAST_UPDATE_TIMESTAMP, [lastchanged], null);
 	}
 
 	function getCurrentTimestamp(){

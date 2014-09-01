@@ -81,7 +81,7 @@ $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
-//workaround for the input field at the sliders, this ensures that input ar only integers with or without
+//workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 jQuery('.numbersOnly').keyup(function () { 
 	this.value = this.value.replace(/[^0-9\.]/g,'1');
@@ -117,7 +117,12 @@ function toastShortMessage(messageText){
 function onDeviceReady() {
 
 	checkIfUserExists();
-
+	
+	setInterval(function() {
+		//sync every 5 minutes
+		synchronise();
+	}, 600000);
+	
 	document.addEventListener("offline", function(e) {
 		//alert("offline");
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -130,6 +135,7 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
+		synchronise();
 		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 
