@@ -1,650 +1,833 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Autobetes App</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="chrome=1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/jquery.mobile-1.4.2.css" />
-        <!-- script src="/js/jquery-1.8.3.min.js"></script-->
-        <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
-        <script src="js/jquery.js"></script>
-        <script src="js/jquery.mobile-1.4.2.js"></script>
-        <script src="js/dbHandler.js"></script>
-        <script src="js/restclient.js"></script>
-        <script src="js/autobetes.js"></script>
-        <script src="js/date.js"></script>
-        
-        <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="css/autobetes.css" type="text/css">
+<head>
+<title>Autobetes app</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/jquery.mobile-1.4.2.css" />
+<!-- script src="/js/jquery-1.8.3.min.js"></script-->
+<link rel="icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="css/autobetes.css" type="text/css">
+<link rel="stylesheet" href="css/joyride-2.1.css" type="text/css">
+</head>
+<body>
 
+	<input id="userId" type="hidden" value="1" />
 
-        <!--link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
-        <script src="/js/jquery-1.8.3.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        <script src="/js/jquery.validate.min.js"></script> -->
-    </head>
-    <body>
+	<!-- Start of first page -->
+	<div data-role="page" id="home-page">
 
-        <input id="userId" type="hidden" value="1"/>
+		<div data-role="header" data-position="inline" data-position="fixed">
+			<h1>Autobetes</h1>
+			<a href="#settings-page" data-role="button" data-icon="gear"
+				data-iconshadow="false" data-direction="reverse"
+				data-iconpos="notext" class="ui-btn-right"></a>
+		</div>
 
-        <!-- Start of first page -->
-        <div data-role="page" id="home">
+		<div role="main" id="mainScreen" class="ui-content">
+
+			<a id="homeStartButton" href="#event-list-page"
+				class="ui-btn ui-icon-plus ui-btn-icon-left"><span id="startEventSpan">Start event</span></a> <a
+				id="historyButton" href="#history-event-instance-page"
+				class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
 			
-            <div data-role="header" data-position="inline" data-position="fixed">
-                <h1>Autobetes</h1>
-                <a href="#settings" data-role="button" data-icon="gear" data-iconshadow="false"
-                   data-direction="reverse" data-transition="flip"
-                   data-iconpos="notext" class="ui-btn-right"></a>
-            </div>
+			<H3>Current activities:</H3>
 
-            <div role="main" id="mainScreen" class="ui-content">
-                <a id = "homeStartButton" href="#start" class="ui-btn ui-icon-plus ui-btn-icon-left">Start event</a>
-                <a id="historyButton" href="#history" class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
-                <p id="addedText"> <p>
-                <H3>Current activity:</H3>
-                
-                <div class="event-list3" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
-                    
-                </div>
-            </div><!-- /content -->
+			<div id="current-activity-event-list" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input"></div>
+			
+			<script id="current-activity-event-list-template" type="text/x-handlebars-template">
+				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+				{{#each .}}
+					<li class="ui-li-has-alt">
+						<a class="ui-btn"><p style="display: none">2</p><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span id="intensity" style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span id="beginHours">{{beginHours}}</span>:<span id="beginMinutes">{{beginMinutes}}</span></strong><br><span id="day">{{beginDay}}</span>-<span id="month">{{beginMonth}}</span>-<span id="year">{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+					</li>
+				{{/each}}
+				</ul>
+			</script>
+		</div>
+		<!-- /content -->
+	
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="file:///Users/dionkoolhaas/AutobetesProject/index.html">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+
+	</div>
+	<!-- /page -->
+
+	<div data-role="page" id="event-list-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<h1>Start event</h1>
+			<div class="ui-btn-right">
+				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
+					id="newEventButton" href="#make-new-event-page"
+					class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+			</div>
+			<div id="event-list-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#" name="event-list-navbar-buttons">All</a></li>
+					<li><a href="#" name="event-list-navbar-buttons">Food</a></li>
+					<li><a href="#" name="event-list-navbar-buttons">Activity</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+			<form id="searchEventsInputForm">
+				<input data-type="search" id="filterControlgroup-input">
+			</form>
+		</div>
+		<div data-role="main" class="ui-content">
+
+			<div id="recentlyAddedEvent" style="display: none">
+				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
+				<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all"
+					style="background: #adf4b4"></A>
+			</div>
+			<div id="event-list" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input"></div>
+			<script id="event-list-template" type="text/x-handlebars-template">
+				{{#each .}}
+					<a onclick="setAddOrEditScreen({{cId}})" class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
+				{{/each}}
+				</div>
+			</script>
 			
 			
-			<div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
 
-        </div><!-- /page -->
+	<div data-role="page" id="start-event-instance-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<p id="start-event-instance-page-event-cId" style="display: none"></p>
+			<p id="start-event-instance-page-eventType" style="display: none"></p>
+			<H1>Start event</H1>
+			<a href="#make-new-event-page"
+				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+		</div>
+		<!-- /header -->
 
-        <div data-role="page" id="start">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <h1>Start Event</a></h1>
-                <div class="ui-btn-right">
-                <a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
-                <a id="newEventButton" href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
-                </div>
-            	<div data-role="navbar">
-                    <ul>
-                        <li><a href="#" name="startEventTypeSelected">All</a></li>
-                        <li><a href="#" name="startEventTypeSelected">Food</a></li>
-                        <li><a href="#" name="startEventTypeSelected">Activity</a></li>
-                    </ul>
-                </div><!-- /navbar -->
-                <form id="searchEventsInputForm">
-                    <input data-type="search" id="filterControlgroup-input">
-                </form>
-            </div>
-            <div data-role="main" class="ui-content" >
-            	
-            	<div id="recentlyAddedEvent" style="display: none">
-            		<span id="eventNameToBePrivileged" style="display: none" ></span>
-            		<span id="presentBoolean" style="display: none" >show</span>
-            		<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all" style="background: #adf4b4"></A>
-            	</div>
-                <div id="event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
-                </div>
-            </div><!-- /content -->
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-        </div><!-- /page -->
+		<div role="main" class="ui-content">
+			<H3 id="startEventName"></H3>
+			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
+			<table width="100%">
+				<tr>
+					<td width="50%"><input name="mydate" id="mydate" type="date"
+						data-role="datebox" data-options='{"mode": "timeflipbox"}'>
+					</td>
+					<td width="50%"><input name="mydate" id="mytime" type="time"
+						data-role="datebox"
+						data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
+					</td>
+				</tr>
+			</table>
+			<div id="startEventQuantitySliderField" class="ui-field-contain">
 
-        <div data-role="page" id="start2">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <p id="eventID" style="display: none"></p>
-                <p id="eventType2" style="display: none"></p>
-                <H1>Add Event</H1>
-                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                <H3 id="startEventName"></H3>
-                <!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
-                <table width="100%">
-                    <tr>
-                        <td width="50%">
-                <input name="mydate" id="mydate" type="date" data-role="datebox"
-                       data-options='{"mode": "timeflipbox"}'>
-                        </td>
-                        <td  width="50%">
-                <input name="mydate" id="mytime" type="time" data-role="datebox"
-                    data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
-                        </td>
-                    </tr>
-                </table>
-                <div class="ui-field-contain">
-                    <label id="quantity" for="slider-2">Amount</label>
-                    <input type="range" name="slider-2" id="slider-2" data-highlight="true" min="1" max="10" value="1" step="0.25">
-                    <p><span id="intensityToText" style="display: none, color: blue">text</span></p>
-                </div>
-                <A href="#home" id="startEventInstanceButton" type CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
-            </div><!-- /content -->
-            
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-
-        </div><!-- /page -->
-        <div data-role="page" id="newEvent">
-            <div data-role="header">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1 id="headerName">New Event</H1>
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                <div>
-                    <fieldset id="eventType" data-role="controlgroup" data-type="horizontal" style="text-align: center">
-                        <input  type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="Food">
-                        <label for="radio-choice-h-2a">Food</label>
-                        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="Activity">
-                        <label for="radio-choice-h-2b">Activity</label>
-                    </fieldset>
-                </div>
-                <input id="newEventName" type="text" data-clear-btn="true" name="text-7"  value="" placeholder="Event name">
-                <a id="addOrEditEvent" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left" data-rel="back">Add</a>
-            	<p id="eventKey" style="display: none"><p>
-            </div><!-- /content -->
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-        </div><!-- /page -->
-        
-        
-        <div data-role="page" data-id="settingsHeader" id="settings">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1>Settings</H1>
-                
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                <P>Pump serial:</P>
-                <input id="pumpSerial" type="text" data-clear-btn="true" placeholder="1234567">
-                <a href="#editSettings" class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">Save</a>
-            </div><!-- /content -->
-        </div><!-- /page -->
-
-       
-
-        <div data-role="page" id="history">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1>History</H1>
-                <div data-role="navbar">
-                    <ul>
-                        <li><a href="#" name="historyEventTypeSelected">All</a></li>
-                        <li><a href="#" name="historyEventTypeSelected">Food</a></li>
-                        <li><a href="#" name="historyEventTypeSelected">Activity</a></li>
-                    </ul>
-                </div><!-- /navbar -->
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                
-                <div class="event-list2" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input">
-                    
-                </div>
-            </div><!-- /content -->
-            <div style="display: none;" id="confirm-placeholder"><!-- placeholder for confirm --></div><!-- /popup -->
-            <div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit" id="confirm-screen"></div>
-            <div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="confirm-popup">
-                <div id="confirm" class="ui-content ui-popup ui-body-a ui-overlay-shadow ui-corner-all" data-role="popup" data-theme="a">
-                    <p id="question">Are you sure you want to delete:</p>
-                    <div class="ui-grid-a">
-                        <div class="ui-block-a">
-                            <a id="yes" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Yes</a>
-                        </div>
-                        <div class="ui-block-b">
-                            <a id="cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a" data-rel="back">Cancel</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-        </div>
-        
-        
-        <div data-role="page" id="editScreen">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all" data-transition="flip">Back</a>
-                <H1>Edit</H1>
-                
-            </div><!-- /header -->
-
-            <div role="main" class="ui-content">
-                <H3 id="startEventName2">Begin</H3>
-                <!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
-                
-                
-                <table width="100%">
-                    <tr>
-                        <td width="50%">
-                <input name="mydate" id="mydate2" type="date" data-role="datebox"
-                       data-options='{"mode": "timeflipbox"}'>
-                        </td>
-                        <td width="50%">
-                <input name="mytime" id="beginTime" type="time" data-role="datebox"
-                    data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
-                        </td>
-                    </tr>
-                </table>
-                <div id="endTimeField" style="display:none;">
-                    <table width ="100%">
-                    <tr>
-                        <td width="50%">
-                    <p>End time:</p>
-                        </td>
-                        <td width="50%">
-                    <input name="mytime" id="endTime" type="time" data-role="datebox"
-                    data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
-                        </td>
-                    <tr>
-                    </table>
-                </div>
-               
-                
-                <div class="ui-field-contain">
-                    <label id="quantity2" for="slider-3">Amount</label>
-                    <input type="range" name="slider-3" id="slider-3" data-highlight="true" min="1" max="10" value="1" step="1" >
-                    <p><span id="intensityToText2" style="display: none, color:blue">Light</span></p>
-                </div>
-              
-            </div><!-- /content -->
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home" class="ui-btn-active ui-state-persist">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-        </div>
-        
-           <div data-role="page" id="report">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1>Reports</H1>
-                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
-            </div><!-- /header -->
-
-            
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home">Input</a></li>
-			<li><a href="#report" class="ui-btn-active ui-state-persist">Report</a></li>
-			<li><a href="#pumpSettings">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-
-        </div><!-- /page -->
-
-         <div data-role="page" id="pumpSettings">
-            <div data-role="header" data-position="fixed">
-                <a data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-                <H1>Pump settings</H1>
-                <a href="#newEvent" class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
-            </div><!-- /header -->
-
-            
-            <div data-role="footer" data-id="foo1" data-position="fixed" class="ui-footer ui-bar-a ui-footer-fixed slideup">
-	<div data-role="navbar">
-		<ul>
-			<li><a href="#home">Input</a></li>
-			<li><a href="#report">Report</a></li>
-			<li><a href="#pumpSettings" class="ui-btn-active ui-state-persist">Pump settings</a></li>
-		</ul>
-	</div><!-- /navbar -->
-</div><!-- /footer -->
-
-        </div><!-- /page -->		
-        
-        <!-- /content -->
-    <!-- /page -->
-    
-    <div data-role="page" id="deleteDialog" data-position="window">
-    	<div data-role="header">
-    		<h1>Delete event</h1>
-    	</div>
-    	<div data-role="content">
-    		<p id="dialogText"></p>
-    		<a id="dialogConfirmButton" data-role="button" data-rel="back" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
-    			<span class="ui-btn-inner ui-btn-corner-all">
-    				<span class="ui-btn-text">Yes</span>
-    			</span>
-    		</a>
-    		<a data-role="button" data-rel="back" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b">
-    			<span class="ui-btn-inner ui-btn-corner-all">
-    				<span class="ui-btn-text">No</span>
-    			</span>
-    		</a>
-    	</div>
-    </div>
-    <script type="text/javascript" charset="utf-8">
-      
-        
-        var db = new dbHandler('autoB', '1.0', 'Autobetes', 1000000);
-        var restClient = new top.molgenis.RestClient();
-        $('#editScreen').page();
-        $('#editScreenActivity').page();
-        $('#start2').page();
-        $('#newEvent').page();
-       
-        var token;
-        
-        $(function() {
-          onDeviceReady();
-        })
-        
-        
-        // Wait for PhoneGap to load
-        // 
-        document.addEventListener("deviceready", onDeviceReady, false);
-
-
-
-        // PhoneGap is loaded and it is now safe to make calls PhoneGap methods
-        //
-         function onDeviceReady() {
-             
-            
-            getToken();
-            
-             document.addEventListener("offline", function(e) {
-                 alert("offline");
-             }, false);
-                                       
-             document.addEventListener("online", function(e) {
-            	 db.sendDbData();
-                 alert("online");
-             }, false);
-             
-            
-        }
-    
-    function getToken(){
- 
-       restClient.login('admin', 'admin', {
-                        success: function(result){
-                            
-                        token = result.token;
-						
-                        }
-                
-            });
-       }
-    
-		
-        function getEvents(eventType) {
-
-            if (eventType !== null && eventType !== undefined) {
-                
-                db.listEventsOfEventType(eventType.toLowerCase());
-                
-            }
-            else{
-                db.listAllEvents();
-            }
-          //hide the green button on top of the list
-        	if($('#presentBoolean').text() === 'hide'){
-        		$('#recentlyAddedEvent').hide();
-        	}
-            
-        }
-
-        function selectTabMenu() {
-            
-            var selectedTabIndex = $(document).data('selectedTabIndex');
-            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-            var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-            $('[name=startEventTypeSelected]').removeClass('ui-btn-active');
-            $('[name=startEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-            //console.log('in selectTabMenu, eventType: ' + eventType);
-            
-            getEvents(eventType);
-          
-        }
-    
-    function selectHistoryTabMenu() {
-        
-        var selectedTabIndex = $(document).data('selectedTabIndex2');
-        var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-        var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-        $('[name=historyEventTypeSelected]').removeClass('ui-btn-active');
-        $('[name=historyEventTypeSelected]:eq(' + index + ')').addClass('ui-btn-active');
-        db.listHistoryEvents(eventType);
-    }
-
-
-        $('[name=startEventTypeSelected]').click(function() {
-            
-            var eventType = $(this).html() === 'All' ? null : $(this).html();
-            var index = 0;
-            if (eventType === 'Food')
-                index = 1;
-            else if (eventType === 'Activity')
-                index = 2;
-            $(document).data('selectedTabIndex', {
-                'index': index,
-                'eventType': eventType
-            });
-            
-            getEvents(eventType);
-        });
-        
-        $('[name=historyEventTypeSelected]').click(function() {
-             var eventType = $(this).html() === 'All' ? null : $(this).html();
-             var index = 0;
-            if (eventType === 'Food')
-                  index = 1;
-              else if (eventType === 'Activity')
-                   index = 2;
-                $(document).data('selectedTabIndex2', {
-              'index': index,
-               'eventType': eventType
-            });
-                                                   
-             db.listHistoryEvents($(this).html());
-            
-        });
-        
-
-        $('#addOrEditEvent').click(function() {
-            //alert('start adding');
-            var eventName = $('#newEventName').val();
-            var eventType = $('[name="radio-choice-h-2"]:checked').val().toLowerCase();
-            if($('#addOrEditEvent').text() === 'Add'){
-            	//add event
-            	db.addEvent($('#newEventName').val(),$('[name="radio-choice-h-2"]:checked').val().toLowerCase());
-            }
-            else{
-            	//edit event 
-            	var eventKey = $('#eventKey').text();
-            	db.editEvent(eventKey, eventName, eventType);
-            }
-           
-        });
-        $('#historyButton').click(function() {
-                $(document).removeData('selectedTabIndex2');
-                selectHistoryTabMenu();
-                $('.event-list2').html('');//empty list
-            
-         });
-        
-        $('#editModeButton').click(function(){
-        	
-        	if($('#editModeButton').val() ==="on"){
-        		//editmode was on, now need to be turned off
-        		$('#editModeButton').val('off');
-        		$('#editModeButton').attr("style","");
-        		$('.eventButtons').attr("style","");
-        		
-        		//change buttontext to Add on newEvent screen
-        		$('#addOrEditEvent').text('Add');
-        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-        	}
-        	else{
-        		//editmode was off, now need to be turned on
-        		$('#editModeButton').val('on');
-        		$('#editModeButton').attr("style","background: #8df3e6 !important");
-        		$('.eventButtons').attr("style","background: #8df3e6 !important");
-        		
-        		//change buttontext to Edit on newEvent screen
-        		$('#addOrEditEvent').text('Save');
-        		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline');
-
-        		
-        	}
-        	
-        	
-        });
-        
-        
-		$('#startEventInstanceButton').click(function() {
+				<label id="start-event-instance-food-quantity-slider-label">Amount</label>
+				<label id="start-event-instance-activity-quantity-slider-label"
+					style="display: none">Intensity: <span id="intensityToText">Light</span></label>
+				<input class="numbersOnly" type="range"
+					name="start-event-instance-quantity-slider"
+					id="start-event-instance-quantity-slider" data-highlight="true"
+					min="1" max="10" value="1" step="0.25">
+			</div>
 			
-			var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-			var unixTime = Date.parse(timeAndDate).getTime();
-
-			if ($('#eventType2').text() === 'food') {
-				db.addFoodEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
-				db.listCurrentEvents();
-				//refresh list of current events
-			} else {
-				db.addActivityEventInstance($('#startEventName').html(), $('#slider-2').val(), unixTime, $('#eventID').text());
-				db.listCurrentEvents();
-				//refresh list of current events
-			}
-			//set text on home screen, regarding which event is added
 			
-			var addedText = "Added "+$('#startEventName').html();
+			<A href="#home-page" id="startEventInstanceButton"
+				CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
+		</div>
+		<!-- /content -->
 
-			if(addedText === $('#addedText').html()){
-				//alter the added text in order to apply only the last intverval function
-				addedText = addedText+' ';
-				$('#addedText').html(addedText);
-				
-			}
-			else{
-				$('#addedText').html(addedText);
-			}
-			window.setInterval(function(){
-				if($('#addedText').html() === addedText){
-					//the added text has been unaltered on the screen for the intervaltime 
-					$('#addedText').html(' ')
-					}
-				}, 4000);
-				
-			return;
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
 
-		});
-        
-        $('#newEventButton').click(function(){
-        	$('#addOrEditEvent').text('Add');
-        	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-			$('#headerName').text('New Event');
-			
-			/*
-        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
-        	that was active in 'Event view' (blue bars in top of screen)
-        	*/
-        	var selectedTabIndex = $(document).data('selectedTabIndex');
-            var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-           
-            if(index === 0 || index === 1){
-            	
-            	$("#radio-choice-h-2a").prop("checked", true);
-            	$("#radio-choice-h-2b").prop("checked",false);
-                $("input[type='radio']").checkboxradio("refresh");
-            }
-            else{
-            	
-        		$("#radio-choice-h-2b").prop("checked", true);
-        		$("#radio-choice-h-2a").prop("checked", false);
-            	$("input[type='radio']").checkboxradio("refresh");
-        	}
-        })
-        $('#recentAddedEventButton').click(function(){
+	</div>
+	<!-- /page -->
+	<div data-role="page" id="make-new-event-page">
+		<div data-role="header">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<H1 id="headerName">New Event</H1>
+		</div>
+		<!-- /header -->
+
+		<div role="main" class="ui-content">
+			<div>
+				<fieldset id="newEventPageEventType" data-role="controlgroup"
+					data-type="horizontal" style="text-align: center">
 					
-			db.setRightScreen(this);
-		});
+					<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a"
+						value="Food"> <label class="radioChoiceNewEvent" for="radio-choice-h-2a">Food</label>
+					<input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b"
+						value="Activity"> <label class="radioChoiceNewEvent" for="radio-choice-h-2b">Activity</label>
+					
+				</fieldset>
+			</div>
+			
+			<input id="newEventName" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Event name"> 
+				<div id="newEventPageFoodInput" style="display:none">
+				<table width="100%" >
+					<tr>
+						<td width="49%">
+							<input type="number" id="newEventPageCarbs" step="0.1" pattern="[0-9]*" placeholder="Carbohydrates" >
+						</td>
+						<td width="1%">
+							<a onclick='toastMessage("Size of this event in terms of grams of carbs")'
+							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
+						</td>
+						<td width="49%">
+							<input type="number" id="newEventPageAlcoholicUnits" step="0.1" pattern="[0-9]+\.?[0-9]?" placeholder="Alcoholic units">
+						</td>
+						<td width="1%">
+							<a onclick='toastMessage("Number of alcholic units in this event. One unit corresponds to a standard glass")'
+				class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
+						</td>
+					<tr>
+				</table>
+				</div>
+				<div id="newEventPageActivityInput" style="display:none">
+				<table width="100%" >
+					<tr>
+						<td width="50%">
+						</td>
+						<td width="49%">
+							<input type="number" id="newEventPagePower" step="0.1" pattern="[0-9]*" placeholder="Power">
+						</td>
+						<td width="1%">
+							<a onclick='toastMessage("Calories / kilo gram body weight / hour")'
+				class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
+						</td>
+					<tr>
+				</table>
+				</div>
+				<a id="addOrEditEvent"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left"
+				data-rel="back">Add</a>
+				
+				<a href= "#deleteEventDialog" id="deleteEvent" data-rel="dialog" data-transition="slidedown"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
+				style="display:none">Delete</a>
+				
+			<p id="cid" style="display: none"></p>
+			
+			
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
 
-        $(document).on('pageshow', '#start', function() {
-        	//set tab index on the "All" tab when the page will be showed
-        	$(document).data('selectedTabIndex', {
-                'index': 0,
-                'eventType': null
-            });
-        	
-        	
-            selectTabMenu();
-        });
+
+	<div data-role="page" data-id="settingsHeader" id="settings-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				data-transition="flip">Back</a>
+			<H1>Settings</H1>
+
+		</div>
+		<!-- /header -->
+
+		<div role="main" class="ui-content">
+			<div class="settingsList" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input">
+				<ul class="ui-listview" data-icon="false">
+					<li class="ui-first-child"><a href="#login-page"
+						class="ui-btn">
+							<h3>Account</h3>
+							<p id="settingsPageAccount"></p>
+					</a></li>
+					<li><a class="ui-btn">
+							<h3>Pump serial</h3> <input id="pumpSerial" type="text"
+							data-clear-btn="true" placeholder="1234567">
+					</a>
+					<li>
+				</ul>
+
+			</div>
+			<a href="#editSettings"
+				class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">Save</a>
+
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+
+
+	<div data-role="page" id="history-event-instance-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				data-transition="flip">Back</a>
+			<H1>History</H1>
+			<div id="history-event-instance-list-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">All</a></li>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">Food</a></li>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">Activity</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /header -->
+
+		<div role="main" class="ui-content">
+
+			<div id="history-event-instance-list" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input"></div>
+			<script id="history-event-instance-list-template" type="text/x-handlebars-template">
+				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+				{{#each .}}
+					<li class="ui-li-has-alt">
+					{{#if amount}}
+					
+						<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}}</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+					
+					{{else}}
+					
+						<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
+					
+					{{/if}}
+					</li>
+				{{/each}}
+				</ul>
+			</script>
+		</div>
+		<!-- /content -->
+		<div style="display: none;" id="confirm-placeholder">
+			<!-- placeholder for confirm -->
+		</div>
+		<!-- /popup -->
+		<div class="ui-screen-hidden ui-popup-screen ui-overlay-inherit"
+			id="confirm-screen"></div>
+		<div class="ui-popup-container ui-popup-hidden ui-popup-truncate"
+			id="confirm-popup">
+			<div id="confirm"
+				class="ui-content ui-popup ui-body-a ui-overlay-shadow ui-corner-all"
+				data-role="popup" data-theme="a">
+				<p id="question">Are you sure you want to delete:</p>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<a id="yes" class="ui-btn ui-corner-all ui-mini ui-btn-a"
+							data-rel="back">Yes</a>
+					</div>
+					<div class="ui-block-b">
+						<a id="cancel" class="ui-btn ui-corner-all ui-mini ui-btn-a"
+							data-rel="back">Cancel</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+
+	<div data-role="page" id="edit-event-instance-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				data-transition="flip">Back</a>
+			<H1>Edit</H1>
+
+		</div>
+		<!-- /header -->
+
+		<div role="main" class="ui-content">
+			<H3 id="edit-event-instance-name">Begin</H3>
+			<p id="edit-event-instance-cId" style="display:none"></p>
+			<p id="edit-event-instance-eventType" style="display:none"></p>
+			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
+
+			<p>From:</p>
+			<table width="100%">
+				<tr>
+					<td width="50%"><input name="mydate" id="edit-event-instance-page-begin-date-field" type="date"
+						data-role="datebox" data-options='{"mode": "timeflipbox"}'>
+					</td>
+					<td width="50%"><input name="mytime" id="edit-event-instance-page-begin-time-field"
+						type="time" data-role="datebox"
+						data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
+					</td>
+				</tr>
+			</table>
+			
+			<div id="endTimeField" style="display: none;">
+			<p>To:</p>
+				<table width="100%">
+					<tr>
+						<td width="50%">
+							<input name="mydate" id="edit-event-instance-page-end-date-field" type="date"
+						data-role="datebox" data-options='{"mode": "timeflipbox"}'>
+						</td>
+						<td width="50%"><input name="mytime" id="edit-event-instance-page-end-time-field" type="time"
+							data-role="datebox"
+							data-options='{"mode": "timebox", "overrideTimeFormat": 24}'>
+						</td>
+					<tr>
+				</table>
+
+			</div>
+
+
+			<div class="ui-field-contain">
+				<label id="edit-event-instance-food-quantity-slider-label">Amount</label>
+				<label id="edit-event-instance-activity-quantity-slider-label"
+					style="display: none">Intensity: <span
+					id="intensity-slider-label-intensity-indication">Light</span></label> <input
+					class="numbersOnly" type="range"
+					name="edit-event-instance-quantity-slider"
+					id="edit-event-instance-quantity-slider" data-highlight="true"
+					min="1" max="10" value="1" step="1">
+
+			</div>
+			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()" data-rel="back" id="edit-event-instance-page-save-button" type CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
+		</div>
+	
+		<!-- /content -->
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+
+	<div data-role="page" id="report-page">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<H1>Reports</H1>
+			<a href="#make-new-event-page"
+				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+		</div>
+		<!-- /header -->
+
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page">Input</a></li>
+					<li><a href="#report-page" class="ui-btn-active ui-state-persist">Report</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+
+	</div>
+	<!-- /page -->
+
+	<div data-role="page" id="pumpSettings">
+		<div data-role="header" data-position="fixed">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<H1>Pump settings</H1>
+			<a href="#make-new-event-page"
+				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content">
+			<iframe src="http://www.w3schools.com" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>
+			
+		</div>
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings"
+						class="ui-btn-active ui-state-persist">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+
+	</div>
+	<!-- /page -->
+
+	<!-- /content -->
+	<!-- /page -->
+
+	<div data-role="page" id="messageDialog" data-position="window">
+		<div data-role="header">
+			<h1 id="messageDialogHeader"></h1>
+		</div>
+		<div data-role="content">
+			<p id="messageDialogText"></p>
+			<a id="messageDialogConfirmButton" data-role="button" data-rel="back"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Ok</span>
+			</span>
+			</a>
+		</div>
+	</div>
+
+	<div data-role="page" id="deleteEventInstanceDialog" data-position="window">
+		<div data-role="header">
+			<h1>Delete event</h1>
+		</div>
+		<div data-role="content">
+			<p id="dialogText"></p>
+			<a id="deleteEventInstanceDialogConfirmButton" data-role="button" data-rel="back"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Yes</span>
+			</span>
+			</a> <a data-role="button" data-rel="back" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">No</span>
+			</span>
+			</a>
+		</div>
+	</div>
+	<div data-role="page" id="deleteEventDialog" data-position="window">
+		<div data-role="header">
+			<h1>Delete event</h1>
+		</div>
+		<div data-role="content">
+			<p id="deleteEventDialogText"></p>
+			<a id="deleteEventDialogConfirmButton" href="#event-list-page" data-role="button" 
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Yes</span>
+			</span>
+			</a> <a id="deleteEventDialogNoButton" data-role="button" data-rel="back" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">No</span>
+			</span>
+			</a>
+		</div>
+	</div>
+
+	<div data-role="page" id="registrationDialog" data-position="window">
+		<div data-role="header">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				data-transition="flip">Back</a>
+			<h1>Sign up</h1>
+		</div>
+		<div data-role="content">
+
+			<input id="registerEmail" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Email"> <input
+				id="registerPumpId" type="text" data-clear-btn="true" name="text-7"
+				value="" placeholder="Pump id"> <input id="registerPassword"
+				type="password" type="text" data-clear-btn="true" name="text-7"
+				value="" placeholder="Password"> <input
+				id="registerConfirmPassword" type="password" type="text"
+				data-clear-btn="true" name="text-7" value=""
+				placeholder="Confirm password"> <a
+				id="registrationDialogOkButton" data-role="button"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Ok</span>
+			</span>
+			</a>
+
+		</div>
+	</div>
+
+	<div data-role="page" id="login-page" data-position="window">
+
+		<div data-role="header">
+			<a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				data-transition="flip">Back</a>
+			<h1>Login</h1>
+		</div>
+		<div data-role="content">
+
+			<input id="loginEmail" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Email"> <input
+				id="loginPassword" type="password" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Password"> <a
+				id="loginDialogOkButton" data-role="button" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+				<span class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Login</span>
+			</span>
+			</a> <a id="registerButton" href="#registrationDialog" data-role="button"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
+				up</a>
+				<a id="guideTourButton" href="#home-page" data-role="button"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span" onclick="$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);"
+				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide tour</a>
+
+
+		</div>
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page">Input</a></li>
+					<li><a href="#report-page">Report</a></li>
+					<li><a href="#pumpSettings"
+						class="ui-btn-active ui-state-persist">Pump settings</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<div data-role="page" id="guideTours" data-position="window">
+	
+	<ol id="homeScreenTourFirstStop">
+      <li data-id="homeStartButton" data-text="Next" class="custom">
+        <h2>Start event</h2>
+        <p>Click here to start an event</p>
+      </li>
+      <li data-id="historyButton" data-text="Next" class="custom">
+        <h2>Stop #2</h2>
+        <p>Hystory can be found here</p>
+      </li>
       
-
-        
-        $(document).on('pageshow', '#home', function() {
-                       
-                db.listCurrentEvents();
-        });
-        
-        $(document).on('pageshow', '#history', function() {
-            selectHistoryTabMenu();
-            //db.listCurrentEvents();
-         });
-        
-        $(document).on('pagehide', '#newEvent', function(){
-        	//empty eventname field
-            $('#newEventName').val('');
-        });
-        $(document).on('pagehide', '#start', function(){
-        	//ensure the button with the new event(in green) will be hidden
-        	$('#recentlyAddedEvent').hide();
-        	//get out of edit mode
-        	$('#editModeButton').val('off');
-    		$('#editModeButton').attr("style","");
-    		$('.eventButtons').attr("style","");
-    		
-        });
-        
-        
-        
+     </ol>
      
-    </script>
+     <ol id="homeScreenTourSecondStop">
+      <li data-id="current-activity-event-list" data-text="Next" class="custom">
+        <h2>Current activities</h2>
+        <p>Once an activity is started it will be listed here at the begin screen.</p>
+      </li>
+      <li data-id="endActivityEventButton" data-text="Next" class="custom">
+        <h2>End activity</h2>
+        <p>Press this button to end the activity</p>
+      </li>
+      
+     </ol>
+     
+     <ol id="startEventScreenTour">
+     
+     	<li data-id="event-list" data-text="Next" class="custom">
+       	 <h2>Start event</h2>
+       	 	<p>Click a button in this list to start an event</p>
+     	 </li>
+     	 <li data-id="event-list-navbar" data-text="Next" class="custom">
+       		 <h2>Filter list</h2>
+       	 	<p>Here you can filter the list on certain types</p>
+     	 </li>
+     	 <li data-id="searchEventsInputForm" data-text="Next" class="custom">
+       	 <h2>Search event</h2>
+       	 	<p>Use the search bar to search for a specific event</p>
+     	 </li>
+     	 <li data-id="editModeButton" data-text="Next" class="custom">
+       	 <h2>Edit button</h2>
+       	 	<p>Press this button to edit a certain event</p>
+     	 </li>
+     	 <li data-id="newEventButton" data-text="Next" class="custom">
+       	 <h2>New event button</h2>
+       	 	<p>Press this button to add a new event to the list</p>
+     	 </li>
+     	 
+     </ol>
+     
+     <ol id="newEventScreenTour">
+      <li data-class="radioChoiceNewEvent" data-text="Next" class="custom">
+        <h2>Event type</h2>
+        <p>Specify event type here</p>
+      </li>
+      <li data-id="newEventName" data-text="Next" class="custom">
+        <h2>Event name</h2>
+        <p>Specify event name here</p>
+      </li>
+      <li data-id="newEventPageCarbs" data-text="Next" class="custom">
+        <h2>Carbohydrates</h2>
+        <p>In case of a food event, specify size in terms of grams of carbs here</p>
+      </li>
+      <li data-id="newEventPageAlcoholicUnits" data-text="Next" class="custom">
+        <h2>Alcoholic units</h2>
+        <p>In case of a food event, specify number of alcholic units here. One unit corresponds to a standard glass</p>
+      </li>
+      <li data-id="newEventPagePower" data-text="Next" class="custom">
+        <h2>Power</h2>
+        <p>In case of a activity event, specify Calories / kilo gram body weight / hour here</p>
+      </li>
+      
+     </ol>
+     
+     <ol id="startEventInstancePageTour">
+      <li data-id="mydate" data-text="Next" class="custom">
+        <h2>Date</h2>
+        <p>Once you start an event, here you can specify the date the event started</p>
+      </li>
+      <li data-id="mytime" data-text="Next" class="custom">
+        <h2>Time</h2>
+        <p>Specify time here</p>
+      </li>
+      <li data-id="startEventQuantitySliderField" data-text="Next" class="custom">
+        <h2>Amount</h2>
+        <p>In case of an food event, use this slider to specify the amount of this event</p>
+      </li>
+      <li data-id="startEventQuantitySliderField" data-text="Next" class="custom">
+        <h2>Intensity</h2>
+        <p>In case of an activity event, use this slider to specify the intensity of this event</p>
+      </li>
+      <li data-id="startEventInstanceButton" data-text="Next" class="custom">
+        <h2>Start event</h2>
+        <p>Your event is registered once you press the start button</p>
+      </li>
+      </ol>
+      
+      
+      
+     <ol id="editEventInstancePageTour">
+      <li data-id="edit-event-instance-page-end-date-field" data-text="Next" class="custom">
+        <h2>End date</h2>
+        <p>Once you end an activity, you can specify the end date here</p>
+      </li>
+      <li data-id="edit-event-instance-page-end-time-field" data-text="Next" class="custom">
+        <h2>End time</h2>
+        <p>Specify time here</p>
+      </li>
+      <li data-id="edit-event-instance-page-save-button" data-text="Next" class="custom">
+		<h2>Save</h2>
+        <p>Input will be saved once you press the save button</p>
+      </li>
+     </ol>
+     
+     <ol id="historyEventPageTour">
+      <li data-id="history-event-instance-list" data-text="Next" class="custom">
+        <h2>History events</h2>
+        <p>Here all the past events are listed. By clicking a button you can edit its event</p>
+      </li>
+      <li data-class="deleteEvent" data-text="Next" class="custom">
+        <h2>Delete event</h2>
+        <p>Press this button to delete an event of interest</p>
+      </li>
+      <li data-id="history-event-instance-list-navbar" data-text="Next" class="custom">
+        <h2>Filter list</h2>
+        <p>Filter list here</p>
+      </li>
+      
+      
+      
+     </ol>
+     
+     
+     
+	</div>
+	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	<script src="js/handlebars-v1.3.0.js"></script>
+	<script src="js/controller/synchronise.js"></script>
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.mobile-1.4.2.js"></script>
+	<script type="text/javascript" src="js/modernizr.mq.js"></script>
+	<script type="text/javascript" src="js/jquery.joyride-2.1.js"></script>
+	<script src="js/model/restclient.js"></script>
+	<script src="js/date.js"></script>
+
+	<script src="js/model/dbHandler.js"></script>
+	<script src="js/controller/guideTourFunctions.js"></script>
+	<script src="js/controller/pageFunctions.js"></script>
+	<script src="js/controller/controllerFunctions.js"></script>
+	<script src="js/controller/callbackControllerFunctions.js"></script>
+	<script src="js/controller/onClickFunctions.js"></script>
+
+	<script src="js/view/viewFunctions.js"></script>
+	<script src="js/view/callbackViewFunctions.js"></script>
+	
+	<script src="js/index.js"></script>
+
 
 
 </body>
