@@ -7,7 +7,7 @@ function setAddOrEditScreen(eventId){
 	
 	if($('#editModeButton').val() ==="on"){
 		//include delete button so user can delete event
-		console.log("edit eventd")
+		
 		$('#deleteEvent').show();
 		//edit mode is on, the screen newEvent will be used
 		window.location.href = '#make-new-event-page';
@@ -249,7 +249,8 @@ function setIntensityTextInScreen(selector, value) {
 
 
 function showEvents(eventType) {
-	if (eventType !== null && eventType !== undefined) {
+	
+	if (eventType === FOOD || eventType === ACTIVITY) {
 
 		df.listEventsOfEventType(eventType);
 

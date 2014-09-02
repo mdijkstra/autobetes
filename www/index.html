@@ -19,18 +19,21 @@
 	<div data-role="page" id="home-page">
 
 		<div data-role="header" data-position="inline" data-position="fixed">
+			<a
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise()"></a>
+				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
 				data-iconshadow="false" data-direction="reverse"
-				data-iconpos="notext" class="ui-btn-right"></a>
+				data-iconpos="notext" class="biggerButton ui-btn-right"></a>
 		</div>
 
 		<div role="main" id="mainScreen" class="ui-content">
 
-			<a id="homeStartButton" href="#event-list-page"
-				class="ui-btn ui-icon-plus ui-btn-icon-left"><span id="startEventSpan">Start event</span></a> <a
+			<a id="homeStartButton" href="#event-list-page" 
+				class="speedTap ui-btn ui-icon-plus ui-btn-icon-left"><span id="startEventSpan">Start event</span></a> <a
 				id="historyButton" href="#history-event-instance-page"
-				class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
+				class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
 			
 			<H3>Current activities:</H3>
 
@@ -56,7 +59,7 @@
 
 				<ul>
 					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
-					<li><a href="file:///Users/dionkoolhaas/AutobetesProject/index.html">Report</a></li>
+					<li><a href="#report-page">Report</a></li>
 					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
@@ -70,18 +73,18 @@
 	<div data-role="page" id="event-list-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<h1>Start event</h1>
 			<div class="ui-btn-right">
 				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
 					id="newEventButton" href="#make-new-event-page"
-					class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+					class="speedTap biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 			</div>
 			<div id="event-list-navbar" data-role="navbar">
 				<ul>
-					<li><a href="#" name="event-list-navbar-buttons">All</a></li>
-					<li><a href="#" name="event-list-navbar-buttons">Food</a></li>
-					<li><a href="#" name="event-list-navbar-buttons">Activity</a></li>
+					<li><a name="event-list-navbar-buttons">All</a></li>
+					<li><a name="event-list-navbar-buttons">Food</a></li>
+					<li><a name="event-list-navbar-buttons">Activity</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -126,12 +129,12 @@
 	<div data-role="page" id="start-event-instance-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<p id="start-event-instance-page-event-cId" style="display: none"></p>
 			<p id="start-event-instance-page-eventType" style="display: none"></p>
 			<H1>Start event</H1>
 			<a href="#make-new-event-page"
-				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+				class="biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 		</div>
 		<!-- /header -->
 
@@ -184,7 +187,7 @@
 	<div data-role="page" id="make-new-event-page">
 		<div data-role="header">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1 id="headerName">New Event</H1>
 		</div>
 		<!-- /header -->
@@ -271,7 +274,7 @@
 	<div data-role="page" data-id="settingsHeader" id="settings-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
 			<H1>Settings</H1>
 
@@ -320,7 +323,7 @@
 	<div data-role="page" id="history-event-instance-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
 			<H1>History</H1>
 			<div id="history-event-instance-list-navbar" data-role="navbar">
@@ -399,7 +402,7 @@
 	<div data-role="page" id="edit-event-instance-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
 			<H1>Edit</H1>
 
@@ -475,13 +478,16 @@
 	<div data-role="page" id="report-page">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Reports</H1>
 			<a href="#make-new-event-page"
-				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+				class="biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 		</div>
 		<!-- /header -->
-
+		<div role="main" class="ui-content">
+			
+			
+		</div>
 
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
@@ -502,14 +508,14 @@
 	<div data-role="page" id="pumpSettings">
 		<div data-role="header" data-position="fixed">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Pump settings</H1>
 			<a href="#make-new-event-page"
-				class="ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+				class="biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<iframe src="http://www.w3schools.com" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>
+			<!--<iframe src="http://195.169.22.242/settings" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>-->
 			
 		</div>
 		<div data-role="footer" data-id="foo1" data-position="relative"
@@ -597,7 +603,7 @@
 	<div data-role="page" id="registrationDialog" data-position="window">
 		<div data-role="header">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
 			<h1>Sign up</h1>
 		</div>
@@ -628,7 +634,7 @@
 
 		<div data-role="header">
 			<a data-rel="back"
-				class="ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
+				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
 			<h1>Login</h1>
 		</div>
@@ -660,10 +666,9 @@
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings"
-						class="ui-btn-active ui-state-persist">Pump settings</a></li>
+					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -807,6 +812,7 @@
      
 	</div>
 	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	
 	<script src="js/handlebars-v1.3.0.js"></script>
 	<script src="js/controller/synchronise.js"></script>
 	<script src="js/jquery.js"></script>

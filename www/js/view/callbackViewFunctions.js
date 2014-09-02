@@ -30,6 +30,7 @@ function showEventList(transaction, result) {
 		var source = $("#event-list-template").html();
 		var template = Handlebars.compile(source);
 		$("#event-list").html(template(rows));
+		
 	} 
 	if($('#editModeButton').val() ==="on"){
 		//edit mode is on, switch background of buttons
@@ -44,6 +45,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 	for (var i = 0; i < result.rows.length; i++) {
 		//progress results
 		var row = result.rows.item(i);
+		//console.log(row);
 		var date = new Date(row.beginTime);
 		var minutes = parseInt(date.getMinutes());
 		if (minutes < 10) {
@@ -81,8 +83,9 @@ function showEventInstanceList(inputType, result) {
 	var eventInstances = [];
 	for (var i = 0; i < result.rows.length; i++) {
 		//process results
-
+		
 		var row = result.rows.item(i);
+		//console.log(JSON.stringify(row));
 		var date = new Date(row.beginTime);
 		var minutes = parseInt(date.getMinutes());
 		if (minutes < 10) {
@@ -105,7 +108,7 @@ function showEventInstanceList(inputType, result) {
 		else{
 			var intensityTextAndColor = convertIntensityIntToTextAndColor(row.intensity);
 			var endDate = new Date(row.endTime);
-			var endMinutes = parseInt(date.getMinutes());
+			var endMinutes = parseInt(endDate.getMinutes());
 			if (endMinutes < 10) {
 				//show minutes correct
 				endMinutes = "0" + endMinutes;

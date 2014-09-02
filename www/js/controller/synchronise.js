@@ -24,10 +24,8 @@ var synchronise = function(){
 			}
 
 			var callback1 = function(data, textStatus, response){
-
-				df.updateLastUpdateTimeStamp(currentTimeStamp);
 				iterateArrayRecursively(0, data);
-
+				df.updateLastUpdateTimeStamp(currentTimeStamp);
 			}
 
 			var errorHandler1 = function(request, textStatus, error){
@@ -52,7 +50,7 @@ var synchronise = function(){
 
 					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
 						pushEntitiesInArray(result);
-
+						//console.log(JSON.stringify(requestData))
 						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
 					});
 				});
@@ -72,10 +70,12 @@ var synchronise = function(){
 }
 
 var iterateArrayRecursively = function(index, data){
-
+	
 	if(index < data.length){
 
 		var entity = data[index];
+		
+		//console.log(JSON.stringify(entity));
 		var entityType;//event or instance
 		//convert boolean to integer, because sqlite cannot handle booleans
 		if(entity.deleted === true){
@@ -101,7 +101,7 @@ var iterateArrayRecursively = function(index, data){
 					//no match on sId(that is the case when an entity has been made on another device
 					//and not been send to this device before), so this device can create this entity in db
 					//create entity
-					df.serverAddEntity(entityType, entity);
+					df.serverAddEntity(entity);
 					iterateArrayRecursively(index+1, data);
 				}
 				else{
@@ -119,13 +119,14 @@ var iterateArrayRecursively = function(index, data){
 							//entity found
 							//console.log("entity found");
 							var row = result.rows.item(0);
+							
 							//double check that server timestamp is equal or higher( timestamp of server should never
 							//be less, because then it would have been updated on the server)
 							if(entity.lastchanged >= row.lastchanged){
 								//console.log("server entity is more recent");
 								//server entity is more recent
 								//update entity
-								df.serverUpdateEntity(entityType, entity, row);
+								df.serverUpdateEntity(entity, row);
 							}
 						}
 						iterateArrayRecursively(index+1, data);
@@ -139,7 +140,7 @@ var iterateArrayRecursively = function(index, data){
 				//check if server entity has a higher timestamp
 				if(entity.lastchanged >= row.lastchanged){
 					//server entity is more recent
-					df.serverUpdateEntity(entityType, entity, row);
+					df.serverUpdateEntity(entity, row);
 				}
 				iterateArrayRecursively(index+1, data);
 			}
@@ -148,7 +149,14 @@ var iterateArrayRecursively = function(index, data){
 	else{
 		//index is equal to list, whole array has been iterated
 		$(document).data(IS_SYNCHRONISING, false);
-
+		//reload list
+		var currentPage = $.mobile.activePage[0].id;
+		if(currentPage === HOMEPAGE){
+			
+			setTimeout(function() {
+			df.showCurrentActivityEventInstances();
+			},1000);
+		}
 
 	}
 

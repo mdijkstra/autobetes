@@ -1,6 +1,5 @@
 
 var df = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
-
 var token;
 var SERVER_URL = 'http://195.169.22.242';
 var SERVER_EVENT_URL = '/api/v1/event';
@@ -25,7 +24,8 @@ var ENDED = 'ended';
 var EDIT = "Edit";
 var EVENT_ALREADY_EXISTS = 'Event allready exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
-var LOGINDIALOG = "loginDialog";
+var LOGINDIALOG = "login-page";
+var HOMEPAGE = "home-page";
 var REGISTRATIONDIALOG = "registrationDialog";
 var DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER = 3;
 var DEFAULT_VALUE_FOOD_QUANTITY_SLIDER = 1;
@@ -80,7 +80,7 @@ $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
-//workaround for the input field at the sliders, this ensures that input ar only integers with or without
+//workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 jQuery('.numbersOnly').keyup(function () { 
 	this.value = this.value.replace(/[^0-9\.]/g,'1');
@@ -113,10 +113,28 @@ function toastShortMessage(messageText){
 	window.plugins.toast.showShortBottom(messageText, null, null);
 }
 
+
 function onDeviceReady() {
-
+	
+	var speedUpTap = function(e){
+       $(this).trigger("click");
+        e.preventDefault();
+        return false;
+      }
+	
+	$(".speedTap").on("tap",speedUpTap);
+	/*
+	$('[name=event-list-navbar-buttons]').on("tap", speedUpTap);
+	
+	$('[name=history-event-instance-list-navbar-buttons]').on("tap", speedUpTap);
+	*/
 	checkIfUserExists();
-
+	
+	setInterval(function() {
+		//sync every 5 minutes
+		synchronise();
+	}, 300000);
+	
 	document.addEventListener("offline", function(e) {
 		//alert("offline");
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -129,6 +147,7 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
+		synchronise();
 		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 

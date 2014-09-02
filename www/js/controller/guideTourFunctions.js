@@ -1,8 +1,8 @@
 function homeScreenTour(){
-	console.log("homeScreenTourSecondStop");
+	//console.log("homeScreenTourSecondStop");
 	//guide tour stops multiple times at home screen. Index indicates which next stop will be
 	var index_stop = $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT);
-	console.log("index is:"+index_stop)
+	//console.log("index is:"+index_stop)
 	if(index_stop === 0){
 		$('#homeScreenTourFirstStop').joyride({
 			autoStart : true,
@@ -62,7 +62,7 @@ function homeScreenTour(){
 }
 
 function startEventScreenTour(){
-	console.log("startEventScreenTour");
+	//console.log("startEventScreenTour");
 	//make All button in navbar active
 	$('[name=event-list-navbar-buttons]:eq(0)').addClass('ui-btn-active');
 	//mock event list
@@ -164,7 +164,7 @@ function startEventInstancePageTour(){
 		modal:true,
 		expose: true,
 		postRideCallback : function(){
-			console.log("go home")
+			//console.log("go home")
 			window.location.href =  '#home-page';
 			$(this).joyride("destroy");
 		},

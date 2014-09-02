@@ -1,4 +1,5 @@
 
+
 $('[name=event-list-navbar-buttons]').click(function() {
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	var index = 0;
@@ -10,6 +11,9 @@ $('[name=event-list-navbar-buttons]').click(function() {
 		'index': index,
 		'eventType': eventType
 	});
+	$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
+	//highlight the button that is selected
+	$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
 	showEvents(eventType);
 });
@@ -26,6 +30,10 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 		'index': index,
 		'eventType': eventType
 	});
+	
+	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
+	//highlight the button that is selected
+	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
 	df.listHistoryEvents($(this).html());
 
@@ -84,7 +92,7 @@ $('#deleteEvent').click(function(){
 
 	$('#deleteEventDialogConfirmButton').click(function() {
 		df.deleteEvent($('#cid').text());
-		console.log("delete event:"+$('#cid').text() )
+		//console.log("delete event:"+$('#cid').text() )
 		toastMessage("delete " + eventName);
 	});
 	$('#deleteEventDialogNoButton').click(function() {
@@ -103,7 +111,9 @@ $('#historyButton').click(function() {
 });
 
 $('#editModeButton').click(function(){
+	
 	if($('#editModeButton').val() ==="on"){
+		console.log("edit mode was on");
 		//editmode was on, now need to be turned off
 		$('#editModeButton').val('off');
 		$('#editModeButton').attr("style","");
@@ -114,6 +124,7 @@ $('#editModeButton').click(function(){
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
 	}
 	else{
+		console.log("edit mode was off");
 		//editmode was off, now need to be turned on
 		$('#editModeButton').val('on');
 		$('#editModeButton').attr("style","background: #8df3e6 !important");
@@ -137,7 +148,7 @@ $('#startEventInstanceButton').click(function() {
 	var eventId = $('#start-event-instance-page-event-cId').text();
 	var quantity = $('#start-event-instance-quantity-slider').val();
 	var eventType = $('#start-event-instance-page-eventType').text();
-
+	
 	df.addEventInstance(quantity, unixTime, eventId, eventType);
 	df.showCurrentActivityEventInstances();
 	//refresh list of current events
@@ -210,7 +221,7 @@ $('#loginDialogOkButton').click(function(){
 });
 
 $('#registrationDialogOkButton').click(function(){
-	console.log("start registering");
+	//console.log("start registering");
 	//get values
 	var email = $('#registerEmail').val();
 	var pumpId = $('#registerPumpId').val();
@@ -241,7 +252,7 @@ $('#registrationDialogOkButton').click(function(){
 
 				}
 				else{
-					console.log(response.responseText)
+					//console.log(response.responseText)
 					toastShortMessage(response.responseText);
 				}
 			};
@@ -271,7 +282,7 @@ $('#registrationDialogOkButton').click(function(){
 
 			};
 
-			console.log("execute restclient.register");
+			//console.log("execute restclient.register");
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{
