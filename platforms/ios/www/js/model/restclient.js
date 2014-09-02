@@ -103,31 +103,6 @@
 
 		return result;
 	};
-<<<<<<< HEAD:platforms/ios/www/js/restclient.js
- 
- molgenis.RestClient.prototype.add = function(url, data, callback, errorHandler) {
- $.ajax({
-        type: 'POST',
-        headers: {'x-molgenis-token': self.token},
-        url: url,
-        data: JSON.stringify(data),
-        async: false,
-        contentType: 'application/json',
-        success: function(data, textStatus, response) {
-        	callback(data, textStatus, response);
-        },
-        error: function(request, textStatus, error) {
-        	console.log("ERROR:" + error);
-        	errorHandler(request, textStatus, error)
-        }
-        });
- 
- 
- }
-
-	
-	molgenis.RestClient.prototype.login = function(username, password, callback) {
-=======
 
 
 	molgenis.RestClient.prototype.add = function(url, data, callback, errorHandler) {
@@ -173,7 +148,6 @@
 
 
 	molgenis.RestClient.prototype.login = function(url, username, password, callback, callbackLoginError) {
->>>>>>> 1b1dcd7939897df42b9e8da320b89945aa615919:www/js/model/restclient.js
 		$.ajax({
 			type: 'POST',
 			dataType : 'json',
