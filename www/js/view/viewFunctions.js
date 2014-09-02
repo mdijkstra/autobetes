@@ -249,7 +249,8 @@ function setIntensityTextInScreen(selector, value) {
 
 
 function showEvents(eventType) {
-	if (eventType !== null && eventType !== undefined) {
+	
+	if (eventType === FOOD || eventType === ACTIVITY) {
 
 		df.listEventsOfEventType(eventType);
 

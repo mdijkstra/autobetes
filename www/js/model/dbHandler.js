@@ -129,8 +129,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// open db, create if not exists
 	var db = openDatabase(shortName, version, displayName, maxSize);
 
-	//resetDB();
-	createTablesIfNotExists();
+	resetDB();
+	//createTablesIfNotExists();
 
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function
@@ -397,7 +397,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * entity in the db.
 	 */
 	function serverUpdateEntity(entity, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
-		
 		if(entity.name){
 			//entity is event
 			//update event
@@ -509,12 +508,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function addEventInstance(quantity, beginTime, cId, eventType) {
 
 		getEntityWithCId(cId, EVENT, function(transaction, result){
+			
 			var row = result.rows.item(0);
-			//callback function, inserts values in the extended table (FoodEventInstance)
+						//callback function, inserts values in the extended table (FoodEventInstance)
 			var addFoodFunction = function(transaction, result){
 				executeQuery(ADD_FOOD_INSTANCE, [result.insertId, quantity],synchronise);
 			};
 			var addActivityFunction = function(transaction, result){
+				
 				executeQuery(ADD_ACTIVITY_INSTANCE, [result.insertId, quantity],synchronise);
 			};
 			if(eventType === FOOD){

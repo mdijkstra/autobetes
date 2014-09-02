@@ -1,4 +1,5 @@
 
+
 $('[name=event-list-navbar-buttons]').click(function() {
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	var index = 0;
@@ -10,6 +11,9 @@ $('[name=event-list-navbar-buttons]').click(function() {
 		'index': index,
 		'eventType': eventType
 	});
+	$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
+	//highlight the button that is selected
+	$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
 	showEvents(eventType);
 });
@@ -26,6 +30,10 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 		'index': index,
 		'eventType': eventType
 	});
+	
+	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
+	//highlight the button that is selected
+	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
 	df.listHistoryEvents($(this).html());
 
@@ -103,7 +111,9 @@ $('#historyButton').click(function() {
 });
 
 $('#editModeButton').click(function(){
+	
 	if($('#editModeButton').val() ==="on"){
+		console.log("edit mode was on");
 		//editmode was on, now need to be turned off
 		$('#editModeButton').val('off');
 		$('#editModeButton').attr("style","");
@@ -114,6 +124,7 @@ $('#editModeButton').click(function(){
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
 	}
 	else{
+		console.log("edit mode was off");
 		//editmode was off, now need to be turned on
 		$('#editModeButton').val('on');
 		$('#editModeButton').attr("style","background: #8df3e6 !important");
@@ -137,7 +148,7 @@ $('#startEventInstanceButton').click(function() {
 	var eventId = $('#start-event-instance-page-event-cId').text();
 	var quantity = $('#start-event-instance-quantity-slider').val();
 	var eventType = $('#start-event-instance-page-eventType').text();
-
+	
 	df.addEventInstance(quantity, unixTime, eventId, eventType);
 	df.showCurrentActivityEventInstances();
 	//refresh list of current events

@@ -30,6 +30,7 @@ function showEventList(transaction, result) {
 		var source = $("#event-list-template").html();
 		var template = Handlebars.compile(source);
 		$("#event-list").html(template(rows));
+		
 	} 
 	if($('#editModeButton').val() ==="on"){
 		//edit mode is on, switch background of buttons
@@ -107,7 +108,7 @@ function showEventInstanceList(inputType, result) {
 		else{
 			var intensityTextAndColor = convertIntensityIntToTextAndColor(row.intensity);
 			var endDate = new Date(row.endTime);
-			var endMinutes = parseInt(date.getMinutes());
+			var endMinutes = parseInt(endDate.getMinutes());
 			if (endMinutes < 10) {
 				//show minutes correct
 				endMinutes = "0" + endMinutes;

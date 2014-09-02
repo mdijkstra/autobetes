@@ -1,6 +1,5 @@
 
 var df = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
-
 var token;
 var SERVER_URL = 'http://195.169.22.242';
 var SERVER_EVENT_URL = '/api/v1/event';
@@ -114,14 +113,27 @@ function toastShortMessage(messageText){
 	window.plugins.toast.showShortBottom(messageText, null, null);
 }
 
-function onDeviceReady() {
 
+function onDeviceReady() {
+	
+	var speedUpTap = function(e){
+       $(this).trigger("click");
+        e.preventDefault();
+        return false;
+      }
+	
+	$(".speedTap").on("tap",speedUpTap);
+	/*
+	$('[name=event-list-navbar-buttons]').on("tap", speedUpTap);
+	
+	$('[name=history-event-instance-list-navbar-buttons]').on("tap", speedUpTap);
+	*/
 	checkIfUserExists();
 	
 	setInterval(function() {
 		//sync every 5 minutes
 		synchronise();
-	}, 600000);
+	}, 300000);
 	
 	document.addEventListener("offline", function(e) {
 		//alert("offline");

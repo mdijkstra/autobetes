@@ -140,7 +140,7 @@ var iterateArrayRecursively = function(index, data){
 				//check if server entity has a higher timestamp
 				if(entity.lastchanged >= row.lastchanged){
 					//server entity is more recent
-					df.serverUpdateEntity(entityType, entity, row);
+					df.serverUpdateEntity(entity, row);
 				}
 				iterateArrayRecursively(index+1, data);
 			}

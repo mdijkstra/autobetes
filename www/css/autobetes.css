@@ -1,3 +1,5 @@
+.biggerButton { padding: 2px !important;}
+
 /* Left transition */
 li.left {
     -webkit-transition: -webkit-transform 250ms ease;
