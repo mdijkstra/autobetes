@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>4F887F97-5D78-4EFD-98BC-F7654B8DBD91</string>
+	<string>B8B66C9F-820F-4B10-86F8-CD4E42D39567</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Autobetes</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>704A6B77-E685-49D9-8447-98EB581955A7</key>
-		<string>https://bitbucket.org/DionKoolhaas/autobetes.git</string>
+		<key>C3D1705F-EA10-4ADC-8374-C8B8200C4E65</key>
+		<string>ssh://bitbucket.org/diadvies/autobetes.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>platforms/ios/Autobetes.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>704A6B77-E685-49D9-8447-98EB581955A7</key>
+		<key>C3D1705F-EA10-4ADC-8374-C8B8200C4E65</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/DionKoolhaas/autobetes.git</string>
+	<string>ssh://bitbucket.org/diadvies/autobetes.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>704A6B77-E685-49D9-8447-98EB581955A7</string>
+	<string>C3D1705F-EA10-4ADC-8374-C8B8200C4E65</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>704A6B77-E685-49D9-8447-98EB581955A7</string>
+			<string>C3D1705F-EA10-4ADC-8374-C8B8200C4E65</string>
 			<key>IDESourceControlWCCName</key>
-			<string>autobetesBeta</string>
+			<string>autobetes-app</string>
 		</dict>
 	</array>
 </dict>
