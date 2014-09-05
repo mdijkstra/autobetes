@@ -2,6 +2,7 @@
 //this method is called when an error happens in a transaction
 function errorHandler(transaction, error) {
 	console.log(error.message);
+	console.log(error);
 	toastShortMessage(ERROR_TEXT+ error.message);
 	console.log(error);
 	console.log(transaction);

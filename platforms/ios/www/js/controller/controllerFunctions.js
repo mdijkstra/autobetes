@@ -155,11 +155,13 @@ function login(){
 						token = result.token;
 						var currentPage = $.mobile.activePage[0].id;
 						if(currentPage === LOGINDIALOG){
-							toastMessage(SUCCESSFULLY_LOGGED_IN);
+							synchronise();
 							//$.mobile.back();//go to previous page
 							window.location.href =  "#"+HOMEPAGE;
+							toastMessage(SUCCESSFULLY_LOGGED_IN);
+				
 						}
-						synchronise();
+						
 
 					
 					}

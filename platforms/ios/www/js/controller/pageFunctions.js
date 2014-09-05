@@ -116,17 +116,17 @@ $(document).on('pagehide', '#event-list-page', function(){
 });
 
 $(document).on('pageshow', '#report-page', function(){
-
-	//toastMessage('show report');
-	/*
-	var ref = window.open(SERVER_URL, '_self', 'location=no');
-	setTimeout(function() {
-
-		toastMessage('close screen');
-		ref.close();
-		window.location.href =  '#home-page';
-	}, 5000);
-	*/
+	
+		   ifrm = document.createElement("IFRAME"); 
+		   ifrm.setAttribute("src", SERVER_URL+"?molgenis-token="+token); 
+		   ifrm.style.width = 640+"px"; 
+		   ifrm.style.height = 480+"px"; 
+		   console.log("no m")
+		   console.log(ifrm)
+		   $('#iFrameDiv').html(ifrm);
+		   //document.body.appendChild(ifrm); 
+		
+	
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){

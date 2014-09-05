@@ -20,7 +20,7 @@
 
 		<div data-role="header" data-position="inline" data-position="fixed">
 			<a
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise()"></a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); toastShortMessage(SYNCHRONISE)"></a>
 				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
@@ -485,7 +485,7 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			
+			<div id="iFrameDiv"></div>
 			
 		</div>
 

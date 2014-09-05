@@ -241,7 +241,7 @@ $('#registrationDialogOkButton').click(function(){
 					email: email,
 					password: password
 			}
-
+			
 			toastShortMessage(CONNECT_TO_SERVER);
 
 			var registerCallbackError = function(response, textStatus, error){
@@ -256,7 +256,7 @@ $('#registrationDialogOkButton').click(function(){
 					toastShortMessage(response.responseText);
 				}
 			};
-			
+			console.log("komie")
 			var registerCallbackSuccess = function(data, textStatus, response){
 				if(response.responseJSON.success){
 					df.updateUser(email, pumpId, password);
@@ -282,7 +282,7 @@ $('#registrationDialogOkButton').click(function(){
 
 			};
 
-			//console.log("execute restclient.register");
+			console.log("execute restclient.register");
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{
