@@ -207,7 +207,7 @@ $('#loginDialogOkButton').click(function(){
 			//user switched account, so now reset db
 
 			df.resetDBExceptUserTable();
-			restClient.setToken(null);//ensure that no token is saved of other account
+			restClient.setToken("");//ensure that no token is saved of other account
 
 		}
 		df.updateEmailAndPassword(email, password, function(){

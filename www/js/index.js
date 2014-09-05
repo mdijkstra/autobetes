@@ -109,20 +109,20 @@ function showMessageDialog(headerText, messageText){
 }
 function toastMessage(messageText){
 	console.log(messageText)
-	if(MOBILE_DEVICE){
+	//if(MOBILE_DEVICE){
 		window.plugins.toast.showLongBottom(messageText, null, null);
-	}
-	else{
+	//}
+	//else{
 		console.log(messageText);
-	}
+	//}
 }
 function toastShortMessage(messageText){
-	if(MOBILE_DEVICE){
+	//if(MOBILE_DEVICE){
 		window.plugins.toast.showShortBottom(messageText, null, null);
-	}
-	else{
+	//}
+	//else{
 		console.log(messageText);
-	}
+	//}
 }
 
 function checkMobileBrowser() {
