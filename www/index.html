@@ -18,7 +18,7 @@
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
 
-		<div data-role="header" data-position="inline" data-position="fixed">
+		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
 			<a
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); toastShortMessage(SYNCHRONISE)"></a>
 				
@@ -71,7 +71,7 @@
 	<!-- /page -->
 
 	<div data-role="page" id="event-list-page">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<h1>Start event</h1>
@@ -127,7 +127,7 @@
 	<!-- /page -->
 
 	<div data-role="page" id="start-event-instance-page">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<p id="start-event-instance-page-event-cId" style="display: none"></p>
@@ -164,8 +164,8 @@
 			</div>
 			
 			
-			<A href="#home-page" id="startEventInstanceButton"
-				CLASS="ui-btn ui-shadow ui-corner-all">Start</A>
+			<A id="startEventInstanceButton"
+				class="ui-btn ui-shadow ui-corner-all">Start</A>
 		</div>
 		<!-- /content -->
 
@@ -185,7 +185,7 @@
 	</div>
 	<!-- /page -->
 	<div data-role="page" id="make-new-event-page">
-		<div data-role="header">
+		<div data-role="header" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1 id="headerName">New Event</H1>
@@ -244,7 +244,7 @@
 				</div>
 				<a id="addOrEditEvent"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left"
-				data-rel="back">Add</a>
+				>Add</a>
 				
 				<a href= "#deleteEventDialog" id="deleteEvent" data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
@@ -271,8 +271,8 @@
 	<!-- /page -->
 
 
-	<div data-role="page" data-id="settingsHeader" id="settings-page">
-		<div data-role="header" data-position="fixed">
+	<div data-role="page" data-id="settingsHeader" id="settings-page" >
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
@@ -321,7 +321,7 @@
 
 
 	<div data-role="page" id="history-event-instance-page">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
@@ -400,7 +400,7 @@
 
 
 	<div data-role="page" id="edit-event-instance-page">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
 				data-transition="flip">Back</a>
@@ -457,7 +457,7 @@
 					min="1" max="10" value="1" step="1">
 
 			</div>
-			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()" data-rel="back" id="edit-event-instance-page-save-button" type CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
+			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()"  id="edit-event-instance-page-save-button" type CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
 		</div>
 	
 		<!-- /content -->
@@ -476,7 +476,7 @@
 	</div>
 
 	<div data-role="page" id="report-page">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Reports</H1>
@@ -506,7 +506,7 @@
 	<!-- /page -->
 
 	<div data-role="page" id="pumpSettings">
-		<div data-role="header" data-position="fixed">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a data-rel="back"
 				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Pump settings</H1>
@@ -561,7 +561,7 @@
 		</div>
 		<div data-role="content">
 			<p id="dialogText"></p>
-			<a id="deleteEventInstanceDialogConfirmButton" data-role="button" data-rel="back"
+			<a id="deleteEventInstanceDialogConfirmButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
@@ -583,7 +583,7 @@
 		</div>
 		<div data-role="content">
 			<p id="deleteEventDialogText"></p>
-			<a id="deleteEventDialogConfirmButton" href="#event-list-page" data-role="button" 
+			<a id="deleteEventDialogConfirmButton" data-role="button" 
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span

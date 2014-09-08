@@ -24,6 +24,7 @@ var synchronise = function(){
 			}
 
 			var callback1 = function(data, textStatus, response){
+				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
 				df.updateLastUpdateTimeStamp(currentTimeStamp);
 			}

@@ -57,6 +57,8 @@ $('#newEventPageEventType').change(function(){
 
 
 $('#addOrEditEvent').click(function() {
+	window.location.href =  '#'+EVENTLISTPAGE;
+	$(window).ready(function(){
 	//alert('start adding');
 	var eventName = $('#newEventName').val();
 	var eventType = $('[name="radio-choice-h-2"]:checked').val();
@@ -83,17 +85,20 @@ $('#addOrEditEvent').click(function() {
 	//tag certain event to be presented on top. The method showlist handles
 	//this privilege
 	$('#eventnameOfAddedOrEditedEvent').text(eventName);
-
+	});
 });
 
 $('#deleteEvent').click(function(){
 	var eventName = $('#newEventName').val();
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
-
+	
 	$('#deleteEventDialogConfirmButton').click(function() {
+		window.location.href =  '#'+EVENTLISTPAGE;
+		$(window).ready(function(){
 		df.deleteEvent($('#cid').text());
 		//console.log("delete event:"+$('#cid').text() )
 		toastMessage("delete " + eventName);
+		})
 	});
 	$('#deleteEventDialogNoButton').click(function() {
 		populateEditEventScreen($('#cid').text());
@@ -142,24 +147,24 @@ $('#editModeButton').click(function(){
 
 
 $('#startEventInstanceButton').click(function() {
+	//var w = window.open('child.html');
+	window.location.href =  '#'+HOMEPAGE;
+	$(window).ready(function(){
+		var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
+		var unixTime = Date.parse(timeAndDate).getTime();
+		var eventId = $('#start-event-instance-page-event-cId').text();
+		var quantity = $('#start-event-instance-quantity-slider').val();
+		var eventType = $('#start-event-instance-page-eventType').text();
+		
+		df.addEventInstance(quantity, unixTime, eventId, eventType);
+		//set added text regarding which event is added
+		var addedText = "Added "+$('#startEventName').html();
+		
+		toastMessage(addedText);
+		//refresh list of current events
+		df.showCurrentActivityEventInstances();
+	});
 
-	var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-	var unixTime = Date.parse(timeAndDate).getTime();
-	var eventId = $('#start-event-instance-page-event-cId').text();
-	var quantity = $('#start-event-instance-quantity-slider').val();
-	var eventType = $('#start-event-instance-page-eventType').text();
-	
-	df.addEventInstance(quantity, unixTime, eventId, eventType);
-	df.showCurrentActivityEventInstances();
-	//refresh list of current events
-
-	//set text on home screen, regarding which event is added
-
-	var addedText = "Added "+$('#startEventName').html();
-
-	toastMessage(addedText)
-
-	return;
 
 });
 
@@ -208,7 +213,7 @@ $('#loginDialogOkButton').click(function(){
 
 			df.resetDBExceptUserTable();
 			restClient.setToken("");//ensure that no token is saved of other account
-
+			
 		}
 		df.updateEmailAndPassword(email, password, function(){
 			login();
@@ -256,7 +261,7 @@ $('#registrationDialogOkButton').click(function(){
 					toastShortMessage(response.responseText);
 				}
 			};
-			console.log("komie")
+			
 			var registerCallbackSuccess = function(data, textStatus, response){
 				if(response.responseJSON.success){
 					df.updateUser(email, pumpId, password);
