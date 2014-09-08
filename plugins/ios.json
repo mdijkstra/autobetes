@@ -7,15 +7,15 @@
         "files": {
             "framework": {
                 "parents": {
-                    "SystemConfiguration.framework": [
-                        {
-                            "xml": "true",
-                            "count": 1
-                        }
-                    ],
                     "QuartzCore.framework": [
                         {
                             "xml": "false",
+                            "count": 1
+                        }
+                    ],
+                    "SystemConfiguration.framework": [
+                        {
+                            "xml": "true",
                             "count": 1
                         }
                     ]
@@ -24,6 +24,10 @@
             "config.xml": {
                 "parents": {
                     "/*": [
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"ios-package\" value=\"Toast\" /></feature>",
+                            "count": 1
+                        },
                         {
                             "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
                             "count": 1
@@ -41,7 +45,7 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Toast\"><param name=\"ios-package\" value=\"Toast\" /></feature>",
+                            "xml": "<preference name=\"StatusBarStyle\" value=\"lightcontent\" />",
                             "count": 1
                         }
                     ]
@@ -50,13 +54,13 @@
         }
     },
     "installed_plugins": {
+        "nl.x-services.plugins.toast": {
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
+        },
         "org.apache.cordova.network-information": {
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "com.coolappz.Autobetes"
-        },
-        "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         }
     },

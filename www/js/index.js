@@ -110,20 +110,20 @@ function showMessageDialog(headerText, messageText){
 }
 function toastMessage(messageText){
 	
-	//if(MOBILE_DEVICE){
-	//	window.plugins.toast.showLongBottom(messageText, null, null);
-	//}
-	//else{
+	if(MOBILE_DEVICE){
+		window.plugins.toast.showLongBottom(messageText, null, null);
+	}
+	else{
 		console.log(messageText);
-	//}
+	}
 }
 function toastShortMessage(messageText){
-	//if(MOBILE_DEVICE){
-	//	window.plugins.toast.showShortBottom(messageText, null, null);
-	//}
-	//else{
+	if(MOBILE_DEVICE){
+		window.plugins.toast.showShortBottom(messageText, null, null);
+	}
+	else{
 		console.log(messageText);
-	//}
+	}
 }
 
 function checkMobileBrowser() {
@@ -134,6 +134,7 @@ function checkMobileBrowser() {
 
 
 function onDeviceReady() {
+	//StatusBar.overlaysWebView(false);
 	MOBILE_DEVICE = checkMobileBrowser();
 	console.log("asymptoot:"+ checkMobileBrowser());
 	var speedUpTap = function(e){
