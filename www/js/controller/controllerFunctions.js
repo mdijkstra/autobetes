@@ -77,7 +77,6 @@ function updateEventInstance() {
 	//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
 	//update event instance in database
 	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
-	console.log(eventType+" "+ $('#edit-event-instance-quantity-slider').val()+" "+unixBeginTime+" "+unixEndTime+" "+cId);
 	});
 }
 

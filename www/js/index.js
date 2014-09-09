@@ -136,7 +136,6 @@ function checkMobileBrowser() {
 function onDeviceReady() {
 	//StatusBar.overlaysWebView(false);
 	MOBILE_DEVICE = checkMobileBrowser();
-	console.log("asymptoot:"+ checkMobileBrowser());
 	var speedUpTap = function(e){
        $(this).trigger("click");
         e.preventDefault();
