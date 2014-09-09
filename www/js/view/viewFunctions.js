@@ -34,13 +34,7 @@ function populateEditEventInstancePage(cId, eventType) {
 			$('#edit-event-instance-page-begin-date-field').val(dateAndTime.date);
 			$('#edit-event-instance-page-begin-time-field').val(dateAndTime.time);
 			
-			if(row.carbs !== null){
-				$('#edit-event-instance-amount-of-grams-text').show();
-				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*row.amount)+' grams' );
-			}
-			else{
-				$('#edit-event-instance-amount-of-grams-text').hide();
-			}
+			
 			
 			if (row.eventType === ACTIVITY) {
 				//activity has an endtime
@@ -78,6 +72,9 @@ function populateEditEventInstancePage(cId, eventType) {
 				$('#edit-event-instance-page-begin-time-text').hide();
 				
 			}
+			
+			
+			$('#edit-event-instance-quantity-slider').unbind();
 			$('#edit-event-instance-quantity-slider').change(function() {
 				//if user slides the #intensity-slider-label-intensity-indication changes accordingly
 					
@@ -86,9 +83,22 @@ function populateEditEventInstancePage(cId, eventType) {
 				if(row.carbs !== null){
 					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(row.carbs*intensity)+' grams' );
 				}
-				
-				setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
+				if(row.intensity){
+					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
+				}
 			});
+			
+			if(row.carbs !== null){
+				$('#edit-event-instance-amount-of-grams-text').show();
+				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*row.amount)+' grams' );
+			}
+			else if(row.amount !== null){
+				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
+			}
+			else{
+				$('#edit-event-instance-amount-of-grams-text').hide();
+			}
+			
 		}
 	});
 
@@ -181,13 +191,7 @@ function populateStartEventInstanceScreen(eventID){
 			var timeStringForMyTime = currentHours + ":" + currentMinutes;
 			$('#mytime').val(timeStringForMyTime);
 
-			if(row.carbs !== null){
-				$('#start-event-instance-amount-of-grams-text').show();
-				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)+' grams' );
-			}
-			else{
-				$('#start-event-instance-amount-of-grams-text').hide();
-			}
+			
 			//add event screen varies by event type
 
 			$('#start-event-instance-page-eventType').text(row.eventType);
@@ -212,16 +216,29 @@ function populateStartEventInstanceScreen(eventID){
 
 
 			}
+			$('#start-event-instance-quantity-slider').unbind();
 			$('#start-event-instance-quantity-slider').change(function() {
 				
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
 				if(row.carbs !== null){
-					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(row.carbs*intensity)+' grams' );
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(row.carbs*intensity)+' grams' );
 				}
-				
-				setIntensityTextInScreen('#intensityToText', parseInt(intensity));
+				if(row.intensity !== null){
+					setIntensityTextInScreen('#intensityToText', parseInt(intensity));
+				}
 			});
+			
+			if(row.carbs !== null){
+				$('#start-event-instance-amount-of-grams-text').show();
+				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)+' grams' );
+			}
+			else if(row.amount !== null){
+				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
+			}
+			else{
+				$('#start-event-instance-amount-of-grams-text').hide();
+			}
 		}
 	})
 
