@@ -6,12 +6,14 @@ function deleteEvent(eventName, eventId, eventType){
 	$('#deleteEventInstanceDialogConfirmButton').click(function() {
 		//user confirms
 		//delete instance
+		$.mobile.back();//go to previous page
+		$(window).ready(function(){
 		df.deleteEventInstance(eventId);
 		//refresh list in history
 		var selectedTabIndex = $(document).data('selectedTabIndex2');
 		var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
 		df.listHistoryEvents(selectedTab);
-
+		});
 	});
 }
 /*
@@ -55,6 +57,10 @@ function convertTimestampToTimeAndDate(timestamp){
  * Method gets called in edit-event-instance-page when user clicks the save button
  */
 function updateEventInstance() {
+	
+	$.mobile.back();//go to previous page
+	$(window).ready(function(){
+		
 	//extract values from DOM
 	var cId = $("#edit-event-instance-cId").text();
 	var eventType = $("#edit-event-instance-eventType").text();
@@ -71,7 +77,8 @@ function updateEventInstance() {
 	//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
 	//update event instance in database
 	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
-
+	console.log(eventType+" "+ $('#edit-event-instance-quantity-slider').val()+" "+unixBeginTime+" "+unixEndTime+" "+cId);
+	});
 }
 
 

@@ -105,7 +105,7 @@ $(document).on('pagehide', '#event-list-page', function(){
 	if($(document).data(TOURMODE)){
 
 	}else{
-		
+		$('#filterControlgroup-input').val('');
 		//ensure the button with the new event(in green) will be hidden
 		$('#recentlyAddedEvent').hide();
 		//get out of edit mode

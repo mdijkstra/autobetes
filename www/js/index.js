@@ -27,6 +27,7 @@ var EVENT_ALREADY_EXISTS = 'Event allready exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
 var LOGINDIALOG = "login-page";
 var HOMEPAGE = "home-page";
+var EVENTLISTPAGE = "event-list-page";
 var REGISTRATIONDIALOG = "registrationDialog";
 var DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER = 3;
 var DEFAULT_VALUE_FOOD_QUANTITY_SLIDER = 1;
@@ -108,21 +109,21 @@ function showMessageDialog(headerText, messageText){
 	$.mobile.changePage( "#messageDialog", { role: "dialog" } );
 }
 function toastMessage(messageText){
-	console.log(messageText)
-	//if(MOBILE_DEVICE){
+	
+	if(MOBILE_DEVICE){
 		window.plugins.toast.showLongBottom(messageText, null, null);
-	//}
-	//else{
+	}
+	else{
 		console.log(messageText);
-	//}
+	}
 }
 function toastShortMessage(messageText){
-	//if(MOBILE_DEVICE){
+	if(MOBILE_DEVICE){
 		window.plugins.toast.showShortBottom(messageText, null, null);
-	//}
-	//else{
+	}
+	else{
 		console.log(messageText);
-	//}
+	}
 }
 
 function checkMobileBrowser() {
@@ -133,6 +134,7 @@ function checkMobileBrowser() {
 
 
 function onDeviceReady() {
+	//StatusBar.overlaysWebView(false);
 	MOBILE_DEVICE = checkMobileBrowser();
 	console.log("asymptoot:"+ checkMobileBrowser());
 	var speedUpTap = function(e){

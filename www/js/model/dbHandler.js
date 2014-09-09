@@ -510,7 +510,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		getEntityWithCId(cId, EVENT, function(transaction, result){
 			
 			var row = result.rows.item(0);
-						//callback function, inserts values in the extended table (FoodEventInstance)
+			//callback function, inserts values in the extended table (FoodEventInstance)
 			var addFoodFunction = function(transaction, result){
 				executeQuery(ADD_FOOD_INSTANCE, [result.insertId, quantity],synchronise);
 			};

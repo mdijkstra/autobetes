@@ -198,7 +198,8 @@
 		}
 	}
 	molgenis.RestClient.prototype.setToken = function(token){
-		return self.token = token;
+		self.token = token;
+		console.log("toek is:"+ self.token)
 	}
 
 	molgenis.RestClient.prototype.logout = function(url, callback) {
