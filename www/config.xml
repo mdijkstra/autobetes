@@ -9,7 +9,7 @@
     <feature name="Notification">
         <param name="wp-package" value="Notification"/>
     </feature>
-    <gap:plugin name="com.phonegap.plugin.statusbar" />
+    
     <preference name="StatusBarOverlaysWebView" value="false" />
     
 	
