@@ -235,7 +235,7 @@ $('#registrationDialogOkButton').click(function(){
 	
 	//add tests to values
 	//validate email 
-	var validationPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+	var validationPattern = /^.+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 	if(validationPattern.test(email)){
 		//validate password
 		if(password === confirmPassword){
