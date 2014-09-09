@@ -47,7 +47,7 @@ function callBackLoginError(response, textStatus, error){
 
 		//open login screen because currently email and pw are not properly set
 		if(currentPage !== LOGINDIALOG){
-			window.location.href =  LOGINPAGE;
+			$.mobile.changePage(LOGINPAGE);
 		}
 	}
 	else{

@@ -143,7 +143,7 @@ function onDeviceReady() {
         return false;
       }
 	
-	$(".speedTap").on("tap",speedUpTap);
+	//$(".speedTap").on("tap",speedUpTap);
 	/*
 	$('[name=event-list-navbar-buttons]').on("tap", speedUpTap);
 	
@@ -163,17 +163,17 @@ function onDeviceReady() {
 
 	document.addEventListener("online", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, true);
-		synchronise();
+		synchronise2();
 
 	}, false);
 
 	document.addEventListener("pause", function(e){
-		synchronise();
+		synchronise2();
 		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 
 	document.addEventListener("resume", function(e){
-		synchronise();
+		synchronise2();
 	}, false);
 
 }

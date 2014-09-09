@@ -20,7 +20,7 @@
 
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
 			<a
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); toastShortMessage(SYNCHRONISE)"></a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise2(); toastShortMessage(SYNCHRONISE)"></a>
 				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
@@ -153,7 +153,7 @@
 				</tr>
 			</table>
 			<div id="startEventQuantitySliderField" class="ui-field-contain">
-
+				<p id="start-event-instance-amount-of-grams-text" style="display: none"></p>
 				<label id="start-event-instance-food-quantity-slider-label">Amount</label>
 				<label id="start-event-instance-activity-quantity-slider-label"
 					style="display: none">Intensity: <span id="intensityToText">Light</span></label>
@@ -415,7 +415,7 @@
 			<p id="edit-event-instance-eventType" style="display:none"></p>
 			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
 
-			<p>From:</p>
+			<p id="edit-event-instance-page-begin-time-text">From:</p>
 			<table width="100%">
 				<tr>
 					<td width="50%"><input name="mydate" id="edit-event-instance-page-begin-date-field" type="date"
@@ -447,6 +447,7 @@
 
 
 			<div class="ui-field-contain">
+				<p id="edit-event-instance-amount-of-grams-text" style="display: none"></p>
 				<label id="edit-event-instance-food-quantity-slider-label">Amount</label>
 				<label id="edit-event-instance-activity-quantity-slider-label"
 					style="display: none">Intensity: <span
