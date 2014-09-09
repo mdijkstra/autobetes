@@ -1,10 +1,11 @@
-var synchronise = function(){
+var synchronise = null;
+var synchronise2 = function(){
 	var currentTimeStamp = new Date().getTime();
 
 	if(canMakeAjaxCall()){
 		//device is not synchronising or logging in yet
 		$(document).data(IS_SYNCHRONISING, true);
-
+		//setTimeout(function() {
 		df.getLastUpdateTimeStamp(function(transaction,result){
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
@@ -67,11 +68,12 @@ var synchronise = function(){
 
 
 		});
+	//}, 5000);
 	}
 }
 
 var iterateArrayRecursively = function(index, data){
-	
+	//setTimeout(function() {
 	if(index < data.length){
 
 		var entity = data[index];
@@ -160,7 +162,7 @@ var iterateArrayRecursively = function(index, data){
 		}
 
 	}
-
+	//}, 50);
 
 }
 

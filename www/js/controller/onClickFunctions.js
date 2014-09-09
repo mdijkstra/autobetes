@@ -57,7 +57,7 @@ $('#newEventPageEventType').change(function(){
 
 
 $('#addOrEditEvent').click(function() {
-	window.location.href =  '#'+EVENTLISTPAGE;
+	$.mobile.changePage('#'+EVENTLISTPAGE);
 	$(window).ready(function(){
 	//alert('start adding');
 	var eventName = $('#newEventName').val();
@@ -93,7 +93,7 @@ $('#deleteEvent').click(function(){
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
 	
 	$('#deleteEventDialogConfirmButton').click(function() {
-		window.location.href =  '#'+EVENTLISTPAGE;
+		$.mobile.changePage('#'+EVENTLISTPAGE);
 		$(window).ready(function(){
 		df.deleteEvent($('#cid').text());
 		//console.log("delete event:"+$('#cid').text() )
@@ -148,7 +148,8 @@ $('#editModeButton').click(function(){
 
 $('#startEventInstanceButton').click(function() {
 	//var w = window.open('child.html');
-	window.location.href =  '#'+HOMEPAGE;
+	$.mobile.changePage('#'+HOMEPAGE);
+	
 	$(window).ready(function(){
 		var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 		var unixTime = Date.parse(timeAndDate).getTime();

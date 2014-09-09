@@ -10,7 +10,7 @@ function setAddOrEditScreen(eventId){
 		
 		$('#deleteEvent').show();
 		//edit mode is on, the screen newEvent will be used
-		window.location.href = '#make-new-event-page';
+		$.mobile.changePage('#make-new-event-page');
 		populateEditEventScreen(eventId);
 
 	}
@@ -18,7 +18,7 @@ function setAddOrEditScreen(eventId){
 
 		$('#deleteEvent').hide();
 		//edit mode is off. open start-event-instance-page screen
-		window.location.href = '#start-event-instance-page';
+		$.mobile.changePage('#start-event-instance-page');
 		populateStartEventInstanceScreen(eventId);
 	}
 }
@@ -33,7 +33,15 @@ function populateEditEventInstancePage(cId, eventType) {
 			$('#edit-event-instance-name').html(row.name);
 			$('#edit-event-instance-page-begin-date-field').val(dateAndTime.date);
 			$('#edit-event-instance-page-begin-time-field').val(dateAndTime.time);
-
+			
+			if(row.carbs !== null){
+				$('#edit-event-instance-amount-of-grams-text').show();
+				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*row.amount)+' grams' );
+			}
+			else{
+				$('#edit-event-instance-amount-of-grams-text').hide();
+			}
+			
 			if (row.eventType === ACTIVITY) {
 				//activity has an endtime
 				var endDateAndTime;
@@ -54,14 +62,11 @@ function populateEditEventInstancePage(cId, eventType) {
 				$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
 				$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
 				$('#edit-event-instance-quantity-slider').val(row.intensity).slider('refresh');
-
+				$('#edit-event-instance-page-begin-time-text').show();
+				
 				setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(row.intensity));
 
-				$('#edit-event-instance-quantity-slider').change(function() {
-					//if user slides the #intensity-slider-label-intensity-indication changes accordingly
-					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt($('#edit-event-instance-quantity-slider').val()));
-
-				});
+				
 
 			} else {
 				$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
@@ -70,10 +75,20 @@ function populateEditEventInstancePage(cId, eventType) {
 				$('#edit-event-instance-activity-quantity-slider-label').hide();
 				$('#edit-event-instance-food-quantity-slider-label').show();
 				$('#endTimeField').hide();
-
-
+				$('#edit-event-instance-page-begin-time-text').hide();
+				
 			}
-
+			$('#edit-event-instance-quantity-slider').change(function() {
+				//if user slides the #intensity-slider-label-intensity-indication changes accordingly
+					
+				var intensity = parseFloat($('#edit-event-instance-quantity-slider').val());
+				
+				if(row.carbs !== null){
+					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(row.carbs*intensity)+' grams' );
+				}
+				
+				setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
+			});
 		}
 	});
 
@@ -104,8 +119,10 @@ function populateEditEventScreen(eventId){
 				$("input[type='radio']").checkboxradio("refresh");
 				$('#newEventPageActivityInput').hide();
 				$('#newEventPageFoodInput').show();
+				
 			}
 			else{
+				
 				$('#make-new-event-page').find('#newEventPagePower').val(row.power);
 				$('#make-new-event-page').find('#newEventPageCarbs').val("");
 				$('#make-new-event-page').find('#newEventPageAlcoholicUnits').val("");
@@ -115,7 +132,7 @@ function populateEditEventScreen(eventId){
 				$("input[type='radio']").checkboxradio("refresh");
 				$('#newEventPageFoodInput').hide();
 				$('#newEventPageActivityInput').show();
-
+				
 			}
 		}
 
@@ -164,6 +181,13 @@ function populateStartEventInstanceScreen(eventID){
 			var timeStringForMyTime = currentHours + ":" + currentMinutes;
 			$('#mytime').val(timeStringForMyTime);
 
+			if(row.carbs !== null){
+				$('#start-event-instance-amount-of-grams-text').show();
+				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)+' grams' );
+			}
+			else{
+				$('#start-event-instance-amount-of-grams-text').hide();
+			}
 			//add event screen varies by event type
 
 			$('#start-event-instance-page-eventType').text(row.eventType);
@@ -184,13 +208,20 @@ function populateStartEventInstanceScreen(eventID){
 				setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
 
 
-				$('#start-event-instance-quantity-slider').change(function() {
-
-					setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
-				});
+				
 
 
 			}
+			$('#start-event-instance-quantity-slider').change(function() {
+				
+				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
+				
+				if(row.carbs !== null){
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(row.carbs*intensity)+' grams' );
+				}
+				
+				setIntensityTextInScreen('#intensityToText', parseInt(intensity));
+			});
 		}
 	})
 

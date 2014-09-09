@@ -133,7 +133,7 @@ function checkIfUserExists(){
 				//allready registering logging in, do nothing
 				
 			}else{
-				window.location.href =  LOGINPAGE;
+				$.mobile.changePage(LOGINPAGE);
 
 			}
 
