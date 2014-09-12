@@ -419,6 +419,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			executeQuery(SERVER_UPDATE_INSTANCE, [entity.sId, entity.sEvent, entity.beginTime, entity.deleted, entity.lastchanged, row.cId], null);
 
 			if (entity.intensity) {
+				if(entity.endTime === undefined){
+					//ensure endtime will be stored as null instead of undefined
+					entity.endTime = null;
+				}
 				executeQuery(UPDATE_ACTIVITY_INSTANCE, [entity.intensity, entity.endTime, row.cId], null);
 
 			} else {
