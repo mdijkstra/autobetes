@@ -81,7 +81,7 @@ function populateEditEventInstancePage(cId, eventType) {
 				var intensity = parseFloat($('#edit-event-instance-quantity-slider').val());
 				
 				if(row.carbs !== null){
-					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(row.carbs*intensity)+' grams' );
+					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
 				if(row.intensity){
 					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
@@ -90,7 +90,7 @@ function populateEditEventInstancePage(cId, eventType) {
 			
 			if(row.carbs !== undefined){
 				$('#edit-event-instance-amount-of-grams-text').show();
-				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*row.amount)+' grams' );
+				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*row.amount)))+' grams' );
 			}
 			else if(row.amount !== undefined){
 				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
@@ -222,7 +222,7 @@ function populateStartEventInstanceScreen(eventID){
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
 				if(row.carbs !== undefined){
-					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(row.carbs*intensity)+' grams' );
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
 				if(row.intensity !== undefined){
 					setIntensityTextInScreen('#intensityToText', parseInt(intensity));
@@ -231,7 +231,7 @@ function populateStartEventInstanceScreen(eventID){
 			
 			if(row.carbs !== null){
 				$('#start-event-instance-amount-of-grams-text').show();
-				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)+' grams' );
+				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams' );
 			}
 			else if(row.amount !== null){
 				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
