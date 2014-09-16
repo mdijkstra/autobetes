@@ -80,7 +80,7 @@ function populateEditEventInstancePage(cId, eventType) {
 					
 				var intensity = parseFloat($('#edit-event-instance-quantity-slider').val());
 				
-				if(row.carbs !== null){
+				if(row.carbs){
 					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
 				if(row.intensity){
@@ -88,11 +88,11 @@ function populateEditEventInstancePage(cId, eventType) {
 				}
 			});
 			
-			if(row.carbs !== undefined){
+			if(row.carbs){
 				$('#edit-event-instance-amount-of-grams-text').show();
 				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*row.amount)))+' grams' );
 			}
-			else if(row.amount !== undefined){
+			else if(row.amount){
 				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
 			}
 			else{
@@ -218,22 +218,24 @@ function populateStartEventInstanceScreen(eventID){
 			}
 			$('#start-event-instance-quantity-slider').unbind();
 			$('#start-event-instance-quantity-slider').change(function() {
-				
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
-				if(row.carbs !== undefined){
+				if(row.carbs){
 					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
-				if(row.intensity !== undefined){
+				else if(row.amount){
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
+				}
+				if(row.intensity){
 					setIntensityTextInScreen('#intensityToText', parseInt(intensity));
 				}
 			});
 			
-			if(row.carbs !== null){
+			if(row.carbs){
 				$('#start-event-instance-amount-of-grams-text').show();
 				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams' );
 			}
-			else if(row.amount !== null){
+			else if(row.amount){
 				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
 			}
 			else{

@@ -346,9 +346,12 @@
 				{{#each .}}
 					<li class="ui-li-has-alt">
 					{{#if amount}}
-					
-						<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}}</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
-					
+						{{#if carbs}}
+							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{carbs}} carbs</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+
+						{{else}}
+							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} units</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+						{{/if}}
 					{{else}}
 					
 						<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
