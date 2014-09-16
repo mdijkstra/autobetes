@@ -92,6 +92,13 @@ function showEventInstanceList(inputType, result) {
 			//show minutes correct
 			minutes = "0" + minutes;
 		}
+		var carbs;
+		if(row.carbs !== null){
+			carbs = parseInt(Math.round(Number(row.carbs*row.amount)));
+		}
+		else{
+			carbs = null;
+		}
 		if(row.eventType === FOOD){
 			eventInstances.push({
 				amount : row.amount,
@@ -102,7 +109,8 @@ function showEventInstanceList(inputType, result) {
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
 				cId : row.cId,
-				eventType: row.eventType
+				eventType: row.eventType,
+				carbs : carbs
 			})
 		}
 		else{

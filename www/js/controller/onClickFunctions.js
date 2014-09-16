@@ -148,9 +148,9 @@ $('#editModeButton').click(function(){
 
 $('#startEventInstanceButton').click(function() {
 	//var w = window.open('child.html');
-	$.mobile.changePage('#'+HOMEPAGE);
+	//$.mobile.changePage('#'+HOMEPAGE);
 	
-	$(window).ready(function(){
+	//$(window).ready(function(){
 		var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
 		var unixTime = Date.parse(timeAndDate).getTime();
 		var eventId = $('#start-event-instance-page-event-cId').text();
@@ -164,7 +164,7 @@ $('#startEventInstanceButton').click(function() {
 		toastMessage(addedText);
 		//refresh list of current events
 		df.showCurrentActivityEventInstances();
-	});
+	
 
 
 });
