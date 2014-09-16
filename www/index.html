@@ -347,10 +347,10 @@
 					<li class="ui-li-has-alt">
 					{{#if amount}}
 						{{#if carbs}}
-							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{carbs}} carbs</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Carbs: {{carbs}} grams</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 
 						{{else}}
-							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} units</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{cId}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{cId}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 						{{/if}}
 					{{else}}
 					
