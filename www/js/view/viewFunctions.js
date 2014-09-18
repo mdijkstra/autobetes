@@ -16,7 +16,7 @@ function setAddOrEditScreen(eventId){
 	}
 	else{
 
-		$('#deleteEvent').hide();
+		
 		//edit mode is off. open start-event-instance-page screen
 		$.mobile.changePage('#start-event-instance-page');
 		populateStartEventInstanceScreen(eventId);

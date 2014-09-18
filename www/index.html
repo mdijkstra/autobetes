@@ -20,7 +20,7 @@
 
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
 			<a
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise2(); toastShortMessage(SYNCHRONISE)"></a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); toastShortMessage(SYNCHRONISE)"></a>
 				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
@@ -77,7 +77,7 @@
 			<h1>Start event</h1>
 			<div class="ui-btn-right">
 				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
-					id="newEventButton" href="#make-new-event-page"
+					id="newEventButton" href="#make-new-event-page" onclick="$('#deleteEvent').hide() //ensure delete event button is hidden"
 					class="speedTap biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 			</div>
 			<div id="event-list-navbar" data-role="navbar">
@@ -645,10 +645,11 @@
 		<div data-role="content">
 
 			<input id="loginEmail" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Email"> <input
-				id="loginPassword" type="password" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Password"> <a
-				id="loginDialogOkButton" data-role="button" data-corners="true"
+				name="text-7" value="" placeholder="Email"> 
+			<input id="loginPassword" type="password" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Password"> 
+				
+				<a id="loginDialogOkButton" data-role="button" data-corners="true"
 				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
 				<span class="ui-btn-inner ui-btn-corner-all"> <span

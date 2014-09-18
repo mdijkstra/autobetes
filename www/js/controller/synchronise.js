@@ -1,5 +1,5 @@
-var synchronise = null;
-var synchronise2 = function(){
+
+var synchronise = function(){
 	var currentTimeStamp = new Date().getTime();
 
 	if(canMakeAjaxCall()){
@@ -35,22 +35,22 @@ var synchronise2 = function(){
 				if(error === UNAUTHORIZED){
 					login();
 				}
-				console.log(request);
-				console.log(textStatus);
-				console.log(error);
+				console.log(JSON.stringify(request));
+				console.log(JSON.stringify(textStatus));
+				console.log(JSON.stringify(error));
 			}
 
-			df.getEventsAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
+			df.getEventsAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
 				pushEntitiesInArray(result);
 				//console.log("events");
 
-				df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
+				df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
 					pushEntitiesInArray(result);
 					//console.log("activity");
 
-					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp, function(transaction,result){
+					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 						pushEntitiesInArray(result);
 						//console.log(JSON.stringify(requestData))
 						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
