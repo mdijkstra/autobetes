@@ -41,7 +41,8 @@ var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var COLOR_EDIT_MODE = "#8df3e6";
 var ALLREADY_EXISTS = " allready exists"
-	var USERISDISABLEDREGEX= /User is disabled/;
+var USERISDISABLEDREGEX= /User is disabled/;
+var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
 var REGISTRATIONFAILREGEX = /Registration failed/;
@@ -56,6 +57,7 @@ var BAD_CREDENTIALS_TEXT = "Wrong email and password combination";
 var ERROR_HEADER = "Error";
 var ERROR_TEXT = "An error occurred: ";
 var PASSWORDS_NOT_THE_SAME = 'Passwords are not the same';
+var ONLYDIGITSMESSAGE = "Please only insert digits";
 var INVALID_EMAIL = "Invalid email";
 var PLEASE_SYNC_WITH_PUMP = "Please synchronise the time settings of your insulin pump with those of your app!";
 var SERVER_CONNECTION_FAIL = "Currently unable to connect to server";
@@ -86,9 +88,12 @@ $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
-jQuery('.numbersOnly').keyup(function () { 
-	this.value = this.value.replace(/[^0-9\.]/g,'1');
-});
+function onlyDigits(){
+	$('.numbersOnly').keyup(function() { 
+		this.value = this.value.replace(/[^0-9\.]/,"");
+	});
+}
+onlyDigits();
 //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
 $(document).on('blur', 'input, textarea', function() {
 	setTimeout(function() {

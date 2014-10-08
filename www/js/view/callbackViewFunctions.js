@@ -12,9 +12,10 @@ function showEventList(transaction, result) {
 				
 				//show new event in button on top of the list
 				$('#recentAddedEventButton').html(row.name);
-				var cId = row.cId;
+				var id = row.id;
+				$('#recentAddedEventButton').unbind();
 				$('#recentAddedEventButton').click(function(){
-					setAddOrEditScreen(cId);
+					setAddOrEditScreen(id);
 				});
 				
 				//ensure next call this button is not presented
@@ -62,7 +63,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType
 
 		}
@@ -108,7 +109,7 @@ function showEventInstanceList(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType,
 				carbs : carbs
 			})
@@ -128,7 +129,7 @@ function showEventInstanceList(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType,
 				intensityText: intensityTextAndColor.text,
 				intensityColorInterpretation: intensityTextAndColor.color,

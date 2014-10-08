@@ -1,33 +1,44 @@
 
 var synchronise = function(){
-	var currentTimeStamp = new Date().getTime();
-
+	
+	var timeStampThisSync = new Date().getTime();
+	console.log(timeStampThisSync);
 	if(canMakeAjaxCall()){
 		//device is not synchronising or logging in yet
 		$(document).data(IS_SYNCHRONISING, true);
 		//setTimeout(function() {
+		
 		df.getLastUpdateTimeStamp(function(transaction,result){
+			
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
-
+			
+			console.log(" vs. "+lastUpdateTimeStamp);
+			
 			var arrayEntities = [];
 			var requestData = [];
 			requestData.push({'timeStampLastSync': (lastUpdateTimeStamp- TIMESTAMPPENALTY)+""});
 
-			var pushEntitiesInArray = function(result){
-				for (var i = 0; i < result.rows.length; i++) {
-					var row = result.rows.item(i);
-					requestData.push(row);
-				}
 
+			var pushEntitiesInArray = function(result, callback){
+				for (var i = 0; i < result.rows.length+1; i++) {
+					if(i < result.rows.length){
+						var row = result.rows.item(i);
+						requestData.push(row);
+					}
+					else{
+						callback();
+					}
+				}
 
 			}
 
 			var callback1 = function(data, textStatus, response){
-				console.log(JSON.stringify(data))
+				$(document).data(IS_SYNCHRONISING, false);
+				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
-				df.updateLastUpdateTimeStamp(currentTimeStamp);
+				df.updateLastUpdateTimeStamp(timeStampThisSync);
 			}
 
 			var errorHandler1 = function(request, textStatus, error){
@@ -42,33 +53,26 @@ var synchronise = function(){
 
 			df.getEventsAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
-				pushEntitiesInArray(result);
-				//console.log("events");
+				pushEntitiesInArray(result, function(){
+					df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
-				df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
+						pushEntitiesInArray(result, function(){
+							df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
+								pushEntitiesInArray(result, function(){
+									//console.log(JSON.stringify(requestData))
+									restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
+								});
+							});
+						});
 
-					pushEntitiesInArray(result);
-					//console.log("activity");
 
-					df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
-						pushEntitiesInArray(result);
-						//console.log(JSON.stringify(requestData))
-						restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
 					});
 				});
 
-
 			});
 
-
-			var lastUpdateTimeStampObject = {timestamp: lastUpdateTimeStamp}
-
-
-
-
-
 		});
-	//}, 5000);
+		//}, 5000);
 	}
 }
 
@@ -95,63 +99,19 @@ var iterateArrayRecursively = function(index, data){
 		else{
 			entityType = INSTANCE;
 		}
-
-		df.getEntityWithSId(entity.sId,entityType, function(transaction, result){
-			if(result.rows.length === 0){
-				//no entity with same sId found
-				if(entity.notInRequestContent === TRUE){
-					//entity was not in request content
-					//no match on sId(that is the case when an entity has been made on another device
-					//and not been send to this device before), so this device can create this entity in db
-					//create entity
-					df.serverAddEntity(entity);
-					iterateArrayRecursively(index+1, data);
-				}
-				else{
-					//entity was in request content and not matched on sId(that is the case when 
-					//an entity has not been sent to server before)so entity can be matched based on cId
-					//match on cId
-					df.getEntityWithCId(entity.cId, entityType, function(transaction, result){
-
-						//double check if entity with cid is found
-						if(result.rows.length === 0){
-							//no entity found, error!!!
-							//console.log("no entity found, error!!!");
-						}
-						else{
-							//entity found
-							//console.log("entity found");
-							var row = result.rows.item(0);
-							
-							//double check that server timestamp is equal or higher( timestamp of server should never
-							//be less, because then it would have been updated on the server)
-							if(entity.lastchanged >= row.lastchanged){
-								//console.log("server entity is more recent");
-								//server entity is more recent
-								//update entity
-								df.serverUpdateEntity(entity, row);
-							}
-						}
-						iterateArrayRecursively(index+1, data);
-					});
-
-				}
-			}
-			else{
-				var row = result.rows.item(0);
-				//a match on sId, entity is on device
-				//check if server entity has a higher timestamp
-				if(entity.lastchanged >= row.lastchanged){
-					//server entity is more recent
-					df.serverUpdateEntity(entity, row);
-				}
+		if(entity.name){
+			df.serverProcessEvent(entity, function(){
 				iterateArrayRecursively(index+1, data);
-			}
-		});
+			});
+		}
+		else{
+			df.serverProcessEventInstance(entity, function(){
+				iterateArrayRecursively(index+1, data);
+			});
+		}
 	}
 	else{
 		//index is equal to list, whole array has been iterated
-		$(document).data(IS_SYNCHRONISING, false);
 		//reload list
 		var currentPage = $.mobile.activePage[0].id;
 		if(currentPage === HOMEPAGE){
@@ -171,16 +131,20 @@ var iterateArrayRecursively = function(index, data){
 var canMakeAjaxCall = function(){
 	var isSynchronising = $(document).data(IS_SYNCHRONISING);
 	var isLoggingIn = $(document).data(IS_SYNCHRONISING);
+	console.log(isSynchronising+" "+ isLoggingIn)
 	if(restClient.getToken() === null){
+		console.log(1)
 		//there is no token
 		checkIfUserExists();
 		return false;
 	}
 	else if(isSynchronising || isLoggingIn ){
+		console.log(2)
 		//device allready synchronising, logging in
 		return false;
 	}
 	else{
+		console.log(3)
 		//can make ajax call
 		return true;
 	}

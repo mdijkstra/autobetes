@@ -1,14 +1,14 @@
-function deleteEvent(eventName, eventId, eventType){
+function deleteEvent(eventName, id, eventType){
 //user need to confirm before event be deleted(inactivated), therefore a confirm dialog appears on screen(delete button has href="#deleteDialog")
 	//set text in dialog
 	$('#dialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
-	
+	$('#deleteEventInstanceDialogConfirmButton').unbind();
 	$('#deleteEventInstanceDialogConfirmButton').click(function() {
 		//user confirms
 		//delete instance
 		$.mobile.back();//go to previous page
 		$(window).ready(function(){
-		df.deleteEventInstance(eventId);
+		df.deleteEventInstance(id);
 		//refresh list in history
 		var selectedTabIndex = $(document).data('selectedTabIndex2');
 		var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
@@ -57,27 +57,58 @@ function convertTimestampToTimeAndDate(timestamp){
  * Method gets called in edit-event-instance-page when user clicks the save button
  */
 function updateEventInstance() {
+	var beginDate = $('#edit-event-instance-page-begin-date-field').val();
+	var beginTime = $('#edit-event-instance-page-begin-time-field').val();
+	var endDate = $('#edit-event-instance-page-end-date-field').val();
+	var endTime = $('#edit-event-instance-page-end-time-field').val();
+	if(beginDate === ""){
+		toastShortMessage("Please define the begin date");
+	}
+	else if(beginTime === ""){
+		toastShortMessage("Please define the begin time");
+	}
+	else if(endDate === "" && endTime !== ""){
+		toastShortMessage("Please define the end date");
+	}
+	else if(endDate !== "" && endTime === ""){
+		toastShortMessage("Please define the end time");
+	}
 	
+	else{
+		
+		
 	$.mobile.back();//go to previous page
 	$(window).ready(function(){
 		
 	//extract values from DOM
-	var cId = $("#edit-event-instance-cId").text();
-	var eventType = $("#edit-event-instance-eventType").text();
-	var beginTimeAndDate = $('#edit-event-instance-page-begin-date-field').val() + " " + $('#edit-event-instance-page-begin-time-field').val();
+	var id = setNullIfFieldIsEmpty($("#edit-event-instance-cId").text());
+	var eventType = setNullIfFieldIsEmpty($("#edit-event-instance-eventType").text());
+	var beginTimeAndDate = setNullIfFieldIsEmpty(beginDate) + " " + setNullIfFieldIsEmpty(beginTime);
 	//convert to unix timestamp
 	var unixBeginTime = Date.parse(beginTimeAndDate).getTime();
 	//same with end time
 	var unixEndTime = null;
-	if(eventType === ACTIVITY){
-		var endTimeAndDate = $('#edit-event-instance-page-end-date-field').val() + " " + $('#edit-event-instance-page-end-time-field').val();
+	if(eventType === ACTIVITY && endDate !== "" && endTime !== ""){
+		var endTimeAndDate = setNullIfFieldIsEmpty(endDate) + " " + setNullIfFieldIsEmpty(endTime);
 
-		var unixEndTime = Date.parse(endTimeAndDate).getTime();
+		var unixEndTime = setNullIfFieldIsEmpty(Date.parse(endTimeAndDate).getTime());
 	}
 	//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
 	//update event instance in database
-	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, cId);
+	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
 	});
+	}
+}
+/*
+ * Ensure that no value will set undefined in db
+ */
+function setNullIfFieldIsEmpty(field){
+	if(field === undefined || field === ""){
+		return null;
+	}
+	else{
+		return field
+	}
 }
 
 
@@ -156,12 +187,11 @@ function login(){
 				
 				restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 					success: function(result){
-
+						synchronise();
 						$(document).data(IS_LOGGING_IN, false);
 						token = result.token;
 						var currentPage = $.mobile.activePage[0].id;
 						if(currentPage === LOGINDIALOG){
-							synchronise();
 							//$.mobile.back();//go to previous page
 							window.location.href =  "#"+HOMEPAGE;
 							toastMessage(SUCCESSFULLY_LOGGED_IN);

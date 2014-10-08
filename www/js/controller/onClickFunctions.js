@@ -57,35 +57,45 @@ $('#newEventPageEventType').change(function(){
 
 
 $('#addOrEditEvent').click(function() {
-	$.mobile.changePage('#'+EVENTLISTPAGE);
-	$(window).ready(function(){
-	//alert('start adding');
+	
+	var cannotAddOrEdit = false;
 	var eventName = $('#newEventName').val();
-	var eventType = $('[name="radio-choice-h-2"]:checked').val();
-	var carbs = $('#newEventPageCarbs').val();
-	var alcoholicUnits = $('#newEventPageAlcoholicUnits').val();
-	var power = $('#newEventPagePower').val();
-
-
-	if($('#addOrEditEvent').text() === 'Add'){
-		//add event
-		df.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
+	var eventType = setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
+	var carbs = setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
+	var alcoholicUnits = setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
+	var power = setNullIfFieldIsEmpty($('#newEventPagePower').val());
+	if(eventName === ""){
+		toastShortMessage("Please define the event name");
+		
 	}
+	
 	else{
-		//edit event 
-		var eventID = $('#cid').text();
-		df.updateEvent(eventID, eventName, eventType, carbs, alcoholicUnits, power);
+	
+	
+	
+	
+		$.mobile.changePage('#'+EVENTLISTPAGE);
+		$(window).ready(function(){
+		if($('#addOrEditEvent').text() === 'Add'){
+			//add event
+			df.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
+		}
+		else{
+			//edit event 
+			var id = $('#cid').text();
+			df.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power);
 
 
+		}
+		});
 	}
-
 	
 	//show div
 	$('#recentlyAddedEvent').show();
 	//tag certain event to be presented on top. The method showlist handles
 	//this privilege
 	$('#eventnameOfAddedOrEditedEvent').text(eventName);
-	});
+	
 });
 
 $('#deleteEvent').click(function(){
@@ -151,20 +161,30 @@ $('#startEventInstanceButton').click(function() {
 	//$.mobile.changePage('#'+HOMEPAGE);
 	
 	//$(window).ready(function(){
-		var timeAndDate = $('#mydate').val() + " " + $('#mytime').val()
-		var unixTime = Date.parse(timeAndDate).getTime();
-		var eventId = $('#start-event-instance-page-event-cId').text();
-		var quantity = $('#start-event-instance-quantity-slider').val();
-		var eventType = $('#start-event-instance-page-eventType').text();
+		if($('#mydate').val() === ""){
+			toastShortMessage("Please define the begin date");
+		}
+		else if($('#mytime').val() === ""){
+			toastShortMessage("Please define the begin time");
+		}
+		else{
+			$.mobile.changePage('#'+HOMEPAGE);
+			$(window).ready(function(){
+		var timeAndDate = setNullIfFieldIsEmpty($('#mydate').val()) + " " + setNullIfFieldIsEmpty($('#mytime').val());
+		var unixTime = setNullIfFieldIsEmpty(Date.parse(timeAndDate).getTime());
+		var eventId = setNullIfFieldIsEmpty($('#start-event-instance-page-event-cId').text());
+		var quantity = setNullIfFieldIsEmpty($('#start-event-instance-quantity-slider').val());
+		var eventType = setNullIfFieldIsEmpty($('#start-event-instance-page-eventType').text());
 		
-		df.addEventInstance(quantity, unixTime, eventId, eventType);
+		df.addEventInstance(quantity, unixTime, eventType, eventId);
 		//set added text regarding which event is added
 		var addedText = "Added "+$('#startEventName').html();
 		
 		toastMessage(addedText);
 		//refresh list of current events
 		df.showCurrentActivityEventInstances();
-	
+			});
+		}
 
 
 });
@@ -205,8 +225,8 @@ $('#newEventButton').click(function(){
 
 $('#loginDialogOkButton').click(function(){
 	//window.location.href =  '#home-page';
-	var email = $('#loginEmail').val();
-	var password = $('#loginPassword').val();
+	var email = setNullIfFieldIsEmpty($('#loginEmail').val());
+	var password = setNullIfFieldIsEmpty($('#loginPassword').val());
 	//check if user switched account
 	df.getUserInfo(function(transaction, result){
 		if(result.rows.length > 0 && result.rows.item(0).email !== email){
@@ -229,10 +249,10 @@ $('#loginDialogOkButton').click(function(){
 $('#registrationDialogOkButton').click(function(){
 	//console.log("start registering");
 	//get values
-	var email = $('#registerEmail').val();
-	var pumpId = $('#registerPumpId').val();
-	var password = $('#registerPassword').val();
-	var confirmPassword = $('#registerConfirmPassword').val();
+	var email = setNullIfFieldIsEmpty($('#registerEmail').val());
+	var pumpId = setNullIfFieldIsEmpty($('#registerPumpId').val());
+	var password = setNullIfFieldIsEmpty($('#registerPassword').val());
+	var confirmPassword = setNullIfFieldIsEmpty($('#registerConfirmPassword').val());
 	
 	//add tests to values
 	//validate email 

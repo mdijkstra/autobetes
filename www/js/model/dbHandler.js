@@ -8,11 +8,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	//add functions to object
 	this.addEvent = addEvent;
-	this.serverAddEntity = serverAddEntity;
 	this.listEventsOfEventType = listEventsOfEventType;
 	this.showEvents = showEvents;
 	this.updateEvent = updateEvent;
-	this.serverUpdateEntity = serverUpdateEntity;
 	this.listHistoryEvents = listHistoryEvents;
 	this.showCurrentActivityEventInstances = showCurrentActivityEventInstances;
 	this.addEventInstance = addEventInstance;
@@ -27,43 +25,43 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.getEventsAfterTimeStamp = getEventsAfterTimeStamp;
 	this.getActivityEventInstancesAfterTimeStamp = getActivityEventInstancesAfterTimeStamp;
 	this.getFoodEventInstancesAfterTimeStamp = getFoodEventInstancesAfterTimeStamp;
-	this.getEntityWithSId = getEntityWithSId;
-	this.getEntityWithCId = getEntityWithCId;
 	this.updateEmailAndPassword = updateEmailAndPassword;
 	this.resetDBExceptUserTable = resetDBExceptUserTable;
 	this.getParticularEvent = getParticularEvent;
 	this.getParticularEventInstance = getParticularEventInstance;
+	this.serverProcessEvent = serverProcessEvent;
+	this.serverProcessEventInstance = serverProcessEventInstance;
 
-
+	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
 	//create statements
-	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
-	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(cId INTEGER PRIMARY KEY, alcoholicUnits INTEGER, carbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(cId) REFERENCES Event(cId))';
-	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(cId INTEGER PRIMARY KEY, power INTEGER)';
+	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id TEXT PRIMARY KEY UNIQUE, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
+	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(id TEXT PRIMARY KEY UNIQUE, alcoholicUnits INTEGER, carbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
+	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(id TEXT PRIMARY KEY UNIQUE, power INTEGER, CONSTRAINT FK_ActivityEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
 
-	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, cEvent INTEGER NOT NULL, sEvent INTEGER, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (cEvent) REFERENCES Event (cId))';
-	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(cId INTEGER PRIMARY KEY, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
-	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(cId INTEGER PRIMARY KEY, endTime INTEGER, intensity INTEGER NOT NULL, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
+	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id TEXT PRIMARY KEY UNIQUE, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, eventId STRING NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (eventId) REFERENCES Event (id))';
+	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id TEXT PRIMARY KEY UNIQUE, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
+	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
 
-	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY, email TEXT, pumpId TEXT, password TEXT)';
-	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY, lastchanged INTEGER NOT NULL)';
+	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, pumpId TEXT, password TEXT)';
+	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)';
 
 	//update statements
-	var SET_SID_EVENT = 'UPDATE Event SET sId = ? WHERE cId = ?';
-	var SET_SID_INSTANCE = 'UPDATE EventInstance SET sId = ? WHERE cId = ?';
 
-	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE cId =?';
-	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=? WHERE cId=?';
-	var UPDATE_ACTIVITY_EVENT = 'UPDATE ActivityEvent SET power=? WHERE cId=?';
+	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
+	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=? WHERE id=?';
+	var UPDATE_ACTIVITY_EVENT = 'UPDATE ActivityEvent SET power=? WHERE id=?';
 
-	var UPDATE_EVENT_INSTANCE = 'UPDATE EventInstance SET beginTime = ?, lastchanged=? WHERE cId=?';
-	var SERVER_UPDATE_EVENT = 'UPDATE Event SET sId=?, name=?, eventType =?, lastchanged=?, deleted=? WHERE cId =?';
-	var SERVER_UPDATE_INSTANCE = 'UPDATE EventInstance SET sId = ?, sEvent = ?, beginTime = ?, deleted=?, lastchanged=? WHERE cId=?';
+	var UPDATE_EVENT_INSTANCE = 'UPDATE EventInstance SET beginTime = ?, lastchanged=? WHERE id=?';
+	var UPDATE_ACTIVITY_INSTANCE = 'UPDATE ActivityEventInstance SET intensity= ?, endTime=? WHERE id = ?';
+	var UPDATE_FOOD_INSTANCE = 'UPDATE FoodEventInstance SET amount= ? WHERE id = ?';
+	
+	var SERVER_UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=?, deleted=? WHERE id =?';
+	var SERVER_UPDATE_INSTANCE = 'UPDATE EventInstance SET eventId = ?, beginTime = ?, deleted=?, lastchanged=? WHERE id=?';
 
-	var UPDATE_ACTIVITY_INSTANCE = 'UPDATE ActivityEventInstance SET intensity= ?, endTime=? WHERE cId = ?';
-	var UPDATE_FOOD_INSTANCE = 'UPDATE FoodEventInstance SET amount= ? WHERE cId = ?';
-	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE cId = ?';
-	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE cId = ?';
+	
+	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE id = ?';
+	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE id = ?';
 	var EDIT_USER = 'UPDATE User SET email = ?,pumpId = ?, password = ? WHERE cId = 1';
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
@@ -71,52 +69,36 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	//select statements
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
-	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.cId, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on a.cId = e.cId WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.cId, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.cId = fev.cId join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.cId, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.cId = fev.cId join EventInstance e on ev.cId = e.cEvent left join ActivityEventInstance a on a.cId = e.cId left join FoodEventInstance f on e.cId = f.cId WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.id, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on a.id = e.id WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
-	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.cId, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.cId = e.cEvent join FoodEventInstance f on e.cId = f.cId join FoodEvent fev on ev.cId = fev.cId where e.cId =?;';
-	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.cId, ev.name, ev.eventType from Event ev join EventInstance e on ev.cId = e.cEvent join ActivityEventInstance a on e.cId = a.cId where e.cId =?;';
-	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.cId = f.cId left join ActivityEvent a on e.cId = a.cId WHERE lastchanged > ?'
-	/*
-	 * 	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, cEvent INTEGER NOT NULL, sEvent INTEGER, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (cEvent) REFERENCES Event (cId))';
-	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(cId INTEGER PRIMARY KEY, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
-	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(cId INTEGER PRIMARY KEY, endTime INTEGER, intensity INTEGER NOT NULL, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(cId) REFERENCES EventInstance(cId))';
-
-	 */
-		
-	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.Dtype, e.beginTime, e.cEvent, e.sEvent, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.cId = a.cId where e.lastchanged > ?;';
-	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.cId, e.sId, e.Dtype, e.beginTime, e.cEvent, e.sEvent, e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.cId = f.cId where e.lastchanged > ?;';
+	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
+	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
+	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
+	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
+	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? AND deleted=0 ORDER BY lower(name) ASC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
 	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';
-	var SELECT_EVENT_WITH_SID = 'SELECT * FROM Event WHERE sId=?';
-	var SELECT_EVENT_INSTANCE_WITH_SID = 'SELECT * FROM EventInstance WHERE sId=?';
-	var SELECT_EVENT_WITH_CID = 'SELECT * FROM Event WHERE cId=?';
-	var SELECT_EVENTINSTANCE_WITH_CID = 'SELECT * FROM EventInstance WHERE cId=?';
-	var GET_CEVENT_WITH_SEVENT = 'SELECT cId FROM Event where sId=?';
+	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
+	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
+	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
 
-
-
-
-	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(cId INTEGER PRIMARY KEY AUTOINCREMENT, sId INTEGER, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
-	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(cId INTEGER PRIMARY KEY AUTOINCREMENT, alcoholicUnits INTEGER, carbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(cId) REFERENCES Event(cId))';
-	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(cId INTEGER PRIMARY KEY AUTOINCREMENT, power INTEGER)';
-
-	var SELECT_PARTICULAR_EVENT = 'SELECT e.cId, e.sId, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.cId = f.cId LEFT JOIN ActivityEvent a on e.cId = a.cId WHERE e.cId =?'
+		
 	//insert statements
-	var ADD_INSTANCE = 'INSERT INTO EventInstance(beginTime, cEvent, sEvent, lastchanged) VALUES (?,?,?,?)';
-	var ADD_FOOD_INSTANCE = 'INSERT INTO FoodEventInstance(cId, amount) VALUES (?,?)';
-	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(cId, intensity) VALUES (?,?)';
-	var ADD_EVENT = 'INSERT INTO Event(name, eventType,lastchanged) VALUES (?,?,?)';
-	var ADD_FOOD = 'INSERT INTO FoodEvent(cId, alcoholicUnits, carbs) VALUES(?,?,?)';
-	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(cId, power) VALUES(?,?)'
+	var ADD_INSTANCE = 'INSERT INTO EventInstance(id, beginTime, eventId, lastchanged) VALUES (?,?,?,?)';
+	var ADD_FOOD_INSTANCE = 'INSERT INTO FoodEventInstance(id, amount) VALUES (?,?)';
+	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(id, intensity) VALUES (?,?)';
+	var ADD_EVENT = 'INSERT INTO Event(id, name, eventType,lastchanged) VALUES (?,?,?,?)';
+	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs) VALUES(?,?,?)';
+	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
 	var ADD_USER = 'INSERT INTO User(cId, email, pumpId, password) VALUES (1,?,?,?)';
 	var ADD_LAST_UPDATE_TIMESTAMP = 'INSERT INTO LastUpdate(cId, lastchanged) VALUES(1,0)';
-	var SERVER_ADD_EVENT = 'INSERT INTO Event(sId, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
-	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(sId, sEvent, cEvent, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?,?)';
-	var ADD_ACTIVITY_INSTANCE_WITH_ENDTIME = 'INSERT INTO ActivityEventInstance(cId, intensity, endTime) VALUES (?,?,?)';
+	var SERVER_ADD_EVENT = 'INSERT INTO Event(id, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
+	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(id, eventId, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?)';
+	var ADD_ACTIVITY_INSTANCE_WITH_ENDTIME = 'INSERT INTO ActivityEventInstance(id, intensity, endTime) VALUES (?,?,?)';
 
 
 	if (!window.openDatabase) {
@@ -127,17 +109,29 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	// open db, create if not exists
+	
 	var db = openDatabase(shortName, version, displayName, maxSize);
-
-	//resetDB();
+	resetDB();
 	createTablesIfNotExists();
 
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function
 	 */
 	function executeQuery(query, argumentsTuple, callBackFunction){
+		//console.log(query);
+		//console.log(JSON.stringify(argumentsTuple));
 		db.transaction(function(transaction) {
 			transaction.executeSql(query, argumentsTuple, callBackFunction, errorHandler);
+		});
+
+	}
+	function executeQueryWithErrorCallback(query, argumentsTuple, successCallback, errorCallback){
+		
+		db.transaction(function(transaction) {
+			transaction.executeSql(query, argumentsTuple, successCallback, function(transaction, error){
+				toastMessage(error.message);
+				errorCallback();
+			});
 		});
 
 	}
@@ -208,6 +202,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				//table contains value
 			}
 		});
+		
 
 	}
 	/*
@@ -272,15 +267,15 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}
 	
-	function getParticularEvent(cId, callback){
-		executeQuery(SELECT_PARTICULAR_EVENT, [cId], callback);
+	function getParticularEvent(id, callback){
+		executeQuery(SELECT_PARTICULAR_EVENT, [id], callback);
 	}
-	function getParticularEventInstance(cId, eventType, callback){
+	function getParticularEventInstance(id, eventType, callback){
 		if(eventType === FOOD){
-			executeQuery(SELECT_PARTICULAR_FOOD_EVENT_INSTANCE, [cId], callback);
+			executeQuery(SELECT_PARTICULAR_FOOD_EVENT_INSTANCE, [id], callback);
 		}
 		else{
-			executeQuery(SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE, [cId], callback);
+			executeQuery(SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE, [id], callback);
 		}
 	}
 	function getEventsAfterTimeStamp(lastchanged, callback) {
@@ -299,23 +294,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	}
 
-	function getEntityWithSId(sId, entityType, callback){
-		if(entityType === EVENT){
-			executeQuery(SELECT_EVENT_WITH_SID, [sId], callback);
-		}
-		else{
-			executeQuery(SELECT_EVENT_INSTANCE_WITH_SID, [sId], callback)
-		}
+
+	function getEventInstanceWithId(id, callback){
+		executeQuery(SELECT_EVENTINSTANCE_WITH_ID, [id], callback)
 	}
-
-
-	function getEntityWithCId(cId, entityType, callback){
-		if(entityType === INSTANCE){
-			executeQuery(SELECT_EVENTINSTANCE_WITH_CID, [cId], callback)
-		}
-		else{
-			executeQuery(SELECT_EVENT_WITH_CID, [cId], callback);
-		}
+	
+	function getEventWithId(id, callback){
+		executeQuery(SELECT_EVENT_WITH_ID, [id], callback);
 	}
 
 
@@ -333,31 +318,37 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method edits a certain event, given the eventKey(primary key), the new eventName
 	 * and the eventType(which can be altered as well).
 	 */
-	function updateEvent(cId, eventName, eventType, carbs, alcoholicUnits, power){
-		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),cId], null);
+	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power){
+		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),id], null);
 		if(eventType === FOOD){
-			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, cId], synchronise);
+			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, id], synchronise);
 		}
 		else{
-			executeQuery(UPDATE_ACTIVITY_EVENT, [power, cId], synchronise);
+			executeQuery(UPDATE_ACTIVITY_EVENT, [power, id], synchronise);
 		}
 
 	}
 	/*
 	 * Adds a food or activity event regarding the given eventType
+	 * 
+	 * 	var ADD_EVENT = 'INSERT INTO Event(id, name, eventType,lastchanged) VALUES (?,?,?,?)';
+	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs) VALUES(?,?,?)';
+	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
+
 	 */
 	function addEvent(eventName, eventType, carbs, alcoholicUnits, power) {
+		var generatedId = makeId();
 
 		var addFoodFunction = function(transaction, result){
-			executeQuery(ADD_FOOD, [result.insertId, alcoholicUnits, carbs],synchronise);
+			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs],synchronise);
 		};
 		var addActivityFunction = function(transaction, result){
-			executeQuery(ADD_ACTIVITY, [result.insertId, power],synchronise);
+			executeQuery(ADD_ACTIVITY, [generatedId, power],synchronise);
 		};
 
 
 
-		var addEventFunction = function(transaction, result){
+		executeQuery(SELECT_PARTICULAR_EVENT_WITH_NAME, [eventName], function(transaction, result){
 			if(result.rows.length > 0){
 				//allready an undeleted event with the same name in the database
 				showMessageDialog("", eventName+ ALLREADY_EXISTS);
@@ -365,179 +356,181 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			else{
 				if(eventType === FOOD){
 					//eventType is food, add row in table event with a row in table FoodEvent assigned to it
-					executeQuery(ADD_EVENT, [eventName, eventType, getCurrentTimestamp()], addFoodFunction);
+					executeQuery(ADD_EVENT, [generatedId, eventName, eventType, getCurrentTimestamp()], addFoodFunction);
 				}
 				else{
-					executeQuery(ADD_EVENT, [eventName, eventType, getCurrentTimestamp()], addActivityFunction);
+					executeQuery(ADD_EVENT, [generatedId, eventName, eventType, getCurrentTimestamp()], addActivityFunction);
 				}
 
-			}
-		}
-
-		executeQuery(SELECT_PARTICULAR_EVENT_WITH_NAME, [eventName], addEventFunction);
-
-
-	}
-
-	function updateEventInstance(type, amount,beginTime,endTime, cId){
-		executeQuery(UPDATE_EVENT_INSTANCE, [beginTime, getCurrentTimestamp(), cId], synchronise);
-
-
-		if (type === ACTIVITY) {
-			executeQuery(UPDATE_ACTIVITY_INSTANCE, [amount, endTime, cId], null);
-
-		} else {
-			executeQuery(UPDATE_FOOD_INSTANCE, [amount, cId], null);
-
-		}
-	}
-
-	/*
-	 * This method gets called in the synchronisation method.It updates an entity, given the entity, its type(Event or EventInstance) and the row of the corresponding 
-	 * entity in the db.
-	 */
-	function serverUpdateEntity(entity, row){//sId, sEvent, type, amount,beginTime,endTime, deleted, timeStampLastChanged, cId
-		if(entity.name){
-			//entity is event
-			//update event
-			executeQuery(SERVER_UPDATE_EVENT, [entity.sId, entity.name, entity.eventType, entity.lastchanged, entity.deleted, row.cId], null);
-
-			if(entity.eventType === FOOD){
-				executeQuery(UPDATE_FOOD_EVENT, [entity.alcoholicUnits, entity.carbs, row.cId], null);
-			}
-			else{
-				executeQuery(UPDATE_ACTIVITY_EVENT, [entity.power, row.cId], null);
-			}
-
-
-
-		}
-
-		else{
-			
-			//update event instance
-			executeQuery(SERVER_UPDATE_INSTANCE, [entity.sId, entity.sEvent, entity.beginTime, entity.deleted, entity.lastchanged, row.cId], null);
-
-			if (entity.intensity) {
-				if(entity.endTime === undefined){
-					//ensure endtime will be stored as null instead of undefined
-					entity.endTime = null;
-				}
-				executeQuery(UPDATE_ACTIVITY_INSTANCE, [entity.intensity, entity.endTime, row.cId], null);
-
-			} else {
-				executeQuery(UPDATE_FOOD_INSTANCE, [entity.amount, row.cId], null);
-
-			}
-		}
-	}
-	/*
-	 * This method gets called in the synchronisation method when on another device an entity is defined. It stores the entity in db given the entity and entity type.
-	 */
-	function serverAddEntity(entity){
-
-		if(entity.name){
-			//entity is event
-			//add event
-			var addFoodFunction = function(transaction, result){
-				executeQuery(ADD_FOOD, [result.insertId, entity.alcoholicUnits, entity.carbs],null);
-			};
-			var addActivityFunction = function(transaction, result){
-				executeQuery(ADD_ACTIVITY, [result.insertId, entity.power],null);
-			};
-
-			
-			if(entity.eventType === FOOD){
-				
-				executeQuery(SERVER_ADD_EVENT, [entity.sId, entity.name, entity.eventType, entity.deleted, entity.lastchanged], addFoodFunction);
-			}
-			else{
-				executeQuery(SERVER_ADD_EVENT, [entity.sId, entity.name, entity.eventType, entity.deleted, entity.lastchanged], addActivityFunction);
-			}
-		}
-		else{
-			//cEvent is the foreign key in EventInstance referencing an event. Entity is from another device, where cEvent is referencing the event with another
-			// cId(cId's are defined locally). So first the event need to be found to declare cEvent, which is possible because sEvent of entity corresponds with sId of the event 
-			var getCEVENTFunction = function(transaction, result){
-				if(result.rows.length === 0){
-					//error, no cEvent found
-
-				}
-				else{
-
-					var cEvent = result.rows.item(0).cId;
-
-					if (entity.intensity) {
-						var addActivityFunction = function(transaction, result){
-							executeQuery(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [result.insertId, entity.intensity, entity.endTime], null);
-						};
-
-						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addActivityFunction);
-					}
-					else{
-						var addFoodFunction = function(transaction, result){
-							executeQuery(ADD_FOOD_INSTANCE, [result.insertId, entity.amount],null);
-						};
-
-						executeQuery(SERVER_ADD_EVENT_INSTANCE, [entity.sId, entity.sEvent, cEvent, entity.beginTime, entity.deleted, entity.lastchanged], addFoodFunction);
-					}
-				}
-			}
-
-			executeQuery(GET_CEVENT_WITH_SEVENT, [entity.sEvent], getCEVENTFunction);
-		}
-
-	}
-
-	/*
-	 * This method sets deleted on 1(true) of the given id and thereby basically
-	 * in-activates the record
-	 */
-	function deleteEventInstance(cId) {
-		
-		executeQuery(DELETE_INSTANCE, [getCurrentTimestamp(), cId], synchronise);
-
-	}
-
-	/*
-	 * This method sets deleted on 1(true) of the given id and thereby basically
-	 * in-activates the record
-	 */
-	function deleteEvent(cId) {
-		executeQuery(DELETE_EVENT, [getCurrentTimestamp(), cId], synchronise);
-
-	}
-
-
-	function addEventInstance(quantity, beginTime, cId, eventType) {
-
-		getEntityWithCId(cId, EVENT, function(transaction, result){
-			
-			var row = result.rows.item(0);
-			//callback function, inserts values in the extended table (FoodEventInstance)
-			var addFoodFunction = function(transaction, result){
-				executeQuery(ADD_FOOD_INSTANCE, [result.insertId, quantity],synchronise);
-			};
-			var addActivityFunction = function(transaction, result){
-				
-				executeQuery(ADD_ACTIVITY_INSTANCE, [result.insertId, quantity],synchronise);
-			};
-			if(eventType === FOOD){
-				executeQuery(ADD_INSTANCE, [beginTime, cId, row.sId, getCurrentTimestamp()], addFoodFunction);
-			}
-			else{
-				executeQuery(ADD_INSTANCE, [beginTime, cId, row.sId, getCurrentTimestamp()], addActivityFunction);
 			}
 		});
 
 
+	}
+
+	function updateEventInstance(type, amount,beginTime,endTime, id){
+		executeQuery(UPDATE_EVENT_INSTANCE, [beginTime, getCurrentTimestamp(), id], synchronise);
+
+
+		if (type === ACTIVITY) {
+			executeQuery(UPDATE_ACTIVITY_INSTANCE, [amount, endTime, id], null);
+
+		} else {
+			executeQuery(UPDATE_FOOD_INSTANCE, [amount, id], null);
+
+		}
+	}
+
+	function serverUpdateEvent(entity, callback){
+		executeQueryWithErrorCallback(SERVER_UPDATE_EVENT, [ setNullIfFieldIsEmpty(entity.name), setNullIfFieldIsEmpty(entity.eventType), setNullIfFieldIsEmpty(entity.lastchanged), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.id)], null, callback);
+
+		if(entity.eventType === FOOD){
+			executeQueryWithErrorCallback(UPDATE_FOOD_EVENT, [setNullIfFieldIsEmpty(entity.alcoholicUnits), setNullIfFieldIsEmpty(entity.carbs), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+		}
+		else{
+			executeQueryWithErrorCallback(UPDATE_ACTIVITY_EVENT, [setNullIfFieldIsEmpty(entity.power), setNullIfFieldIsEmpty(entity.id)], callback,callback);
+		}	
+	}
+
+	function serverAddEvent(entity,callback){
+		executeQueryWithErrorCallback(SERVER_ADD_EVENT, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.name), setNullIfFieldIsEmpty(entity.eventType), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged)], function(){
+			if(entity.eventType === FOOD){
+				executeQueryWithErrorCallback(ADD_FOOD, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.alcoholicUnits), setNullIfFieldIsEmpty(entity.carbs)],callback,callback);
+			}
+			else{
+				executeQueryWithErrorCallback(ADD_ACTIVITY, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.power)],callback,callback);
+			}
+		}, callback);
+	}
+	function serverUpdateEventInstance(entity, callback){
+		executeQueryWithErrorCallback(SERVER_UPDATE_INSTANCE, [setNullIfFieldIsEmpty(entity.eventId), setNullIfFieldIsEmpty(entity.beginTime), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged), setNullIfFieldIsEmpty(entity.id)], null, callback);
+
+		if (entity.intensity) {
+
+			executeQueryWithErrorCallback(UPDATE_ACTIVITY_INSTANCE, [setNullIfFieldIsEmpty(entity.intensity), setNullIfFieldIsEmpty(entity.endTime), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+
+		} else {
+			executeQuery(UPDATE_FOOD_INSTANCE, [setNullIfFieldIsEmpty(entity.amount), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+
+		}
+	}
+
+	function serverAddEventInstance(entity, callback){
+		executeQueryWithErrorCallback(SERVER_ADD_EVENT_INSTANCE, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.eventId), setNullIfFieldIsEmpty(entity.beginTime), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged)], function(){
+			if (entity.intensity) {
+				executeQueryWithErrorCallback(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.intensity), setNullIfFieldIsEmpty(entity.endTime)], callback, callback);
+			}
+			else{
+				executeQueryWithErrorCallback(ADD_FOOD_INSTANCE, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.amount)],callback, callback);
+			}
+		}, callback);
+	}
+	
+	function serverProcessEvent(entity, callback){
+			//check if event allready exists on device by selecting event based on id. If no event is retrieved from db
+		//then the event is not stored yet and need to be added. If an event is retrieved from db then the lastchanged values 
+		//need to be compared. If entity from server has a equal or higher lastchanged, then we consider it more recent and then
+		//we update it.
+		
+		//get event from db
+			executeQueryWithErrorCallback(SELECT_EVENT_WITH_ID, [entity.id], function(transaction, result){
+				//check if an event is received
+				if (0 < result.rows.length) {
+					//an event is received
+					//event on device
+					var row = result.rows.item(0);
+					//compare lastchanged of both events
+					if( entity.lastchanged >= row.lastchanged){
+						//event of server is more recent
+						//update event
+						serverUpdateEvent(entity, callback);
+					}
+					else{
+						//event of device is more recent
+						//execute callback
+						callback();
+					}
+				}
+				else{
+					//no event is received
+					//event not on device yet
+					//add event
+					serverAddEvent(entity, callback);
+					
+				}
+			}, callback);
+		
+		
+	}
+	
+	function serverProcessEventInstance(entity, callback){
+
+		executeQueryWithErrorCallback(SELECT_EVENTINSTANCE_WITH_ID, [entity.id], function(transaction, result){
+			if (0 < result.rows.length) {
+				//event instance is on device
+				var row = result.rows.item(0);
+				if( entity.lastchanged >= row.lastchanged){
+					//update event instance
+					serverUpdateEventInstance(entity, callback);
+
+				}
+				else{
+					callback()
+				}
+			}
+			else{
+				//event instance is not on device
+				serverAddEventInstance(entity, callback);
+				
+			}
+		}, callback);
+	}
+	
+
+
+	/*
+	 * This method sets deleted on 1(true) of the given id and thereby basically
+	 * in-activates the record
+	 */
+	function deleteEventInstance(id) {
+		
+		executeQuery(DELETE_INSTANCE, [getCurrentTimestamp(), id], synchronise);
+
+	}
+
+	/*
+	 * This method sets deleted on 1(true) of the given id and thereby basically
+	 * in-activates the record
+	 */
+	function deleteEvent(id) {
+		executeQuery(DELETE_EVENT, [getCurrentTimestamp(), id], synchronise);
 
 	}
 
 
+	function addEventInstance(quantity, beginTime, eventType, eventId) {
+
+		var generatedId = makeId();
+
+		//callback function, inserts values in the extended table (FoodEventInstance)
+		var addFoodFunction = function(transaction, result){
+			executeQuery(ADD_FOOD_INSTANCE, [generatedId, quantity],synchronise);
+		};
+		var addActivityFunction = function(transaction, result){
+
+			executeQuery(ADD_ACTIVITY_INSTANCE, [generatedId, quantity],synchronise);
+		};
+		if(eventType === FOOD){
+			executeQuery(ADD_INSTANCE, [generatedId, beginTime, eventId, getCurrentTimestamp()], addFoodFunction);
+		}
+		else{
+			executeQuery(ADD_INSTANCE, [generatedId, beginTime, eventId, getCurrentTimestamp()], addActivityFunction);
+		}
 
 
 
+
+	}
 
 	function getUserInfo(callback){
 		executeQuery(SELECT_USER_INFO, [], callback);
@@ -565,5 +558,16 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function getCurrentTimestamp(){
 		return new Date().getTime();
 
+	}
+	function makeId()
+	{
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+
+	    for( var i=0; i < ID_STRING_LENGTH; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    
+	    
+	    return text;
 	}
 }
