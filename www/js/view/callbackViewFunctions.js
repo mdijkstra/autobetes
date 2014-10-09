@@ -72,10 +72,15 @@ function showCurrentEventInstanceActivity(inputType, result) {
 		buttons.push(button);
 
 	}
-
-	var source = $("#current-activity-event-list-template").html();
-	var template = Handlebars.compile(source);	
-	$('#current-activity-event-list').html(template(buttons));
+	if(buttons.length > 0){
+		$('#current-activity-event-list').show();
+		var source = $("#current-activity-event-list-template").html();
+		var template = Handlebars.compile(source);	
+		$('#current-activity-event-list').html(template(buttons));
+	}
+	else{
+		$('#current-activity-event-list').hide();
+	}
 
 }
 
@@ -113,13 +118,18 @@ function showCurrentEventInstanceFood(inputType, result) {
 		}
 		}
 	}
-	foodInstances.push({total:total});
+	if(foodInstances.length > 0){
+		$('#current-food-event-list').show();
+	foodInstances.unshift({total:total});
 	console.log("joepi: "+JSON.stringify(foodInstances));
 	var source = $("#current-food-event-list-template").html();
 	var template = Handlebars.compile(source);	
 	console.log(template(foodInstances));
 	$('#current-food-event-list').html(template(foodInstances));
-	
+	}
+	else{
+		$('#current-food-event-list').hide();
+	}
 }
 
 function showEventInstanceList(inputType, result) {
