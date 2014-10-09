@@ -35,7 +35,7 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	//highlight the button that is selected
 	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
-	df.listHistoryEvents($(this).html());
+	df.listHistoryEvents($(this).html(), showEventInstanceList);
 
 });
 
