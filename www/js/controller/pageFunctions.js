@@ -57,8 +57,9 @@ $(document).on('pageshow', '#home-page', function() {
 	}
 	else{
 		
-
-		df.showCurrentActivityEventInstances();
+		df.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, showCurrentEventInstanceFood);
+		df.showCurrentActivityEventInstances(showCurrentEventInstanceActivity);
+		
 		
 	}
 });

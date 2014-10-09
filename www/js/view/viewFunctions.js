@@ -76,8 +76,8 @@ function populateEditEventInstancePage(cId, eventType) {
 			//unbind previous functions on this slider 
 			$('#edit-event-instance-quantity-slider').unbind();
 			//the only digits function is now unbind as well. 
-			//bind function again
-			onlyDigits();
+			//bind function again 
+			onlyDigits();//allow only digits as input on slider
 			$('#edit-event-instance-quantity-slider').change(function() {
 				//if user slides the #intensity-slider-label-intensity-indication changes accordingly
 					
@@ -231,7 +231,7 @@ function populateStartEventInstanceScreen(id){
 				else if(row.amount){
 					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
 				}
-				if(row.intensity){
+				if(intensity){
 					setIntensityTextInScreen('#intensityToText', parseInt(intensity));
 				}
 			});
@@ -307,11 +307,11 @@ function showEvents(eventType) {
 	
 	if (eventType === FOOD || eventType === ACTIVITY) {
 
-		df.listEventsOfEventType(eventType);
+		df.listEventsOfEventType(eventType,showEventList);
 
 	}
 	else{
-		df.showEvents();
+		df.showEvents(showEventList);
 	}
 	//if user edits or adds an event it will be shown on top of the list in green.
 	//in the onclick(#addOrEditEvent) function the name will be set in the hidden span #eventnameOfAddedOrEditedEvent. 

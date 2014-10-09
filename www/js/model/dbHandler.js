@@ -31,6 +31,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.getParticularEventInstance = getParticularEventInstance;
 	this.serverProcessEvent = serverProcessEvent;
 	this.serverProcessEventInstance = serverProcessEventInstance;
+	this.getUnsentExceptionRecords = getUnsentExceptionRecords;
+	this.setClientExceptionRecordAsBeenSent =setClientExceptionRecordAsBeenSent;
+	this.getCurrentFoodEventInstances = getCurrentFoodEventInstances;
 
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
@@ -45,7 +48,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, pumpId TEXT, password TEXT)';
 	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)';
-
+	var CREATE_CLIENT_EXCEPTION_LOG = 'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)';
 	//update statements
 
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
@@ -65,9 +68,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var EDIT_USER = 'UPDATE User SET email = ?,pumpId = ?, password = ? WHERE cId = 1';
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
-
+	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?'
 
 	//select statements
+	var GET_UNSENT_EXCEPTION_RECORDS = "SELECT * FROM ClientExceptionLog where isSent = 0";
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
 	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.id, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on a.id = e.id WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
@@ -85,9 +89,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
 	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
 	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
-
-		
+	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
+	
 	//insert statements
+	var ADD_EXCEPTION_RECORD = "INSERT INTO ClientExceptionLog(clientDataAndTime, exception, query) VALUES(?,?,?)";
 	var ADD_INSTANCE = 'INSERT INTO EventInstance(id, beginTime, eventId, lastchanged) VALUES (?,?,?,?)';
 	var ADD_FOOD_INSTANCE = 'INSERT INTO FoodEventInstance(id, amount) VALUES (?,?)';
 	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(id, intensity) VALUES (?,?)';
@@ -99,7 +104,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SERVER_ADD_EVENT = 'INSERT INTO Event(id, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
 	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(id, eventId, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?)';
 	var ADD_ACTIVITY_INSTANCE_WITH_ENDTIME = 'INSERT INTO ActivityEventInstance(id, intensity, endTime) VALUES (?,?,?)';
-
+	
 
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
@@ -111,20 +116,31 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// open db, create if not exists
 	
 	var db = openDatabase(shortName, version, displayName, maxSize);
-	resetDB();
+	//resetDB();
 	createTablesIfNotExists();
-
+	
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function
 	 */
 	function executeQuery(query, argumentsTuple, callBackFunction){
-		//console.log(query);
-		//console.log(JSON.stringify(argumentsTuple));
+		
 		db.transaction(function(transaction) {
-			transaction.executeSql(query, argumentsTuple, callBackFunction, errorHandler);
+			transaction.executeSql(query, argumentsTuple, callBackFunction,  function (transaction, error) {
+				 toastShortMessage(ERROR_TEXT+ error.message);
+					var thecurrenttime = getCurrentTimestamp();
+					var exception = error.message;
+					var queryWithArguments = query+ JSON.stringify(argumentsTuple);
+					console.log(exception)
+					console.log(thecurrenttime)
+					console.log(queryWithArguments);
+					db.transaction(function(transaction) {
+						transaction.executeSql(ADD_EXCEPTION_RECORD, [thecurrenttime, exception, queryWithArguments], function(){console.log("good")}, function(transaction, error){console.log(error.message)});
+					});
+				})
 		});
 
 	}
+
 	function executeQueryWithErrorCallback(query, argumentsTuple, successCallback, errorCallback){
 		
 		db.transaction(function(transaction) {
@@ -139,6 +155,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * Resets all tables
 	 */
 	function resetDB(){
+		//executeQuery( 'DROP TABLE IF EXISTS ClientExceptionLog;', [], null);
+		
 		executeQuery( 'DROP TABLE IF EXISTS User;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
@@ -162,7 +180,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 */
 	function createTablesIfNotExists(){
 		//create tables if not exist
-
+		executeQuery( CREATE_CLIENT_EXCEPTION_LOG, [], null);
+		
 		executeQuery( CREATE_LAST_UPDATE, [], null);
 
 		executeQuery( CREATE_USER, [], null);
@@ -232,9 +251,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method selects all the records of ActivityEventInstance that are currently running. And calls
 	 * showCurrentEventInstanceActivity to insert the info in the DOM
 	 */
-	function showCurrentActivityEventInstances() {
+	function showCurrentActivityEventInstances(callback) {
 
-		executeQuery(SELECT_CURRENT_EVENT_INSTANCES, [], showCurrentEventInstanceActivity);
+		executeQuery(SELECT_CURRENT_EVENT_INSTANCES, [], callback);
 
 	}
 
@@ -242,17 +261,17 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	/*
 	 * This method selects all the EventInstances regarding the given event type. 
 	 */
-	function listHistoryEvents(type) {
+	function listHistoryEvents(type, callback) {
 
 		if (type === FOOD) {
-			executeQuery(SELECT_FOOD_EVENT_INSTANCES, [], showEventInstanceList);
+			executeQuery(SELECT_FOOD_EVENT_INSTANCES, [], callback);
 
 
 		} else if (type === ACTIVITY) {
-			executeQuery(SELECT_ACTIVITY_EVENT_INSTANCES, [], showEventInstanceList);
+			executeQuery(SELECT_ACTIVITY_EVENT_INSTANCES, [], callback);
 
 		} else if (type === ALL || type === null) {
-			executeQuery(SELECT_ALL_EVENT_INSTANCES, [], showEventInstanceList);
+			executeQuery(SELECT_ALL_EVENT_INSTANCES, [], callback);
 
 		}
 
@@ -261,9 +280,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	/*
 	 * This method selects all the events stored in the db
 	 */
-	function showEvents() {
+	function showEvents(callback) {
 
-		executeQuery(SELECT_ALL_EVENTS, [], showEventList);
+		executeQuery(SELECT_ALL_EVENTS, [], callback);
 
 	}
 	
@@ -531,6 +550,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 
 	}
+	
+	function getCurrentFoodEventInstances(range, callback){
+		var curTimeStamp= getCurrentTimestamp();
+		executeQuery(SELECT_CURRENT_PLANNED_FOOD, [(curTimeStamp-range), (curTimeStamp+range)], callback)
+	}
 
 	function getUserInfo(callback){
 		executeQuery(SELECT_USER_INFO, [], callback);
@@ -552,9 +576,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function updateLastUpdateTimeStamp(lastchanged){
-		executeQuery(EDIT_LAST_UPDATE_TIMESTAMP, [lastchanged], null);
+		executeQuery(EDIT_LAST_UPDATE_TIMESTAMP, [lastchanged], function(){});
 	}
-
+	function getUnsentExceptionRecords(callback){
+		executeQuery(GET_UNSENT_EXCEPTION_RECORDS, [], callback);
+	}
+	function setClientExceptionRecordAsBeenSent(id){
+		executeQuery(SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD, [id], function(){});
+	}
 	function getCurrentTimestamp(){
 		return new Date().getTime();
 

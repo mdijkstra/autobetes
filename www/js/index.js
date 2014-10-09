@@ -4,6 +4,7 @@ var token;
 var SERVER_URL = 'http://195.169.22.242';
 //var SERVER_URL = 'http://localhost:8080'
 var SERVER_EVENT_URL = '/api/v1/event';
+var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
 var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
@@ -35,6 +36,7 @@ var MIN_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var MIN_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
 var STEP_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var STEP_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
+var PLUSMINRANGEFOODEVENT = 1200000;
 var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;

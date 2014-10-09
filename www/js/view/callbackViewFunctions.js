@@ -79,6 +79,49 @@ function showCurrentEventInstanceActivity(inputType, result) {
 
 }
 
+function showCurrentEventInstanceFood(inputType, result) {
+
+	var foodInstances = [];
+	var total = 0;
+	for (var i = 0; i < result.rows.length; i++) {
+		//progress results
+		var row = result.rows.item(i);
+		
+		//check if name is allready in foodInstances, if so add this instance to it
+		var allreadyInFoodInstances = false;
+		/*
+		for(var i = 0; i < foodInstances.length; i++){
+			var instance = foodInstances[i];
+			
+			if(instance.name === row.name){
+				
+				if(row.carbs){
+					allreadyInFoodInstances = true;
+					instance.amount = instance.amount+row.amount;
+					instance.carbs = instance.carbs+ (row.amount*row.carbs);
+					total = total+(row.carbs*row.amount);
+				}
+			}
+		}*/
+		if(allreadyInFoodInstances === false){
+		if(row.carbs){
+			foodInstances.push({name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+			total = total+(row.carbs*row.amount);
+		}
+		else{
+			foodInstances.push({name:row.name, amount:row.amount});
+		}
+		}
+	}
+	foodInstances.push({total:total});
+	console.log("joepi: "+JSON.stringify(foodInstances));
+	var source = $("#current-food-event-list-template").html();
+	var template = Handlebars.compile(source);	
+	console.log(template(foodInstances));
+	$('#current-food-event-list').html(template(foodInstances));
+	
+}
+
 function showEventInstanceList(inputType, result) {
 
 	var eventInstances = [];

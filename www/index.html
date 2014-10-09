@@ -34,6 +34,27 @@
 				class="speedTap ui-btn ui-icon-plus ui-btn-icon-left"><span id="startEventSpan">Start event</span></a> <a
 				id="historyButton" href="#history-event-instance-page"
 				class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
+			<H3>Current food intake</H3>
+			<div id="current-food-event-list" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input"></div>
+				
+			<script id="current-food-event-list-template" type="text/x-handlebars-template">
+				
+				{{#each .}}
+					{{#if amount}}
+						{{#if carbs}}
+							<p>{{amount}}x {{name}} {{carbs}}</p>
+						{{else}}
+							<p>{{amount}}x {{name}} </p>
+						{{/if}}
+					{{else}}
+						{{#if total}}
+							<p>Total: {{total}} carbs</p>
+						{{/if}}
+					{{/if}}
+				{{/each}}
+				
+			</script>
 			
 			<H3>Current activities:</H3>
 
@@ -484,8 +505,6 @@
 			<a data-rel="back"
 				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Reports</H1>
-			<a href="#make-new-event-page"
-				class="biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
@@ -514,8 +533,7 @@
 			<a data-rel="back"
 				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<H1>Pump settings</H1>
-			<a href="#make-new-event-page"
-				class="biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+			
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">

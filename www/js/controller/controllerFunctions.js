@@ -12,7 +12,7 @@ function deleteEvent(eventName, id, eventType){
 		//refresh list in history
 		var selectedTabIndex = $(document).data('selectedTabIndex2');
 		var selectedTab = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-		df.listHistoryEvents(selectedTab);
+		df.listHistoryEvents(selectedTab, showEventInstanceList);
 		});
 	});
 }
@@ -142,7 +142,7 @@ function selectHistoryTabMenu() {
 	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
 	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 
-	df.listHistoryEvents(eventType);
+	df.listHistoryEvents(eventType, showEventInstanceList);
 }
 /*
  * This method gets called on booth. When user exists it calls the login method or else it opens login page

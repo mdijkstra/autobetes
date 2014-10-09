@@ -39,6 +39,19 @@ var synchronise = function(){
 				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
 				df.updateLastUpdateTimeStamp(timeStampThisSync);
+				//now syncing is done it is time to send unsent exception records to server
+				df.getUnsentExceptionRecords(function(transaction,result){
+					console.log("length:"+ result.rows.length);
+					for (var i = 0; i < result.rows.length; i++) {
+						var row = result.rows.item(i);
+						var record = {exception : row.exception, clientDateAndTime: row.clientDataAndTime, query: row.query};
+						console.log("send exeption:"+ JSON.stringify(record));
+						restClient.add(SERVER_URL+SERVER_CLIENT_EXCEPTION_LOG_URL, record, function(data, textStatus, response){
+							console.log("set as sent: "+ row.id)
+							df.setClientExceptionRecordAsBeenSent(row.id);
+						}, null);
+					}
+				});
 			}
 
 			var errorHandler1 = function(request, textStatus, error){
