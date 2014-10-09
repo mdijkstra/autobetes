@@ -109,8 +109,8 @@
 			<h1>Start event</h1>
 			<div class="ui-btn-right">
 				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
-					id="newEventButton" href="#make-new-event-page" onclick="$('#deleteEvent').hide() //ensure delete event button is hidden"
-					class="speedTap biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+					id="newEventButton" href="#make-new-event-page"  onclick="setNewEventScreen()"
+					class=" biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
 			</div>
 			<div id="event-list-navbar" data-role="navbar">
 				<ul>
@@ -125,11 +125,13 @@
 			</div>
 		</div>
 		<div data-role="main" class="ui-content">
-
+			<div id="event-list2" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input">
 			<div id="recentlyAddedEvent" style="display: none">
 				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
 				<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all"
 					style="background: #adf4b4"></A>
+			</div>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
@@ -137,6 +139,7 @@
 				{{#each .}}
 					<a onclick='setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 				{{/each}}
+					<a style="background: #adf4b4" href="#make-new-event-page" onclick="setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Add new event</a>
 				</div>
 			</script>
 			
