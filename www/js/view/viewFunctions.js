@@ -16,7 +16,7 @@ function setAddOrEditScreen(eventId){
 	}
 	else{
 
-		$('#deleteEvent').hide();
+		
 		//edit mode is off. open start-event-instance-page screen
 		$.mobile.changePage('#start-event-instance-page');
 		populateStartEventInstanceScreen(eventId);
@@ -28,7 +28,7 @@ function populateEditEventInstancePage(cId, eventType) {
 		if(result.rows.length=== 1){
 			var row = result.rows.item(0);
 			var dateAndTime = convertTimestampToTimeAndDate(row.beginTime);
-			$('#edit-event-instance-cId').html(row.cId);
+			$('#edit-event-instance-cId').html(row.id);
 			$('#edit-event-instance-eventType').html(row.eventType);
 			$('#edit-event-instance-name').html(row.name);
 			$('#edit-event-instance-page-begin-date-field').val(dateAndTime.date);
@@ -73,8 +73,11 @@ function populateEditEventInstancePage(cId, eventType) {
 				
 			}
 			
-			
+			//unbind previous functions on this slider 
 			$('#edit-event-instance-quantity-slider').unbind();
+			//the only digits function is now unbind as well. 
+			//bind function again 
+			onlyDigits();//allow only digits as input on slider
 			$('#edit-event-instance-quantity-slider').change(function() {
 				//if user slides the #intensity-slider-label-intensity-indication changes accordingly
 					
@@ -104,15 +107,15 @@ function populateEditEventInstancePage(cId, eventType) {
 
 }
 
-function populateEditEventScreen(eventId){
-	df.getParticularEvent(eventId, function(transaction, result){
+function populateEditEventScreen(id){
+	df.getParticularEvent(id, function(transaction, result){
 		$("#radio-choice-h-2a").checkboxradio('disable');
 		$("#radio-choice-h-2b").checkboxradio('disable');
 
 		if(result.rows.length === 1){
 			var row = result.rows.item(0);
 			//set eventID
-			$('#cid').text(row.cId);
+			$('#cid').text(row.id);
 			//set header name
 			$('#make-new-event-page').find("#headerName").text(EDIT);
 			//set name of event 
@@ -154,13 +157,13 @@ function populateEditEventScreen(eventId){
  * which is the context of clicked button, and the eventID which is the primary
  * key to the event.
  */
-function populateStartEventInstanceScreen(eventID){
-	df.getParticularEvent(eventID, function(transaction, result){
+function populateStartEventInstanceScreen(id){
+	df.getParticularEvent(id, function(transaction, result){
 
 		if(result.rows.length === 1){
 			var row = result.rows.item(0);
 			//set the eventID which is the primary key of the event
-			$('#start-event-instance-page-event-cId').text(row.cId);
+			$('#start-event-instance-page-event-cId').text(row.id);
 			//set event name
 			$('#startEventName').html(row.name);
 			//get current time
@@ -217,7 +220,9 @@ function populateStartEventInstanceScreen(eventID){
 
 			}
 			$('#start-event-instance-quantity-slider').unbind();
+			onlyDigits();
 			$('#start-event-instance-quantity-slider').change(function() {
+				
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
 				if(row.carbs){
@@ -226,7 +231,7 @@ function populateStartEventInstanceScreen(eventID){
 				else if(row.amount){
 					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
 				}
-				if(row.intensity){
+				if(intensity){
 					setIntensityTextInScreen('#intensityToText', parseInt(intensity));
 				}
 			});
@@ -302,11 +307,11 @@ function showEvents(eventType) {
 	
 	if (eventType === FOOD || eventType === ACTIVITY) {
 
-		df.listEventsOfEventType(eventType);
+		df.listEventsOfEventType(eventType,showEventList);
 
 	}
 	else{
-		df.showEvents();
+		df.showEvents(showEventList);
 	}
 	//if user edits or adds an event it will be shown on top of the list in green.
 	//in the onclick(#addOrEditEvent) function the name will be set in the hidden span #eventnameOfAddedOrEditedEvent. 

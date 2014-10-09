@@ -4,6 +4,7 @@ var token;
 var SERVER_URL = 'http://195.169.22.242';
 //var SERVER_URL = 'http://localhost:8080'
 var SERVER_EVENT_URL = '/api/v1/event';
+var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
 var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
@@ -35,13 +36,15 @@ var MIN_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var MIN_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
 var STEP_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var STEP_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
+var PLUSMINRANGEFOODEVENT = 1200000;
 var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
-var TIMESTAMPPENALTY = 3600000;
+var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var COLOR_EDIT_MODE = "#8df3e6";
 var ALLREADY_EXISTS = " allready exists"
-	var USERISDISABLEDREGEX= /User is disabled/;
+var USERISDISABLEDREGEX= /User is disabled/;
+var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
 var REGISTRATIONFAILREGEX = /Registration failed/;
@@ -56,6 +59,7 @@ var BAD_CREDENTIALS_TEXT = "Wrong email and password combination";
 var ERROR_HEADER = "Error";
 var ERROR_TEXT = "An error occurred: ";
 var PASSWORDS_NOT_THE_SAME = 'Passwords are not the same';
+var ONLYDIGITSMESSAGE = "Please only insert digits";
 var INVALID_EMAIL = "Invalid email";
 var PLEASE_SYNC_WITH_PUMP = "Please synchronise the time settings of your insulin pump with those of your app!";
 var SERVER_CONNECTION_FAIL = "Currently unable to connect to server";
@@ -86,9 +90,12 @@ $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
-jQuery('.numbersOnly').keyup(function () { 
-	this.value = this.value.replace(/[^0-9\.]/g,'1');
-});
+function onlyDigits(){
+	$('.numbersOnly').keyup(function() { 
+		this.value = this.value.replace(/[^0-9\.]/,"");
+	});
+}
+onlyDigits();
 //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
 $(document).on('blur', 'input, textarea', function() {
 	setTimeout(function() {
@@ -134,6 +141,8 @@ function checkMobileBrowser() {
 
 
 function onDeviceReady() {
+
+	
 	//StatusBar.overlaysWebView(false);
 	MOBILE_DEVICE = checkMobileBrowser();
 	var speedUpTap = function(e){
@@ -150,10 +159,9 @@ function onDeviceReady() {
 	*/
 	checkIfUserExists();
 	
-	setInterval(function() {
-		//sync every 5 minutes
-		synchronise();
-	}, 300000);
+	
+	synchronise();
+	
 	
 	document.addEventListener("offline", function(e) {
 		//alert("offline");
@@ -162,17 +170,17 @@ function onDeviceReady() {
 
 	document.addEventListener("online", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, true);
-		synchronise2();
+		synchronise();
 
 	}, false);
 
 	document.addEventListener("pause", function(e){
-		synchronise2();
+		synchronise();
 		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
 	}, false);
 
 	document.addEventListener("resume", function(e){
-		synchronise2();
+		synchronise();
 	}, false);
 
 }

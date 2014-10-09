@@ -12,9 +12,10 @@ function showEventList(transaction, result) {
 				
 				//show new event in button on top of the list
 				$('#recentAddedEventButton').html(row.name);
-				var cId = row.cId;
+				var id = row.id;
+				$('#recentAddedEventButton').unbind();
 				$('#recentAddedEventButton').click(function(){
-					setAddOrEditScreen(cId);
+					setAddOrEditScreen(id);
 				});
 				
 				//ensure next call this button is not presented
@@ -62,7 +63,7 @@ function showCurrentEventInstanceActivity(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType
 
 		}
@@ -76,6 +77,49 @@ function showCurrentEventInstanceActivity(inputType, result) {
 	var template = Handlebars.compile(source);	
 	$('#current-activity-event-list').html(template(buttons));
 
+}
+
+function showCurrentEventInstanceFood(inputType, result) {
+
+	var foodInstances = [];
+	var total = 0;
+	for (var i = 0; i < result.rows.length; i++) {
+		//progress results
+		var row = result.rows.item(i);
+		
+		//check if name is allready in foodInstances, if so add this instance to it
+		var allreadyInFoodInstances = false;
+		/*
+		for(var i = 0; i < foodInstances.length; i++){
+			var instance = foodInstances[i];
+			
+			if(instance.name === row.name){
+				
+				if(row.carbs){
+					allreadyInFoodInstances = true;
+					instance.amount = instance.amount+row.amount;
+					instance.carbs = instance.carbs+ (row.amount*row.carbs);
+					total = total+(row.carbs*row.amount);
+				}
+			}
+		}*/
+		if(allreadyInFoodInstances === false){
+		if(row.carbs){
+			foodInstances.push({name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+			total = total+(row.carbs*row.amount);
+		}
+		else{
+			foodInstances.push({name:row.name, amount:row.amount});
+		}
+		}
+	}
+	foodInstances.push({total:total});
+	console.log("joepi: "+JSON.stringify(foodInstances));
+	var source = $("#current-food-event-list-template").html();
+	var template = Handlebars.compile(source);	
+	console.log(template(foodInstances));
+	$('#current-food-event-list').html(template(foodInstances));
+	
 }
 
 function showEventInstanceList(inputType, result) {
@@ -108,7 +152,7 @@ function showEventInstanceList(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType,
 				carbs : carbs
 			})
@@ -128,7 +172,7 @@ function showEventInstanceList(inputType, result) {
 				beginDay : date.getDate(),
 				beginMonth : (date.getMonth() + 1),
 				beginYear : date.getFullYear(),
-				cId : row.cId,
+				id : row.id,
 				eventType: row.eventType,
 				intensityText: intensityTextAndColor.text,
 				intensityColorInterpretation: intensityTextAndColor.color,

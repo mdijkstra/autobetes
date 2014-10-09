@@ -132,7 +132,7 @@
 			headers: {'x-molgenis-token': self.token},
 			url: url,
 			data: JSON.stringify(data),
-			async: false,
+			async: true,
 			contentType: 'application/json',
 			success: function(data, textStatus, response) {
 				callback(data, textStatus, response);
