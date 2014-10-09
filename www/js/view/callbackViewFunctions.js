@@ -121,10 +121,8 @@ function showCurrentEventInstanceFood(inputType, result) {
 	if(foodInstances.length > 0){
 		$('#current-food-event-list').show();
 	foodInstances.unshift({total:total});
-	console.log("joepi: "+JSON.stringify(foodInstances));
 	var source = $("#current-food-event-list-template").html();
 	var template = Handlebars.compile(source);	
-	console.log(template(foodInstances));
 	$('#current-food-event-list').html(template(foodInstances));
 	}
 	else{

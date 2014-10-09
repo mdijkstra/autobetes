@@ -53,7 +53,7 @@ var CANNOT_OPEN_DATABASE = "Cannot open database";
 var CONNECTED_TO_INTERNET = "Connection";
 var ACTIVATE_ACOUNT_HEADER = "Inactive account";
 var ACTIVATE_ACOUNT_TEXT = "Your account is currently inactive, please click the link in the email to activate your account";
-
+var ENDTIMEBEFOREBEGINTIME = "End time cannot be before begin time";
 var BAD_CREDENTIALS_HEADER = "Bad credentials";
 var BAD_CREDENTIALS_TEXT = "Wrong email and password combination";
 var ERROR_HEADER = "Error";
