@@ -29,44 +29,55 @@
 		</div>
 
 		<div role="main" id="mainScreen" class="ui-content">
-
-			<a id="homeStartButton" href="#event-list-page" 
-				class="speedTap ui-btn ui-icon-plus ui-btn-icon-left"><span id="startEventSpan">Start event</span></a> <a
-				id="historyButton" href="#history-event-instance-page"
-				class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
-			<H3>Current food intake</H3>
-			<div id="current-food-event-list" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input"></div>
-				
-			<script id="current-food-event-list-template" type="text/x-handlebars-template">
-				
-				{{#each .}}
-					{{#if amount}}
-						{{#if carbs}}
-							<p>{{amount}}x {{name}} {{carbs}}</p>
-						{{else}}
-							<p>{{amount}}x {{name}} </p>
-						{{/if}}
-					{{else}}
-						{{#if total}}
-							<p>Total: {{total}} carbs</p>
-						{{/if}}
-					{{/if}}
-				{{/each}}
-				
-			</script>
-			
-			<H3>Current activities:</H3>
-
+		<table width="100%">
+				<tr>
+					<td width="50%">
+					<a id="homeStartButton" href="#event-list-page" class="ui-btn ui-icon-plus ui-btn-icon-left" ><span id="startEventSpan">Start event</span></a>
+					</td>
+					<td width="50%">
+					<a id="historyButton" href="#history-event-instance-page" class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
+					</td>
+				</tr>			
+			</table>
+		
 			<div id="current-activity-event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
 			
 			<script id="current-activity-event-list-template" type="text/x-handlebars-template">
+				<H3>Current activities:</H3>
 				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
 				{{#each .}}
 					<li class="ui-li-has-alt">
 						<a class="ui-btn"><p style="display: none">2</p><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span id="intensity" style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span id="beginHours">{{beginHours}}</span>:<span id="beginMinutes">{{beginMinutes}}</span></strong><br><span id="day">{{beginDay}}</span>-<span id="month">{{beginMonth}}</span>-<span id="year">{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
 					</li>
+				{{/each}}
+				</ul>
+			</script>
+			
+			
+			<div id="current-food-event-list" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input"></div>
+			<br>
+			<script id="current-food-event-list-template" type="text/x-handlebars-template">
+				<H3>Current food intake:</H3>
+				<br>
+				<ul class="ui-listview" data-role="listview" data-theme="a">
+				{{#each .}}
+					
+					{{#if amount}}
+						<li><a class="ui-btn" style="height:8px">
+							{{#if carbs}}
+								<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} grams</p>
+							{{else}}
+								<p style="font-size: 9pt;">{{amount}}x {{name}} </p>
+							{{/if}}
+						</a></li>
+					{{else}}
+						{{#if total}}
+							<b style="font-size: 9pt;">Total: {{total}} carbohydrates</b>
+						{{/if}}
+					{{/if}}
+					
 				{{/each}}
 				</ul>
 			</script>
@@ -97,9 +108,7 @@
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<h1>Start event</h1>
 			<div class="ui-btn-right">
-				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
-					id="newEventButton" href="#make-new-event-page" onclick="$('#deleteEvent').hide() //ensure delete event button is hidden"
-					class="speedTap biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> 
 			</div>
 			<div id="event-list-navbar" data-role="navbar">
 				<ul>
@@ -114,19 +123,23 @@
 			</div>
 		</div>
 		<div data-role="main" class="ui-content">
-
+			<div id="event-list2" data-role="controlgroup" data-filter="true"
+				data-input="#filterControlgroup-input">
 			<div id="recentlyAddedEvent" style="display: none">
 				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
-				<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all"
+				<A id="recentAddedEventButton" CLASS=" ui-btn ui-shadow ui-corner-all"
 					style="background: #adf4b4"></A>
+			</div>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
 			<script id="event-list-template" type="text/x-handlebars-template">
+				<a style="background: #adf4b4" href="#make-new-event-page" onclick="setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Add new event</a>
+
 				{{#each .}}
 					<a onclick='setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 				{{/each}}
-				</div>
+									</div>
 			</script>
 			
 			
@@ -482,7 +495,7 @@
 					min="1" max="10" value="1" step="1">
 
 			</div>
-			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()"  id="edit-event-instance-page-save-button" type CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
+			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()"  id="edit-event-instance-page-save-button"  CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
 		</div>
 	
 		<!-- /content -->

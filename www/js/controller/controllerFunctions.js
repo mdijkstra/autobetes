@@ -77,7 +77,7 @@ function updateEventInstance() {
 	else{
 		
 		
-	$.mobile.back();//go to previous page
+	
 	$(window).ready(function(){
 		
 	//extract values from DOM
@@ -92,10 +92,23 @@ function updateEventInstance() {
 		var endTimeAndDate = setNullIfFieldIsEmpty(endDate) + " " + setNullIfFieldIsEmpty(endTime);
 
 		var unixEndTime = setNullIfFieldIsEmpty(Date.parse(endTimeAndDate).getTime());
+		if(unixEndTime < unixBeginTime){
+			toastShortMessage(ENDTIMEBEFOREBEGINTIME);
+		}
+		else{
+			//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
+			//update event instance in database
+			df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
+			$.mobile.back();//go to previous page
+		}
 	}
-	//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
-	//update event instance in database
-	df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
+	else{
+		//console.log("update "+ eventType+"  "+$('#edit-event-instance-quantity-slider').val()+"  "+unixBeginTime+"  "+unixEndTime+"  "+cId)
+		//update event instance in database
+		df.updateEventInstance(eventType, $('#edit-event-instance-quantity-slider').val(),unixBeginTime,unixEndTime, id);
+		$.mobile.back();//go to previous page
+	}
+	
 	});
 	}
 }
