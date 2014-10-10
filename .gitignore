@@ -3,3 +3,4 @@ platforms
 hooks/
 merges/
  *~
+plugins/org.apache.cordova.statusbar/tests/
