@@ -32,10 +32,10 @@
 		<table width="100%">
 				<tr>
 					<td width="50%">
-					<a id="homeStartButton" href="#event-list-page" class="ui-btn ui-icon-plus ui-btn-icon-left" style="width:100%"><span id="startEventSpan">Start event</span></a>
+					<a id="homeStartButton" href="#event-list-page" class="ui-btn ui-icon-plus ui-btn-icon-left" ><span id="startEventSpan">Start event</span></a>
 					</td>
 					<td width="50%">
-					<a id="historyButton" href="#history-event-instance-page" class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left" style="width:100%">History</a>
+					<a id="historyButton" href="#history-event-instance-page" class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
 					</td>
 				</tr>			
 			</table>
@@ -108,9 +108,7 @@
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<h1>Start event</h1>
 			<div class="ui-btn-right">
-				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> <a
-					id="newEventButton" href="#make-new-event-page"  onclick="setNewEventScreen()"
-					class=" biggerButton ui-btn ui-icon-plus ui-btn-icon-right ui-btn-icon-notext ui-corner-all"></a>
+				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a> 
 			</div>
 			<div id="event-list-navbar" data-role="navbar">
 				<ul>
@@ -129,18 +127,19 @@
 				data-input="#filterControlgroup-input">
 			<div id="recentlyAddedEvent" style="display: none">
 				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
-				<A id="recentAddedEventButton" CLASS="ui-btn ui-shadow ui-corner-all"
+				<A id="recentAddedEventButton" CLASS=" ui-btn ui-shadow ui-corner-all"
 					style="background: #adf4b4"></A>
 			</div>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
 			<script id="event-list-template" type="text/x-handlebars-template">
+				<a style="background: #adf4b4" href="#make-new-event-page" onclick="setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Add new event</a>
+
 				{{#each .}}
 					<a onclick='setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 				{{/each}}
-					<a style="background: #adf4b4" href="#make-new-event-page" onclick="setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Add new event</a>
-				</div>
+									</div>
 			</script>
 			
 			
