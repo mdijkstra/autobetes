@@ -140,16 +140,9 @@ $(document).on('pagehide', '#event-list-page', function(){
 
 $(document).on('pageshow', '#report-page', function(){
 	
-		   ifrm = document.createElement("IFRAME"); 
-		   ifrm.setAttribute("src", SERVER_URL+"?molgenis-token="+token); 
-		   ifrm.style.width = 640+"px"; 
-		   ifrm.style.height = 480+"px"; 
-		   console.log("no m")
-		   console.log(ifrm)
-		   $('#iFrameDiv').html(ifrm);
-		   //document.body.appendChild(ifrm); 
-		
-	
+	$.get( SERVER_URL+"?molgenis-token="+token, function( data ) {
+		$('#reportDiv').html( data );
+	});
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){
