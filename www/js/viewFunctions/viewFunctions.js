@@ -1,3 +1,49 @@
+function view() {
+	//add functions to object
+	this.showMessageDialog = showMessageDialog;
+	this.toastMessage = toastMessage;
+	this.toastShortMessage = toastShortMessage;
+	this.setAddOrEditScreen = setAddOrEditScreen;
+	this.populateEditEventInstancePage = populateEditEventInstancePage;
+	this.populateEditEventScreen = populateEditEventScreen;
+	this.populateStartEventInstanceScreen = populateStartEventInstanceScreen;
+	this.setIntensityTextInScreen = setIntensityTextInScreen;
+	this.setNewEventScreen = setNewEventScreen;
+	
+/*
+ * Show dialog with message text
+ */
+function showMessageDialog(headerText, messageText){
+	$("#messageDialogHeader").html(headerText);
+	$("#messageDialogText").html(messageText);
+	$.mobile.changePage( "#messageDialog", { role: "dialog" } );
+}
+/*
+ * Toast message for 5 seconds
+ */
+function toastMessage(messageText){
+	
+	if(MOBILE_DEVICE){
+		//it is a mobile device
+		window.plugins.toast.showLongBottom(messageText, null, null);
+	}
+	else{
+		//no toast for normal browser, add message to console
+		console.log(messageText);
+	}
+}
+/*
+ * Toast message for 3 seconds
+ */
+function toastShortMessage(messageText){
+	if(MOBILE_DEVICE){
+		window.plugins.toast.showShortBottom(messageText, null, null);
+	}
+	else{
+		console.log(messageText);
+	}
+}
+
 /*
  * This method gets called when an event button is clicked. When the edit mode is on
  * the screen in where the user can modify the event will be set. When de edit mode
@@ -22,12 +68,19 @@ function setAddOrEditScreen(eventId){
 		populateStartEventInstanceScreen(eventId);
 	}
 }
-function populateEditEventInstancePage(cId, eventType) {
-	df.getParticularEventInstance(cId, eventType, function(transaction, result){
+/*
+ * Given the id and eventType, this method calls the dbhandler to retrieve event of interest
+ * and populates edit event instance screen.
+ */
+function populateEditEventInstancePage(id, eventType) {
+	dbHandler.getParticularEventInstance(id, eventType, function(transaction, result){
 
 		if(result.rows.length=== 1){
+			//found event instance
+			//get entity
 			var row = result.rows.item(0);
-			var dateAndTime = convertTimestampToTimeAndDate(row.beginTime);
+			//fill fields
+			var dateAndTime = controller.convertTimestampToTimeAndDate(row.beginTime);
 			$('#edit-event-instance-cId').html(row.id);
 			$('#edit-event-instance-eventType').html(row.eventType);
 			$('#edit-event-instance-name').html(row.name);
@@ -42,12 +95,12 @@ function populateEditEventInstancePage(cId, eventType) {
 				if(row.endTime === null){
 					//no endtime in row, set current time as endtime
 					var curTimestamp = new Date();
-					endDateAndTime = convertTimestampToTimeAndDate(curTimestamp);
+					endDateAndTime = controller.convertTimestampToTimeAndDate(curTimestamp);
 				}
 				else{
-					endDateAndTime = convertTimestampToTimeAndDate(row.endTime);
+					endDateAndTime = controller.convertTimestampToTimeAndDate(row.endTime);
 				}
-
+				//set slider for activity
 				$('#endTimeField').show();
 				$('#edit-event-instance-page-end-time-field').val(endDateAndTime.time);
 				$('#edit-event-instance-page-end-date-field').val(endDateAndTime.date);
@@ -63,6 +116,7 @@ function populateEditEventInstancePage(cId, eventType) {
 				
 
 			} else {
+				//set slider for food
 				$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
 				$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
 				$('#edit-event-instance-quantity-slider').val(row.amount).slider('refresh');
@@ -78,19 +132,21 @@ function populateEditEventInstancePage(cId, eventType) {
 			//the only digits function is now unbind as well. 
 			//bind function again 
 			onlyDigits();//allow only digits as input on slider
+			
 			$('#edit-event-instance-quantity-slider').change(function() {
 				//if user slides the #intensity-slider-label-intensity-indication changes accordingly
 					
 				var intensity = parseFloat($('#edit-event-instance-quantity-slider').val());
 				
 				if(row.carbs){
+					//calculate amount of grams en present on screen
 					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
 				if(row.intensity){
 					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
 				}
 			});
-			
+			//show and hide the right elements according to event type
 			if(row.carbs){
 				$('#edit-event-instance-amount-of-grams-text').show();
 				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*row.amount)))+' grams' );
@@ -106,13 +162,18 @@ function populateEditEventInstancePage(cId, eventType) {
 	});
 
 }
-
+/*
+ * Given the id of the event, this method retrieves the event of interest from db and populates 
+ * edit event screen
+ */
 function populateEditEventScreen(id){
-	df.getParticularEvent(id, function(transaction, result){
+	dbHandler.getParticularEvent(id, function(transaction, result){
+		//eventtype cannot be changed after event is declared so disable checkbox
 		$("#radio-choice-h-2a").checkboxradio('disable');
 		$("#radio-choice-h-2b").checkboxradio('disable');
 
 		if(result.rows.length === 1){
+			//found event
 			var row = result.rows.item(0);
 			//set eventID
 			$('#cid').text(row.id);
@@ -158,7 +219,7 @@ function populateEditEventScreen(id){
  * key to the event.
  */
 function populateStartEventInstanceScreen(id){
-	df.getParticularEvent(id, function(transaction, result){
+	dbHandler.getParticularEvent(id, function(transaction, result){
 
 		if(result.rows.length === 1){
 			var row = result.rows.item(0);
@@ -196,7 +257,6 @@ function populateStartEventInstanceScreen(id){
 
 			
 			//add event screen varies by event type
-
 			$('#start-event-instance-page-eventType').text(row.eventType);
 			if (row.eventType === FOOD) {
 				$('#start-event-instance-activity-quantity-slider-label').hide();
@@ -220,15 +280,17 @@ function populateStartEventInstanceScreen(id){
 
 			}
 			$('#start-event-instance-quantity-slider').unbind();
-			onlyDigits();
+			onlyDigits();//after unbind add the only digits function to slider
 			$('#start-event-instance-quantity-slider').change(function() {
-				
+				//perform action if value of quantity slider changes
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
 				if(row.carbs){
+					//calculat amount of carbs
 					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
 				}
 				else if(row.amount){
+					//carbs not defined, amount is unknown
 					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
 				}
 				if(intensity){
@@ -251,50 +313,12 @@ function populateStartEventInstanceScreen(id){
 
 }
 
-function convertIntensityIntToTextAndColor(value){
-	var textAndColor;
-	switch(value) {
-	case 1:
-		textAndColor = {color:'#CCFF33',text:'Very easy'};
-
-		break;
-	case 2:
-		textAndColor = {color:'#99FF33',text:'Somewhat easy'};
-		break;
-	case 3:
-		textAndColor = {color:'#33CC33',text:'Moderate'};
-		break;
-	case 4:
-		textAndColor = {color:'#FF9933',text:'Somewhat hard'};
-		break;
-	case 5:
-		textAndColor = {color:'#FF6600',text:'Moderately hard'};
-		break;
-	case 6:
-		textAndColor = {color:'#FF0000',text:'Hard'};
-		break;
-	case 7:
-		textAndColor = {color:'#FF0000',text:'Hard'};
-		break;
-	case 8:
-		textAndColor = {color:'#CC0000',text:'Very hard'};
-		break;
-	case 9:
-		textAndColor = {color:'#A31919',text:'Very, very hard'};
-		break;
-	case 10:
-		textAndColor = {color:'#721212',text:'Maximal'};
-		break;
-
-	}
-	return textAndColor;
-}
 
 /*
  * Sets the right interpretation of the given value, in the DOM element(selector)
  */
 function setIntensityTextInScreen(selector, value) {
-	var textAndColor = convertIntensityIntToTextAndColor(value);
+	var textAndColor = controller.convertIntensityIntToTextAndColor(value);
 
 	$(selector).css({
 		'color' : textAndColor.color
@@ -303,28 +327,9 @@ function setIntensityTextInScreen(selector, value) {
 }
 
 
-function showEvents(eventType) {
-	
-	if (eventType === FOOD || eventType === ACTIVITY) {
-
-		df.listEventsOfEventType(eventType,showEventList);
-
-	}
-	else{
-		df.showEvents(showEventList);
-	}
-	//if user edits or adds an event it will be shown on top of the list in green.
-	//in the onclick(#addOrEditEvent) function the name will be set in the hidden span #eventnameOfAddedOrEditedEvent. 
-	//Once that name corresponds with the event in showlist it will set in the green button. The text in #eventnameOfAddedOrEditedEvent
-	//will be removed in order to hide the green button after the list is shown.
-	if($('#eventnameOfAddedOrEditedEvent').text() === ''){
-		//text is empty, ensure that button is hidden
-		$('#recentlyAddedEvent').hide();
-	}
-	
-
-}
-
+/*
+ * This method adjusts make-new-event-page according to the event type selected of selectedTabIndex
+ */
 function setNewEventScreen(){
 	$('#deleteEvent').hide()//ensure delete button is hidden
 	$('#addOrEditEvent').text('Add');
@@ -339,18 +344,18 @@ function setNewEventScreen(){
 	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
 
 	if(index === 0 || index === 1){
-
+		//Set screen according to Food event type
 		$("#radio-choice-h-2a").prop("checked", true);
 		$("#radio-choice-h-2b").prop("checked",false);
 		$("input[type='radio']").checkboxradio("refresh");
-
+		
 		$('#newEventPageActivityInput').hide();
 		$('#newEventPageFoodInput').show();
 
 
 	}
 	else{
-
+		//Set screen according to Activity event type
 		$("#radio-choice-h-2b").prop("checked", true);
 		$("#radio-choice-h-2a").prop("checked", false);
 		$("input[type='radio']").checkboxradio("refresh");
@@ -360,4 +365,4 @@ function setNewEventScreen(){
 	}
 }
 
-
+}

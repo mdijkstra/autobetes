@@ -4,6 +4,7 @@ function homeScreenTour(){
 	var index_stop = $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT);
 	//console.log("index is:"+index_stop)
 	if(index_stop === 0){
+		//first stop at home screen
 		$('#homeScreenTourFirstStop').joyride({
 			autoStart : true,
 			modal:true,
@@ -20,6 +21,12 @@ function homeScreenTour(){
 		});
 	}
 	else if(index_stop === 1){
+		//second stop at home screen
+		//mock a current activity and a current food intake
+		//show both fields
+		//mock activity
+		$('#current-activity-event-list').show();
+		$('#current-food-event-list').show();
 		var buttons = [{
 				name : "Football",
 				intensityText: 'Moderate',
@@ -33,9 +40,26 @@ function homeScreenTour(){
 				eventType: "Activity"
 
 		}];
+		//add activity to screen
 		var source = $("#current-activity-event-list-template").html();
 		var template = Handlebars.compile(source);	
 		$('#current-activity-event-list').html(template(buttons));
+		
+		
+		//mock food 
+		var foodInstances = [];
+		foodInstances.push({total:10});
+		foodInstances.push({name : "Energy drink", amount : 1, carbs:10});
+		
+		//get template
+		var source = $("#current-food-event-list-template").html();
+		//compile to hanlebars template
+		var template = Handlebars.compile(source);	
+		//fill template with events and add screen to page
+		$('#current-food-event-list').html(template(foodInstances));
+		
+		
+		
 		$('#homeScreenTourSecondStop').joyride({
 			autoStart : true,
 			modal:true,
@@ -49,8 +73,19 @@ function homeScreenTour(){
 			},
 			preStepCallback : function(index, tip){
 				if(index === 1){
-					//$(this).joyride("setNubPositionTopRight");
-					$(this)[0].nubPosition = "top-right";
+					$(this).joyride("setNubPositionTopRight");
+				}
+				if(index === 2){
+				
+					$(this)[0].tipLocation = 'top';
+
+				}
+			},
+			postStepCallback : function(index, tip){
+				//set tooltip back at buttom after index 2
+				if(index === 2){
+					
+					$(this)[0].tipLocation = 'bottom';
 
 				}
 			}
@@ -67,6 +102,8 @@ function startEventScreenTour(){
 	$('[name=event-list-navbar-buttons]:eq(0)').addClass('ui-btn-active');
 	//mock event list
 	$('#event-list').html("");
+	var eventButton = $('<a id ="newEventButton" style="background: #F7D358" href="#make-new-event-page" onclick="view.setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Define new event</a>');
+	$('#event-list').append(eventButton);
 	var eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">Cycling</span></A>');
 	$('#event-list').append(eventButton);
 	eventButton = $('<A CLASS="eventButtons ui-btn ui-shadow ui-corner-all"><span id="name">Hamburger</span></A>');
@@ -176,7 +213,7 @@ function startEventInstancePageTour(){
 				$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
 				$('#start-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
 				$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER).slider('refresh');
-				setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
+				view.setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
 			}
 		}
 	});
@@ -249,6 +286,13 @@ function historyEventInstancePageTour(){
 			autoStart : true,
 			modal:true,
 			expose: true,
+			tip_location : 'bottom',
+			preStepCallback : function(index, tip){
+				if(index === 2){
+					$(this)[0].tipLocation = 'bottom';
+				}
+				
+			},
 			postRideCallback : function(){
 				
 				window.location.href =  '#home-page';

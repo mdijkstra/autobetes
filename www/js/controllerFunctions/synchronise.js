@@ -2,19 +2,19 @@
 var synchronise = function(){
 	
 	var timeStampThisSync = new Date().getTime();
-	console.log(timeStampThisSync);
+
 	if(canMakeAjaxCall()){
 		//device is not synchronising or logging in yet
 		$(document).data(IS_SYNCHRONISING, true);
 		//setTimeout(function() {
 		
-		df.getLastUpdateTimeStamp(function(transaction,result){
+		dbHandler.getLastUpdateTimeStamp(function(transaction,result){
 			
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
 			
-			console.log(" vs. "+lastUpdateTimeStamp);
+		
 			
 			var arrayEntities = [];
 			var requestData = [];
@@ -38,42 +38,42 @@ var synchronise = function(){
 				$(document).data(IS_SYNCHRONISING, false);
 				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
-				df.updateLastUpdateTimeStamp(timeStampThisSync);
+				dbHandler.updateLastUpdateTimeStamp(timeStampThisSync);
 				//now syncing is done it is time to send unsent exception records to server
-				df.getUnsentExceptionRecords(function(transaction,result){
-					console.log("length:"+ result.rows.length);
+				dbHandler.getUnsentExceptionRecords(function(transaction,result){
+					
 					for (var i = 0; i < result.rows.length; i++) {
 						var row = result.rows.item(i);
 						var record = {exception : row.exception, clientDateAndTime: row.clientDataAndTime, query: row.query};
-						console.log("send exeption:"+ JSON.stringify(record));
+						
 						restClient.add(SERVER_URL+SERVER_CLIENT_EXCEPTION_LOG_URL, record, function(data, textStatus, response){
-							console.log("set as sent: "+ row.id)
-							df.setClientExceptionRecordAsBeenSent(row.id);
+
+							dbHandler.setClientExceptionRecordAsBeenSent(row.id);
 						}, null);
 					}
 				});
 			}
 
-			var errorHandler1 = function(request, textStatus, error){
+			var errorHandler = function(request, textStatus, error){
 				$(document).data(IS_SYNCHRONISING, false);
 				if(error === UNAUTHORIZED){
-					login();
+					controller.login();
 				}
 				console.log(JSON.stringify(request));
 				console.log(JSON.stringify(textStatus));
 				console.log(JSON.stringify(error));
 			}
 
-			df.getEventsAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
+			dbHandler.getEventsAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
 				pushEntitiesInArray(result, function(){
-					df.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
+					dbHandler.getActivityEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 
 						pushEntitiesInArray(result, function(){
-							df.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
+							dbHandler.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 								pushEntitiesInArray(result, function(){
 									//console.log(JSON.stringify(requestData))
-									restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler1);
+									restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler);
 								});
 							});
 						});
@@ -113,12 +113,12 @@ var iterateArrayRecursively = function(index, data){
 			entityType = INSTANCE;
 		}
 		if(entity.name){
-			df.serverProcessEvent(entity, function(){
+			dbHandler.serverProcessEvent(entity, function(){
 				iterateArrayRecursively(index+1, data);
 			});
 		}
 		else{
-			df.serverProcessEventInstance(entity, function(){
+			dbHandler.serverProcessEventInstance(entity, function(){
 				iterateArrayRecursively(index+1, data);
 			});
 		}
@@ -130,7 +130,7 @@ var iterateArrayRecursively = function(index, data){
 		if(currentPage === HOMEPAGE){
 			
 			setTimeout(function() {
-			df.showCurrentActivityEventInstances();
+			dbHandler.showCurrentActivityEventInstances();
 			},1000);
 		}
 
@@ -144,20 +144,19 @@ var iterateArrayRecursively = function(index, data){
 var canMakeAjaxCall = function(){
 	var isSynchronising = $(document).data(IS_SYNCHRONISING);
 	var isLoggingIn = $(document).data(IS_SYNCHRONISING);
-	console.log(isSynchronising+" "+ isLoggingIn)
 	if(restClient.getToken() === null){
-		console.log(1)
+
 		//there is no token
-		checkIfUserExists();
+		controller.checkIfUserExists();
 		return false;
 	}
 	else if(isSynchronising || isLoggingIn ){
-		console.log(2)
+
 		//device allready synchronising, logging in
 		return false;
 	}
 	else{
-		console.log(3)
+
 		//can make ajax call
 		return true;
 	}
