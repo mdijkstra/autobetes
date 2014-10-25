@@ -1,1 +1,0 @@
-phonegap plugin add org.apache.cordova.statusbar

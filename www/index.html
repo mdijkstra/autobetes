@@ -20,7 +20,7 @@
 
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
 			<a
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); toastShortMessage(SYNCHRONISE)"></a>
+				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-refresh ui-btn-icon-left ui-btn-icon-notext " onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)"></a>
 				
 			<h1>Autobetes</h1>
 			<a href="#settings-page" data-role="button" data-icon="gear"
@@ -35,7 +35,7 @@
 					<a id="homeStartButton" href="#event-list-page" class="ui-btn ui-icon-plus ui-btn-icon-left" ><span id="startEventSpan">Start event</span></a>
 					</td>
 					<td width="50%">
-					<a id="historyButton" href="#history-event-instance-page" class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
+					<a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2')" class="speedTap ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left">History</a>
 					</td>
 				</tr>			
 			</table>
@@ -48,7 +48,7 @@
 				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
 				{{#each .}}
 					<li class="ui-li-has-alt">
-						<a class="ui-btn"><p style="display: none">2</p><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span id="intensity" style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span id="beginHours">{{beginHours}}</span>:<span id="beginMinutes">{{beginMinutes}}</span></strong><br><span id="day">{{beginDay}}</span>-<span id="month">{{beginMonth}}</span>-<span id="year">{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+						<a class="ui-btn"><p style="display: none">2</p><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span id="intensity" style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span id="beginHours">{{beginHours}}</span>:<span id="beginMinutes">{{beginMinutes}}</span></strong><br><span id="day">{{beginDay}}</span>-<span id="month">{{beginMonth}}</span>-<span id="year">{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
 					</li>
 				{{/each}}
 				</ul>
@@ -134,10 +134,10 @@
 			<div id="event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
 			<script id="event-list-template" type="text/x-handlebars-template">
-				<a style="background: #adf4b4" href="#make-new-event-page" onclick="setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Add new event</a>
+				<a style="background: #F7D358" href="#make-new-event-page" onclick="view.setNewEventScreen()" class="eventButtons ui-btn ui-shadow ui-corner-all">Define new event</a>
 
 				{{#each .}}
-					<a onclick='setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
+					<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 				{{/each}}
 									</div>
 			</script>
@@ -248,14 +248,14 @@
 							<input type="number" id="newEventPageCarbs" step="0.1" pattern="[0-9]*" placeholder="Carbohydrates" >
 						</td>
 						<td width="1%">
-							<a onclick='toastMessage("Size of this event in terms of grams of carbs")'
+							<a onclick='view.toastMessage("Size of this event in terms of grams of carbs")'
 							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 						<td width="49%">
 							<input type="number" id="newEventPageAlcoholicUnits" step="0.1" pattern="[0-9]+\.?[0-9]?" placeholder="Alcoholic units">
 						</td>
 						<td width="1%">
-							<a onclick='toastMessage("Number of alcholic units in this event. One unit corresponds to a standard glass")'
+							<a onclick='view.toastMessage("Number of alcholic units in this event. One unit corresponds to a standard glass")'
 				class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 					<tr>
@@ -270,7 +270,7 @@
 							<input type="number" id="newEventPagePower" step="0.1" pattern="[0-9]*" placeholder="Power">
 						</td>
 						<td width="1%">
-							<a onclick='toastMessage("Calories / kilo gram body weight / hour")'
+							<a onclick='view.toastMessage("Calories / kilo gram body weight / hour")'
 				class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 					<tr>
@@ -381,14 +381,14 @@
 					<li class="ui-li-has-alt">
 					{{#if amount}}
 						{{#if carbs}}
-							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Carbs: {{carbs}} grams</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Carbs: {{carbs}} grams</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 
 						{{else}}
-							<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 						{{/if}}
 					{{else}}
 					
-						<a href="#edit-event-instance-page" onclick='populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='deleteEvent("{{name}}", "{{id}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
+						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
 					
 					{{/if}}
 					</li>
@@ -495,7 +495,7 @@
 					min="1" max="10" value="1" step="1">
 
 			</div>
-			<a id="edit-event-instance-page-save-button" onclick="updateEventInstance()"  id="edit-event-instance-page-save-button"  CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
+			<a id="edit-event-instance-page-save-button" onclick="controller.updateEventInstance()"  id="edit-event-instance-page-save-button"  CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
 		</div>
 	
 		<!-- /content -->
@@ -726,6 +726,7 @@
      </ol>
      
      <ol id="homeScreenTourSecondStop">
+     
       <li data-id="current-activity-event-list" data-text="Next" class="custom">
         <h2>Current activities</h2>
         <p>Once an activity is started it will be listed here at the begin screen.</p>
@@ -733,6 +734,10 @@
       <li data-id="endActivityEventButton" data-text="Next" class="custom">
         <h2>End activity</h2>
         <p>Press this button to end the activity</p>
+      </li>
+      <li data-id="current-food-event-list" data-text="Next" class="custom">
+        <h2>Current food intake</h2>
+        <p>Here the current planned food intake is listed</p>
       </li>
       
      </ol>
@@ -757,15 +762,15 @@
      	 </li>
      	 <li data-id="newEventButton" data-text="Next" class="custom">
        	 <h2>New event button</h2>
-       	 	<p>Press this button to add a new event to the list</p>
+       	 	<p>Press this button to define a new event</p>
      	 </li>
      	 
      </ol>
      
      <ol id="newEventScreenTour">
       <li data-class="radioChoiceNewEvent" data-text="Next" class="custom">
-        <h2>Event type</h2>
-        <p>Specify event type here</p>
+        <h2>Define a new event</h2>
+        <p>Once you define a new event , specify event type here</p>
       </li>
       <li data-id="newEventName" data-text="Next" class="custom">
         <h2>Event name</h2>
@@ -789,7 +794,7 @@
      <ol id="startEventInstancePageTour">
       <li data-id="mydate" data-text="Next" class="custom">
         <h2>Date</h2>
-        <p>Once you start an event, here you can specify the date the event started</p>
+        <p>Once you start an event, here you can specify the start date</p>
       </li>
       <li data-id="mytime" data-text="Next" class="custom">
         <h2>Time</h2>
@@ -849,24 +854,23 @@
 	</div>
 	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 	
-	<script src="js/handlebars-v1.3.0.js"></script>
-	<script src="js/controller/synchronise.js"></script>
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.mobile-1.4.2.js"></script>
-	<script type="text/javascript" src="js/modernizr.mq.js"></script>
-	<script type="text/javascript" src="js/jquery.joyride-2.1.js"></script>
-	<script src="js/model/restclient.js"></script>
-	<script src="js/date.js"></script>
+	<script src="js/libraries/handlebars-v1.3.0.js"></script>
+	<script src="js/controllerFunctions/synchronise.js"></script>
+	<script src="js/libraries/jquery.js"></script>
+	<script src="js/libraries/jquery.mobile-1.4.2.js"></script>
+	<script type="text/javascript" src="js/libraries/modernizr.mq.js"></script>
+	<script type="text/javascript" src="js/libraries/jquery.joyride-2.1.js"></script>
+	<script src="js/dbAndRestclientObjects/restclient.js"></script>
+	<script src="js/libraries/date.js"></script>
 
-	<script src="js/model/dbHandler.js"></script>
-	<script src="js/controller/guideTourFunctions.js"></script>
-	<script src="js/controller/pageFunctions.js"></script>
-	<script src="js/controller/controllerFunctions.js"></script>
-	<script src="js/controller/callbackControllerFunctions.js"></script>
-	<script src="js/controller/onClickFunctions.js"></script>
+	<script src="js/dbAndRestclientObjects/dbHandler.js"></script>
+	<script src="js/controllerFunctions/guideTourFunctions.js"></script>
+	<script src="js/controllerFunctions/pageFunctions.js"></script>
+	<script src="js/controllerFunctions/controllerFunctions.js"></script>
+	<script src="js/controllerFunctions/onClickFunctions.js"></script>
 
-	<script src="js/view/viewFunctions.js"></script>
-	<script src="js/view/callbackViewFunctions.js"></script>
+	<script src="js/viewFunctions/viewFunctions.js"></script>
+	<script src="js/viewFunctions/callbackViewFunctions.js"></script>
 	
 	<script src="js/index.js"></script>
 
