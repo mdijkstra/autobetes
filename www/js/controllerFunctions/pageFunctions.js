@@ -80,7 +80,9 @@ $(document).on('pageshow', '#home-page', function() {
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 		
-		
+		// refresh sensor-plot
+		$('#sensor-plot').attr("src", 'http://195.169.22.237/scripts/plot-sensor-3-6-12-24h/run?molgenis-token=permanent' );
+		$('#sensor-plot').css('width', window.innerWidth);
 	}
 });
 
