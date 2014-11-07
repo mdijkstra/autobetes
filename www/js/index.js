@@ -12,6 +12,7 @@ var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
 var SERVER_LOGOUT_URL = '/api/v1/logout';
+var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
@@ -92,6 +93,7 @@ $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
+$("input[type='radio']").checkboxradio();
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){

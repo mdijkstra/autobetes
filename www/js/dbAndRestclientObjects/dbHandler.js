@@ -8,8 +8,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	//add functions to object
 	this.addEvent = addEvent;
-	this.listEventsOfEventType = listEventsOfEventType;
-	this.showEvents = showEvents;
+	this.getEvents = getEvents;
 	this.updateEvent = updateEvent;
 	this.listHistoryEvents = listHistoryEvents;
 	this.showCurrentActivityEventInstances = showCurrentActivityEventInstances;
@@ -77,13 +76,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
+	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;'
+	//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
+		var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
 	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
-	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? AND deleted=0 ORDER BY lower(name) ASC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
 	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
@@ -109,7 +109,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	if (!window.openDatabase) {
 		// not all mobile devices support databases  if it does not, the following alert will display
 		// indicating the device will not be albe to run this application
-		showMessageDialog("", CANNOT_OPEN_DATABASE);
+		view.showMessageDialog("", CANNOT_OPEN_DATABASE);
 		return;
 	}
 
@@ -123,16 +123,17 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * Executes given query with arguments. Result will be processed in the callback function
 	 */
 	function executeQuery(query, argumentsTuple, callBackFunction){
-		
+		//make db transaction
 		db.transaction(function(transaction) {
 			transaction.executeSql(query, argumentsTuple, callBackFunction,  function (transaction, error) {
-				 toastShortMessage(ERROR_TEXT+ error.message);
+				//error callback function
+				//show error message to user
+				 view.toastShortMessage(ERROR_TEXT+ error.message);
+				 //retrieve values necessary for debugging
 					var thecurrenttime = getCurrentTimestamp();
 					var exception = error.message;
 					var queryWithArguments = query+ JSON.stringify(argumentsTuple);
-					console.log(exception)
-					console.log(thecurrenttime)
-					console.log(queryWithArguments);
+					//report error(will be send to server)
 					db.transaction(function(transaction) {
 						transaction.executeSql(ADD_EXCEPTION_RECORD, [thecurrenttime, exception, queryWithArguments], function(){console.log("good")}, function(transaction, error){console.log(error.message)});
 					});
@@ -140,7 +141,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		});
 
 	}
-
+/*
+ * Executes given query with arguments. Same as above but with here errorcallback can be passed along
+ */
 	function executeQueryWithErrorCallback(query, argumentsTuple, successCallback, errorCallback){
 		
 		db.transaction(function(transaction) {
@@ -280,11 +283,20 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	/*
 	 * This method selects all the events stored in the db
 	 */
-	function showEvents(callback) {
+	function getEvents(eventType, callback) {
+		
+		if (eventType === FOOD || eventType === ACTIVITY) {
 
-		executeQuery(SELECT_ALL_EVENTS, [], callback);
+			executeQuery(SELECT_EVENTS_WITH_TYPE, [eventType], callback);
+
+		}
+		else{
+			executeQuery(SELECT_ALL_EVENTS, [], callback);
+		}
+		
 
 	}
+
 	
 	function getParticularEvent(id, callback){
 		executeQuery(SELECT_PARTICULAR_EVENT, [id], callback);
@@ -320,15 +332,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	
 	function getEventWithId(id, callback){
 		executeQuery(SELECT_EVENT_WITH_ID, [id], callback);
-	}
-
-
-	/*
-	 * This method selects all events of a certain eventType
-	 */
-	function listEventsOfEventType(eventType) {
-		executeQuery(SELECT_EVENTS_WITH_TYPE, [eventType], showEventList);
-
 	}
 
 
@@ -370,7 +373,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery(SELECT_PARTICULAR_EVENT_WITH_NAME, [eventName], function(transaction, result){
 			if(result.rows.length > 0){
 				//allready an undeleted event with the same name in the database
-				showMessageDialog("", eventName+ ALLREADY_EXISTS);
+				view.showMessageDialog("", eventName+ ALLREADY_EXISTS);
 			}
 			else{
 				if(eventType === FOOD){
@@ -401,46 +404,46 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 
 	function serverUpdateEvent(entity, callback){
-		executeQueryWithErrorCallback(SERVER_UPDATE_EVENT, [ setNullIfFieldIsEmpty(entity.name), setNullIfFieldIsEmpty(entity.eventType), setNullIfFieldIsEmpty(entity.lastchanged), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.id)], null, callback);
+		executeQueryWithErrorCallback(SERVER_UPDATE_EVENT, [ controller.setNullIfFieldIsEmpty(entity.name), controller.setNullIfFieldIsEmpty(entity.eventType), controller.setNullIfFieldIsEmpty(entity.lastchanged), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.id)], null, callback);
 
 		if(entity.eventType === FOOD){
-			executeQueryWithErrorCallback(UPDATE_FOOD_EVENT, [setNullIfFieldIsEmpty(entity.alcoholicUnits), setNullIfFieldIsEmpty(entity.carbs), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+			executeQueryWithErrorCallback(UPDATE_FOOD_EVENT, [controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs), controller.setNullIfFieldIsEmpty(entity.id)], callback, callback);
 		}
 		else{
-			executeQueryWithErrorCallback(UPDATE_ACTIVITY_EVENT, [setNullIfFieldIsEmpty(entity.power), setNullIfFieldIsEmpty(entity.id)], callback,callback);
+			executeQueryWithErrorCallback(UPDATE_ACTIVITY_EVENT, [controller.setNullIfFieldIsEmpty(entity.power), controller.setNullIfFieldIsEmpty(entity.id)], callback,callback);
 		}	
 	}
 
 	function serverAddEvent(entity,callback){
-		executeQueryWithErrorCallback(SERVER_ADD_EVENT, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.name), setNullIfFieldIsEmpty(entity.eventType), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged)], function(){
+		executeQueryWithErrorCallback(SERVER_ADD_EVENT, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.name), controller.setNullIfFieldIsEmpty(entity.eventType), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.lastchanged)], function(){
 			if(entity.eventType === FOOD){
-				executeQueryWithErrorCallback(ADD_FOOD, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.alcoholicUnits), setNullIfFieldIsEmpty(entity.carbs)],callback,callback);
+				executeQueryWithErrorCallback(ADD_FOOD, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs)],callback,callback);
 			}
 			else{
-				executeQueryWithErrorCallback(ADD_ACTIVITY, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.power)],callback,callback);
+				executeQueryWithErrorCallback(ADD_ACTIVITY, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.power)],callback,callback);
 			}
 		}, callback);
 	}
 	function serverUpdateEventInstance(entity, callback){
-		executeQueryWithErrorCallback(SERVER_UPDATE_INSTANCE, [setNullIfFieldIsEmpty(entity.eventId), setNullIfFieldIsEmpty(entity.beginTime), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged), setNullIfFieldIsEmpty(entity.id)], null, callback);
+		executeQueryWithErrorCallback(SERVER_UPDATE_INSTANCE, [controller.setNullIfFieldIsEmpty(entity.eventId), controller.setNullIfFieldIsEmpty(entity.beginTime), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.lastchanged), controller.setNullIfFieldIsEmpty(entity.id)], null, callback);
 
 		if (entity.intensity) {
 
-			executeQueryWithErrorCallback(UPDATE_ACTIVITY_INSTANCE, [setNullIfFieldIsEmpty(entity.intensity), setNullIfFieldIsEmpty(entity.endTime), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+			executeQueryWithErrorCallback(UPDATE_ACTIVITY_INSTANCE, [controller.setNullIfFieldIsEmpty(entity.intensity), controller.setNullIfFieldIsEmpty(entity.endTime), controller.setNullIfFieldIsEmpty(entity.id)], callback, callback);
 
 		} else {
-			executeQuery(UPDATE_FOOD_INSTANCE, [setNullIfFieldIsEmpty(entity.amount), setNullIfFieldIsEmpty(entity.id)], callback, callback);
+			executeQuery(UPDATE_FOOD_INSTANCE, [controller.setNullIfFieldIsEmpty(entity.amount), controller.setNullIfFieldIsEmpty(entity.id)], callback, callback);
 
 		}
 	}
 
 	function serverAddEventInstance(entity, callback){
-		executeQueryWithErrorCallback(SERVER_ADD_EVENT_INSTANCE, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.eventId), setNullIfFieldIsEmpty(entity.beginTime), setNullIfFieldIsEmpty(entity.deleted), setNullIfFieldIsEmpty(entity.lastchanged)], function(){
+		executeQueryWithErrorCallback(SERVER_ADD_EVENT_INSTANCE, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.eventId), controller.setNullIfFieldIsEmpty(entity.beginTime), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.lastchanged)], function(){
 			if (entity.intensity) {
-				executeQueryWithErrorCallback(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.intensity), setNullIfFieldIsEmpty(entity.endTime)], callback, callback);
+				executeQueryWithErrorCallback(ADD_ACTIVITY_INSTANCE_WITH_ENDTIME, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.intensity), controller.setNullIfFieldIsEmpty(entity.endTime)], callback, callback);
 			}
 			else{
-				executeQueryWithErrorCallback(ADD_FOOD_INSTANCE, [setNullIfFieldIsEmpty(entity.id), setNullIfFieldIsEmpty(entity.amount)],callback, callback);
+				executeQueryWithErrorCallback(ADD_FOOD_INSTANCE, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.amount)],callback, callback);
 			}
 		}, callback);
 	}

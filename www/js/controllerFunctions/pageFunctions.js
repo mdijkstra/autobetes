@@ -11,13 +11,24 @@ $(document).on('pageshow', '#event-list-page', function() {
 	}
 	else{
 		
-		showSelectedEvents();
+		//get tab index
+		var selectedTabIndex = $(document).data('selectedTabIndex');
+		//if nothing is selected take 0 as index
+		var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
+		//get eventType take null if nothing is selected
+		var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+		//unhighlight all buttons
+		$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
+		//highlight the button that is selected
+		$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
+		
+		dbHandler.getEvents(eventType, callbackView.showEventList);
 	}
 });
 
 $(document).on('pageshow', '#login-page', function(){
 
-	df.getUserInfo(function(transaction,result){
+	dbHandler.getUserInfo(function(transaction,result){
 
 
 		if(result.rows.length > 0 && result.rows.item(0).email){
@@ -36,9 +47,11 @@ $(document).on('pageshow', '#login-page', function(){
 });
 
 $(document).on('pageshow', '#settings-page', function(){
-	df.getUserInfo(function(transaction,result){
+	//fill settings page
+	//get user info
+	dbHandler.getUserInfo(function(transaction,result){
 		if(result.rows.length > 0 && result.rows.item(0).email){
-
+			//fill page
 			$('#settingsPageAccount').html(result.rows.item(0).email);
 			$('#pumpSerial').val(result.rows.item(0).pumpId);
 		}
@@ -46,6 +59,13 @@ $(document).on('pageshow', '#settings-page', function(){
 
 		}
 	});
+	/*
+	restClient._get(SERVER_URL+SERVER_USER_INFO_URL, "", function(data){
+		console.log(JSON.stringify(data));
+	});
+	 $("#settings-page-recordingEventsButton").prop("disabled",true);
+	 */
+	 
 });
 
 $(document).on('pageshow', '#home-page', function() {
@@ -56,15 +76,24 @@ $(document).on('pageshow', '#home-page', function() {
 		homeScreenTour();
 	}
 	else{
-		
-		df.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, showCurrentEventInstanceFood);
-		df.showCurrentActivityEventInstances(showCurrentEventInstanceActivity);
+		//get current food and activity instances and present on screen
+		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
+		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 		
 		
 	}
 });
 
 $(document).on('pageshow', '#history-event-instance-page', function() {
+	//highlight right tab
+	//get tab index
+	var selectedTabIndex = $(document).data('selectedTabIndex2');
+	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
+	//get event type
+	var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
+	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
+	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
+
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
 		
@@ -72,8 +101,8 @@ $(document).on('pageshow', '#history-event-instance-page', function() {
 	}
 	else{
 		
-		selectHistoryTabMenu();
-		//db.showCurrentActivityEventInstances();
+		dbHandler.listHistoryEvents(eventType, callbackView.showEventInstanceList);
+
 	}
 });
 
@@ -118,11 +147,10 @@ $(document).on('pagehide', '#event-list-page', function(){
 
 $(document).on('pageshow', '#report-page', function(){
 	
-		$.get( SERVER_URL+"/plugin/home/view-report?molgenis-token="+token, function( data ) {
-			$('#reportDiv').html( data );
-		});
+	$.get( SERVER_URL+"?molgenis-token="+token, function( data ) {
+		$('#reportDiv').html( data );
+	});
 });
-
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){
 		startEventInstancePageTour();
@@ -137,7 +165,3 @@ $(document).on('pageshow', '#edit-event-instance-page', function(){
 	
 });
 
-
-$(document).on('pageshow', '#pumpSettings', function(){
-	
-});

@@ -147,7 +147,7 @@
 	}
 
 
-	molgenis.RestClient.prototype.login = function(url, username, password, callback, callbackLoginError) {
+	molgenis.RestClient.prototype.login = function(url, username, password, callback, callBackLoginError) {
 		$.ajax({
 			type: 'POST',
 			dataType : 'json',
