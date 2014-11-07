@@ -59,6 +59,13 @@ $(document).on('pageshow', '#settings-page', function(){
 
 		}
 	});
+	/*
+	restClient._get(SERVER_URL+SERVER_USER_INFO_URL, "", function(data){
+		console.log(JSON.stringify(data));
+	});
+	 $("#settings-page-recordingEventsButton").prop("disabled",true);
+	 */
+	 
 });
 
 $(document).on('pageshow', '#home-page', function() {

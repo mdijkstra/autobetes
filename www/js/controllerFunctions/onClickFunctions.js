@@ -76,6 +76,12 @@ $('#addOrEditEvent').click(function() {
 	}
 
 	else{
+		//show div
+		$('#recentlyAddedEvent').show();
+		//tag certain event to be presented on top. The method showlist handles
+		//this privilege
+		$('#eventnameOfAddedOrEditedEvent').text(eventName);
+		
 		//go back to event list page
 		$.mobile.changePage('#'+EVENTLISTPAGE);
 		//wait till window is loaded
@@ -95,11 +101,6 @@ $('#addOrEditEvent').click(function() {
 		});
 	}
 
-	//show div
-	$('#recentlyAddedEvent').show();
-	//tag certain event to be presented on top. The method showlist handles
-	//this privilege
-	$('#eventnameOfAddedOrEditedEvent').text(eventName);
 
 });
 

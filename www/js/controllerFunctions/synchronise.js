@@ -41,7 +41,6 @@ var synchronise = function(){
 				dbHandler.updateLastUpdateTimeStamp(timeStampThisSync);
 				//now syncing is done it is time to send unsent exception records to server
 				dbHandler.getUnsentExceptionRecords(function(transaction,result){
-					
 					for (var i = 0; i < result.rows.length; i++) {
 						var row = result.rows.item(i);
 						var record = {exception : row.exception, clientDateAndTime: row.clientDataAndTime, query: row.query};
@@ -52,6 +51,7 @@ var synchronise = function(){
 						}, null);
 					}
 				});
+				
 			}
 
 			var errorHandler = function(request, textStatus, error){

@@ -24,7 +24,7 @@ function callbackView() {
 			for (var i = 0; i < result.rows.length; i++) {
 				var row = result.rows.item(i);
 
-
+				
 				if($('#eventnameOfAddedOrEditedEvent').text() === row.name ){
 					//new event has been made, name corresponds with name of this row item.
 					//the item need to be presented as a special button on top of the list, not in the list itself
@@ -119,28 +119,41 @@ function callbackView() {
 	 * This method present list of current food events retrieved from db at the home screen
 	 */
 	function showCurrentEventInstanceFood(inputType, result) {
-
+		var timeFirstEventExpires = null;
 		var foodInstances = [];
 		var total = 0;
+		var currentTime = new Date().getTime();
 		if(0< result.rows.length){
 
 			for (var i = 0; i < result.rows.length; i++) {
 				//progress results
 				var row = result.rows.item(i);
-
-
+				
+				var timeThisEventExpires = (row.beginTime-currentTime)+ PLUSMINRANGEFOODEVENT;
+				if(timeFirstEventExpires !==null){
+					if(timeFirstEventExpires > timeThisEventExpires){
+						timeFirstEventExpires = timeThisEventExpires;
+					}
+				}
+				else{
+					timeFirstEventExpires = timeThisEventExpires;
+				}
 				if(row.carbs){
-					foodInstances.push({name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+					foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
 					total = total+(row.carbs*row.amount);
 				}
 				else{
-					foodInstances.push({name:row.name, amount:row.amount});
+					foodInstances.push({id: row.id, name:row.name, amount:row.amount});
 				}
 
 			}
 		}
 		//check if there are events, if not hide current-food-event-list
 		if(foodInstances.length > 0){	
+			setTimeout(function(){
+				dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
+			}, timeFirstEventExpires)
+			
 			$('#current-food-event-list').show();
 			foodInstances.unshift({total:total});
 			//get template

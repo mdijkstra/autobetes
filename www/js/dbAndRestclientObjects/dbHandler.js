@@ -76,13 +76,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ALL_EVENTS = 'SELECT * FROM Event WHERE deleted=0 ORDER BY lower(name) ASC;'
+	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;'
+	//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
+		var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
 	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
-	var SELECT_EVENTS_WITH_TYPE = 'SELECT * FROM Event where eventType = ? AND deleted=0 ORDER BY lower(name) ASC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
 	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';

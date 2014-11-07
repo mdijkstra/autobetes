@@ -332,37 +332,37 @@ function setIntensityTextInScreen(selector, value) {
  */
 function setNewEventScreen(){
 	$('#deleteEvent').hide()//ensure delete button is hidden
-	$('#addOrEditEvent').text('Add');
-	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-	$('#headerName').text('New Event');
 
-	/*
-        	Autoselect 'Food' or 'Activity' when adding new event, based on selection 
-        	that was active in 'Event view' (blue bars in top of screen)
-	 */
 	var selectedTabIndex = $(document).data('selectedTabIndex');
 	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-
 	if(index === 0 || index === 1){
 		//Set screen according to Food event type
+		$('#newEventPageActivityInput').hide();
+		$('#newEventPageFoodInput').show();
 		$("#radio-choice-h-2a").prop("checked", true);
 		$("#radio-choice-h-2b").prop("checked",false);
 		$("input[type='radio']").checkboxradio("refresh");
 		
-		$('#newEventPageActivityInput').hide();
-		$('#newEventPageFoodInput').show();
+		
 
 
 	}
 	else{
 		//Set screen according to Activity event type
+		$('#newEventPageFoodInput').hide();
+		$('#newEventPageActivityInput').show();
 		$("#radio-choice-h-2b").prop("checked", true);
 		$("#radio-choice-h-2a").prop("checked", false);
 		$("input[type='radio']").checkboxradio("refresh");
 
-		$('#newEventPageFoodInput').hide();
-		$('#newEventPageActivityInput').show();
+		
 	}
+	
+	$('#addOrEditEvent').text('Add');
+	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
+	$('#headerName').text('New Event');
+	$('#newEventName').val($('#filterControlgroup-input').val());
+
 }
 
 }
