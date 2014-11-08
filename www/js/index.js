@@ -6,8 +6,9 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var SERVER_URL = 'http://195.169.22.242';
-//var SERVER_URL = 'http://localhost:8080'
+//var SERVER_URL = 'http://195.169.22.242';
+var SERVER_URL = 'http://localhost:8080';
+var TEST_SERVER_URL = 'http://localhost:8080'; // http://195.169.22.237
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
