@@ -81,7 +81,9 @@ $(document).on('pageshow', '#home-page', function() {
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 		
 		// refresh sensor-plot
-		$('#sensor-plot').attr("src", 'http://195.169.22.237/scripts/plot-sensor-3-6-12-24h/run?molgenis-token=permanent' );
+		// TODO: Fix token!
+		gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+		$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
 		$('#sensor-plot').css('width', window.innerWidth);
 	}
 });
