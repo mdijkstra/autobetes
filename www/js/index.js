@@ -119,18 +119,6 @@ $(document).on('blur', 'input, textarea', function() {
 });
 
 
-onDeviceReady();
-document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
-/*
-//if it is a mobile device, than it has to wait till phonegap is loaded
-if(MOBILE_DEVICE === true){
-	document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
-}
-else{
-	//no waiting for phonegap needed
-	onDeviceReady();
-}
-*/
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -143,13 +131,13 @@ function checkMobileBrowser() {
 
 // TODO: Fix token!
 function updateSensorPlot() {
-	view.toastShortMessage("updateSensorPlot()");
+	
 	$.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
 	//	alert("respons: "+ sensor_last_timestamp_gmt0_current);
 		if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
+			view.toastShortMessage("new plotje");
 			sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
 			gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-			view.toastShortMessage("new plotje");
 			$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
 			$('#sensor-plot').css('width', window.innerWidth);
 		}
@@ -161,10 +149,11 @@ function updateSensorPlot() {
 /*
  * This method performs required functions once device is ready with loading all scripts
  */
-view.toastShortMessage("voor on device reaady");
 function onDeviceReady() {
+
 	MOBILE_DEVICE = checkMobileBrowser();
-	view.toastShortMessage("onDeviceReady()");
+
+
 	controller.checkIfUserExists();
 	
 	//add event listeners
@@ -198,3 +187,15 @@ function onDeviceReady() {
 
 }
 
+//onDeviceReady();
+document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
+/*
+//if it is a mobile device, than it has to wait till phonegap is loaded
+if(MOBILE_DEVICE === true){
+	document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
+}
+else{
+	//no waiting for phonegap needed
+	onDeviceReady();
+}
+*/

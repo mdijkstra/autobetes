@@ -41,6 +41,10 @@
                             "count": 1
                         },
                         {
+                            "xml": "<preference name=\"StatusBarBackgroundColor\" value=\"#000000\" />",
+                            "count": 1
+                        },
+                        {
                             "xml": "<preference name=\"StatusBarStyle\" value=\"lightcontent\" />",
                             "count": 1
                         }
@@ -51,13 +55,13 @@
     },
     "installed_plugins": {
         "nl.x-services.plugins.toast": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
         },
         "org.apache.cordova.network-information": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
         },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
         }
     },
     "dependent_plugins": {}
