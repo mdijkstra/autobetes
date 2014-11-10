@@ -79,12 +79,6 @@ $(document).on('pageshow', '#home-page', function() {
 		//get current food and activity instances and present on screen
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
-		
-		// refresh sensor-plot
-		// TODO: Fix token!
-		gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-		$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
-		$('#sensor-plot').css('width', window.innerWidth);
 	}
 });
 
