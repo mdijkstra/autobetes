@@ -79,8 +79,6 @@ $(document).on('pageshow', '#home-page', function() {
 		//get current food and activity instances and present on screen
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
-		
-		
 	}
 });
 
@@ -147,7 +145,7 @@ $(document).on('pagehide', '#event-list-page', function(){
 
 $(document).on('pageshow', '#report-page', function(){
 	
-	$.get( SERVER_URL+"?molgenis-token="+token, function( data ) {
+	$.get( SERVER_URL+"/plugin/home/view-report?molgenis-token="+token, function( data ) {
 		$('#reportDiv').html( data );
 	});
 });

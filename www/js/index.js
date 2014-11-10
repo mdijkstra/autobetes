@@ -6,8 +6,18 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var SERVER_URL = 'http://195.169.22.242';
-//var SERVER_URL = 'http://localhost:8080'
+var DEBUG = false;
+var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
+var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
+
+// auto update sensor plot
+var sensor_last_timestamp_gmt0 = 0
+var SENSOR_LAST_TIMESTAMP_GMT0_URL = '/plugin/anonymous/sensorLastTimeStamp';
+
+// color stuff
+var COLOR_EDIT_MODE = "#8df3e6";
+// TODO group colors here so we can easily change?
+
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
@@ -47,7 +57,6 @@ var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
-var COLOR_EDIT_MODE = "#8df3e6";
 var ALLREADY_EXISTS = " allready exists"
 var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
@@ -109,7 +118,10 @@ $(document).on('blur', 'input, textarea', function() {
 	}, 0);
 });
 
-MOBILE_DEVICE = checkMobileBrowser();
+
+onDeviceReady();
+document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
+/*
 //if it is a mobile device, than it has to wait till phonegap is loaded
 if(MOBILE_DEVICE === true){
 	document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
@@ -118,7 +130,7 @@ else{
 	//no waiting for phonegap needed
 	onDeviceReady();
 }
-
+*/
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -129,16 +141,31 @@ function checkMobileBrowser() {
 	return check; 
 }
 
+// TODO: Fix token!
+function updateSensorPlot() {
+	view.toastShortMessage("updateSensorPlot()");
+	$.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
+	//	alert("respons: "+ sensor_last_timestamp_gmt0_current);
+		if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
+			sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
+			gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+			view.toastShortMessage("new plotje");
+			$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
+			$('#sensor-plot').css('width', window.innerWidth);
+		}
+		
+		// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
+	});		
+}
+
 /*
  * This method performs required functions once device is ready with loading all scripts
  */
+view.toastShortMessage("voor on device reaady");
 function onDeviceReady() {
-	
-
+	MOBILE_DEVICE = checkMobileBrowser();
+	view.toastShortMessage("onDeviceReady()");
 	controller.checkIfUserExists();
-	
-	
-	synchronise();
 	
 	//add event listeners
 	document.addEventListener("offline", function(e) {
@@ -160,6 +187,14 @@ function onDeviceReady() {
 	document.addEventListener("resume", function(e){
 		synchronise();
 	}, false);
+
+	synchronise();
+		
+	// auto refresh sensor-plot	
+	updateSensorPlot();
+	setInterval(function() {
+		updateSensorPlot()
+	}, 10000); // ask server every 10s if new parsed data; if so, show new graph
 
 }
 
