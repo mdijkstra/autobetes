@@ -47,6 +47,10 @@
                         {
                             "xml": "<preference name=\"StatusBarStyle\" value=\"lightcontent\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Console\"><param name=\"ios-package\" value=\"CDVLogger\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -61,6 +65,9 @@
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         },
         "org.apache.cordova.statusbar": {
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
+        },
+        "org.apache.cordova.console": {
             "PACKAGE_NAME": "com.coolappz.Autobetes"
         }
     },

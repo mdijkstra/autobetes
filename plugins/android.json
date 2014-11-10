@@ -44,6 +44,9 @@
         },
         "org.apache.cordova.statusbar": {
             "PACKAGE_NAME": "com.coolappz.Autobetes"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "com.coolappz.Autobetes"
         }
     },
     "dependent_plugins": {}
