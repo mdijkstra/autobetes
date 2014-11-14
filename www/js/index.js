@@ -134,6 +134,7 @@ function updateSensorPlot() {
 	
 	$.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
 	//	alert("respons: "+ sensor_last_timestamp_gmt0_current);
+	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
 		if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
 			view.toastShortMessage("new plotje");
 			sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
