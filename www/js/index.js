@@ -131,20 +131,23 @@ function checkMobileBrowser() {
 
 // TODO: Fix token!
 function updateSensorPlot() {
-	
-	$.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
-	//	alert("respons: "+ sensor_last_timestamp_gmt0_current);
-	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
-		if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
-			view.toastShortMessage("new plotje");
-			sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
-			gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-			$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
-			$('#sensor-plot').css('width', window.innerWidth);
-		}
-		
-		// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
-	});		
+	view.toastShortMessage("Fetch new plot");
+	console.log('>> Fetch new plot');
+	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+	$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
+	$('#sensor-plot').css('width', .95 * window.innerWidth);
+
+	// $.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
+	// 	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
+	// 	if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
+	// 		view.toastShortMessage("new plotje");
+	// 		sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
+	// 		gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+	// 		$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
+	// 		$('#sensor-plot').css('width', window.innerWidth);
+	// 	}
+	// 	// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
+	// });	
 }
 
 /*
@@ -153,7 +156,6 @@ function updateSensorPlot() {
 function onDeviceReady() {
 
 	MOBILE_DEVICE = checkMobileBrowser();
-
 
 	controller.checkIfUserExists();
 	
@@ -184,12 +186,17 @@ function onDeviceReady() {
 	updateSensorPlot();
 	setInterval(function() {
 		updateSensorPlot()
-	}, 10000); // ask server every 10s if new parsed data; if so, show new graph
+	}, 10000); // ask server every 10s for new sensor plot
 
 }
 
-//onDeviceReady();
-document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
+if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+    document.addEventListener("deviceready", onDeviceReady, false);
+} else {
+    onDeviceReady();
+}
+
+// document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
 /*
 //if it is a mobile device, than it has to wait till phonegap is loaded
 if(MOBILE_DEVICE === true){
