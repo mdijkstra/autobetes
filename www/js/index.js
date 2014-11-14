@@ -131,8 +131,6 @@ function checkMobileBrowser() {
 
 // TODO: Fix token!
 function updateSensorPlot() {
-	view.toastShortMessage("Fetch new plot");
-	console.log('>> Fetch new plot');
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
 	$('#sensor-plot').css('width', .95 * window.innerWidth);
