@@ -1,3 +1,29 @@
+/* change font size header */
+#home-page .ui-header h1 {
+  font-size: 1.3em;   
+}
+
+/* background */
+#background{ 
+	position: fixed; 
+	top: 0; 
+	left: 0; 
+	width: 100% !important; 
+	height: 100% !important; 
+	background: url(../img/logo.png) no-repeat center 85% fixed !important; 
+	-webkit-background-size: cover; 
+	-moz-background-size: cover; 
+	-o-background-size: cover; 
+	background-size: cover; 
+	z-index: -1; 
+	opacity : 0.4;
+} 
+.ui-page{ 
+	background:none; 
+}
+
+
+
 .biggerButton { padding: 4px !important;}
 
 /* Left transition */

@@ -26,6 +26,7 @@
 		</div>
 
 		<div role="main" id="mainScreen" class="ui-content">
+			<div id="background"></div>
 			<table width="100%">
 				<tr>
 					<td width="50%"><a id="homeStartButton"
@@ -57,13 +58,10 @@
 
 			<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 			<br>
-			<script id="current-food-event-list-template"
-				type="text/x-handlebars-template">
-				<H3>Current food intake:</H3>
+			<script id="current-food-event-list-template" type="text/x-handlebars-template">
 				<br>
 				<ul class="ui-listview" data-role="listview" data-theme="a">
 				{{#each .}}
-					
 					{{#if amount}}
 						<li><a class="ui-btn" style="height:8px" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
 							{{#if carbs}}
@@ -74,7 +72,7 @@
 						</a></li>
 					{{else}}
 						{{#if total}}
-							<b style="font-size: 9pt;">Total: {{total}} carbohydrates</b>
+							Total: <B>{{total}} gram</B> carbs
 						{{/if}}
 					{{/if}}
 					
