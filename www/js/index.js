@@ -15,7 +15,7 @@ var sensor_last_timestamp_gmt0 = 0
 var SENSOR_LAST_TIMESTAMP_GMT0_URL = '/plugin/anonymous/sensorLastTimeStamp';
 
 // color stuff
-var COLOR_EDIT_MODE = "#8df3e6";
+var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
 // TODO group colors here so we can easily change?
 
 var SERVER_EVENT_URL = '/api/v1/event';
@@ -133,7 +133,7 @@ function checkMobileBrowser() {
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
-	$('#sensor-plot').css('width', .95 * window.innerWidth);
+	$('#sensor-plot').css('width', .90 * window.innerWidth);
 
 	// $.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
 	// 	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
