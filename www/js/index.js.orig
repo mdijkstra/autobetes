@@ -189,6 +189,20 @@ function checkMobileBrowser() {
 
 // TODO: Fix token!
 function updateSensorPlot() {
+<<<<<<< HEAD
+	
+	$.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
+	//	alert("respons: "+ sensor_last_timestamp_gmt0_current);
+		if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
+			view.toastShortMessage("new plotje");
+			sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
+			gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+			$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
+			$('#sensor-plot').css('width', window.innerWidth);
+		}
+		
+	});		
+=======
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
 	$('#sensor-plot').css('width', .90 * window.innerWidth);
@@ -204,6 +218,7 @@ function updateSensorPlot() {
 	// 	}
 	// 	// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
 	// });	
+>>>>>>> ba60b584a4d0c9b413531a41fce411c2dfe2c143
 }
 
 /*
