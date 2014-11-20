@@ -103,6 +103,64 @@ $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 $("input[type='radio']").checkboxradio();
+
+
+	
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $(function() {
+    	
+   	 var sugList = $("#suggestions");
+
+   	    $("#newEventName").on("input", function(e) {
+   	        var text = $(this).val();
+   	        if(text.length < 1) {
+   	            sugList.html("");
+   	            sugList.listview("refresh");
+   	        } else {
+   	        	dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
+   	        		sugList.html("");
+   	        	var str = "";
+   	        	console.log(text);
+   	        	for (var i = 0; i < result.rows.length; i++) {
+   					var row = result.rows.item(i);
+   					
+   					if(row.name.toUpperCase().indexOf(text.toUpperCase()) > -1){
+   					str += "<li>"+row.name+"</li>";
+   					}
+   	        	}
+   	                
+   	                sugList.html(str);
+   	                sugList.listview("refresh");
+   	               
+   	           // },"json");
+   	        
+   	          });
+   	        }
+   	 });
+});
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
@@ -142,7 +200,6 @@ function updateSensorPlot() {
 			$('#sensor-plot').css('width', window.innerWidth);
 		}
 		
-		// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
 	});		
 }
 

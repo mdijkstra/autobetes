@@ -33,7 +33,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.getUnsentExceptionRecords = getUnsentExceptionRecords;
 	this.setClientExceptionRecordAsBeenSent =setClientExceptionRecordAsBeenSent;
 	this.getCurrentFoodEventInstances = getCurrentFoodEventInstances;
-
+	this.getEventsWithNameRegexpInput = getEventsWithNameRegexpInput;
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
 	//create statements
@@ -70,6 +70,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?'
 
 	//select statements
+	var SELECT_EVENTS_WITH_NAME_REGEXP = 'SELECT * FROM Event WHERE name regexp(?))'	;
+	
 	var GET_UNSENT_EXCEPTION_RECORDS = "SELECT * FROM ClientExceptionLog where isSent = 0";
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
 	var SELECT_CURRENT_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.id, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on a.id = e.id WHERE e.deleted = 0 AND a.endTime IS NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
@@ -78,7 +80,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0 AND (ev.eventType = "Food" OR a.endTime IS NOT NULL) AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;'
 	//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
-		var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
+	var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
 	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
@@ -116,6 +118,32 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	// open db, create if not exists
 	
 	var db = openDatabase(shortName, version, displayName, maxSize);
+	
+	//(thanks to Mirnal Kant, SQLManager)
+	//Version 2 -- Prevent Firefox crashing 
+//	          -- Suspect a problem with continual creation of Regex objects
+/*
+	var g_RegExpString = null;
+	var g_RegExp = null;
+
+	//functions to be created for the db
+	var smDbFunctions = { 
+	  // (0) = Regex Expression
+	  // (1) = Column value to test
+	    regexp: {
+	        onFunctionCall: function(val) {
+	            if (g_RegExp == null || val.getString(0) != g_RegExpString) 
+	            {
+	                g_RegExpString = val.getString(0);
+	                g_RegExp = new RegExp(g_RegExpString);
+	            }
+	            if (val.getString(1).match(g_RegExp)) return 1;
+	            else return 0;
+	        }
+	    }
+	};
+	Database.createFunction("REGEXP", 2, smDbFunctions.regexp);
+	*/
 	//resetDB();
 	createTablesIfNotExists();
 	
@@ -295,6 +323,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		}
 		
 
+	}
+	function getEventsWithNameRegexpInput(input, callback){
+		executeQuery(SELECT_ALL_EVENTS, [], callback);
 	}
 
 	
