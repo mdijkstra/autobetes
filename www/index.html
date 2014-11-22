@@ -15,12 +15,11 @@
 </head>
 <body>
 
-	<input id="userId" type="hidden" value="1" />
 
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
-			<a class="speedTap" onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
+			<a  onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
 			<h1>Autobetes</h1>
 			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png"></a>
 		</div>
@@ -247,6 +246,7 @@
 
 			<input id="newEventName" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Event name">
+				<ul id="suggestions" data-role="listview" data-inset="true"></ul>
 			<div id="newEventPageFoodInput" style="display: none">
 				<table width="100%">
 					<tr>
@@ -281,14 +281,7 @@
 					<tr>
 				</table>
 			</div>
-			<a id="addOrEditEvent"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
-
-			<a href="#deleteEventDialog" id="deleteEvent" data-rel="dialog"
-				data-transition="slidedown"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
-				style="display: none">Delete</a>
-
+			
 			<p id="cid" style="display: none"></p>
 
 
@@ -296,6 +289,14 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<a id="addOrEditEvent"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
+
+			<a href="#deleteEventDialog" id="deleteEvent" data-rel="dialog"
+				data-transition="slidedown"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
+				style="display: none">Delete</a>
+			
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page"
