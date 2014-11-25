@@ -122,6 +122,7 @@ function callbackView() {
 		var timeFirstEventExpires = null;
 		var foodInstances = [];
 		var total = 0;
+		var unknownContent = false;
 		var currentTime = new Date().getTime();
 		if(0< result.rows.length){
 
@@ -143,7 +144,8 @@ function callbackView() {
 					total = total+(row.carbs*row.amount);
 				}
 				else{
-					foodInstances.push({id: row.id, name:row.name, amount:row.amount});
+					unknownContent = true;
+					foodInstances.push({id: row.id, name:row.name, amount:row.amount, carbs:("?")});
 				}
 
 			}
@@ -155,7 +157,14 @@ function callbackView() {
 			}, timeFirstEventExpires)
 			
 			$('#current-food-event-list').show();
-			foodInstances.unshift({total:total});
+			if(unknownContent){
+				//meal consist of a component with unknown amount of carbs
+				//this indicates that actual total is possibly higher than given
+				foodInstances.unshift({total:("at least "+total)});
+			}
+			else{
+				foodInstances.unshift({total:total});
+			}
 			//get template
 			var source = $("#current-food-event-list-template").html();
 			//compile to hanlebars template

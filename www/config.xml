@@ -11,7 +11,7 @@
         <param name="wp-package" value="Notification"/>
     </feature>
     
-	<gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
+	
 	<preference name="StatusBarBackgroundColor" value="#000000" />
 	<preference name="StatusBarStyle" value="blacktranslucent" />
     <preference name="StatusBarOverlaysWebView" value="false" />

@@ -1,3 +1,8 @@
+$('#connectToMoves').click(function(){
+	window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&redirect_uri=autobetesapp://&scope=activity', '_system' ,'location=no');
+
+});
+
 
 $('[name=event-list-navbar-buttons]').click(function() {
 	//get event type that user clicked

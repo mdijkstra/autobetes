@@ -187,11 +187,17 @@ function checkMobileBrowser() {
 	return check; 
 }
 
+function handleOpenURL(url) {
+	  setTimeout(function() {
+	    alert("received url: " + url);
+	  }, 0);
+}
+
 // TODO: Fix token!
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
-	$('#sensor-plot').css('width', .90 * window.innerWidth);
+	//$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
+	//$('#sensor-plot').css('width', .90 * window.innerWidth);
 
 	// $.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
 	// 	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
