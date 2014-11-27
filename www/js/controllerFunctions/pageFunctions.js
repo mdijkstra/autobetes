@@ -143,11 +143,71 @@ $(document).on('pagehide', '#event-list-page', function(){
 	}
 });
 
+// TODO FIX token
 $(document).on('pageshow', '#report-page', function(){
 	
-	$.get( SERVER_URL+"/plugin/home/view-report?molgenis-token="+token, function( data ) {
-		$('#reportDiv').html( data );
-	});
+//	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+	// $('#sensor-plot').attr("src", TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent' );
+	// $('#sensor-plot').css('width', .90 * window.innerWidth);
+
+	// $.ajax({
+	// 	url: TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent',
+	// 	type: "json",
+	// 	success: function(data, textStatus, response) {
+	// 		console.log( data );
+	// 		datax = data;
+	// 		var rpi = data[0].RPiLastSeen;
+	// 		var sensor = data[0].lastSensorRecordSeen;
+	// 		$('#raspberry-last-seen').html(rpi + ' min.');
+	// 		view.toastShortMessage("Updated connnection stats!");
+	// 	},
+	// 	error: function(request, textStatus, error) {
+	// 		console.log("ERROR:" + error);
+	//
+	// 	}
+	// });
+
+$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function(data) {
+	var now = new Date().getTime() / 1000; // seconds
+	var rpi = Math.round((now - data.RPiLastSeen) / 60);
+	var sensor = Math.round((now - data.lastSensorRecordSeen) / 60);
+
+	var date = new Date;
+	$('#connection-stats-update').html(date.getHours() + ':' + date.getMinutes());
+	$('#raspberry-last-seen').html(rpi + ' min.');
+	$('#sensor-last-seen').html(sensor + ' min.');
+	view.toastShortMessage("Updated connnection stats!");
+});
+
+	// $.ajax(
+	// 	{
+	// 		url: TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent',
+	// 		type: 'GET',
+	// 		dataType: "json",
+	// 		success: function(json) {
+	// 			console.log( json );
+	// 			datax = json;
+	// 			var rpi = json.RPiLastSeen;
+	// 			var sensor = json.lastSensorRecordSeen;
+	// 			$('#raspberry-last-seen').html(rpi + ' min.');
+	// 			view.toastShortMessage("Updated connnection stats!");
+	// 		},
+	//
+	// 		error: function(error) {
+	// 			console.log('>>> MD >>> The ajax request failed: ' + error);
+	// 		}
+	// 	}
+	// );
+
+
+	// $.get(TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function( data ) {
+	// 	console.log( data );
+	// 	datax = data;
+	// 	var rpi = data[0].RPiLastSeen;
+	// 	var sensor = data[0].lastSensorRecordSeen;
+	// 	$('#raspberry-last-seen').html(rpi + ' min.');
+	// 	view.toastShortMessage("Updated connnection stats!");
+	// });
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){

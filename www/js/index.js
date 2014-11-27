@@ -14,6 +14,9 @@ var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237
 var sensor_last_timestamp_gmt0 = 0
 var SENSOR_LAST_TIMESTAMP_GMT0_URL = '/plugin/anonymous/sensorLastTimeStamp';
 
+// get connection statistics
+var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
+
 // color stuff
 var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
 // TODO group colors here so we can easily change?
