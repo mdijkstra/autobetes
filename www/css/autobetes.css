@@ -18,6 +18,7 @@
 	z-index: -1; 
 	opacity : 0.4;
 } 
+
 .ui-page{ 
 	background:none; 
 }
@@ -82,27 +83,19 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background-size: 18px 18px;
 }
 
-.ui-icon-autobetes-settings {
+/*.ui-icon-autobetes-settings {
     background: url("glyphicons/png/glyphicons_439_wrench.png") no-repeat;
     background-position: center center;
 }
-
-.ui-icon-autobetes-history {
-    background: url("glyphicons/png/glyphicons_057_history.png") no-repeat;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-	background-position-x: 11px;
-	background-position-y: 50%;
-    background-size: 18px 18px;
-}
+*/
 
 .ui-icon-autobetes-fork {
     background: url("images/1416417254_fork.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
-	background-position-x: 11px;
+	background-position-x: 18px;
 	background-position-y: 50%;
-    background-size: 18px 18px;
+    background-size: 28px 28px;
 }
 
 
@@ -110,13 +103,34 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background: url("images/1416417029_running_man-512.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
-	background-position-x: 0px;
+	background-position-x: -4px;
 	background-position-y: 50%;
-    background-size: 40px 40px;
+    background-size: 70px 70px;
 }
-.ui-icon-autobetes-history:after,
+
+.ui-icon-autobetes-special {
+    background: url("images/thunderbolt1.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 17px;
+	background-position-y: 50%;
+    background-size: 28px 28px;
+}
+
+.ui-icon-autobetes-history {
+    background: url("glyphicons/png/glyphicons_057_history.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 28px 28px;
+}
+
+
 .ui-icon-autobetes-fork:after,
-.ui-icon-autobetes-run:after
+.ui-icon-autobetes-run:after,
+.ui-icon-autobetes-special:after,
+.ui-icon-autobetes-history:after
 {
 	background-color: transparent /*{global-icon-color}*/;
 }

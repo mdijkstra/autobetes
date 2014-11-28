@@ -143,11 +143,46 @@ $(document).on('pagehide', '#event-list-page', function(){
 	}
 });
 
+function minAgo(now, ts) { // both seconds
+	return Math.round((now - ts) / 60);
+}
+
+// TODO FIX token
 $(document).on('pageshow', '#report-page', function(){
 	
-	$.get( SERVER_URL+"/plugin/home/view-report?molgenis-token="+token, function( data ) {
-		$('#reportDiv').html( data );
+	if (0 === timestamp_last_seen_server) {
+		// we have never had contact with the server before
+		var never = 'never';
+		$('#server-last-seen-span').html(never);
+		$('#raspberry-last-seen-span').html(never);
+		$('#sensor-last-seen-span').html(never);		
+	} else {
+		var now =  new Date().getTime() / 1000; // convert to s
+		$('#server-last-seen-span').html(minAgo(now, timestamp_last_seen_server) + ' min. ago');
+		$('#raspberry-last-seen-span').html(minAgo(now, timestamp_last_seen_raspberry) + ' min. ago');
+		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
+	}
+	
+	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function(data) {
+		var now =  new Date().getTime() / 1000; // convert to s
+		timestamp_last_seen_server = now;
+		timestamp_last_seen_raspberry = data.RPiLastSeen; 
+		timestamp_last_seen_sensor = data.lastSensorRecordSeen;
+
+		var date = new Date;
+		$('#connection-stats-time').html('(' + date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes() + ' h.)');
+
+		var serv_min	= minAgo(now, timestamp_last_seen_server);
+		var rasp_min	= minAgo(now, timestamp_last_seen_raspberry);
+		var sens_min	= minAgo(now, timestamp_last_seen_sensor);
+
+		$('#server-last-seen-span').html(serv_min + ' min. ago');
+		$('#raspberry-last-seen-span').html(rasp_min + ' min. ago');
+		$('#sensor-last-seen-span').html(sens_min + ' min. ago');		
+
+		view.toastMessage('Server ' + serv_min + ' min. ago\nRaspberry ' + rasp_min + ' min. ago\nSensor ' + sens_min + ' min. ago\n');
 	});
+
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){

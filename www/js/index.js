@@ -10,9 +10,11 @@ var DEBUG = false;
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
-// auto update sensor plot
-var sensor_last_timestamp_gmt0 = 0
-var SENSOR_LAST_TIMESTAMP_GMT0_URL = '/plugin/anonymous/sensorLastTimeStamp';
+// get connection statistics
+var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
+var timestamp_last_seen_server		= 0 // ms since 1970 in GMT0; 0 means never seen
+var timestamp_last_seen_raspberry	= 0 // ms since 1970 in GMT0; 0 means never seen
+var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
 
 // color stuff
 var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
@@ -195,21 +197,30 @@ function handleOpenURL(url) {
 
 // TODO: Fix token!
 function updateSensorPlot() {
+	console.log('>> update sensorplot');
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
+<<<<<<< HEAD
 	//$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
 	//$('#sensor-plot').css('width', .90 * window.innerWidth);
+=======
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent';
+	
+    var sensor_plot_preload = new Image(),
+		sensor_plot = $('#sensor-plot');
 
-	// $.get( TEST_SERVER_URL + SENSOR_LAST_TIMESTAMP_GMT0_URL + '?molgenis-token=permanent', function( sensor_last_timestamp_gmt0_current ) {
-	// 	view.toastShortMessage(sensor_last_timestamp_gmt0 +"<"+ sensor_last_timestamp_gmt0_current);
-	// 	if (sensor_last_timestamp_gmt0 < sensor_last_timestamp_gmt0_current) {
-	// 		view.toastShortMessage("new plotje");
-	// 		sensor_last_timestamp_gmt0 = sensor_last_timestamp_gmt0_current
-	// 		gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	// 		$('#sensor-plot').attr("src", TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent' );
-	// 		$('#sensor-plot').css('width', window.innerWidth);
-	// 	}
-	// 	// console.log('>> data = ' + sensor_last_timestamp_gmt0_current);
-	// });	
+    sensor_plot_preload.onload = function() {
+		console.log('>> MD sensor_plot_preload.onload');
+		        // sensor_plot.src = sensor_plot_preload.src;
+		$('#sensor-plot').attr("src", sensor_plot_preload.src);
+		$('#sensor-plot').attr('width', .90 * window.innerWidth);
+		$('#sensor-plot').attr('style', 'visibility: visible;');
+    };
+
+    sensor_plot_preload.src = img_url;
+>>>>>>> cbf3da7b4ff979e9fa0d119e31aac4ec504006a1
+
+	// $('#sensor-plot').css('width', .90 * window.innerWidth);
+	// $('#sensor-plot').attr("src", img_url );
 }
 
 /*
@@ -244,8 +255,8 @@ function onDeviceReady() {
 
 	synchronise();
 		
-	// auto refresh sensor-plot	
-	updateSensorPlot();
+	$('#sensor-plot').attr('style', 'visibility:hidden'); // hide plot first time
+	updateSensorPlot(); 	// and then auto refresh sensor-plot
 	setInterval(function() {
 		updateSensorPlot()
 	}, 10000); // ask server every 10s for new sensor plot

@@ -19,7 +19,7 @@
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
-			<a  onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
+			<a onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
 			<h1>Autobetes</h1>
 			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png"></a>
 		</div>
@@ -28,9 +28,14 @@
 			<div id="background"></div>
 
             <div data-role="controlgroup" data-type="horizontal" align="center">
+<<<<<<< HEAD
+                <a id="homeStartButton" href="#event-list-page" data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">Eat</a>
+                <a href="#move-page" data-role="button" data-theme="a" data-icon="autobetes-run"  data-iconpos="left" class="ios">Move</a>
+=======
                 <a id="homeStartButton" href="#event-list-page" data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">&nbsp;</a>
                 <a href="#" data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
                 <a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a>
+>>>>>>> cbf3da7b4ff979e9fa0d119e31aac4ec504006a1
                     <a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2')"
 					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
@@ -50,8 +55,9 @@
 				{{/each}}
 				</ul>
 			</script>
-
+			
 			<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
+			
 			<br>
 			<script id="current-food-event-list-template" type="text/x-handlebars-template">
 				<br>
@@ -75,6 +81,9 @@
 				{{/each}}
 				</ul>
 			</script>
+			<ul class="ui-listview" data-role="listview" data-theme="a">
+			
+			</ul>
 		</div>
 
 		<!-- /content -->
