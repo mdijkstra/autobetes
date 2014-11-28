@@ -143,71 +143,46 @@ $(document).on('pagehide', '#event-list-page', function(){
 	}
 });
 
+function minAgo(now, ts) { // both seconds
+	return Math.round((now - ts) / 60);
+}
+
 // TODO FIX token
 $(document).on('pageshow', '#report-page', function(){
 	
-//	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	// $('#sensor-plot').attr("src", TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent' );
-	// $('#sensor-plot').css('width', .90 * window.innerWidth);
+	if (0 === timestamp_last_seen_server) {
+		// we have never had contact with the server before
+		var never = 'never';
+		$('#server-last-seen-span').html(never);
+		$('#raspberry-last-seen-span').html(never);
+		$('#sensor-last-seen-span').html(never);		
+	} else {
+		var now =  new Date().getTime() / 1000; // convert to s
+		$('#server-last-seen-span').html(minAgo(now, timestamp_last_seen_server) + ' min. ago');
+		$('#raspberry-last-seen-span').html(minAgo(now, timestamp_last_seen_raspberry) + ' min. ago');
+		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
+	}
+	
+	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function(data) {
+		var now =  new Date().getTime() / 1000; // convert to s
+		timestamp_last_seen_server = now;
+		timestamp_last_seen_raspberry = data.RPiLastSeen; 
+		timestamp_last_seen_sensor = data.lastSensorRecordSeen;
 
-	// $.ajax({
-	// 	url: TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent',
-	// 	type: "json",
-	// 	success: function(data, textStatus, response) {
-	// 		console.log( data );
-	// 		datax = data;
-	// 		var rpi = data[0].RPiLastSeen;
-	// 		var sensor = data[0].lastSensorRecordSeen;
-	// 		$('#raspberry-last-seen').html(rpi + ' min.');
-	// 		view.toastShortMessage("Updated connnection stats!");
-	// 	},
-	// 	error: function(request, textStatus, error) {
-	// 		console.log("ERROR:" + error);
-	//
-	// 	}
-	// });
+		var date = new Date;
+		$('#connection-stats-time').html('(' + date.getHours() + ':' + (date.getMinutes()<10?'0':'') + date.getMinutes() + ' h.)');
 
-$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function(data) {
-	var now = new Date().getTime() / 1000; // seconds
-	var rpi = Math.round((now - data.RPiLastSeen) / 60);
-	var sensor = Math.round((now - data.lastSensorRecordSeen) / 60);
+		var serv_min	= minAgo(now, timestamp_last_seen_server);
+		var rasp_min	= minAgo(now, timestamp_last_seen_raspberry);
+		var sens_min	= minAgo(now, timestamp_last_seen_sensor);
 
-	var date = new Date;
-	$('#connection-stats-update').html(date.getHours() + ':' + date.getMinutes());
-	$('#raspberry-last-seen').html(rpi + ' min.');
-	$('#sensor-last-seen').html(sensor + ' min.');
-	view.toastShortMessage("Updated connnection stats!");
-});
+		$('#server-last-seen-span').html(serv_min + ' min. ago');
+		$('#raspberry-last-seen-span').html(rasp_min + ' min. ago');
+		$('#sensor-last-seen-span').html(sens_min + ' min. ago');		
 
-	// $.ajax(
-	// 	{
-	// 		url: TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent',
-	// 		type: 'GET',
-	// 		dataType: "json",
-	// 		success: function(json) {
-	// 			console.log( json );
-	// 			datax = json;
-	// 			var rpi = json.RPiLastSeen;
-	// 			var sensor = json.lastSensorRecordSeen;
-	// 			$('#raspberry-last-seen').html(rpi + ' min.');
-	// 			view.toastShortMessage("Updated connnection stats!");
-	// 		},
-	//
-	// 		error: function(error) {
-	// 			console.log('>>> MD >>> The ajax request failed: ' + error);
-	// 		}
-	// 	}
-	// );
+		view.toastMessage('Server ' + serv_min + ' min. ago\nRaspberry ' + rasp_min + ' min. ago\nSensor ' + sens_min + ' min. ago\n');
+	});
 
-
-	// $.get(TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function( data ) {
-	// 	console.log( data );
-	// 	datax = data;
-	// 	var rpi = data[0].RPiLastSeen;
-	// 	var sensor = data[0].lastSensorRecordSeen;
-	// 	$('#raspberry-last-seen').html(rpi + ' min.');
-	// 	view.toastShortMessage("Updated connnection stats!");
-	// });
 });
 $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){

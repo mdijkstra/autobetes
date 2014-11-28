@@ -35,8 +35,7 @@
 					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
 			
-			<DIV ID="sensor-smiley-img"></DIV>
-			<IMG ID="sensor-plot" WIDTH="0">
+			<IMG ID="sensor-plot" STYLE='visibility: hidden;'>
 
 			<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 
@@ -598,15 +597,13 @@
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<div id="reportDiv2">
-				<h1>Connections</h1>
-				<h3>Last connection at <SPAN id="connection-stats-update">...</SPAN> h.</h3>
-				<ul>
-					<li>Raspberry:	<SPAN id="raspberry-last-seen">...</SPAN></li>
-					<li>Sensor:		<SPAN id="sensor-last-seen">...</SPAN></li>
-				</ul>
-			</div>
-			
+			<h3>Connections <SPAN id="connection-stats-time"></SPAN></h3>
+			<ul>
+				<li>Server: 	<SPAN id="server-last-seen-span"></SPAN></li>
+				<li>Raspberry:	<SPAN id="raspberry-last-seen-span"></SPAN></li>
+				<li>Sensor:		<SPAN id="sensor-last-seen-span"></SPAN></li>
+			</ul>
+			<div id="reportDiv2"></div>
 		</div>
 
 		<div data-role="footer" data-id="foo1" data-position="relative"
