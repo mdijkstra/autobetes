@@ -1,4 +1,4 @@
-$(document).on('pageshow', '#event-list-page', function() {
+$(document).on('pageshow', '#food-event-list-page', function() {
 	//set tab index on the "All" tab when the page will be showed
 	$(document).data('selectedTabIndex', {
 		'index': 0,
@@ -10,7 +10,7 @@ $(document).on('pageshow', '#event-list-page', function() {
 		startEventScreenTour();
 	}
 	else{
-		
+		/*
 		//get tab index
 		var selectedTabIndex = $(document).data('selectedTabIndex');
 		//if nothing is selected take 0 as index
@@ -21,8 +21,8 @@ $(document).on('pageshow', '#event-list-page', function() {
 		$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
 		//highlight the button that is selected
 		$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
-		
-		dbHandler.getEvents(eventType, callbackView.showEventList);
+		*/
+		dbHandler.getEvents(FOOD, callbackView.showEventList);
 	}
 });
 
@@ -109,7 +109,6 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 
 	}else{
 
-		
 		//empty eventname field
 		$('#newEventName').val('');
 		$('#newEventPageCarbs').val('');
@@ -129,7 +128,7 @@ $(document).on('pageshow', '#make-new-event-page', function(){
 	}
 })
 
-$(document).on('pagehide', '#event-list-page', function(){
+$(document).on('pagehide', '#food-event-list-page', function(){
 	if($(document).data(TOURMODE)){
 
 	}else{

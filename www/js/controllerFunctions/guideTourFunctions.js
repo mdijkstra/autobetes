@@ -12,7 +12,7 @@ function homeScreenTour(){
 			postRideCallback : function (index, tip) {
 				
 				$(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 1)
-				window.location.href =  '#event-list-page';
+				window.location.href =  '#food-event-list-page';
 				//$(this).joyride({autoStart : false});
 				$(this).joyride("destroy");
 

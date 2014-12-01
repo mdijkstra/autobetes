@@ -64,21 +64,24 @@ $('#newEventPageEventType').change(function(){
 });
 
 
-$('#addOrEditEvent').click(function() {
+$('#addOrEditFoodEvent').click(function() {
 	//get values
+
 	var cannotAddOrEdit = false;
 	var eventName = $('#newEventName').val();
-	var eventType = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
+	var eventType = FOOD;
 	var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 	var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 	var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
 	//check if eventname is empty
+	
 	if(eventName === ""){
 		view.toastShortMessage("Please define the event name");
 
 	}
 
 	else{
+		
 		//show div
 		$('#recentlyAddedEvent').show();
 		//tag certain event to be presented on top. The method showlist handles
@@ -89,17 +92,15 @@ $('#addOrEditEvent').click(function() {
 		$.mobile.changePage('#'+EVENTLISTPAGE);
 		//wait till window is loaded
 		$(window).ready(function(){
-
-			if($('#addOrEditEvent').text() === 'Add'){
+			if($('#addOrEditFoodEvent').text() === 'Add'){
 				//add event
+				console.log(eventName+" "+eventType+" "+carbs+" "+alcoholicUnits+" "+power)
 				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
 			}
 			else{
 				//edit event 
-				var id = $('#cid').text();
+				var id = $('#foodId').text();
 				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power);
-
-
 			}
 		});
 	}
@@ -107,7 +108,7 @@ $('#addOrEditEvent').click(function() {
 
 });
 
-$('#deleteEvent').click(function(){
+$('#deleteFoodEvent').click(function(){
 	//get name 
 	var eventName = $('#newEventName').val();
 	//insert name in dialog text
@@ -120,7 +121,7 @@ $('#deleteEvent').click(function(){
 		//wait till window is loaded
 		$(window).ready(function(){
 			//delete event
-			dbHandler.deleteEvent($('#cid').text());
+			dbHandler.deleteEvent($('#foodId').text());
 
 			view.toastMessage("deleted " + eventName);
 		})

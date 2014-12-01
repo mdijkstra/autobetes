@@ -53,16 +53,13 @@ function setAddOrEditScreen(eventId){
 	
 	if($('#editModeButton').val() ==="on"){
 		//include delete button so user can delete event
-		
-		$('#deleteEvent').show();
-		//edit mode is on, the screen newEvent will be used
-		$.mobile.changePage('#make-new-event-page');
+		$('#addOrEditFoodEvent').html("Edit");
+		$('#deleteFoodEvent').show();
+		//edit mode is on, the screen define-new-food-page will be used
+		$.mobile.changePage('#define-new-food-page');
 		populateEditEventScreen(eventId);
-
 	}
 	else{
-
-		
 		//edit mode is off. open start-event-instance-page screen
 		$.mobile.changePage('#start-event-instance-page');
 		populateStartEventInstanceScreen(eventId);
@@ -175,24 +172,20 @@ function populateEditEventScreen(id){
 		if(result.rows.length === 1){
 			//found event
 			var row = result.rows.item(0);
-			//set eventID
-			$('#cid').text(row.id);
-			//set header name
-			$('#make-new-event-page').find("#headerName").text(EDIT);
-			//set name of event 
-			$('#make-new-event-page').find('#newEventName').val(row.name);
+			
 
 			//set the fieldset right
 			if(row.eventType === FOOD){
-				$('#make-new-event-page').find('#newEventPagePower').val("");
-				$('#make-new-event-page').find('#newEventPageCarbs').val(row.carbs);
-				$('#make-new-event-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
-
-				$("#radio-choice-h-2a").prop("checked", true);
-				$("#radio-choice-h-2b").prop("checked",false);
-				$("input[type='radio']").checkboxradio("refresh");
-				$('#newEventPageActivityInput').hide();
-				$('#newEventPageFoodInput').show();
+				//set eventID
+				$('#foodId').text(row.id);
+				//set header name
+				$('#define-new-food-page').find("#headerName").text(EDIT);
+				//set name of event 
+				$('#define-new-food-page').find('#newEventName').val(row.name);
+				
+				$('#define-new-food-page').find('#newEventPagePower').val("");
+				$('#define-new-food-page').find('#newEventPageCarbs').val(row.carbs);
+				$('#define-new-food-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
 				
 			}
 			else{
@@ -331,7 +324,7 @@ function setIntensityTextInScreen(selector, value) {
  * This method adjusts make-new-event-page according to the event type selected of selectedTabIndex
  */
 function setNewEventScreen(){
-	$('#deleteEvent').hide()//ensure delete button is hidden
+	$('#deleteFoodEvent').hide()//ensure delete button is hidden
 
 	var selectedTabIndex = $(document).data('selectedTabIndex');
 	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
