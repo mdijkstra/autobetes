@@ -71,8 +71,9 @@ function callbackView() {
 
 		var buttons = [];
 		for (var i = 0; i < result.rows.length; i++) {
-			//progress results
+			
 			var row = result.rows.item(i);
+			var intensityTextAndColor = controller.convertIntensityIntToTextAndColor(row.intensity);
 			//console.log(row);
 			var date = new Date(row.beginTime);
 			var minutes = parseInt(date.getMinutes());
@@ -80,7 +81,6 @@ function callbackView() {
 				//show minutes correct
 				minutes = "0" + minutes;
 			}
-			var intensityTextAndColor = controller.convertIntensityIntToTextAndColor(row.intensity);
 			var button = {
 					name : row.name,
 					intensityText: intensityTextAndColor.text,
@@ -92,7 +92,20 @@ function callbackView() {
 					beginYear : date.getFullYear(),
 					id : row.id,
 					eventType: row.eventType
-
+			}
+			
+			var endMinutes = null;
+			var endHours = null;
+			if(row.endTime != null){
+				var endDate = new Date(row.endTime);
+				endMinutes = parseInt(endDate.getMinutes());
+				endHours = parseInt(endDate.getHours());
+				if (endMinutes < 10) {
+					//show minutes correct
+					endMinutes = "0" + endMinutes;
+				}
+				button.endMinutes = endMinutes;
+				button.endHours = endHours;
 			}
 
 			//add button to array
@@ -218,14 +231,8 @@ function callbackView() {
 			else{
 				//push activity button object to list
 				var intensityTextAndColor = controller.convertIntensityIntToTextAndColor(row.intensity);
-				var endDate = new Date(row.endTime);
-				var endMinutes = parseInt(endDate.getMinutes());
-				if (endMinutes < 10) {
-					//show minutes correct
-					endMinutes = "0" + endMinutes;
-				}
 				//push button object to list
-				eventInstances.push({
+				var button ={
 					name : row.name,
 					beginHours : date.getHours(),
 					beginMinutes : minutes,
@@ -235,10 +242,20 @@ function callbackView() {
 					id : row.id,
 					eventType: row.eventType,
 					intensityText: intensityTextAndColor.text,
-					intensityColorInterpretation: intensityTextAndColor.color,
-					endHours : endDate.getHours(),
-					endMinutes : endMinutes
-				});
+					intensityColorInterpretation: intensityTextAndColor.color
+					
+				};
+				if(row.endTime){
+					var endDate = new Date(row.endTime);
+					var endMinutes = parseInt(endDate.getMinutes());
+					if (endMinutes < 10) {
+						//show minutes correct
+						endMinutes = "0" + endMinutes;
+					}
+					button.endHours = endDate.getHours();
+					button.endMinutes = endMinutes;
+				}
+				eventInstances.push(button);
 			}
 
 		}

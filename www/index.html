@@ -29,32 +29,17 @@
 
             <div data-role="controlgroup" data-type="horizontal" align="center">
                 <a id="homeStartButton" href="#event-list-page" data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">&nbsp;</a>
-                <a href="#" data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
+                <a href="#moves-page" data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
                 <a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a>
                     <a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2')"
 					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
 			
 			<IMG ID="sensor-plot" STYLE='visibility: hidden;'>
-
-			<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
-
-			<script id="current-activity-event-list-template"
-				type="text/x-handlebars-template">
-				<H3>Current activities:</H3>
-				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
-				{{#each .}}
-					<li class="ui-li-has-alt">
-						<a class="ui-btn"><p style="display: none">2</p><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span id="intensity" style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span id="beginHours">{{beginHours}}</span>:<span id="beginMinutes">{{beginMinutes}}</span></strong><br><span id="day">{{beginDay}}</span>-<span id="month">{{beginMonth}}</span>-<span id="year">{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
-					</li>
-				{{/each}}
-				</ul>
-			</script>
-
 			<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 			<br>
 			<script id="current-food-event-list-template" type="text/x-handlebars-template">
-				<br>
+				<H4>Current food intake:</H4>
 				<ul class="ui-listview" data-role="listview" data-theme="a">
 				{{#each .}}
 					{{#if amount}}
@@ -75,6 +60,28 @@
 				{{/each}}
 				</ul>
 			</script>
+			
+			<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
+
+			<script id="current-activity-event-list-template"
+				type="text/x-handlebars-template">
+				<H4>Current activities:</H4>
+				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
+				{{#each .}}
+					{{#if endHours}}
+					<li class="ui-li-has-alt">
+						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} - {{endHours}}:{{endMinutes}}</span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+					</li>
+					{{else}}
+					<li class="ui-li-has-alt">
+						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} </span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+					</li>
+					{{/if}}
+				{{/each}}
+				</ul>
+			</script>
+
+			<br>
 		</div>
 
 		<!-- /content -->
@@ -588,7 +595,7 @@
 		</div>
 		<!-- /footer -->
 	</div>
-	<div data-role="page" id="move-page">
+	<div data-role="page" id="moves-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
 			<a data-rel="back"
