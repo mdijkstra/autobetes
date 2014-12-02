@@ -120,18 +120,15 @@
 			</div>
 		</div>
 		<div data-role="main" class="ui-content">
-			<div id="event-list2" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input">
-				<div id="recentlyAddedEvent" style="display: none">
+			<div id="recentlyAddedEvent" style="display: none">
 					<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
 					<A id="recentAddedEventButton"
 						CLASS=" ui-btn ui-shadow ui-corner-all"
 						style="background: #adf4b4"></A>
 				</div>
-			</div>
 			<div id="define-new-event-button-list">
 				<a style="background: #3388CC; color:#FFFFFF; text-shadow: none;" href="#define-new-food-page"
-					onclick="view.setNewEventScreen()"
+					onclick="view.setNewEventScreen();"
 					class="ui-btn ui-shadow ui-corner-all">Define new food</a>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
@@ -278,10 +275,10 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<a id="addOrEditFoodEvent"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
-			<a id="addOrEditFoodEventAndConsume"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add and consume</a>
+			<a id="addOrSaveFoodEvent" onclick ="controller.saveOrEditFoodEvent(false)"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save</a>
+			<a id="addOrEditFoodEventAndConsume" onclick ="controller.saveOrEditFoodEvent(true)"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save and consume</a>
 			<a href="#deleteEventDialog" id="deleteFoodEvent" data-rel="dialog"
 				data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"

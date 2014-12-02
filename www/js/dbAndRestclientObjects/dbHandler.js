@@ -163,7 +163,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 					var queryWithArguments = query+ JSON.stringify(argumentsTuple);
 					//report error(will be send to server)
 					db.transaction(function(transaction) {
-						transaction.executeSql(ADD_EXCEPTION_RECORD, [thecurrenttime, exception, queryWithArguments], function(){console.log("good")}, function(transaction, error){console.log(error.message)});
+						transaction.executeSql(ADD_EXCEPTION_RECORD, [thecurrenttime, exception, queryWithArguments], function(){}, function(transaction, error){console.log(error.message)});
 					});
 				})
 		});
@@ -246,7 +246,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			if(result.rows.length === 0){
 				//table contains no value
 				//create null user so it can be modified later
-				addUser(null, null, null);
+				addUser(null, null, null);	
 			}
 			else{
 				//table contains value
@@ -389,14 +389,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
 
 	 */
-	function addEvent(eventName, eventType, carbs, alcoholicUnits, power) {
+	function addEvent(eventName, eventType, carbs, alcoholicUnits, power, callback) {
 		var generatedId = makeId();
-
+		
 		var addFoodFunction = function(transaction, result){
-			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs],synchronise);
+			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs], synchronise);
 		};
 		var addActivityFunction = function(transaction, result){
-			executeQuery(ADD_ACTIVITY, [generatedId, power],synchronise);
+			executeQuery(ADD_ACTIVITY, [generatedId, power], synchronise);
 		};
 
 
@@ -417,7 +417,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 			}
 		});
-
+		if(callback !== null){
+			callback(generatedId);
+		}
 
 	}
 

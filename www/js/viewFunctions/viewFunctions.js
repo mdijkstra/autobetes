@@ -325,7 +325,7 @@ function setIntensityTextInScreen(selector, value) {
  */
 function setNewEventScreen(){
 	$('#deleteFoodEvent').hide()//ensure delete button is hidden
-
+	$('#foodId').html('');
 	var selectedTabIndex = $(document).data('selectedTabIndex');
 	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
 	if(index === 0 || index === 1){

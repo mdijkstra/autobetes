@@ -2,6 +2,7 @@ $('#connectToMoves').click(function(){
 	window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&redirect_uri=http://autobetes.nl&scope=activity', '_system' ,'location=no');
 });
 
+
 $('[name=event-list-navbar-buttons]').click(function() {
 	//get event type that user clicked
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
@@ -63,50 +64,6 @@ $('#newEventPageEventType').change(function(){
 
 });
 
-
-$('#addOrEditFoodEvent').click(function() {
-	//get values
-
-	var cannotAddOrEdit = false;
-	var eventName = $('#newEventName').val();
-	var eventType = FOOD;
-	var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
-	var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
-	var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
-	//check if eventname is empty
-	
-	if(eventName === ""){
-		view.toastShortMessage("Please define the event name");
-
-	}
-
-	else{
-		
-		//show div
-		$('#recentlyAddedEvent').show();
-		//tag certain event to be presented on top. The method showlist handles
-		//this privilege
-		$('#eventnameOfAddedOrEditedEvent').text(eventName);
-		
-		//go back to event list page
-		$.mobile.changePage('#'+EVENTLISTPAGE);
-		//wait till window is loaded
-		$(window).ready(function(){
-			if($('#addOrEditFoodEvent').text() === 'Add'){
-				//add event
-				console.log(eventName+" "+eventType+" "+carbs+" "+alcoholicUnits+" "+power)
-				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power);
-			}
-			else{
-				//edit event 
-				var id = $('#foodId').text();
-				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power);
-			}
-		});
-	}
-
-
-});
 
 $('#deleteFoodEvent').click(function(){
 	//get name 
