@@ -203,8 +203,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
+		
+		executeQuery( 'DROP TABLE IF EXISTS ClientInstance;', [], null);
 
-		createTablesIfNotExists();
+		executeQuery('DROP TABLE IF EXISTS ClientExceptionLog', [], null);
 	}
 	/*
 	 * Creates all tables if not exist
@@ -371,13 +373,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method edits a certain event, given the eventKey(primary key), the new eventName
 	 * and the eventType(which can be altered as well).
 	 */
-	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power){
-		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),id], null);
+	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, callback){
+		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),id], function(){});
 		if(eventType === FOOD){
-			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, id], synchronise);
+			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, id], callback(id));
 		}
 		else{
-			executeQuery(UPDATE_ACTIVITY_EVENT, [power, id], synchronise);
+			executeQuery(UPDATE_ACTIVITY_EVENT, [power, id], callback(id));
 		}
 
 	}
@@ -393,13 +395,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		var generatedId = makeId();
 		
 		var addFoodFunction = function(transaction, result){
-			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs], synchronise);
+			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs], callback(generatedId));
 		};
 		var addActivityFunction = function(transaction, result){
-			executeQuery(ADD_ACTIVITY, [generatedId, power], synchronise);
+			executeQuery(ADD_ACTIVITY, [generatedId, power], callback(generatedId));
 		};
-
-
 
 		executeQuery(SELECT_PARTICULAR_EVENT_WITH_NAME, [eventName], function(transaction, result){
 			if(result.rows.length > 0){
@@ -417,10 +417,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 			}
 		});
-		if(callback !== null){
-			callback(generatedId);
-		}
-
+		
 	}
 
 	function updateEventInstance(type, amount,beginTime,endTime, id){

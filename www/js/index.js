@@ -106,7 +106,7 @@ $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 $("input[type='radio']").checkboxradio();
 
-
+/*
 	
     var availableTags = [
       "ActionScript",
@@ -163,6 +163,7 @@ $("input[type='radio']").checkboxradio();
    	        }
    	 });
 });
+   */
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
