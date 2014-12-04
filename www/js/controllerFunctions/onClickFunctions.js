@@ -1,6 +1,11 @@
 $('#connectToMoves').click(function(){
-	window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&redirect_uri=http://autobetes.nl&scope=activity', '_system' ,'location=no');
-});
+	if(restclient.getToken() !== null){
+		window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&redirect_uri=http://autobetes.nl&scope=activity&token='+restclient.getToken(), '_system' ,'location=no');
+	}
+	else{
+		view.toastMessage("You are currently not logged in, please make sure that your account is logged in");
+	}
+	});
 
 
 $('[name=event-list-navbar-buttons]').click(function() {
