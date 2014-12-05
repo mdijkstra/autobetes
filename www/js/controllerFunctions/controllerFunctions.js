@@ -25,6 +25,7 @@ function controller() {
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
+		var id = $('#foodId').html();
 		//check if eventname is empty
 
 		if(eventName === ""){
@@ -33,8 +34,8 @@ function controller() {
 
 		}
 		else{
-			var callbackFunction = null;
-			//go back to event list page
+			var callbackFunction = function(generatedId){synchronise()};
+			
 			if(andConsume === false){
 				//go back to food event list page
 				//this food event need to be shown on top of the list
@@ -43,41 +44,44 @@ function controller() {
 				//tag certain event to be presented on top. The method showlist handles
 				//this privilege
 				$('#eventnameOfAddedOrEditedEvent').text(eventName);
+				//go back to event list page
 				$.mobile.changePage('#'+EVENTLISTPAGE);
 			}
 			else{
 				//consume directly
 				//redirect to start-event-instance-page
 				$.mobile.changePage('#start-event-instance-page');
-				if($('#foodId').html() === ''){
+				if(id === ''){
 					//event has no id, means that it is not saved in db yet
 					//Id will be generated in the db handler, so therefore
 					//define this callbackfunction.
-					callbackFunction = function(id){
+					callbackFunction = function(generatedId){
+						//timeout is necessary because this callback gets executed just before entity is added
 						setTimeout(function(){
-							//timeout is necessary to access db after event is
-							//added
-							view.populateStartEventInstanceScreen(id);
-						},50);
+							view.populateStartEventInstanceScreen(generatedId);
+							synchronise();
+						}, 100);
 					}
 				}
 				else{
 					//event allready exists
-					setTimeout(function(){
-						//timeout is necessary to access db after event is updated
-						view.populateStartEventInstanceScreen($('#foodId').html());
-					},50);
+					callbackFunction = function(id){
+						//timeout is necessary because this callback gets executed just before entity is updated
+						setTimeout(function(){
+						view.populateStartEventInstanceScreen(id);
+						synchronise();
+						}, 100);
+					}
 				}
 
 			}
-			if($('#foodId').html() === ''){
+			if(id === ''){
 				//add event
 				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
 			}
 			else{
 				//edit event 
-				var id = $('#foodId').html();
-				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power);
+				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
 			}
 		}
 	}

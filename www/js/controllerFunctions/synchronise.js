@@ -48,7 +48,7 @@ var synchronise = function(){
 						restClient.add(SERVER_URL+SERVER_CLIENT_EXCEPTION_LOG_URL, record, function(data, textStatus, response){
 
 							dbHandler.setClientExceptionRecordAsBeenSent(row.id);
-						}, null);
+						}, function(){});
 					}
 				});
 				

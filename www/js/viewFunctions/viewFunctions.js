@@ -25,7 +25,7 @@ function toastMessage(messageText){
 	
 	if(MOBILE_DEVICE){
 		//it is a mobile device
-		window.plugins.toast.showLongBottom(messageText, null, null);
+		//window.plugins.toast.showLongBottom(messageText, null, null);
 	}
 	else{
 		//no toast for normal browser, add message to console
