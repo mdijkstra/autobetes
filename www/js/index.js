@@ -1,3 +1,5 @@
+
+
 //declare all global variables
 var dbHandler = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
 var callbackView = new callbackView();
@@ -90,7 +92,15 @@ var SYNCHRONISE = "Synchronise with server";
 var TOURMODE = "App is in guide tour modus";
 var LOGINPAGE = '#login-page';
 var GUIDE_TOUR_HOMESCREEN_STOP_INT = "Start guide tour";
+var LINKTOMOVES = 'moves://';
+var LINKTOMOVESPLAYSTORE = "https://play.google.com/store/apps/details?id=com.protogeo.moves";//link to the android play store
+var LINKTOMOVESAPPSTORE = "http://itunes.com/apps/protogeo/moves";//link to the itunes app store
+var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
+var OS;
+var ANDROID = "Android";
+var IOS = "iOS";
 var MOBILE_DEVICE = false;
+var MOVES_INSTSTALLED = false;
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -218,14 +228,27 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
-
+	//alert("ghaa")
+	
+	//check if moves is installed on device
+	appAvailability.check(
+			LINKTOMOVES, // URI Scheme
+		    function() {  // Success callback
+		        //alert('Moves is available');
+		        MOVES_INSTSTALLED = true;
+		    },
+		    function() {  // Error callback
+		    	//alert('Moves is not available');
+		    	MOVES_INSTSTALLED = false;
+		    }
+		);
+	
 	MOBILE_DEVICE = checkMobileBrowser();
 
 	controller.checkIfUserExists();
 	
 	//add event listeners
 	document.addEventListener("offline", function(e) {
-		//alert("offline");
 		$(document).data(CONNECTED_TO_INTERNET, false);
 	}, false);
 
@@ -257,13 +280,24 @@ function onDeviceReady() {
 
 }
 
-if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
+//onDeviceReady();
+//document.addEventListener("deviceready", onDeviceReady, false);
+
+if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
+	OS =  IOS;
+	LINKTOMOVES = "moves://";
     document.addEventListener("deviceready", onDeviceReady, false);
-} else {
+} 
+else if(navigator.userAgent.match(/(Android)/)){
+	OS = ANDROID;
+	LINKTOMOVES = "com.protogeo.moves";
+	document.addEventListener("deviceready", onDeviceReady, false);
+}
+else {
     onDeviceReady();
 }
 
-// document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
+//document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
 /*
 //if it is a mobile device, than it has to wait till phonegap is loaded
 if(MOBILE_DEVICE === true){

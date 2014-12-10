@@ -1,11 +1,35 @@
 $('#connectToMoves').click(function(){
-	if(restclient.getToken() !== null){
-		window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&redirect_uri=http://autobetes.nl&scope=activity&token='+restclient.getToken(), '_system' ,'location=no');
+	if(MOVES_INSTSTALLED){
+		if(restClient.getToken() !== null){
+			//console.log("token is: "+ restClient.getToken());
+			window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken(), '_system' ,'location=no');
+		}
+		else{
+			view.toastMessage("You are currently not logged in, please make sure that your account is logged in");
+		}
 	}
 	else{
-		view.toastMessage("You are currently not logged in, please make sure that your account is logged in");
+		
+		//moves is not installed on device
+		//link to the website
+		window.open(LINKTOMOVESWEBSITE, '_system' ,'location=no');
+		/*
+		 * OPTIMALIZATION link to the play/app store directly. This code works for android but not for
+		 *  not for ios, might be due to the lack of the app store app in the simulator
+		if(OS === ANDROID){
+			//os is android
+			//open moves in play store
+			window.open(LINKTOMOVESPLAYSTORE, '_system' ,'location=no');
+		}
+		else if(OS === IOS){
+			//os is iOS
+			//open moves in app store
+			view.toastShortMessage("link to appstore");
+			window.open(LINKTOMOVESAPPSTORE, '_system' ,'location=no');
+		}
+		*/
 	}
-	});
+});
 
 
 $('[name=event-list-navbar-buttons]').click(function() {

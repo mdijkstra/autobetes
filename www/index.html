@@ -13,13 +13,14 @@
 <link rel="stylesheet" href="css/autobetes.css" type="text/css">
 <link rel="stylesheet" href="css/joyride-2.1.css" type="text/css">
 </head>
-<body>
+<body onload="init()">
 
 
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
-			<a  onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
+			<!--<a  onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>-->
+			<a href="mailto:autobetes@gmail.com" >Feedback</a>
 			<h1>Autobetes</h1>
 			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png"></a>
 		</div>
