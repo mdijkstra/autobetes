@@ -11,10 +11,8 @@
         <param name="wp-package" value="Notification"/>
     </feature>
     
-	
 	<preference name="StatusBarBackgroundColor" value="#000000" />
 	<preference name="StatusBarStyle" value="blacktranslucent" />
     <preference name="StatusBarOverlaysWebView" value="false" />
-    
 	
 </widget>

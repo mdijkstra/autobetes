@@ -3,7 +3,7 @@
 <head>
 <title>Autobetes app</title>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <link rel="stylesheet" href="themes/autobetes_theme_20141110.min.css" />
 <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
@@ -13,15 +13,16 @@
 <link rel="stylesheet" href="css/autobetes.css" type="text/css">
 <link rel="stylesheet" href="css/joyride-2.1.css" type="text/css">
 </head>
-<body>
+<body onload="init()">
 
 
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
-		<div data-role="header" data-position="inline" data-position="fixed" style="min-height: 55px;">
-			<a  onclick="synchronise(); onDeviceReady(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
+			<!--<a  onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>-->
+			<a href="mailto:autobetes@gmail.com" >Feedback</a>
 			<h1>Autobetes</h1>
-			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png"></a>
+			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png" alt="Settings logo"></a>
 		</div>
 
 		<div role="main" id="mainScreen" class="ui-content">
@@ -35,8 +36,8 @@
 					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
 			
-			<IMG ID="test-plot">			
-			<IMG ID="sensor-plot" STYLE='visibility: hidden;'>
+			<IMG ID="test-plot" alt="Test plot">
+			<IMG ID="sensor-plot" STYLE='visibility: hidden;' alt="Sensor plot">
 			<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template" type="text/x-handlebars-template">
 				<H4>Current food intake:</H4>
@@ -811,9 +812,9 @@
 				name="text-7" value="" placeholder="Email"> <input
 				id="registerPumpId" type="text" data-clear-btn="true" name="text-7"
 				value="" placeholder="Pump id"> <input id="registerPassword"
-				type="password" type="text" data-clear-btn="true" name="text-7"
+				type="password"  data-clear-btn="true" name="text-7"
 				value="" placeholder="Password"> <input
-				id="registerConfirmPassword" type="password" type="text"
+				id="registerConfirmPassword" type="password"
 				data-clear-btn="true" name="text-7" value=""
 				placeholder="Confirm password"> <a
 				id="registrationDialogOkButton" data-role="button"
@@ -840,7 +841,7 @@
 
 			<input id="loginEmail" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Email"> 
-			<input id="loginPassword" type="password" type="text"
+			<input id="loginPassword" type="password"
 				data-clear-btn="true" name="text-7" value="" placeholder="Password"> 
 				
 				<a id="loginDialogOkButton" data-role="button" data-corners="true"

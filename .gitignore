@@ -1,4 +1,5 @@
 .DS_Store
+plugins
 platforms
 hooks/
 merges/
