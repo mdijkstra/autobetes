@@ -13,9 +13,6 @@ var synchronise = function(){
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
-			
-		
-			
 			var arrayEntities = [];
 			var requestData = [];
 			requestData.push({'timeStampLastSync': (lastUpdateTimeStamp- TIMESTAMPPENALTY)+""});

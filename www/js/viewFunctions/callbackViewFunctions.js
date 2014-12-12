@@ -47,6 +47,7 @@ function callbackView() {
 				}
 
 			}
+			
 			//get template
 			var source = $("#event-list-template").html();
 			//compile to hanlebars template
