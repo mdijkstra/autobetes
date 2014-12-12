@@ -94,28 +94,35 @@ $('#newEventPageEventType').change(function(){
 });
 
 
-$('#deleteFoodEvent').click(function(){
+$('#deleteEvent').click(function(){
 	//get name 
 	var eventName = $('#newEventName').val();
 	//insert name in dialog text
 	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
+	//insert id in confirm and no button
+	$('#deleteEventDialogConfirmButton').val($('#foodId').html());
+	$('#deleteEventDialogNoButton').val($('#foodId').html());
 
-	$('#deleteEventDialogConfirmButton').click(function() {
-		//user confirmed deleting event
-		//go back to event list page
-		$.mobile.changePage('#'+EVENTLISTPAGE);
-		//wait till window is loaded
-		$(window).ready(function(){
-			//delete event
-			dbHandler.deleteEvent($('#foodId').text());
+});
 
-			view.toastMessage("deleted " + eventName);
-		})
-	});
-	$('#deleteEventDialogNoButton').click(function() {
-		view.populateEditEventScreen($('#cid').text());
-	});
+$('#deleteEventDialogConfirmButton').click(function() {
 
+	view.populateEditEventScreen($('#deleteEventDialogNoButton').val());
+});
+
+$('#deleteEventDialogConfirmButton').click(function() {
+	console.log("confirm")
+	var eventName = $('#newEventName').val();
+	//user confirmed deleting event
+	//go back to event list page
+	$.mobile.changePage('#'+EVENTLISTPAGE);
+	//wait till window is loaded
+	$(window).ready(function(){
+		//delete event
+		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
+
+		view.toastMessage("deleted " + $('#deleteEventDialogConfirmButton').val());
+	})
 });
 
 

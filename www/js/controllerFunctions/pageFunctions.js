@@ -1,4 +1,13 @@
-$(document).on('pageshow', '#food-event-list-page', function() {
+$(document).on('pageshow', '#event-list-page', function() {
+	
+	if(EventListType ===FOOD){
+		$('#event-list-page-header').html("Food page");
+		$('#event-list-page-define-new-event-button').html("Define new food");
+	}
+	else{
+		$('#event-list-page-header').html("Activity page");
+		$('#event-list-page-define-new-event-button').html("Define new activity");
+	}
 	//set tab index on the "All" tab when the page will be showed
 	$(document).data('selectedTabIndex', {
 		'index': 0,
@@ -22,7 +31,7 @@ $(document).on('pageshow', '#food-event-list-page', function() {
 		//highlight the button that is selected
 		$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 		*/
-		dbHandler.getEvents(FOOD, callbackView.showEventList);
+		dbHandler.getEvents(EventListType, callbackView.showEventList);
 	}
 });
 
@@ -120,7 +129,7 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 	}
 
 });
-$(document).on('pagehide', '#define-new-food-page', function(){
+$(document).on('pagehide', '#define-event-page', function(){
 	//empty all variables
 	$('#newEventName').val('');
 	$('#newEventPageCarbs').val('');
@@ -137,7 +146,7 @@ $(document).on('pageshow', '#make-new-event-page', function(){
 	}
 })
 
-$(document).on('pagehide', '#food-event-list-page', function(){
+$(document).on('pagehide', '#event-list-page', function(){
 	if($(document).data(TOURMODE)){
 
 	}else{

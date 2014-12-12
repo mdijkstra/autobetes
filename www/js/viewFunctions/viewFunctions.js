@@ -54,9 +54,9 @@ function setAddOrEditScreen(eventId){
 	if($('#editModeButton').val() ==="on"){
 		//include delete button so user can delete event
 		$('#addOrEditFoodEvent').html("Edit");
-		$('#deleteFoodEvent').show();
-		//edit mode is on, the screen define-new-food-page will be used
-		$.mobile.changePage('#define-new-food-page');
+		$('#deleteEvent').show();
+		//edit mode is on, the screen define-event-page will be used
+		$.mobile.changePage('#define-event-page');
 		populateEditEventScreen(eventId);
 	}
 	else{
@@ -173,23 +173,27 @@ function populateEditEventScreen(id){
 			//found event
 			var row = result.rows.item(0);
 			
-
+			$('#define-event-page').find("#headerName").text(EDIT);
+			$('#foodId').text(row.id);
 			//set the fieldset right
 			if(row.eventType === FOOD){
 				//set eventID
-				$('#foodId').text(row.id);
+				
 				//set header name
-				$('#define-new-food-page').find("#headerName").text(EDIT);
+				$("#newEventPageFoodInput").show();
 				//set name of event 
-				$('#define-new-food-page').find('#newEventName').val(row.name);
+				$('#define-event-page').find('#newEventName').val(row.name);
 				
-				$('#define-new-food-page').find('#newEventPagePower').val("");
-				$('#define-new-food-page').find('#newEventPageCarbs').val(row.carbs);
-				$('#define-new-food-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
-				
+				$('#define-event-page').find('#newEventPagePower').val("");
+				$('#define-event-page').find('#newEventPageCarbs').val(row.carbs);
+				$('#define-event-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
+				$('#addOrEditEventAndStart').html("Save and consume");
 			}
 			else{
-				
+				$("#newEventPageFoodInput").hide();
+				$('#define-event-page').find('#newEventName').val(row.name);
+				$('#addOrEditEventAndStart').html("Save and start");
+				/*
 				$('#make-new-event-page').find('#newEventPagePower').val(row.power);
 				$('#make-new-event-page').find('#newEventPageCarbs').val("");
 				$('#make-new-event-page').find('#newEventPageAlcoholicUnits').val("");
@@ -199,6 +203,7 @@ function populateEditEventScreen(id){
 				$("input[type='radio']").checkboxradio("refresh");
 				$('#newEventPageFoodInput').hide();
 				$('#newEventPageActivityInput').show();
+				*/
 				
 			}
 		}
@@ -324,31 +329,21 @@ function setIntensityTextInScreen(selector, value) {
  * This method adjusts make-new-event-page according to the event type selected of selectedTabIndex
  */
 function setNewEventScreen(){
-	$('#deleteFoodEvent').hide()//ensure delete button is hidden
+	$('#deleteEvent').hide()//ensure delete button is hidden
 	$('#foodId').html('');
-	var selectedTabIndex = $(document).data('selectedTabIndex');
-	var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-	if(index === 0 || index === 1){
+	console.log("type: "+ EventListType);
+	if(EventListType === FOOD){
 		//Set screen according to Food event type
 		$('#newEventPageActivityInput').hide();
 		$('#newEventPageFoodInput').show();
-		$("#radio-choice-h-2a").prop("checked", true);
-		$("#radio-choice-h-2b").prop("checked",false);
-		$("input[type='radio']").checkboxradio("refresh");
-		
-		
-
-
+		$('#addOrEditEventAndStart').html("Save and consume")
+		$("#newEventPageFoodInput").show();
 	}
 	else{
 		//Set screen according to Activity event type
 		$('#newEventPageFoodInput').hide();
 		$('#newEventPageActivityInput').show();
-		$("#radio-choice-h-2b").prop("checked", true);
-		$("#radio-choice-h-2a").prop("checked", false);
-		$("input[type='radio']").checkboxradio("refresh");
-
-		
+		$('#addOrEditEventAndStart').html("Save and start")
 	}
 	
 	$('#addOrEditEvent').text('Add');

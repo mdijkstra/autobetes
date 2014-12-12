@@ -21,7 +21,7 @@ function controller() {
 		//extract values
 		var cannotAddOrEdit = false;
 		var eventName = $('#newEventName').val();
-		var eventType = FOOD;
+		var eventType = EventListType;
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
@@ -48,7 +48,7 @@ function controller() {
 				$.mobile.changePage('#'+EVENTLISTPAGE);
 			}
 			else{
-				//consume directly
+				//start directly
 				//redirect to start-event-instance-page
 				$.mobile.changePage('#start-event-instance-page');
 				if(id === ''){

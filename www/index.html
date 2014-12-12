@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="css/autobetes.css" type="text/css">
 <link rel="stylesheet" href="css/joyride-2.1.css" type="text/css">
 </head>
-<body onload="init()">
+<body>
 
 
 	<!-- Start of first page -->
@@ -29,14 +29,16 @@
 			<div id="background"></div>
 
             <div data-role="controlgroup" data-type="horizontal" align="center">
-                <a id="homeStartButton" href="#food-event-list-page" data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">&nbsp;</a>
-                <a href="#moves-page" data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
+                <a id="homeStartButton" href="#event-list-page" onclick="EventListType = FOOD; $('#event-list-page-header').html('Food page');$('#event-list-page-define-new-event-button').html('Define new food');" 
+                data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">&nbsp;</a>
+                <a href="#event-list-page" onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Activity page');$('#event-list-page-define-new-event-button').html('Define new activity');" 
+                data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
                 <a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a>
                     <a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2')"
 					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
 			
-			<IMG ID="test-plot" alt="Test plot">
+			<IMG ID="test-plot" alt="">
 			<IMG ID="sensor-plot" STYLE='visibility: hidden;' alt="Sensor plot">
 			<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template" type="text/x-handlebars-template">
@@ -106,12 +108,12 @@
 	</div>
 	<!-- /page -->
 
-	<div data-role="page" id="food-event-list-page">
+	<div data-role="page" id="event-list-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-			<h1>Start event</h1>
+			<h1 id="event-list-page-header">Food page</h1>
 			<div class="ui-btn-right">
 				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
 			</div>
@@ -128,9 +130,10 @@
 						CLASS=" ui-btn ui-shadow ui-corner-all"
 						style="background: #adf4b4"></A>
 				</div>
+				
 			<div id="define-new-event-button-list">
-				<a style="background: #3388CC; color:#FFFFFF; text-shadow: none;" href="#define-new-food-page"
-					onclick="view.setNewEventScreen();"
+				<a id="event-list-page-define-new-event-button" style="background: #3388CC; color:#FFFFFF; text-shadow: none;"
+					onclick="view.setNewEventScreen();" href="#define-event-page"
 					class="ui-btn ui-shadow ui-corner-all">Define new food</a>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
@@ -222,7 +225,7 @@
 
 	</div>
 	<!-- /page -->
-	<div data-role="page" id="define-new-food-page">
+	<div data-role="page" id="define-event-page">
 		<div data-role="header" style="min-height: 55px;">
 			<a data-rel="back"
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
@@ -280,65 +283,9 @@
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<a id="addOrSaveFoodEvent" onclick ="controller.saveOrEditFoodEvent(false)"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save</a>
-			<a id="addOrEditFoodEventAndConsume" onclick ="controller.saveOrEditFoodEvent(true)"
+			<a id="addOrEditEventAndStart" onclick ="controller.saveOrEditFoodEvent(true)"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save and consume</a>
-			<a href="#deleteEventDialog" id="deleteFoodEvent" data-rel="dialog"
-				data-transition="slidedown"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
-				style="display: none">Delete</a>
-			
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
-					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
-				</ul>
-			</div>
-			<!-- /navbar -->
-		</div>
-		<!-- /footer -->
-	</div>
-	<!-- /page -->
-
-	<div data-role="page" id="define-new-activity-page">
-		<div data-role="header" style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-			<H1 id="headerName">New activity</H1>
-		</div>
-		<!-- /header -->
-
-		<div role="main" class="ui-content">
-			
-			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Event name">
-				<ul id="suggestions" data-role="listview" data-inset="true"></ul>
-			<div id="newEventPageActivityInput">
-				<table width="100%">
-					<tr>
-						
-						<td width="99%"><input type="number" id="newEventPagePower" 
-							step="0.1" pattern="[0-9]*" placeholder="Power"></td>
-						<td width="1%"><a
-							onclick='view.toastMessage("Calories / kilo gram body weight / hour")'
-							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
-						</td>
-					<tr>
-				</table>
-			</div>
-			
-			<p id="activityId" style="display: none"></p>
-
-
-		</div>
-		<!-- /content -->
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<a id="addOrEditActivityEvent"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Add</a>
-
-			<a href="#deleteEventDialog" id="deleteActivityEvent" data-rel="dialog"
+			<a href="#deleteEventDialog" id="deleteEvent" data-rel="dialog"
 				data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a>
@@ -379,6 +326,10 @@
 					<li><a class="ui-btn">
 							<h3>Pump serial</h3> <input id="pumpSerial" type="text"
 							data-clear-btn="true" placeholder="1234567">
+					</a>
+					</li>
+					<li><a id="connectToMoves" class="ui-btn">
+							<h3>Connect to moves</h3> 
 					</a>
 					</li>
 					<!--
@@ -636,37 +587,7 @@
 		</div>
 		<!-- /footer -->
 	</div>
-	<div data-role="page" id="moves-page">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-			<H1>Moves</H1>
-		</div>
-		<!-- /header -->
-		
-		<div role="main" class="ui-content">
-			<div id="reportDiv2">
-					<a id="connectToMoves">Connect to moves</a>
-				
-			</div>
-			
-		</div>
-
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Input</a></li>
-					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
-				</ul>
-			</div>
-			<!-- /navbar -->
-		</div>
-		<!-- /footer -->
-
-	</div>
+	
 	<div data-role="page" id="report-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
