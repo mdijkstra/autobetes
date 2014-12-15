@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta name="format-detection" content="telephone=no" /><!-- Prevent showing numbers as phone numbers -->
 <link rel="stylesheet" href="themes/autobetes_theme_20141110.min.css" />
 <link rel="stylesheet" href="themes/jquery.mobile.icons.min.css" />
 <link rel="stylesheet" href="css/jquery.mobile.structure-1.4.5.min.css" />
@@ -255,6 +256,7 @@
 							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 					<tr>
+					<!-- remove alcohole for now
 					<tr>
 						<td width="29%">
 							<p>Alcohol:</p>
@@ -271,6 +273,7 @@
 							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 					</tr>
+					 -->
 				</table>
 			</div>
 			
@@ -565,7 +568,8 @@
 			</div>
 			
 		</div>
-	
+		<br/>
+		
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
@@ -574,6 +578,11 @@
 				onclick="controller.updateEventInstance()"
 				id="edit-event-instance-page-save-button"
 				CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
+				<a id="edit-event-instance-page-save-button"
+				href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance($("#edit-event-instance-name").text(), $("#edit-event-instance-cId").text(), $("#edit-event-instance-eventType").text())'
+				onclick="controller.updateEventInstance()"
+				id="edit-event-instance-page-save-button"
+				CLASS="ui-btn ui-shadow ui-corner-all">Delete</a>
 				
 			<div data-role="navbar">
 				<ul>

@@ -43,7 +43,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id TEXT PRIMARY KEY UNIQUE, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, eventId STRING NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (eventId) REFERENCES Event (id))';
 	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id TEXT PRIMARY KEY UNIQUE, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
-	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
+	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, special INTEGER DEFAULT 0, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
 
 	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, pumpId TEXT, password TEXT)';
 	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)';
@@ -203,8 +203,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
-		
-		executeQuery( 'DROP TABLE IF EXISTS ClientInstance;', [], null);
 
 		executeQuery('DROP TABLE IF EXISTS ClientExceptionLog', [], null);
 	}

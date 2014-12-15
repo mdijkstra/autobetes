@@ -96,7 +96,8 @@ function controller() {
 		$('#deleteEventInstanceDialogConfirmButton').click(function() {
 			//user confirms
 			//delete instance
-			$.mobile.back();//go to previous page
+			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
+			$.mobile.changePage("#history-event-instance-page");
 			$(window).ready(function(){
 				dbHandler.deleteEventInstance(id);
 				//refresh list in history
