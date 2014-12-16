@@ -98,14 +98,17 @@ function controller() {
 			//delete instance
 			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
 			//$.mobile.changePage("#history-event-instance-page");
-			window.history.go(-1);
+			
+			var deletedFrom = $("#delete-from").html();
+			if(deletedFrom === "edit-event-instance-page"){
+				//if deleted from edit-event-instance-page go back 2 pages, otherwise edit-event-instance-page pops up with the deleted event instance
+				window.history.go(-2);
+			}
+			else{
+				window.history.go(-1);
+			}
 			$(window).ready(function(){
-				setTimeout(function(){
-				console.log(window.history.state.pageUrl);
-				if(window.history.state.pageUrl === "edit-event-instance-page"){
-					window.history.go(-1);
-				}
-				},0);
+				
 				dbHandler.deleteEventInstance(id);
 				//refresh list in history
 				var selectedTabIndex = $(document).data('selectedTabIndex2');
@@ -269,7 +272,7 @@ function controller() {
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							//successfully logged in
-
+							$("#notLoggedIn").hide();
 							synchronise();
 							$(document).data(IS_LOGGING_IN, false);
 							token = result.token;
