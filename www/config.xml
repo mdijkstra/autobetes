@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="Autobetes.com" version="1.0.0">
-	<icon src="img/icon.png" />
     <name>Autobetes</name>
     <description>Autobetes app</description>
     <author email="info@diadvies.nl" href="http://www.autobetes.com">Dion Koolhaas & Martijn Dijkstra</author>
     <access origin="*"/>
+
+	<platform name="ios">
+		<icon src="img/icons/icon.png" />
+	</platform>
     
     <preference name="webviewbounce" value="true"/>
     <feature name="Notification">
