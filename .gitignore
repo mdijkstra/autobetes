@@ -1,7 +1,7 @@
 .DS_Store
 plugins/
-platforms
+platforms/
 hooks/
 merges/
- *~
+*~
 plugins/org.apache.cordova.statusbar/tests/
