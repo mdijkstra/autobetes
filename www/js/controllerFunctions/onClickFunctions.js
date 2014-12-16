@@ -1,5 +1,9 @@
 $('#connectToMoves').click(function(){
+
+	window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken(), '_system' ,'location=no');
+
 	if(MOVES_INSTSTALLED){
+
 		if(restClient.getToken() !== null){
 			//console.log("token is: "+ restClient.getToken());
 			window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken(), '_system' ,'location=no');
@@ -111,18 +115,16 @@ $('#deleteEventDialogConfirmButton').click(function() {
 });
 
 $('#deleteEventDialogConfirmButton').click(function() {
+	console.log("confirm")
 	var eventName = $('#newEventName').val();
 	//user confirmed deleting event
 	//go back to event list page
-	//$.mobile.changePage('#'+EVENTLISTPAGE);
-	//go back two pages will go back to event list page as well + the edit event screen of the deleted event
-	//is gone
-	window.history.go(-2);
+	$.mobile.changePage('#'+EVENTLISTPAGE);
 	//wait till window is loaded
 	$(window).ready(function(){
 		//delete event
 		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
-		
+
 		view.toastMessage("deleted " + $('#deleteEventDialogConfirmButton').val());
 	})
 });
