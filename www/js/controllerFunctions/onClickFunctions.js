@@ -134,7 +134,7 @@ $('#editModeButton').click(function(){
 
 		//editmode was on, now need to be turned off
 		$('#editModeButton').val('off');
-		$('#editModeButton').attr("style","");
+		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 
 		//change buttontext to Add on make-new-event-page screen
@@ -145,7 +145,7 @@ $('#editModeButton').click(function(){
 
 		//editmode was off, now need to be turned on
 		$('#editModeButton').val('on');
-		$('#editModeButton').attr("style","background: #8df3e6 !important");
+		// $('#editModeButton').attr("style","background: #8df3e6 !important");
 		$('.eventButtons').attr("style","background: #8df3e6 !important");
 
 		//change buttontext to Edit on make-new-event-page screen

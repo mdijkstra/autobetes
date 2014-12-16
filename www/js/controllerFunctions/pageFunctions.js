@@ -1,36 +1,9 @@
 $(document).on('pageshow', '#event-list-page', function() {
-	
-	if(EventListType ===FOOD){
-		$('#event-list-page-header').html("Food page");
-		$('#event-list-page-define-new-event-button').html("Define new food");
-	}
-	else{
-		$('#event-list-page-header').html("Activity page");
-		$('#event-list-page-define-new-event-button').html("Define new activity");
-	}
-	//set tab index on the "All" tab when the page will be showed
-	$(document).data('selectedTabIndex', {
-		'index': 0,
-		'eventType': null
-	});
-
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
 		startEventScreenTour();
 	}
 	else{
-		/*
-		//get tab index
-		var selectedTabIndex = $(document).data('selectedTabIndex');
-		//if nothing is selected take 0 as index
-		var index = selectedTabIndex === undefined ? 0 : selectedTabIndex.index;
-		//get eventType take null if nothing is selected
-		var eventType = selectedTabIndex === undefined ? null : selectedTabIndex.eventType;
-		//unhighlight all buttons
-		$('[name=event-list-navbar-buttons]').removeClass('ui-btn-active');
-		//highlight the button that is selected
-		$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
-		*/
 		dbHandler.getEvents(EventListType, callbackView.showEventList);
 	}
 });
@@ -155,7 +128,7 @@ $(document).on('pagehide', '#event-list-page', function(){
 		$('#recentlyAddedEvent').hide();
 		//get out of edit mode
 		$('#editModeButton').val('off');
-		$('#editModeButton').attr("style","");
+		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 	}
 });

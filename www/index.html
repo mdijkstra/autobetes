@@ -20,22 +20,21 @@
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<!--<a  onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)"><img src="css/glyphicons/png/glyphicons_081_refresh.png"> </a>-->
-			<a href="mailto:autobetes@gmail.com" >Feedback</a>
+			<a href="mailto:autobetes@gmail.com" data-icon="autobetes-feedback" style="height:30px;">&nbsp;</a>
 			<h1>Autobetes</h1>
-			<a href="#settings-page"><img src="css/glyphicons/png/glyphicons_439_wrench.png" alt="Settings logo"></a>
+			<a href="#settings-page" data-icon="autobetes-settings" style="height:30px;">&nbsp;</a>
 		</div>
 
+		<SPAN style="text-align:center"><h1 id="notLoggedIn" style="display:none">Please <a href="#login-page" style="text-decoration:none">sign up / log in</a> first!</h1></SPAN>
 		<div role="main" id="mainScreen" class="ui-content">
 			<div id="background"></div>
 
             <div data-role="controlgroup" data-type="horizontal" align="center">
-                <a id="homeStartButton" href="#event-list-page" onclick="EventListType = FOOD; $('#event-list-page-header').html('Food page');$('#event-list-page-define-new-event-button').html('Define new food');" 
-                data-role="button" data-theme="a" data-icon="autobetes-fork" 	data-iconpos="left" class="ios">&nbsp;</a>
-                <a href="#event-list-page" onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Activity page');$('#event-list-page-define-new-event-button').html('Define new activity');" 
-                data-role="button" data-theme="a" data-icon="autobetes-run"  	data-iconpos="left" class="ios">&nbsp;</a>
-                <a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a>
-                    <a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2')"
-					data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
+                <a id="homeStartButton" href="#event-list-page" onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New'); $('#editModeButton').show()" 
+                data-role="button" data-theme="a" data-icon="autobetes-fork" data-iconpos="left" class="ios">&nbsp;</a>
+                <a href="#event-list-page" onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New'); $('#editModeButton').hide()" data-role="button" data-theme="a" data-icon="autobetes-special" data-iconpos="left" class="ios">&nbsp;</a>
+                <!--a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a-->
+				<a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2');"	data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
 			
 			<IMG ID="test-plot" alt="">
@@ -73,11 +72,11 @@
 				{{#each .}}
 					{{#if endHours}}
 					<li class="ui-li-has-alt">
-						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} - {{endHours}}:{{endMinutes}}</span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} - {{endHours}}:{{endMinutes}}</span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
 					</li>
 					{{else}}
 					<li class="ui-li-has-alt">
-						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} </span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
+						<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} </span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
 					</li>
 					{{/if}}
 				{{/each}}
@@ -87,42 +86,27 @@
 			<br>
 		</div>
 
-		<!-- /content -->
-
-
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+		<div data-role="footer" data-position="relative" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
-		</div>
-		<!-- /footer -->
-
+		</div> 		
 	</div>
 	<!-- /page -->
 
 	<div data-role="page" id="event-list-page">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
-			<h1 id="event-list-page-header">Food page</h1>
-			<div class="ui-btn-right">
-				<a id="editModeButton" class="ui-btn ui-corner-all">Edit</a>
-			</div>
-			
-			<!-- /navbar -->
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
+			<a data-rel="back" class="speedTap" data-icon="autobetes-back" style="height:30px;">&nbsp;</a>
+			<h1 id="event-list-page-header">My food / special events</h1>
+			<a id="editModeButton" data-icon="autobetes-edit" style="height:30px;">&nbsp;</a>
 			<div id="searchEventsInputForm">
 				<input data-type="search" id="filterControlgroup-input">
 			</div>
 		</div>
+
 		<div data-role="main" class="ui-content">
 			<div id="recentlyAddedEvent" style="display: none">
 					<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
@@ -134,7 +118,7 @@
 			<div id="define-new-event-button-list">
 				<a id="event-list-page-define-new-event-button" style="background: #3388CC; color:#FFFFFF; text-shadow: none;"
 					onclick="view.setNewEventScreen();" href="#define-event-page"
-					class="ui-btn ui-shadow ui-corner-all">Define new food</a>
+					class="ui-btn ui-shadow ui-corner-all">New</a>
 			</div>
 			<div id="event-list" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input"></div>
@@ -149,19 +133,15 @@
 			<br>
 		</div>
 		<!-- /content -->
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+		<div data-role="footer" data-position="relative" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
+
 	</div>
 	<!-- /page -->
 
@@ -195,7 +175,7 @@
 					style="display: none"></p>
 				<label id="start-event-instance-food-quantity-slider-label">Amount</label>
 				<label id="start-event-instance-activity-quantity-slider-label"
-					style="display: none">Intensity: <span id="intensityToText">Light</span></label>
+					style="display: none">Degree: <span id="intensityToText">Little</span></label>
 				<input class="numbersOnly" type="range"
 					name="start-event-instance-quantity-slider"
 					id="start-event-instance-quantity-slider" data-highlight="true"
@@ -207,21 +187,15 @@
 		</div>
 		<!-- /content -->
 
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<A id="startEventInstanceButton"
-				class="ui-btn ui-shadow ui-corner-all">Save</A>
+		<div data-role="footer" data-id="foo1" data-position="relative" class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<A id="startEventInstanceButton" class="ui-btn ui-shadow ui-corner-all">Save</A>
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
 
 	</div>
 	<!-- /page -->
@@ -292,10 +266,8 @@
 			
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -305,11 +277,8 @@
 	<!-- /page -->
 
 	<div data-role="page" data-id="settingsHeader" id="settings-page">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
-				data-transition="flip">Back</a>
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
+			<a data-rel="back" class="speedTap" data-icon="autobetes-back" style="height:30px;">&nbsp;</a>
 			<H1>Settings</H1>
 		</div>
 		<!-- /header -->
@@ -391,10 +360,8 @@
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -406,20 +373,14 @@
 
 
 	<div data-role="page" id="history-event-instance-page">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
-				data-transition="flip">Back</a>
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
+			<a data-rel="back" class="speedTap" data-icon="autobetes-back" style="height:30px;">&nbsp;</a>
 			<H1>History</H1>
 			<div id="history-event-instance-list-navbar" data-role="navbar">
 				<ul>
-					<li><a href="#"
-						name="history-event-instance-list-navbar-buttons">All</a></li>
-					<li><a href="#"
-						name="history-event-instance-list-navbar-buttons">Food</a></li>
-					<li><a href="#"
-						name="history-event-instance-list-navbar-buttons">Activity</a></li>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">All</a></li>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">Food</a></li>
+					<li><a href="#" name="history-event-instance-list-navbar-buttons">Special</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -444,7 +405,7 @@
 						{{/if}}
 					{{else}}
 					
-						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Intensity: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
+						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
 					
 					{{/if}}
 					</li>
@@ -480,19 +441,14 @@
 				</div>
 			</div>
 		</div>
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+		<div data-role="footer" data-position="relative" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
 	</div>
 
 
@@ -555,8 +511,8 @@
 					style="display: none"></p>
 				<label id="edit-event-instance-food-quantity-slider-label">Amount</label>
 				<label id="edit-event-instance-activity-quantity-slider-label"
-					style="display: none">Intensity: <span
-					id="intensity-slider-label-intensity-indication">Light</span></label> <input
+					style="display: none">Degree: <span
+					id="intensity-slider-label-intensity-indication">Little</span></label> <input
 					class="numbersOnly" type="range"
 					name="edit-event-instance-quantity-slider"
 					id="edit-event-instance-quantity-slider" data-highlight="true"
@@ -577,15 +533,11 @@
 				
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
 	</div>
 	
 	<div data-role="page" id="report-page">
@@ -606,14 +558,13 @@
 			<div id="reportDiv2"></div>
 		</div>
 
+		<div class="FooterClass"></div>
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page">Input</a></li>
-					<li><a href="#report-page"
-						class="ui-btn-active ui-state-persist">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
+					<li><a href="#home-page">Dashboard</a></li>
+					<li><a href="#report-page" class="ui-btn-active ui-state-persist">Report</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -640,10 +591,8 @@
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="#home-page">Input</a></li>
+					<li><a href="#home-page">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings"
-						class="ui-btn-active ui-state-persist">Pump settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -789,14 +738,11 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Input</a></li>
+						class="ui-btn-active ui-state-persist">Dashboard</a></li>
 					<li><a href="#report-page">Report</a></li>
-					<li><a href="#pumpSettings">Pump settings</a></li>
 				</ul>
 			</div>
-			<!-- /navbar -->
 		</div>
-		<!-- /footer -->
 	</div>
 	<div data-role="page" id="guideTours" data-position="window">
 	
@@ -898,10 +844,9 @@
         <h2>Amount</h2>
         <p>In case of an food event, use this slider to specify the amount of this event</p>
       </li>
-      <li data-id="startEventQuantitySliderField" data-text="Next"
-				class="custom">
-        <h2>Intensity</h2>
-        <p>In case of an activity event, use this slider to specify the intensity of this event</p>
+      <li data-id="startEventQuantitySliderField" data-text="Next" class="custom">
+        <h2>Degree</h2>
+        <p>In case of an activity event, use this slider to specify the degree of this event</p>
       </li>
       <li data-id="startEventInstanceButton" data-text="Next"
 				class="custom">
@@ -974,8 +919,5 @@
 	<script src="js/viewFunctions/callbackViewFunctions.js"></script>
 	
 	<script src="js/index.js"></script>
-
-
-
 </body>
 </html>
