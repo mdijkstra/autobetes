@@ -20,7 +20,7 @@
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a href="mailto:autobetes@gmail.com" data-icon="autobetes-feedback" style="height:30px;">&nbsp;</a>
-			<h1>Autobetes</h1>
+			<h1>AutobetesX</h1>
 			<a href="#settings-page" data-icon="autobetes-settings" style="height:30px;">&nbsp;</a>
 		</div>
 
@@ -187,6 +187,8 @@
 
 		<div data-role="footer" data-id="foo1" data-position="relative" class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<A id="startEventInstanceButton" class="ui-btn ui-shadow ui-corner-all">Save</A>
+			<a data-rel="back"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
@@ -261,6 +263,8 @@
 				data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a>
+				<a data-rel="back"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
 			
 			<div data-role="navbar">
 				<ul>
@@ -401,14 +405,13 @@
 					<li class="ui-li-has-alt">
 					{{#if amount}}
 						{{#if carbs}}
-							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Carbs: {{carbs}} grams</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Carbs: {{carbs}} grams</strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 
 						{{else}}
-							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
+							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 						{{/if}}
 					{{else}}
-					
-						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}")' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
+						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
 					
 					{{/if}}
 					</li>
@@ -533,7 +536,9 @@
 				onclick="controller.updateEventInstance()"
 				id="edit-event-instance-page-save-button"
 				CLASS="ui-btn ui-shadow ui-corner-all">Save</a>
-				
+			<a data-rel="back"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
+			<a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance($("#edit-event-instance-name").text(), $("#edit-event-instance-cId").text(), $("#edit-event-instance-eventType").text());' CLASS="ui-btn ui-shadow ui-corner-all"data-rel="dialog" data-transition="slidedown" title="Delete">Delete</a>
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page" class="ui-btn-active ui-state-persist">Dashboard</a></li>
@@ -646,6 +651,7 @@
 					class="ui-btn-text">No</span>
 			</span>
 			</a>
+			<p id="delete-from" style="display:none"></p>
 		</div>
 	</div>
 	<div data-role="page" id="deleteEventDialog" data-position="window">
