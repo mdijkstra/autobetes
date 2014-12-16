@@ -111,16 +111,18 @@ $('#deleteEventDialogConfirmButton').click(function() {
 });
 
 $('#deleteEventDialogConfirmButton').click(function() {
-	console.log("confirm")
 	var eventName = $('#newEventName').val();
 	//user confirmed deleting event
 	//go back to event list page
-	$.mobile.changePage('#'+EVENTLISTPAGE);
+	//$.mobile.changePage('#'+EVENTLISTPAGE);
+	//go back two pages will go back to event list page as well + the edit event screen of the deleted event
+	//is gone
+	window.history.go(-2);
 	//wait till window is loaded
 	$(window).ready(function(){
 		//delete event
 		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
-
+		
 		view.toastMessage("deleted " + $('#deleteEventDialogConfirmButton').val());
 	})
 });
@@ -134,7 +136,7 @@ $('#editModeButton').click(function(){
 
 		//editmode was on, now need to be turned off
 		$('#editModeButton').val('off');
-		$('#editModeButton').attr("style","");
+		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 
 		//change buttontext to Add on make-new-event-page screen
@@ -145,7 +147,7 @@ $('#editModeButton').click(function(){
 
 		//editmode was off, now need to be turned on
 		$('#editModeButton').val('on');
-		$('#editModeButton').attr("style","background: #8df3e6 !important");
+		// $('#editModeButton').attr("style","background: #8df3e6 !important");
 		$('.eventButtons').attr("style","background: #8df3e6 !important");
 
 		//change buttontext to Edit on make-new-event-page screen

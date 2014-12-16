@@ -1,8 +1,8 @@
 /* change font size header */
-#home-page .ui-header h1 {
-  font-size: 1.3em;   
+/*#home-page .ui-header h1 {
+  font-size: 1.3em;
 }
-
+*/
 /* background */
 #background{ 
 	position: fixed; 
@@ -89,6 +89,42 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 }
 */
 
+.ui-icon-autobetes-feedback {
+    background: url("glyphicons/png/glyphicons_245_chat.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 50%;
+    background-size: 65%;
+}
+
+.ui-icon-autobetes-settings {
+    background: url("glyphicons/png/glyphicons_280_settings.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 50%;
+    background-size: 65%;
+}
+
+.ui-icon-autobetes-back {
+    background: url("glyphicons/png/glyphicons_210_left_arrow.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 50%;
+    background-size: 65%;
+}
+
+.ui-icon-autobetes-edit {
+    background: url("glyphicons/png/glyphicons_150_edit.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 50%;
+    background-size: 65%;
+}
+
 .ui-icon-autobetes-fork {
     background: url("images/1416417254_fork.png") no-repeat;
     box-shadow: none;
@@ -126,7 +162,10 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background-size: 28px 28px;
 }
 
-
+.ui-icon-autobetes-feedback:after,
+.ui-icon-autobetes-settings:after,
+.ui-icon-autobetes-back:after,
+.ui-icon-autobetes-edit:after,
 .ui-icon-autobetes-fork:after,
 .ui-icon-autobetes-run:after,
 .ui-icon-autobetes-special:after,

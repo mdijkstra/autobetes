@@ -96,8 +96,16 @@ function controller() {
 		$('#deleteEventInstanceDialogConfirmButton').click(function() {
 			//user confirms
 			//delete instance
-			$.mobile.back();//go to previous page
+			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
+			//$.mobile.changePage("#history-event-instance-page");
+			window.history.go(-1);
 			$(window).ready(function(){
+				setTimeout(function(){
+				console.log(window.history.state.pageUrl);
+				if(window.history.state.pageUrl === "edit-event-instance-page"){
+					window.history.go(-1);
+				}
+				},0);
 				dbHandler.deleteEventInstance(id);
 				//refresh list in history
 				var selectedTabIndex = $(document).data('selectedTabIndex2');
@@ -297,35 +305,35 @@ function controller() {
 		var textAndColor;
 		switch(value) {
 		case 1:
-			textAndColor = {color:'#CCFF33',text:'Very easy'};
+			textAndColor = {color:'#CCFF33',text:'Very little'};
 
 			break;
 		case 2:
-			textAndColor = {color:'#99FF33',text:'Somewhat easy'};
+			textAndColor = {color:'#99FF33',text:'Very little'};
 			break;
 		case 3:
-			textAndColor = {color:'#33CC33',text:'Moderate'};
+			textAndColor = {color:'#33CC33',text:'Little'};
 			break;
 		case 4:
-			textAndColor = {color:'#FF9933',text:'Somewhat hard'};
+			textAndColor = {color:'#FF9933',text:'Little'};
 			break;
 		case 5:
-			textAndColor = {color:'#FF6600',text:'Moderately hard'};
+			textAndColor = {color:'#FF6600',text:'Moderate'};
 			break;
 		case 6:
-			textAndColor = {color:'#FF0000',text:'Hard'};
+			textAndColor = {color:'#FF0000',text:'Moderate'};
 			break;
 		case 7:
-			textAndColor = {color:'#FF0000',text:'Hard'};
+			textAndColor = {color:'#FF0000',text:'Much'};
 			break;
 		case 8:
-			textAndColor = {color:'#CC0000',text:'Very hard'};
+			textAndColor = {color:'#CC0000',text:'Much'};
 			break;
 		case 9:
-			textAndColor = {color:'#A31919',text:'Very, very hard'};
+			textAndColor = {color:'#A31919',text:'Very much'};
 			break;
 		case 10:
-			textAndColor = {color:'#721212',text:'Maximal'};
+			textAndColor = {color:'#721212',text:'Very much'};
 			break;
 
 		}

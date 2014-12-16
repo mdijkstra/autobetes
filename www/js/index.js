@@ -1,5 +1,3 @@
-
-
 //declare all global variables
 var dbHandler = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
 var callbackView = new callbackView();
@@ -183,6 +181,7 @@ function onlyDigits(){
 	});
 }
 onlyDigits();
+
 //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
 $(document).on('blur', 'input, textarea', function() {
 	setTimeout(function() {
@@ -190,7 +189,43 @@ $(document).on('blur', 'input, textarea', function() {
 	}, 0);
 });
 
-
+// $(document).on("pageinit", "home-page", function(event){
+// 	// $("div.ui-footer-dashboard").load('footerDashboard.html', function(){$(this).trigger("create")});
+// 		$("div.ui-footer").load('footer.html', function(){$(this).trigger("create")});
+// 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
+// 	// $("a.footerTab1").addClass('ui-btn-active').trigger("create");
+// 	// alert('xxx');
+// });
+//
+// $(document).on("pageshow", "report-page", function(event){
+// 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
+// 	// $("a.footerTab2").addClass('ui-btn-active').trigger("create");
+// });
+//
+//
+// // auto inject footer
+$(document).on('pageinit', function(event){
+	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
+		
+		if (0 === result.rows.length) $('#notLoggedIn').show();
+		else {
+			var row = result.rows.item(0);
+			var lastUpdateTimeStamp = row.lastchanged;
+			if (0 === lastUpdateTimeStamp) $('#notLoggedIn').show();
+			else $('#notLoggedIn').hide();
+		}		
+	});
+	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
+	 // $("div.ui-footer").load('footerDashboard.html', function(){$(this).trigger("create")});
+	// alert('hoi');
+	// if (undefined === $.mobile.activePage) $("a.footerTab1").addClass('ui-btn-active').trigger("create");
+	// else
+	// {
+	// 	alert($.mobile.activePage[0].id);
+	// 	if ("home-page" === $.mobile.activePage[0].id) $("a.footerTab1").addClass('ui-btn-active').trigger("create");
+	// 	if ("report-page" === $.mobile.activePage[0].id) $("a.footerTab2").addClass('ui-btn-active').trigger("create");
+	// }
+});
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -229,7 +264,8 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
-	//alert("ghaa")
+	// increase font of all h1's
+	$('h1').attr('style','font-size:1.3em;');
 	
 	//check if moves is installed on device
 	appAvailability.check(
