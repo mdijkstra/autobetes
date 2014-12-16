@@ -305,35 +305,35 @@ function controller() {
 		var textAndColor;
 		switch(value) {
 		case 1:
-			textAndColor = {color:'#CCFF33',text:'Very easy'};
+			textAndColor = {color:'#CCFF33',text:'Very little'};
 
 			break;
 		case 2:
-			textAndColor = {color:'#99FF33',text:'Somewhat easy'};
+			textAndColor = {color:'#99FF33',text:'Very little'};
 			break;
 		case 3:
-			textAndColor = {color:'#33CC33',text:'Moderate'};
+			textAndColor = {color:'#33CC33',text:'Little'};
 			break;
 		case 4:
-			textAndColor = {color:'#FF9933',text:'Somewhat hard'};
+			textAndColor = {color:'#FF9933',text:'Little'};
 			break;
 		case 5:
-			textAndColor = {color:'#FF6600',text:'Moderately hard'};
+			textAndColor = {color:'#FF6600',text:'Moderate'};
 			break;
 		case 6:
-			textAndColor = {color:'#FF0000',text:'Hard'};
+			textAndColor = {color:'#FF0000',text:'Moderate'};
 			break;
 		case 7:
-			textAndColor = {color:'#FF0000',text:'Hard'};
+			textAndColor = {color:'#FF0000',text:'Much'};
 			break;
 		case 8:
-			textAndColor = {color:'#CC0000',text:'Very hard'};
+			textAndColor = {color:'#CC0000',text:'Much'};
 			break;
 		case 9:
-			textAndColor = {color:'#A31919',text:'Very, very hard'};
+			textAndColor = {color:'#A31919',text:'Very much'};
 			break;
 		case 10:
-			textAndColor = {color:'#721212',text:'Maximal'};
+			textAndColor = {color:'#721212',text:'Very much'};
 			break;
 
 		}

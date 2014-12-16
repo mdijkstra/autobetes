@@ -9,10 +9,6 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"AppAvailability\"><param name=\"ios-package\" value=\"AppAvailability\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"StatusBar\"><param name=\"ios-package\" value=\"CDVStatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
@@ -29,25 +25,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
                         },
                         {
                             "xml": "<feature name=\"Console\"><param name=\"ios-package\" value=\"CDVLogger\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
-                            "count": 1
-                        }
-                    ]
-                }
-            },
-            "*-Info.plist": {
-                "parents": {
-                    "CFBundleURLTypes": [
-                        {
-                            "xml": "<array><dict><key>CFBundleURLSchemes</key><array><string>autobetesapp</string></array></dict></array>",
                             "count": 1
                         }
                     ]
@@ -58,12 +40,6 @@
                     "QuartzCore.framework": [
                         {
                             "xml": "false",
-                            "count": 1
-                        }
-                    ],
-                    "SystemConfiguration.framework": [
-                        {
-                            "xml": "true",
                             "count": 1
                         }
                     ],
@@ -78,27 +54,17 @@
         }
     },
     "installed_plugins": {
-        "com.ohh2ahh.plugins.appavailability": {
-            "PACKAGE_NAME": "autobetes.com"
-        },
-        "nl.x-services.plugins.launchmyapp": {
-            "URL_SCHEME": "autobetesapp",
-            "PACKAGE_NAME": "autobetes.com"
-        },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "Autobetes.com"
         },
         "nl.x-services.plugins.toast": {
-            "PACKAGE_NAME": "autobetes.com"
-        },
-        "org.apache.cordova.network-information": {
-            "PACKAGE_NAME": "autobetes.com"
-        },
-        "org.apache.cordova.console": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "Autobetes.com"
         },
         "org.apache.cordova.inappbrowser": {
-            "PACKAGE_NAME": "autobetes.com"
+            "PACKAGE_NAME": "Autobetes.com"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "Autobetes.com"
         }
     },
     "dependent_plugins": {}

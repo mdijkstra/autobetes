@@ -8,7 +8,7 @@ var synchronise = function(){
 		$(document).data(IS_SYNCHRONISING, true);
 		//setTimeout(function() {
 		
-		dbHandler.getLastUpdateTimeStamp(function(transaction,result){
+		dbHandler.getLastUpdateTimeStamp(function(transaction, result){
 			
 			var currentTime = new Date().getTime();
 			var row = result.rows.item(0);
