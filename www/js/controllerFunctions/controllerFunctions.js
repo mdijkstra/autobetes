@@ -97,8 +97,15 @@ function controller() {
 			//user confirms
 			//delete instance
 			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
-			$.mobile.changePage("#history-event-instance-page");
+			//$.mobile.changePage("#history-event-instance-page");
+			window.history.go(-1);
 			$(window).ready(function(){
+				setTimeout(function(){
+				console.log(window.history.state.pageUrl);
+				if(window.history.state.pageUrl === "edit-event-instance-page"){
+					window.history.go(-1);
+				}
+				},0);
 				dbHandler.deleteEventInstance(id);
 				//refresh list in history
 				var selectedTabIndex = $(document).data('selectedTabIndex2');

@@ -111,16 +111,18 @@ $('#deleteEventDialogConfirmButton').click(function() {
 });
 
 $('#deleteEventDialogConfirmButton').click(function() {
-	console.log("confirm")
 	var eventName = $('#newEventName').val();
 	//user confirmed deleting event
 	//go back to event list page
-	$.mobile.changePage('#'+EVENTLISTPAGE);
+	//$.mobile.changePage('#'+EVENTLISTPAGE);
+	//go back two pages will go back to event list page as well + the edit event screen of the deleted event
+	//is gone
+	window.history.go(-2);
 	//wait till window is loaded
 	$(window).ready(function(){
 		//delete event
 		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
-
+		
 		view.toastMessage("deleted " + $('#deleteEventDialogConfirmButton').val());
 	})
 });
