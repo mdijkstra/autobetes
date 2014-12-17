@@ -20,7 +20,7 @@
 	<div data-role="page" id="home-page">
 		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<a href="mailto:autobetes@gmail.com" data-icon="autobetes-feedback" style="height:30px;">&nbsp;</a>
-			<h1>AutobetesX</h1>
+			<h1>Autobetes</h1>
 			<a href="#settings-page" data-icon="autobetes-settings" style="height:30px;">&nbsp;</a>
 		</div>
 
@@ -28,9 +28,9 @@
 		<div role="main" id="mainScreen" class="ui-content">
 			<div id="background"></div>
             <div data-role="controlgroup" data-type="horizontal" align="center">
-                <a id="homeStartButton" href="#event-list-page" onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New'); $('#editModeButton').show()" 
+                <a id="homeStartButton" href="#event-list-page" onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New')" 
                 data-role="button" data-theme="a" data-icon="autobetes-fork" data-iconpos="left" class="ios">&nbsp;</a>
-                <a href="#event-list-page" onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New'); $('#editModeButton').hide()" data-role="button" data-theme="a" data-icon="autobetes-special" data-iconpos="left" class="ios">&nbsp;</a>
+                <a href="#event-list-page" onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New')" data-role="button" data-theme="a" data-icon="autobetes-special" data-iconpos="left" class="ios">&nbsp;</a>
                 <!--a href="#" data-role="button" data-theme="a" data-icon="autobetes-special"  	data-iconpos="left" class="ios">&nbsp;</a-->
 				<a id="historyButton" href="#history-event-instance-page" onclick="$(document).removeData('selectedTabIndex2');"	data-role="button" data-theme="a" data-icon="autobetes-history" data-iconpos="left" class="ios speedTap">&nbsp;</a>
             </div>
@@ -123,7 +123,12 @@
 			<script id="event-list-template" type="text/x-handlebars-template">
 				
 				{{#each .}}
-					<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
+					{{#if standard}}
+						{{!-- The event is  standard so not editable --}}
+						<a onclick='$.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");' class="ui-btn ui-shadow ui-corner-all">{{name}}</a>
+					{{else}}
+						<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
+					{{/if}}
 				{{/each}}
 				</div>
 			</script>

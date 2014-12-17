@@ -43,6 +43,11 @@ function callbackView() {
 				}
 				else{
 					//push button in array
+					if(row.id.indexOf(ADMINIDPREPOSITION) > -1){
+						//event is common, add param common=true
+						row.standard = true;
+					}
+					
 					rows.push(row);
 				}
 
