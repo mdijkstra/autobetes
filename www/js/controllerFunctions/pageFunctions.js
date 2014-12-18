@@ -10,7 +10,7 @@ $(document).on('pageshow', '#event-list-page', function() {
 
 $(document).on('pageshow', '#login-page', function(){
 
-	dbHandler.getUserInfo(function(transaction,result){
+	dbHandler.getUserCredentials(function(transaction,result){
 
 
 		if(result.rows.length > 0 && result.rows.item(0).email){
@@ -28,14 +28,42 @@ $(document).on('pageshow', '#login-page', function(){
 	});
 });
 
+$(document).on('pageshow', '#user-info-page', function(){
+	dbHandler.getUserInfo(function(transaction,result){
+		
+		for (var i = 0; i < result.rows.length; i++) {
+			//process results
+			var row = result.rows.item(i);
+			$('#pumpSerial').val(row.idOnPump);
+			//var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
+			var bodyWeight = $('#bodyWeight').val(row.bodyWeight);
+			var length = $('#length').val(row.length);
+			var birthYear= $('#yearOfBirth').val(row.birthYear);
+			console.log("sdf"+JSON.stringify(row));
+			if(row.gender === "Male"){
+				console.log("male")
+				$("#radio-choice-h-2a").prop("checked", true);
+				$("#radio-choice-h-2b").prop("checked",false);
+			}
+			else{
+				$("#radio-choice-h-2a").prop("checked", false);
+				$("#radio-choice-h-2b").prop("checked",true);
+			}
+			$("input[type='radio']").checkboxradio("refresh");
+			console.log(JSON.stringify(row));
+		}
+	});
+});
+
+
 $(document).on('pageshow', '#settings-page', function(){
 	//fill settings page
 	//get user info
-	dbHandler.getUserInfo(function(transaction,result){
+	dbHandler.getUserCredentials(function(transaction,result){
 		if(result.rows.length > 0 && result.rows.item(0).email){
 			//fill page
 			$('#settingsPageAccount').html(result.rows.item(0).email);
-			$('#pumpSerial').val(result.rows.item(0).pumpId);
+			//$('#pumpSerial').val(result.rows.item(0).pumpId);
 		}
 		else{
 

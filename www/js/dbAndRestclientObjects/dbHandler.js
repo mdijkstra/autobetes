@@ -34,6 +34,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.setClientExceptionRecordAsBeenSent =setClientExceptionRecordAsBeenSent;
 	this.getCurrentFoodEventInstances = getCurrentFoodEventInstances;
 	this.getEventsWithNameRegexpInput = getEventsWithNameRegexpInput;
+	this.updateUserInfo = updateUserInfo;
+	this.updateParticularFieldInUserInfo = updateParticularFieldInUserInfo;
+	this.getUserCredentials = getUserCredentials;
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
 	//create statements
@@ -45,9 +48,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id TEXT PRIMARY KEY UNIQUE, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
 	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, special INTEGER DEFAULT 0, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
 
-	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, pumpId TEXT, password TEXT)';
+	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, password TEXT)';
 	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)';
 	var CREATE_CLIENT_EXCEPTION_LOG = 'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)';
+	var CREATE_USER_INFO = 'CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER)';
 	//update statements
 
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
@@ -64,7 +68,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	
 	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE id = ?';
 	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE id = ?';
-	var EDIT_USER = 'UPDATE User SET email = ?,pumpId = ?, password = ? WHERE cId = 1';
+	var EDIT_USER = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
+	var EDIT_USER_INFO = 'UPDATE UserInfo SET idOnPump= ?,gender= ?,bodyWeight= ?,length= ?,birthYear= ?,lastchanged= ? WHERE cId = 1';
+	var EDIT_PARTICULAR_FIELD_USER_INFO = 'UPDATE UserInfo SET ?=?, lastchanged=? where cId = 1';
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
 	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?'
@@ -76,7 +82,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
 	var SELECT_CURRENT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.intensity, a.id, ev.name, a.endTime, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on a.id = e.id WHERE (a.endTime IS NULL OR a.endTime > ?) AND e.deleted = 0 AND e.beginTime < ? AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND a.endTime IS NOT NULL AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
+	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0  AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;'
 	//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
@@ -87,11 +93,12 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
-	var SELECT_USER_INFO = 'SELECT * FROM User LIMIT 1';
+	var SELECT_USER_CREDENTIALS = 'SELECT * FROM User LIMIT 1';
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
 	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
 	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
 	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
+	var SELECT_USER_INFO = 'SELECT * FROM UserInfo';
 	
 	//insert statements
 	var ADD_EXCEPTION_RECORD = "INSERT INTO ClientExceptionLog(clientDataAndTime, exception, query) VALUES(?,?,?)";
@@ -101,7 +108,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var ADD_EVENT = 'INSERT INTO Event(id, name, eventType,lastchanged) VALUES (?,?,?,?)';
 	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs) VALUES(?,?,?)';
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
-	var ADD_USER = 'INSERT INTO User(cId, email, pumpId, password) VALUES (1,?,?,?)';
+	var ADD_USER = 'INSERT INTO User(cId, email, password) VALUES (1,?,?,?)';
+	var ADD_USER_INFO= 'INSERT INTO UserInfo(cId, idOnPump,gender,bodyWeight,length,birthYear,lastchanged) VALUES(1,?,?,?,?,?,0)'
 	var ADD_LAST_UPDATE_TIMESTAMP = 'INSERT INTO LastUpdate(cId, lastchanged) VALUES(1,0)';
 	var SERVER_ADD_EVENT = 'INSERT INTO Event(id, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
 	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(id, eventId, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?)';
@@ -205,6 +213,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
 
 		executeQuery('DROP TABLE IF EXISTS ClientExceptionLog', [], null);
+		
+		//execute
 	}
 	/*
 	 * Creates all tables if not exist
@@ -229,6 +239,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( CREATE_FOOD_EVENT_INSTANCE, [], null);
 
 		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], null);
+		
+		executeQuery( CREATE_USER_INFO, [], null);
 
 		//Create row with id 0 in table last update if not exists
 		executeQuery( SELECT_LAST_UPDATE_TIMESTAMP, [], function(transaction,result){
@@ -242,11 +254,12 @@ function dbHandler(shortName, version, displayName, maxSize) {
 			}
 		});
 		//same as above
-		executeQuery( SELECT_USER_INFO, [], function(transaction,result){
+		executeQuery( SELECT_USER_CREDENTIALS, [], function(transaction,result){
 			if(result.rows.length === 0){
 				//table contains no value
 				//create null user so it can be modified later
 				addUser(null, null, null);	
+				addUserInfo(null,null,null,null,null);
 			}
 			else{
 				//table contains value
@@ -259,7 +272,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * Resets all tables except for the user table. Used when user switches account
 	 */
 	function resetDBExceptUserTable(){
-
+		console.log("reset db");
 		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], null);
@@ -273,7 +286,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
-
+		
+		executeQuery( 'DROP TABLE IF EXISTS UserInfo;', [], null);
+		
+		executeQuery( CREATE_USER_INFO, [], null);
+		
+		addUserInfo(null,null,null,null,null);
+		
 		createTablesIfNotExists();
 	}
 
@@ -587,17 +606,30 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery(SELECT_CURRENT_PLANNED_FOOD, [(curTimeStamp-range), (curTimeStamp+range)], callback)
 	}
 
+	function getUserCredentials(callback){
+		executeQuery(SELECT_USER_CREDENTIALS, [], callback);
+	}
+
+	function addUser(email, password){
+		executeQuery(ADD_USER, [email, password], function(){});
+	}
+	function addUserInfo(idOnPump,gender,bodyWeight,length,birthYear){
+		executeQuery(ADD_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear],function(){});
+	}
+
+	function updateUser(email, password){
+		executeQuery(EDIT_USER, [email, password], function(){});
+	}
+	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,getCurrentTimestamp()],function(){});
+	}
+	function updateParticularFieldInUserInfo(fieldName,fieldValue){
+		executeQuery(EDIT_PARTICULAR_FIELD_USER_INFO, [fieldName,fieldValue,getCurrentTimestamp()],function(){});
+	}
 	function getUserInfo(callback){
-		executeQuery(SELECT_USER_INFO, [], callback);
+		executeQuery(SELECT_USER_INFO, [],callback);
 	}
-
-	function addUser(email, pumpId, password){
-		executeQuery(ADD_USER, [email, pumpId, password], null);
-	}
-
-	function updateUser(email, pumpId, password){
-		executeQuery(EDIT_USER, [email, pumpId, password], null);
-	}
+	
 	function updateEmailAndPassword(email, password, callback){
 		executeQuery(UPDATE_EMAIL_AND_PASSWORD, [email, password], callback);
 	}

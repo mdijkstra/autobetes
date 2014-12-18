@@ -252,23 +252,23 @@ function controller() {
 
 			}
 		}
-		dbHandler.getUserInfo(checkCallBack);
+		dbHandler.getUserCredentials(checkCallBack);
 	}
 	/*
 	 * This method provides logging in, it gets called on booth and when token is expired
 	 */
 	function login(){
 
-		console.log($(document).data(IS_LOGGING_IN));
+	
 		if($(document).data(IS_LOGGING_IN) === false){
 			//ensure that app is not logging in multiple times simultaneously
 			$(document).data(IS_LOGGING_IN, true);
-			dbHandler.getUserInfo(function(transaction,result){
+			dbHandler.getUserCredentials(function(transaction,result){
 
 				if(result.rows.length > 0){
 					var row = result.rows.item(0);
 					//try to log in with data
-
+					
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							//successfully logged in

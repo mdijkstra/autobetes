@@ -202,9 +202,9 @@ function callbackView() {
 		var eventInstances = [];
 		for (var i = 0; i < result.rows.length; i++) {
 			//process results
-
+			
 			var row = result.rows.item(i);
-			//console.log(JSON.stringify(row));
+			console.log(JSON.stringify(row))
 			var date = new Date(row.beginTime);
 			var minutes = parseInt(date.getMinutes());
 			if (minutes < 10) {

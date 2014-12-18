@@ -54,6 +54,7 @@ $('[name=event-list-navbar-buttons]').click(function() {
 	//highlight the button that is selected
 	$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 	//show list of events with certain eventType
+	
 	dbHandler.getEvents(eventType, callbackView.showEventList);
 });
 
@@ -62,6 +63,10 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	//get event type
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	//get index
+	if(eventType ===SPECIAL){
+		eventType = ACTIVITY;//first it was activity now special
+	}
+	
 	var index = 0;
 	if (eventType === FOOD)
 		index = 1;
@@ -75,7 +80,7 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
 	//highlight the button that is selected
 	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
-
+	console.log("type: "+ eventType);
 	dbHandler.listHistoryEvents(eventType, callbackView.showEventInstanceList);
 
 });
@@ -203,7 +208,7 @@ $('#loginDialogOkButton').click(function(){
 	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val());
 	var password = controller.setNullIfFieldIsEmpty($('#loginPassword').val());
 	//check if user switched account
-	dbHandler.getUserInfo(function(transaction, result){
+	dbHandler.getUserCredentials(function(transaction, result){
 		if(result.rows.length > 0 && result.rows.item(0).email !== email){
 			//user switched account, so now reset db
 
@@ -221,14 +226,25 @@ $('#loginDialogOkButton').click(function(){
 
 });
 
+$('#saveUserInfoButton').click(function(){
+	
+	var idOnPump = $('#pumpSerial').val();
+	var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
+	var bodyWeight = $('#bodyWeight').val();
+	var length = $('#length').val();
+	var birthYear= $('#yearOfBirth').val();
+	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+});
+
 $('#registrationDialogOkButton').click(function(){
 	//console.log("start registering");
 	//get values
 	var email = controller.setNullIfFieldIsEmpty($('#registerEmail').val());
-	var pumpId = controller.setNullIfFieldIsEmpty($('#registerPumpId').val());
 	var password = controller.setNullIfFieldIsEmpty($('#registerPassword').val());
 	var confirmPassword = controller.setNullIfFieldIsEmpty($('#registerConfirmPassword').val());
-
+	
+	
+	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear)
 	//add tests to values
 	//validate email 
 	var validationPattern = /^.+@.+.[a-zA-Z]{2,3}$/;
@@ -237,7 +253,12 @@ $('#registrationDialogOkButton').click(function(){
 		if(password === confirmPassword){
 			//reset db to ensure that data from another account not will end up in this account, 
 			dbHandler.resetDBExceptUserTable();
-
+			var idOnPump = $('registerPumpId').val();
+			var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-22"]:checked').val());
+			var bodyWeight = $('#bodyWeightRegisterScreen').val();
+			var length = $('#lengthRegisterScreen').val();
+			var birthYear= $('#yearOfBirthRegisterScreen').val();
+			console.log("add user info: "+ idOnPump+" "+gender+" "+bodyWeight+" "+length+" "+birthYear)
 			var userData = {
 					email: email,
 					password: password
@@ -260,7 +281,7 @@ $('#registrationDialogOkButton').click(function(){
 
 			var registerCallbackSuccess = function(data, textStatus, response){
 				if(response.responseJSON.success){
-					dbHandler.updateUser(email, pumpId, password);
+					dbHandler.updateUser(email, password);
 					$.mobile.back();//go to previous page
 					//alert(response.responseJSON.message);
 					setTimeout(function() {

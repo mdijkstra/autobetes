@@ -34,6 +34,7 @@ var ACTIVITYEVENTINSTANCE = "ActivityEventInstance";
 var UNAUTHORIZED = "Unauthorized";
 var FOOD = 'Food';
 var EVENT = "Event";
+var SPECIAL = "Special";
 var INSTANCE = "Instance";
 var ACTIVITY = 'Activity';
 var RUNNING = "running";
