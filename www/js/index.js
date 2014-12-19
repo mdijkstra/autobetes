@@ -28,6 +28,7 @@ var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
+var SYNCHRONISE_USER_INFO_URL =  '/plugin/anonymous/syncUserInfo';
 var REGISTER_URL = "/plugin/anonymous/registerUser";
 var FOODEVENTINSTANCE = "FoodEventInstance";
 var ACTIVITYEVENTINSTANCE = "ActivityEventInstance";

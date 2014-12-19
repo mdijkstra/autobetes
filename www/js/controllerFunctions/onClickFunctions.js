@@ -244,7 +244,7 @@ $('#registrationDialogOkButton').click(function(){
 	var confirmPassword = controller.setNullIfFieldIsEmpty($('#registerConfirmPassword').val());
 	
 	
-	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear)
+	
 	//add tests to values
 	//validate email 
 	var validationPattern = /^.+@.+.[a-zA-Z]{2,3}$/;
@@ -253,12 +253,14 @@ $('#registrationDialogOkButton').click(function(){
 		if(password === confirmPassword){
 			//reset db to ensure that data from another account not will end up in this account, 
 			dbHandler.resetDBExceptUserTable();
-			var idOnPump = $('registerPumpId').val();
-			var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-22"]:checked').val());
+			var idOnPump = $('#registerPumpId').val();
+			//var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-22"]:checked').val());
+			var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
 			var bodyWeight = $('#bodyWeightRegisterScreen').val();
 			var length = $('#lengthRegisterScreen').val();
 			var birthYear= $('#yearOfBirthRegisterScreen').val();
-			console.log("add user info: "+ idOnPump+" "+gender+" "+bodyWeight+" "+length+" "+birthYear)
+			dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear)
+			//console.log("add user info: "+ idOnPump+" "+gender+" "+bodyWeight+" "+length+" "+birthYear)
 			var userData = {
 					email: email,
 					password: password
@@ -304,7 +306,6 @@ $('#registrationDialogOkButton').click(function(){
 
 			};
 
-			console.log("execute restclient.register");
 			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 		}
 		else{

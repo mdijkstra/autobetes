@@ -283,7 +283,7 @@ function controller() {
 								view.toastMessage(SUCCESSFULLY_LOGGED_IN);
 
 							}
-
+							syncUserInfo();
 
 
 						}
@@ -298,6 +298,21 @@ function controller() {
 		}
 		else{
 		}
+	}
+
+	
+	function syncUserInfo(){
+		dbHandler.getUserInfo(function(transaction,result){
+			var requestData = [];
+			var row = result.rows.item(0);
+			requestData.push(row);
+			console.log(SERVER_URL+SYNCHRONISE_USER_INFO_URL);
+			console.log(JSON.stringify(requestData));
+			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
+				console.log(JSON.stringify(data));
+				
+			}, function(){});
+		});
 	}
 	/*
 	 * Interprets an integer from 1 till 10, returns an object with html color code and text corresponding
