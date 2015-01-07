@@ -22,10 +22,20 @@ function controller() {
 		var cannotAddOrEdit = false;
 		var eventName = $('#newEventName').val();
 		var eventType = EventListType;
+		var id = $('#foodId').html();
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
-		var id = $('#foodId').html();
+		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var newEvent= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var estimationCarbs = controller.setNullIfFieldIsEmpty($('#newEventEstimationCarbs').is(':checked'));
+		//convert boolean to integer
+		if(estimationCarbs === true){
+			estimationCarbs = 0;
+		}
+		else{
+			estimationCarbs = 1;
+		}
 		//check if eventname is empty
 
 		if(eventName === ""){
@@ -77,11 +87,11 @@ function controller() {
 			}
 			if(id === ''){
 				//add event
-				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
+				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callbackFunction);
 			}
 			else{
-				//edit event 
-				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
+				//edit event
+				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callbackFunction);
 			}
 		}
 	}
@@ -311,6 +321,7 @@ function controller() {
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 				console.log(JSON.stringify(data));
 				
+				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
 			}, function(){});
 		});
 	}

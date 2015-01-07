@@ -263,6 +263,29 @@
 						</td>
 					<tr>
 					<tr>
+						<form>
+							<label>         
+							<input id="newEventEstimationCarbs" type="checkbox" checked="checked"
+								name="checkbox-0 ">Check me     
+							</label>
+						</form>
+					</tr>
+					<tr>
+						<td width="29%">
+							<p>Portion size:</p>
+						</td>
+						<td width="50%"><input type="number" id="newEventPortionSize"
+							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
+							placeholder="unknown" value="0"></td>
+						<td width="20%">
+							<p>units</p>
+						</td>
+						<td width="1%"><a
+							onclick='view.toastMessage("Clear if unknown. Number of alcholic units in this food/drink. One unit corresponds to a standard glass")'
+							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
+						</td>
+					</tr>
+					<tr>
 						<td width="29%">
 							<p>Alcohol:</p>
 						</td>
@@ -331,8 +354,8 @@
 							<h3>Account</h3>
 							<p id="settingsPageAccount"></p>
 					</a></li>
-					<li><a href="#user-info-page" class="ios" data-role="button" data-theme="a"
-						data-icon="autobetes-edit2" data-iconpos="left">
+					<li><a href="#user-info-page" class="ios" data-role="button"
+						data-theme="a" data-icon="autobetes-edit2" data-iconpos="left">
 							&nbsp;&nbsp;&nbsp;Edit user info </a></li>
 					<li><a id="connectToMoves" class="ios" data-role="button"
 						data-theme="a" data-icon="autobetes-run" data-iconpos="left">&nbsp;&nbsp;&nbsp;Connect
@@ -350,7 +373,7 @@
 						</select>
 					</a> </li>
 					-->
-					
+
 				</ul>
 
 				<br>
@@ -386,7 +409,7 @@
 			<div class="settingsList" data-role="controlgroup" data-filter="true"
 				data-input="#filterControlgroup-input">
 				<ul class="ui-listview" data-icon="false">
-					
+
 					<li class="ui-first-child"><a class="ui-btn">
 							<h3>Pump Id</h3> <input id="pumpSerial" type="text"
 							data-clear-btn="true" placeholder="1234567">
@@ -401,7 +424,7 @@
 									id="radio-choice-h-2a" value="Male"> <label
 									class="radioChoiceNewEvent" for="radio-choice-h-2a">Male</label>
 								<input type="radio" name="radio-choice-h-2"
-									id="radio-choice-h-2b" value="Femal"> <label
+									id="radio-choice-h-2b" value="Female"> <label
 									class="radioChoiceNewEvent" for="radio-choice-h-2b">Female</label>
 
 							</fieldset>
@@ -409,9 +432,9 @@
 					</a></li>
 
 					<li><a class="ui-btn">
-							<h3>Body weight</h3>
-							<input type="number" id="bodyWeight" step="1" pattern="[0-9]*"
-							data-clear-btn="true" placeholder="In kilograms">
+							<h3>Body weight</h3> <input type="number" id="bodyWeight"
+							step="1" pattern="[0-9]*" data-clear-btn="true"
+							placeholder="In kilograms">
 					</a></li>
 					<li><a class="ui-btn">
 							<h3>Length</h3> <input id="length" type="number"
@@ -426,16 +449,13 @@
 
 
 				</ul>
-				<a id="saveUserInfoButton" data-rel="back" 
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span"
-				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
-				class="ui-btn-inner ui-btn-corner-all"> <span
-					class="ui-btn-text">Save</span>
-			</span>
-			</a>
-
-				<br>
+				<a id="saveUserInfoButton" data-rel="back" data-corners="true"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+					class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text">Save</span>
+				</span>
+				</a> <br>
 
 			</div>
 
@@ -777,21 +797,23 @@
 		</div>
 		<div data-role="content">
 			<ul class="ui-listview" data-icon="false">
-			<li><a class="ui-btn"><h3>Email</h3><input id="registerEmail" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="example@autobetes.com"> </a></li>
-			
-			<li><a class="ui-btn"><h3>Password</h3><input id="registerPassword"
-				type="password" data-clear-btn="true" name="text-7" value="">
+				<li><a class="ui-btn"><h3>Email</h3>
+						<input id="registerEmail" type="text" data-clear-btn="true"
+						name="text-7" value="" placeholder="example@autobetes.com">
 				</a></li>
-				
-			<li><a class="ui-btn"><h3>Confirm password</h3><input id="registerConfirmPassword"
-				type="password" data-clear-btn="true" name="text-7" value="">
-			</a></li>
-			<li><a class="ui-btn"><h3>Pump id</h3><input
-				id="registerPumpId" type="text" data-clear-btn="true" name="text-7"
-				value="" placeholder="12345"></a> </li>
-			
-			<li><a class="ui-btn"><h3>Gender</h3>
+
+				<li><a class="ui-btn"><h3>Password</h3>
+						<input id="registerPassword" type="password" data-clear-btn="true"
+						name="text-7" value=""> </a></li>
+
+				<li><a class="ui-btn"><h3>Confirm password</h3>
+						<input id="registerConfirmPassword" type="password"
+						data-clear-btn="true" name="text-7" value=""> </a></li>
+				<li><a class="ui-btn"><h3>Pump id</h3>
+						<input id="registerPumpId" type="text" data-clear-btn="true"
+						name="text-7" value="" placeholder="12345"></a></li>
+
+				<li><a class="ui-btn"><h3>Gender</h3>
 
 						<fieldset id="genderFormRegisterScreen" data-role="controlgroup"
 							data-type="horizontal" style="text-align: center">
@@ -803,13 +825,11 @@
 								id="radio-choice-h-22b" value="Female"> <label
 								class="radioChoiceNewEvent" for="radio-choice-h-22b">Female</label>
 
-						</fieldset>
-
-				</a></li>
+						</fieldset> </a></li>
 
 				<li><a class="ui-btn">
-						<h3>Body weight</h3>
-						<input type="number" id="bodyWeightRegisterScreen" step="1" pattern="[0-9]*"
+						<h3>Body weight</h3> <input type="number"
+						id="bodyWeightRegisterScreen" step="1" pattern="[0-9]*"
 						data-clear-btn="true" placeholder="In kilograms">
 				</a></li>
 				<li><a class="ui-btn">
@@ -818,13 +838,12 @@
 						placeholder="In centimeters">
 				</a></li>
 				<li><a class="ui-btn">
-						<h3>Year of birth</h3> <input id="yearOfBirthRegisterScreen" type="number"
-						data-clear-btn="true" step="1" pattern="[0-9]*"
+						<h3>Year of birth</h3> <input id="yearOfBirthRegisterScreen"
+						type="number" data-clear-btn="true" step="1" pattern="[0-9]*"
 						placeholder="i.e. 1991">
 				</a></li>
 			</ul>
-			<a
-				id="registrationDialogOkButton" data-role="button"
+			<a id="registrationDialogOkButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span

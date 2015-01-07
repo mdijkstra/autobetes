@@ -172,7 +172,6 @@ function populateEditEventScreen(id){
 		if(result.rows.length === 1){
 			//found event
 			var row = result.rows.item(0);
-			
 			$('#define-event-page').find("#headerName").text(EDIT);
 			$('#foodId').text(row.id);
 			//set the fieldset right
@@ -187,6 +186,19 @@ function populateEditEventScreen(id){
 				$('#define-event-page').find('#newEventPagePower').val("");
 				$('#define-event-page').find('#newEventPageCarbs').val(row.carbs);
 				$('#define-event-page').find('#newEventPageAlcoholicUnits').val(row.alcoholicUnits);
+				$('#define-event-page').find('#newEventPortionSize').val(row.portionsize);
+				
+				if(row.estimationCarbs === 0){
+					//0 stands for false
+					//uncheck checkbox
+					$('#newEventEstimationCarbs').prop('checked', false);
+					
+				}
+				else{
+					//check checkbox
+					$('#newEventEstimationCarbs').prop('checked', true); 
+				}
+				$('#newEventEstimationCarbs').checkboxradio('refresh');
 				$('#addOrEditEventAndStart').html("Save and consume");
 			}
 			else{

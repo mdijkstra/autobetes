@@ -37,11 +37,12 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.updateUserInfo = updateUserInfo;
 	this.updateParticularFieldInUserInfo = updateParticularFieldInUserInfo;
 	this.getUserCredentials = getUserCredentials;
+	this.serUpdateUserInfo = serUpdateUserInfo;
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
 	//create statements
 	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id TEXT PRIMARY KEY UNIQUE, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
-	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(id TEXT PRIMARY KEY UNIQUE, alcoholicUnits INTEGER, carbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
+	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(id TEXT PRIMARY KEY UNIQUE, alcoholicUnits INTEGER, carbs INTEGER, portionsize INTEGER, estimationCarbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
 	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(id TEXT PRIMARY KEY UNIQUE, power INTEGER, CONSTRAINT FK_ActivityEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
 
 	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id TEXT PRIMARY KEY UNIQUE, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, eventId STRING NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (eventId) REFERENCES Event (id))';
@@ -55,7 +56,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	//update statements
 
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
-	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=? WHERE id=?';
+	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=?, portionsize=?, estimationCarbs=? WHERE id=?';
 	var UPDATE_ACTIVITY_EVENT = 'UPDATE ActivityEvent SET power=? WHERE id=?';
 
 	var UPDATE_EVENT_INSTANCE = 'UPDATE EventInstance SET beginTime = ?, lastchanged=? WHERE id=?';
@@ -64,7 +65,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	
 	var SERVER_UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=?, deleted=? WHERE id =?';
 	var SERVER_UPDATE_INSTANCE = 'UPDATE EventInstance SET eventId = ?, beginTime = ?, deleted=?, lastchanged=? WHERE id=?';
-
 	
 	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE id = ?';
 	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE id = ?';
@@ -89,14 +89,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
-	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
+	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power, f.portionsize, f.estimationCarbs FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
 	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
 	var SELECT_USER_CREDENTIALS = 'SELECT * FROM User LIMIT 1';
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
 	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
-	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
+	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, f.portionsize, f.estimationCarbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
 	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
 	var SELECT_USER_INFO = 'SELECT * FROM UserInfo';
 	
@@ -106,9 +106,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var ADD_FOOD_INSTANCE = 'INSERT INTO FoodEventInstance(id, amount) VALUES (?,?)';
 	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(id, intensity) VALUES (?,?)';
 	var ADD_EVENT = 'INSERT INTO Event(id, name, eventType,lastchanged) VALUES (?,?,?,?)';
-	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs) VALUES(?,?,?)';
+	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs, portionsize, estimationCarbs) VALUES(?,?,?,?,?)';
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
-	var ADD_USER = 'INSERT INTO User(cId, email, password) VALUES (1,?,?,?)';
+	var ADD_USER = 'INSERT INTO User(cId, email, password) VALUES (1,?,?)';
 	var ADD_USER_INFO= 'INSERT INTO UserInfo(cId, idOnPump,gender,bodyWeight,length,birthYear,lastchanged) VALUES(1,?,?,?,?,?,0)'
 	var ADD_LAST_UPDATE_TIMESTAMP = 'INSERT INTO LastUpdate(cId, lastchanged) VALUES(1,0)';
 	var SERVER_ADD_EVENT = 'INSERT INTO Event(id, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
@@ -197,6 +197,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		//executeQuery( 'DROP TABLE IF EXISTS ClientExceptionLog;', [], null);
 		
 		executeQuery( 'DROP TABLE IF EXISTS User;', [], null);
+		
+		executeQuery( 'DROP TABLE IF EXISTS UserInfo;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
 
@@ -229,7 +231,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 		executeQuery( CREATE_EVENT, [], null);
 
-
+		
 		executeQuery( CREATE_FOOD_EVENT, [], null);
 
 		executeQuery( CREATE_ACTIVITY_EVENT, [], null);
@@ -241,7 +243,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], null);
 		
 		executeQuery( CREATE_USER_INFO, [], null);
-
+		
 		//Create row with id 0 in table last update if not exists
 		executeQuery( SELECT_LAST_UPDATE_TIMESTAMP, [], function(transaction,result){
 			if(result.rows.length === 0){
@@ -253,12 +255,13 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				//table contains value
 			}
 		});
+		
 		//same as above
 		executeQuery( SELECT_USER_CREDENTIALS, [], function(transaction,result){
 			if(result.rows.length === 0){
 				//table contains no value
 				//create null user so it can be modified later
-				addUser(null, null, null);	
+				addUser(null, null);	
 				addUserInfo(null,null,null,null,null);
 			}
 			else{
@@ -390,10 +393,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * This method edits a certain event, given the eventKey(primary key), the new eventName
 	 * and the eventType(which can be altered as well).
 	 */
-	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, callback){
+	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callback){
 		executeQuery(UPDATE_EVENT, [eventName, eventType, getCurrentTimestamp(),id], function(){});
 		if(eventType === FOOD){
-			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, id], callback(id));
+			executeQuery(UPDATE_FOOD_EVENT, [alcoholicUnits, carbs, portionsize, estimationCarbs, id], callback(id));
 		}
 		else{
 			executeQuery(UPDATE_ACTIVITY_EVENT, [power, id], callback(id));
@@ -408,11 +411,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
 
 	 */
-	function addEvent(eventName, eventType, carbs, alcoholicUnits, power, callback) {
+	function addEvent(eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callback) {
 		var generatedId = makeId();
 		
 		var addFoodFunction = function(transaction, result){
-			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs], callback(generatedId));
+			executeQuery(ADD_FOOD, [generatedId, alcoholicUnits, carbs, portionsize, estimationCarbs], callback(generatedId));
 		};
 		var addActivityFunction = function(transaction, result){
 			executeQuery(ADD_ACTIVITY, [generatedId, power], callback(generatedId));
@@ -454,7 +457,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQueryWithErrorCallback(SERVER_UPDATE_EVENT, [ controller.setNullIfFieldIsEmpty(entity.name), controller.setNullIfFieldIsEmpty(entity.eventType), controller.setNullIfFieldIsEmpty(entity.lastchanged), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.id)], null, callback);
 
 		if(entity.eventType === FOOD){
-			executeQueryWithErrorCallback(UPDATE_FOOD_EVENT, [controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs), controller.setNullIfFieldIsEmpty(entity.id)], callback, callback);
+			executeQueryWithErrorCallback(UPDATE_FOOD_EVENT, [controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs), controller.setNullIfFieldIsEmpty(entity.portionsize), controller.setNullIfFieldIsEmpty(entity.estimationCarbs), controller.setNullIfFieldIsEmpty(entity.id)], callback, callback);
 		}
 		else{
 			executeQueryWithErrorCallback(UPDATE_ACTIVITY_EVENT, [controller.setNullIfFieldIsEmpty(entity.power), controller.setNullIfFieldIsEmpty(entity.id)], callback,callback);
@@ -464,7 +467,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function serverAddEvent(entity,callback){
 		executeQueryWithErrorCallback(SERVER_ADD_EVENT, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.name), controller.setNullIfFieldIsEmpty(entity.eventType), controller.setNullIfFieldIsEmpty(entity.deleted), controller.setNullIfFieldIsEmpty(entity.lastchanged)], function(){
 			if(entity.eventType === FOOD){
-				executeQueryWithErrorCallback(ADD_FOOD, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs)],callback,callback);
+				executeQueryWithErrorCallback(ADD_FOOD, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.alcoholicUnits), controller.setNullIfFieldIsEmpty(entity.carbs), controller.setNullIfFieldIsEmpty(entity.portionsize), controller.setNullIfFieldIsEmpty(entity.estimationCarbs)],callback,callback);
 			}
 			else{
 				executeQueryWithErrorCallback(ADD_ACTIVITY, [controller.setNullIfFieldIsEmpty(entity.id), controller.setNullIfFieldIsEmpty(entity.power)],callback,callback);
@@ -622,6 +625,9 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	}
 	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear){
 		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,getCurrentTimestamp()],function(){});
+	}
+	function serUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,lastchanged],function(){});
 	}
 	function updateParticularFieldInUserInfo(fieldName,fieldValue){
 		executeQuery(EDIT_PARTICULAR_FIELD_USER_INFO, [fieldName,fieldValue,getCurrentTimestamp()],function(){});
