@@ -134,6 +134,14 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background-size: 65%;
 }
 
+.ui-icon-autobetes-edit2 {
+    background: url("glyphicons/png/glyphicons_150_edit.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+}
+
 .ui-icon-autobetes-fork {
     background: url("images/1416417254_fork.png") no-repeat;
     box-shadow: none;
@@ -181,7 +189,8 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-fork:after,
 .ui-icon-autobetes-run:after,
 .ui-icon-autobetes-special:after,
-.ui-icon-autobetes-history:after
+.ui-icon-autobetes-history:after,
+.ui-icon-autobetes-edit2:after
 {
 	background-color: transparent /*{global-icon-color}*/;
 }

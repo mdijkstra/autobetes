@@ -103,6 +103,15 @@ var iterateArrayRecursively = function(index, data){
 			//console.log("deleted is false");
 			entity.deleted = 0;
 		}
+		if(entity.estimationCarbs === true){
+			//console.log("deleted is true");
+			entity.estimationCarbs = 1;
+		}
+		else{
+			//console.log("deleted is false");
+			entity.estimationCarbs = 0;
+		}
+		//check entity type
 		if(entity.name){
 			entityType = EVENT;
 		}

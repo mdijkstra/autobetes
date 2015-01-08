@@ -6,7 +6,7 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = false;
+var DEBUG = true;
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
@@ -28,12 +28,14 @@ var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
+var SYNCHRONISE_USER_INFO_URL =  '/plugin/anonymous/syncUserInfo';
 var REGISTER_URL = "/plugin/anonymous/registerUser";
 var FOODEVENTINSTANCE = "FoodEventInstance";
 var ACTIVITYEVENTINSTANCE = "ActivityEventInstance";
 var UNAUTHORIZED = "Unauthorized";
 var FOOD = 'Food';
 var EVENT = "Event";
+var SPECIAL = "Special";
 var INSTANCE = "Instance";
 var ACTIVITY = 'Activity';
 var RUNNING = "running";
@@ -97,7 +99,8 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
-var MOBILE_DEVICE = false;
+var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
+var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
 var EventListType = FOOD;
 $(document).data(IS_SYNCHRONISING, false);
@@ -266,7 +269,7 @@ function updateSensorPlot() {
 function onDeviceReady() {
 	// increase font of all h1's
 	$('h1').attr('style','font-size:1.3em;');
-	
+	/*
 	//check if moves is installed on device
 	appAvailability.check(
 			LINKTOMOVES, // URI Scheme
@@ -279,9 +282,8 @@ function onDeviceReady() {
 		    	MOVES_INSTSTALLED = false;
 		    }
 		);
-	
+	*/
 	MOBILE_DEVICE = checkMobileBrowser();
-
 	controller.checkIfUserExists();
 	
 	//add event listeners

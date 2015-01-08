@@ -22,10 +22,20 @@ function controller() {
 		var cannotAddOrEdit = false;
 		var eventName = $('#newEventName').val();
 		var eventType = EventListType;
+		var id = $('#foodId').html();
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
-		var id = $('#foodId').html();
+		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var newEvent= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var estimationCarbs = controller.setNullIfFieldIsEmpty($('#newEventEstimationCarbs').is(':checked'));
+		//convert boolean to integer
+		if(estimationCarbs === true){
+			estimationCarbs = 0;
+		}
+		else{
+			estimationCarbs = 1;
+		}
 		//check if eventname is empty
 
 		if(eventName === ""){
@@ -77,11 +87,11 @@ function controller() {
 			}
 			if(id === ''){
 				//add event
-				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
+				dbHandler.addEvent(eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callbackFunction);
 			}
 			else{
-				//edit event 
-				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, callbackFunction);
+				//edit event
+				dbHandler.updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callbackFunction);
 			}
 		}
 	}
@@ -252,23 +262,23 @@ function controller() {
 
 			}
 		}
-		dbHandler.getUserInfo(checkCallBack);
+		dbHandler.getUserCredentials(checkCallBack);
 	}
 	/*
 	 * This method provides logging in, it gets called on booth and when token is expired
 	 */
 	function login(){
 
-		console.log($(document).data(IS_LOGGING_IN));
+	
 		if($(document).data(IS_LOGGING_IN) === false){
 			//ensure that app is not logging in multiple times simultaneously
 			$(document).data(IS_LOGGING_IN, true);
-			dbHandler.getUserInfo(function(transaction,result){
+			dbHandler.getUserCredentials(function(transaction,result){
 
 				if(result.rows.length > 0){
 					var row = result.rows.item(0);
 					//try to log in with data
-
+					
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							//successfully logged in
@@ -283,7 +293,7 @@ function controller() {
 								view.toastMessage(SUCCESSFULLY_LOGGED_IN);
 
 							}
-
+							syncUserInfo();
 
 
 						}
@@ -298,6 +308,22 @@ function controller() {
 		}
 		else{
 		}
+	}
+
+	
+	function syncUserInfo(){
+		dbHandler.getUserInfo(function(transaction,result){
+			var requestData = [];
+			var row = result.rows.item(0);
+			requestData.push(row);
+			console.log(SERVER_URL+SYNCHRONISE_USER_INFO_URL);
+			console.log(JSON.stringify(requestData));
+			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
+				console.log(JSON.stringify(data));
+				
+				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
+			}, function(){});
+		});
 	}
 	/*
 	 * Interprets an integer from 1 till 10, returns an object with html color code and text corresponding
