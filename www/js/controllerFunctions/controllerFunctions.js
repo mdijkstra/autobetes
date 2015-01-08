@@ -29,6 +29,7 @@ function controller() {
 		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
 		var newEvent= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
 		var estimationCarbs = controller.setNullIfFieldIsEmpty($('#newEventEstimationCarbs').is(':checked'));
+		console.log("is checked"+ estimationCarbs);
 		//convert boolean to integer
 		if(estimationCarbs === true){
 			estimationCarbs = 0;

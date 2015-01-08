@@ -76,6 +76,7 @@ function populateEditEventInstancePage(id, eventType) {
 			//found event instance
 			//get entity
 			var row = result.rows.item(0);
+			
 			//fill fields
 			var dateAndTime = controller.convertTimestampToTimeAndDate(row.beginTime);
 			$('#edit-event-instance-cId').html(row.id);
@@ -84,9 +85,8 @@ function populateEditEventInstancePage(id, eventType) {
 			$('#edit-event-instance-page-begin-date-field').val(dateAndTime.date);
 			$('#edit-event-instance-page-begin-time-field').val(dateAndTime.time);
 			
-			
-			
 			if (row.eventType === ACTIVITY) {
+				
 				//activity has an endtime
 				var endDateAndTime;
 				if(row.endTime === null){
@@ -113,6 +113,7 @@ function populateEditEventInstancePage(id, eventType) {
 				
 
 			} else {
+				
 				//set slider for food
 				$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
 				$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
@@ -174,6 +175,7 @@ function populateEditEventScreen(id){
 			var row = result.rows.item(0);
 			$('#define-event-page').find("#headerName").text(EDIT);
 			$('#foodId').text(row.id);
+			console.log(JSON.stringify(row));
 			//set the fieldset right
 			if(row.eventType === FOOD){
 				//set eventID
@@ -189,14 +191,14 @@ function populateEditEventScreen(id){
 				$('#define-event-page').find('#newEventPortionSize').val(row.portionsize);
 				
 				if(row.estimationCarbs === 0){
-					//0 stands for false
+					//0 stands for true
 					//uncheck checkbox
-					$('#newEventEstimationCarbs').prop('checked', false);
+					$('#newEventEstimationCarbs').prop('checked', true);
 					
 				}
 				else{
 					//check checkbox
-					$('#newEventEstimationCarbs').prop('checked', true); 
+					$('#newEventEstimationCarbs').prop('checked', false); 
 				}
 				$('#newEventEstimationCarbs').checkboxradio('refresh');
 				$('#addOrEditEventAndStart').html("Save and consume");
@@ -264,11 +266,19 @@ function populateStartEventInstanceScreen(id){
 			}
 			var timeStringForMyTime = currentHours + ":" + currentMinutes;
 			$('#mytime').val(timeStringForMyTime);
-
+			
+			if(row.portionsize){
+				$('#startEventPortionSize').html("Portion size "+ row.portionsize+" gram");
+				$('#startEventPortionSize').show();
+			}
+			else{
+				$('#startEventPortionSize').hide();
+			}
 			
 			//add event screen varies by event type
 			$('#start-event-instance-page-eventType').text(row.eventType);
 			if (row.eventType === FOOD) {
+				$('#startEventInstanceHeader').text("Eat food");
 				$('#start-event-instance-activity-quantity-slider-label').hide();
 				$('#start-event-instance-food-quantity-slider-label').show();
 				$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
@@ -276,7 +286,7 @@ function populateStartEventInstanceScreen(id){
 				$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_FOOD_QUANTITY_SLIDER).slider('refresh');
 
 			} else {
-
+				$('#startEventInstanceHeader').text("Start activity");
 				$('#start-event-instance-food-quantity-slider-label').hide();
 				$('#start-event-instance-activity-quantity-slider-label').show();
 				$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
@@ -296,8 +306,15 @@ function populateStartEventInstanceScreen(id){
 				var intensity = parseFloat($('#start-event-instance-quantity-slider').val());
 				
 				if(row.carbs){
-					//calculat amount of carbs
-					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
+					//calculate amount of carbs
+					if(row.estimationCarbs === 0){
+						//amount of carbs is an estimation
+						$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams </span>(estimated)' );
+					}
+					else{
+						$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams</span>' );
+					}
+					
 				}
 				else if(row.amount){
 					//carbs not defined, amount is unknown
@@ -310,7 +327,14 @@ function populateStartEventInstanceScreen(id){
 			
 			if(row.carbs){
 				$('#start-event-instance-amount-of-grams-text').show();
-				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams' );
+				if(row.estimationCarbs === 0){
+					//amount of carbs is an estimation
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams</span> (estimated)' );
+				}
+				else{
+					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams</span>' );
+				}
+				
 			}
 			else if(row.amount){
 				$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );

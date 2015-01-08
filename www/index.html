@@ -181,12 +181,13 @@
 				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
 			<p id="start-event-instance-page-event-cId" style="display: none"></p>
 			<p id="start-event-instance-page-eventType" style="display: none"></p>
-			<H1>Start event</H1>
+			<H1 id="startEventInstanceHeader">Start event</H1>
 		</div>
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
 			<H3 id="startEventName"></H3>
+			<p id="startEventPortionSize"></p>
 			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
 			<table width="100%">
 				<tr>
@@ -202,7 +203,7 @@
 			<div id="startEventQuantitySliderField" class="ui-field-contain">
 				<p id="start-event-instance-amount-of-grams-text"
 					style="display: none"></p>
-				<label id="start-event-instance-food-quantity-slider-label">Amount</label>
+				<label id="start-event-instance-food-quantity-slider-label">Portions</label>
 				<label id="start-event-instance-activity-quantity-slider-label"
 					style="display: none">Degree: <span id="intensityToText">Little</span></label>
 				<input class="numbersOnly" type="range"
@@ -243,48 +244,40 @@
 		<div role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Event name">
+				name="text-7" value="" placeholder="Food name">
 
 			<div id="newEventPageFoodInput">
-				<table width="100%">
+			<p style="line-height: 70%">Carbs in a portion:</p>
+				<table class="define-event-page-table">
 					<tr>
-						<td width="29%">
-							<p>Carbs:</p>
-						</td>
-						<td width="50%"><input type="number" id="newEventPageCarbs"
+						<td width="40%"><input type="number" id="newEventPageCarbs"
 							data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?"
 							placeholder="unknown"></td>
 						<td width="20%">
-							<p>grams</p>
+							<p>gram</p>
 						</td>
-						<td width="1%"><a
-							onclick='view.toastMessage("Clear if unknown. Size of this food/drink in terms of grams of carbohyrdrates.")'
-							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
+						<td width="40%">
+							<form>
+   							 <input type="checkbox" name="checkbox-mini-0" id="newEventEstimationCarbs" data-mini="true">
+   							 <label for="newEventEstimationCarbs">Estimate</label>
+							</form>
+							
+						
 						</td>
-					<tr>
-					<tr>
-						<form>
-							<label>         
-							<input id="newEventEstimationCarbs" type="checkbox" checked="checked"
-								name="checkbox-0 ">Check me     
-							</label>
-						</form>
 					</tr>
+				</table>
+				<p style="line-height: 70%">Portion size:</p>
+				<table class="define-event-page-table">
 					<tr>
-						<td width="29%">
-							<p>Portion size:</p>
-						</td>
-						<td width="50%"><input type="number" id="newEventPortionSize"
+						<td width="40%"><input type="number" id="newEventPortionSize"
 							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
 							placeholder="unknown" value="0"></td>
-						<td width="20%">
-							<p>units</p>
+						<td width="60%">
+							<p>gram</p>
 						</td>
-						<td width="1%"><a
-							onclick='view.toastMessage("Clear if unknown. Number of alcholic units in this food/drink. One unit corresponds to a standard glass")'
-							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
-						</td>
+						
 					</tr>
+					<!-- 
 					<tr>
 						<td width="29%">
 							<p>Alcohol:</p>
@@ -300,7 +293,7 @@
 							onclick='view.toastMessage("Clear if unknown. Number of alcholic units in this food/drink. One unit corresponds to a standard glass")'
 							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
-					</tr>
+					</tr> -->
 				</table>
 			</div>
 
