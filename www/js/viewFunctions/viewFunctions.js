@@ -384,7 +384,7 @@ function setNewEventScreen(){
 	
 	$('#addOrEditEvent').text('Add');
 	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-	$('#headerName').text('New Event');
+	$('#headerName').text('New Food');
 	$('#newEventName').val($('#filterControlgroup-input').val());
 
 }
