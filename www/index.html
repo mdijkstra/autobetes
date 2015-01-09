@@ -48,7 +48,7 @@
 				<a id="historyButton" href="#history-event-instance-page"
 					onclick="$(document).removeData('selectedTabIndex2');"
 					data-role="button" data-theme="a" data-icon="autobetes-history"
-					data-iconpos="left" class="ios speedTap">&nbsp;</a>
+					data-iconpos="left" class="ios ">&nbsp;</a>
 			</div>
 
 			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot"
@@ -63,14 +63,22 @@
 					{{#if amount}}
 						<li><a class="ui-btn" style="height:8px" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
 							{{#if carbs}}
-								<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} grams</p>
+								{{#if estimationCarbs}}
+									<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} gram ?</p>
+								{{else}}
+									<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} gram &#160;&#160;</p>
+								{{/if}}
 							{{else}}
-								<p style="font-size: 9pt;">{{amount}}x {{name}}</p><p style="font-size: 9pt;" class="ui-li-aside"> ? grams</p>
+								<p style="font-size: 9pt;">{{amount}}x {{name}}</p><p style="font-size: 9pt;" class="ui-li-aside"> ?</p>
 							{{/if}}
 						</a></li>
 					{{else}}
 						{{#if total}}
-							Total: <B>{{total}} gram</B> carbs
+							{{#if estimatedContent}}
+								Total carbs: <B>{{total}} gram</B> (estimated)
+							{{else}}
+							Total carbs: <B>{{total}} gram</B> 
+							{{/if}}
 							<br>
 						{{/if}}
 					{{/if}}
@@ -119,7 +127,7 @@
 	<div data-role="page" id="event-list-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" class="speedTap" data-icon="autobetes-back"
+			<a data-rel="back" data-icon="autobetes-back"
 				style="height: 30px;">&nbsp;</a>
 			<h1 id="event-list-page-header">My food / special events</h1>
 			<a id="editModeButton" data-icon="autobetes-edit"
@@ -177,17 +185,17 @@
 	<div data-role="page" id="start-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<p id="start-event-instance-page-event-cId" style="display: none"></p>
 			<p id="start-event-instance-page-eventType" style="display: none"></p>
-			<H1 id="startEventInstanceHeader">Start event</H1>
+			<H1 id="startEventInstanceHeader">Eat</H1>
 		</div>
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
 			<H3 id="startEventName"></H3>
-			<p id="startEventPortionSize"></p>
+			<p id="startEventPortionSize" class="grayColor"></p>
 			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->
 			<table width="100%">
 				<tr>
@@ -203,7 +211,7 @@
 			<div id="startEventQuantitySliderField" class="ui-field-contain">
 				<p id="start-event-instance-amount-of-grams-text"
 					style="display: none"></p>
-				<label id="start-event-instance-food-quantity-slider-label">Portions</label>
+				<label id="start-event-instance-food-quantity-slider-label">servings</label>
 				<label id="start-event-instance-activity-quantity-slider-label"
 					style="display: none">Degree: <span id="intensityToText">Little</span></label>
 				<input class="numbersOnly" type="range"
@@ -235,8 +243,8 @@
 	<!-- /page -->
 	<div data-role="page" id="define-event-page">
 		<div data-role="header" style="min-height: 55px;">
-			<a data-rel="back"
-				class="speedTap biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<H1 id="headerName">New food</H1>
 		</div>
 		<!-- /header -->
@@ -247,9 +255,10 @@
 				name="text-7" value="" placeholder="Food name">
 
 			<div id="newEventPageFoodInput">
-			<p style="line-height: 70%">Carbs in a portion:</p>
+		
+			
+			<p>Carbs in a serving:</p>
 				<table class="define-event-page-table">
-					<tr>
 						<td width="40%"><input type="number" id="newEventPageCarbs"
 							data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?"
 							placeholder="unknown"></td>
@@ -266,12 +275,12 @@
 						</td>
 					</tr>
 				</table>
-				<p style="line-height: 70%">Portion size:</p>
+				<p>serving size:</p>
 				<table class="define-event-page-table">
 					<tr>
 						<td width="40%"><input type="number" id="newEventPortionSize"
 							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
-							placeholder="unknown" value="0"></td>
+							placeholder="unknown"></td>
 						<td width="60%">
 							<p>gram</p>
 						</td>
@@ -310,7 +319,7 @@
 			<a id="addOrEditEventAndStart"
 				onclick="controller.saveOrEditFoodEvent(true)"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save
-				and consume</a> <a href="#deleteEventDialog" id="deleteEvent"
+				and 'eat'</a> <a href="#deleteEventDialog" id="deleteEvent"
 				data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a> <a data-rel="back"
@@ -329,10 +338,10 @@
 	</div>
 	<!-- /page -->
 
-	<div data-role="page" data-id="settingsHeader" id="settings-page">
+	<div data-role="page" id="settings-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" class="speedTap" data-icon="autobetes-back"
+			<a data-rel="back" data-icon="autobetes-back"
 				style="height: 30px;">&nbsp;</a>
 			<H1>Settings</H1>
 		</div>
@@ -392,7 +401,7 @@
 	<div data-role="page" data-id="settingsHeader" id="user-info-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" class="speedTap" data-icon="autobetes-back"
+			<a data-rel="back" data-icon="autobetes-back"
 				style="height: 30px;">&nbsp;</a>
 			<H1>Edit user info</H1>
 		</div>
@@ -474,7 +483,7 @@
 	<div data-role="page" id="history-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" class="speedTap" data-icon="autobetes-back"
+			<a data-rel="back" data-icon="autobetes-back"
 				style="height: 30px;">&nbsp;</a>
 			<H1>History</H1>
 			<div id="history-event-instance-list-navbar" data-role="navbar">
@@ -561,9 +570,8 @@
 	<div data-role="page" id="edit-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
-				data-transition="flip">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<H1>Edit</H1>
 
 		</div>
@@ -651,8 +659,8 @@
 	<div data-role="page" id="report-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<H1>Reports</H1>
 		</div>
 		<!-- /header -->
@@ -688,8 +696,8 @@
 	<div data-role="page" id="pumpSettings">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<H1>Pump settings</H1>
 
 		</div>
@@ -783,9 +791,8 @@
 
 	<div data-role="page" id="registrationDialog" data-position="window">
 		<div data-role="header">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
-				data-transition="flip">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<h1>Sign up</h1>
 		</div>
 		<div data-role="content">
@@ -851,9 +858,8 @@
 	<div data-role="page" id="login-page" data-position="window">
 
 		<div data-role="header">
-			<a data-rel="back"
-				class="biggerButton ui-btn ui-shadow ui-corner-all ui-icon-arrow-l ui-btn-icon-left ui-btn-icon-notext ui-corner-all"
-				data-transition="flip">Back</a>
+			<a data-rel="back" data-icon="autobetes-back"
+				style="height: 30px;">&nbsp;</a>
 			<h1>Login</h1>
 		</div>
 		<div data-role="content">

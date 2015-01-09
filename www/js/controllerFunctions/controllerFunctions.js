@@ -109,7 +109,7 @@ function controller() {
 			//delete instance
 			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
 			//$.mobile.changePage("#history-event-instance-page");
-			
+			view.toastMessage("deleted");
 			var deletedFrom = $("#delete-from").html();
 			if(deletedFrom === "edit-event-instance-page"){
 				//if deleted from edit-event-instance-page go back 2 pages, otherwise edit-event-instance-page pops up with the deleted event instance

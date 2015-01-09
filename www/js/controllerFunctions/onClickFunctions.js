@@ -1,7 +1,10 @@
 $('#connectToMoves').click(function(){
-
-	window.open('moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken(), '_system' ,'location=no');
-
+	
+	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken();
+	console.log(link);
+	window.open(link, '_system' ,'');
+	
+	/*
 	if(MOVES_INSTSTALLED){
 
 		if(restClient.getToken() !== null){
@@ -32,7 +35,8 @@ $('#connectToMoves').click(function(){
 			window.open(LINKTOMOVESAPPSTORE, '_system' ,'location=no');
 		}
 		*/
-	}
+	//}
+	
 });
 
 
@@ -114,13 +118,12 @@ $('#deleteEvent').click(function(){
 
 });
 
-$('#deleteEventDialogConfirmButton').click(function() {
+$('#deleteEventDialogNoButton').click(function() {
 
 	view.populateEditEventScreen($('#deleteEventDialogNoButton').val());
 });
 
 $('#deleteEventDialogConfirmButton').click(function() {
-	console.log("confirm")
 	var eventName = $('#newEventName').val();
 	//user confirmed deleting event
 	//go back to event list page
@@ -130,7 +133,7 @@ $('#deleteEventDialogConfirmButton').click(function() {
 		//delete event
 		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
 
-		view.toastMessage("deleted " + $('#deleteEventDialogConfirmButton').val());
+		view.toastMessage("deleted");
 	})
 });
 

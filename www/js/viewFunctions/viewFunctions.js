@@ -25,7 +25,7 @@ function toastMessage(messageText){
 	
 	if(MOBILE_DEVICE){
 		//it is a mobile device
-		//window.plugins.toast.showLongBottom(messageText, null, null);
+		window.plugins.toast.showLongBottom(messageText, null, null);
 	}
 	else{
 		//no toast for normal browser, add message to console
@@ -138,7 +138,7 @@ function populateEditEventInstancePage(id, eventType) {
 				
 				if(row.carbs){
 					//calculate amount of grams en present on screen
-					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*intensity)))+' grams' );
+					$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*intensity)))+' gram' );
 				}
 				if(row.intensity){
 					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
@@ -147,10 +147,10 @@ function populateEditEventInstancePage(id, eventType) {
 			//show and hide the right elements according to event type
 			if(row.carbs){
 				$('#edit-event-instance-amount-of-grams-text').show();
-				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +parseInt(Math.round(Number(row.carbs*row.amount)))+' grams' );
+				$('#edit-event-instance-amount-of-grams-text').html('Carbs: ' +parseInt(Math.round(Number(row.carbs*row.amount)))+' gram' );
 			}
 			else if(row.amount){
-				$('#edit-event-instance-amount-of-grams-text').html('Carbohydrates: ' +'unknown' );
+				$('#edit-event-instance-amount-of-grams-text').html('Carbs: ' +'unknown' );
 			}
 			else{
 				$('#edit-event-instance-amount-of-grams-text').hide();
@@ -268,17 +268,17 @@ function populateStartEventInstanceScreen(id){
 			$('#mytime').val(timeStringForMyTime);
 			
 			if(row.portionsize){
-				$('#startEventPortionSize').html("Portion size "+ row.portionsize+" gram");
+				$('#startEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
 				$('#startEventPortionSize').show();
 			}
 			else{
-				$('#startEventPortionSize').hide();
+				$('#startEventPortionSize').html("Serving size: unknown");
 			}
 			
 			//add event screen varies by event type
 			$('#start-event-instance-page-eventType').text(row.eventType);
 			if (row.eventType === FOOD) {
-				$('#startEventInstanceHeader').text("Eat food");
+				$('#startEventInstanceHeader').text("Eat");
 				$('#start-event-instance-activity-quantity-slider-label').hide();
 				$('#start-event-instance-food-quantity-slider-label').show();
 				$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);
@@ -286,7 +286,7 @@ function populateStartEventInstanceScreen(id){
 				$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_FOOD_QUANTITY_SLIDER).slider('refresh');
 
 			} else {
-				$('#startEventInstanceHeader').text("Start activity");
+				$('#startEventInstanceHeader').text("Start event");
 				$('#start-event-instance-food-quantity-slider-label').hide();
 				$('#start-event-instance-activity-quantity-slider-label').show();
 				$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
@@ -309,10 +309,10 @@ function populateStartEventInstanceScreen(id){
 					//calculate amount of carbs
 					if(row.estimationCarbs === 0){
 						//amount of carbs is an estimation
-						$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams </span>(estimated)' );
+						$('#start-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' + parseInt(Math.round(Number(row.carbs*intensity)))+' gram </span>(estimated)' );
 					}
 					else{
-						$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' + parseInt(Math.round(Number(row.carbs*intensity)))+' grams</span>' );
+						$('#start-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' + parseInt(Math.round(Number(row.carbs*intensity)))+' gram</span>' );
 					}
 					
 				}
@@ -329,10 +329,10 @@ function populateStartEventInstanceScreen(id){
 				$('#start-event-instance-amount-of-grams-text').show();
 				if(row.estimationCarbs === 0){
 					//amount of carbs is an estimation
-					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams</span> (estimated)' );
+					$('#start-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' gram</span> (estimated)' );
 				}
 				else{
-					$('#start-event-instance-amount-of-grams-text').html('Carbohydrates: <span style="font-weight: bold;">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' grams</span>' );
+					$('#start-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' +parseInt(Math.round(Number(row.carbs*DEFAULT_VALUE_FOOD_QUANTITY_SLIDER)))+' gram</span>' );
 				}
 				
 			}
@@ -365,14 +365,20 @@ function setIntensityTextInScreen(selector, value) {
  * This method adjusts make-new-event-page according to the event type selected of selectedTabIndex
  */
 function setNewEventScreen(){
+	//empty fields
 	$('#deleteEvent').hide()//ensure delete button is hidden
 	$('#foodId').html('');
-	console.log("type: "+ EventListType);
+	$('#newEventPageCarbs').val("");
+	$('#newEventPortionSize').val("");
+	//uncheck checkbox
+	$('#newEventEstimationCarbs').prop('checked', false); 
+	$('#newEventEstimationCarbs').checkboxradio('refresh');
+	
 	if(EventListType === FOOD){
 		//Set screen according to Food event type
 		$('#newEventPageActivityInput').hide();
 		$('#newEventPageFoodInput').show();
-		$('#addOrEditEventAndStart').html("Save and consume")
+		$('#addOrEditEventAndStart').html("Save and eat")
 		$("#newEventPageFoodInput").show();
 	}
 	else{
@@ -384,7 +390,7 @@ function setNewEventScreen(){
 	
 	$('#addOrEditEvent').text('Add');
 	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-	$('#headerName').text('New Food');
+	$('#headerName').text('New food');
 	$('#newEventName').val($('#filterControlgroup-input').val());
 
 }

@@ -97,7 +97,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
 	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
 	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, f.portionsize, f.estimationCarbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
-	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
+	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs, fev.estimationCarbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
 	var SELECT_USER_INFO = 'SELECT * FROM UserInfo';
 	
 	//insert statements

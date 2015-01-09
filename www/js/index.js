@@ -6,7 +6,7 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = true;
+var DEBUG = false;
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
@@ -230,6 +230,7 @@ $(document).on('pageinit', function(event){
 	// }
 });
 
+
 /*
  * This method checks if the broser is from a mobile phone
  */
@@ -309,9 +310,9 @@ function onDeviceReady() {
 	synchronise();
 		
 	$('#sensor-plot').attr('style', 'visibility:hidden'); // hide plot first time
-	updateSensorPlot(); 	// and then auto refresh sensor-plot
+	//updateSensorPlot(); 	// and then auto refresh sensor-plot
 	setInterval(function() {
-		updateSensorPlot();
+		//updateSensorPlot();
 		//update current activity list and food event list
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);

@@ -23,7 +23,12 @@
 	background:none; 
 }
 
-
+.boldAndOrange{
+	font-weight: bold; color: #f89406;
+}
+.grayColor{
+	color: #A4A4A4;
+}
 
 .biggerButton { padding: 4px !important;}
 
