@@ -18,6 +18,16 @@
 	z-index: -1; 
 	opacity : 0.4;
 } 
+div.ui-slider-switch{
+	position: absolute;
+	right: 10px;
+	width: 100px;
+}
+.define-event-page-table{
+	border:0px;
+	margin:0px;
+	padding:0px;
+}
 
 .ui-page{ 
 	background:none; 
@@ -30,6 +40,11 @@
 	color: #A4A4A4;
 }
 
+.custom{
+	font-size: 9pt; 
+	font-weight: bold; 
+	line-height: 120%;
+}
 .biggerButton { padding: 4px !important;}
 
 /* Left transition */

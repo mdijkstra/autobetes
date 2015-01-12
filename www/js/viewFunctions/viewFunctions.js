@@ -9,6 +9,7 @@ function view() {
 	this.populateStartEventInstanceScreen = populateStartEventInstanceScreen;
 	this.setIntensityTextInScreen = setIntensityTextInScreen;
 	this.setNewEventScreen = setNewEventScreen;
+	this.emptyDefineEventPage = emptyDefineEventPage;
 	
 /*
  * Show dialog with message text
@@ -201,7 +202,7 @@ function populateEditEventScreen(id){
 					$('#newEventEstimationCarbs').prop('checked', false); 
 				}
 				$('#newEventEstimationCarbs').checkboxradio('refresh');
-				$('#addOrEditEventAndStart').html("Save and consume");
+				$('#addOrEditEventAndStart').html("Save and 'eat'");
 			}
 			else{
 				$("#newEventPageFoodInput").hide();
@@ -366,23 +367,19 @@ function setIntensityTextInScreen(selector, value) {
  */
 function setNewEventScreen(){
 	//empty fields
-	$('#deleteEvent').hide()//ensure delete button is hidden
-	$('#foodId').html('');
-	$('#newEventPageCarbs').val("");
-	$('#newEventPortionSize').val("");
-	//uncheck checkbox
-	$('#newEventEstimationCarbs').prop('checked', false); 
-	$('#newEventEstimationCarbs').checkboxradio('refresh');
+	emptyDefineEventPage();
 	
 	if(EventListType === FOOD){
 		//Set screen according to Food event type
+		$('#headerName').text('New food');
 		$('#newEventPageActivityInput').hide();
 		$('#newEventPageFoodInput').show();
-		$('#addOrEditEventAndStart').html("Save and eat")
+		$('#addOrEditEventAndStart').html("Save and 'eat'")
 		$("#newEventPageFoodInput").show();
 	}
 	else{
 		//Set screen according to Activity event type
+		$('#headerName').text('New special event');
 		$('#newEventPageFoodInput').hide();
 		$('#newEventPageActivityInput').show();
 		$('#addOrEditEventAndStart').html("Save and start")
@@ -390,9 +387,19 @@ function setNewEventScreen(){
 	
 	$('#addOrEditEvent').text('Add');
 	$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
-	$('#headerName').text('New food');
 	$('#newEventName').val($('#filterControlgroup-input').val());
 
+}
+
+function emptyDefineEventPage(){
+	$('#deleteEvent').hide()//ensure delete button is hidden
+	$('#newEventName').val('');
+	$('#newEventPageCarbs').val('');
+	$('#foodId').html('');
+	$('#newEventPageAlcoholicUnits').val(0);
+	$('#newEventPortionSize').val('');
+	$('#newEventEstimationCarbs').prop('checked', false); 
+	$('#newEventEstimationCarbs').checkboxradio('refresh');
 }
 
 }

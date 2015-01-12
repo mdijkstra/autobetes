@@ -57,28 +57,29 @@
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template"
 				type="text/x-handlebars-template">
-				<H4>Current food intake:</H4>
-				<ul class="ui-listview" data-role="listview" data-theme="a">
+				<H4 style="line-height: 40%;">Current food intake:</H4>
+				
 				{{#each .}}
 					{{#if amount}}
-						<li><a class="ui-btn" style="height:8px" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
+						<li><a class="ui-btn" style=" font-size: 9pt;" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
 							{{#if carbs}}
 								{{#if estimationCarbs}}
-									<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} gram ?</p>
+									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside"  style="font-size: 9pt; font-weight: bold;"> {{carbs}} gram ?</span>
 								{{else}}
-									<p style="font-size: 9pt;">{{amount}}x {{name}}</p> <p style="font-size: 9pt;" class="ui-li-aside"> {{carbs}} gram &#160;&#160;</p>
+									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside" style="font-size: 9pt; font-weight: bold"> {{carbs}} gram &#160;&#160;</span>
 								{{/if}}
 							{{else}}
-								<p style="font-size: 9pt;">{{amount}}x {{name}}</p><p style="font-size: 9pt;" class="ui-li-aside"> ?</p>
+								<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside" style="font-size: 9pt; font-weight: bold;"> ?</span>
 							{{/if}}
 						</a></li>
 					{{else}}
 						{{#if total}}
 							{{#if estimatedContent}}
-								Total carbs: <B>{{total}} gram</B> (estimated)
+								<p style="line-height: 40%;">Total carbs: <B>{{total}} gram</B> (estimated)</p>
 							{{else}}
-							Total carbs: <B>{{total}} gram</B> 
+								<p style="line-height: 40%;">Total carbs: <B>{{total}} gram</B> </p>
 							{{/if}}
+							<ul class="ui-listview" data-role="listview" data-theme="a">
 							<br>
 						{{/if}}
 					{{/if}}
@@ -228,7 +229,7 @@
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<A id="startEventInstanceButton"
-				class="ui-btn ui-shadow ui-corner-all">Save</A> <a data-rel="back"
+				class="ui-btn ui-shadow ui-corner-all">Save</A> <a href="#event-list-page"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
 			<div data-role="navbar">
 				<ul>
@@ -249,23 +250,26 @@
 		</div>
 		<!-- /header -->
 
-		<div role="main" class="ui-content">
+		<div data-role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Food name">
 
 			<div id="newEventPageFoodInput">
-		
-			
-			<p>Carbs in a serving:</p>
-				<table class="define-event-page-table">
-						<td width="40%"><input type="number" id="newEventPageCarbs"
+			<br>
+			<p style="line-height: 40%;">Carbs in a serving:</p>
+				<table class="table-condensed">
+				<thead>
+				</thead>
+				<tbody>
+					<tr>
+						<td width="50%"><input type="number" id="newEventPageCarbs"
 							data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?"
 							placeholder="unknown"></td>
 						<td width="20%">
 							<p>gram</p>
 						</td>
-						<td width="40%">
+						<td width="30%">
 							<form>
    							 <input type="checkbox" name="checkbox-mini-0" id="newEventEstimationCarbs" data-mini="true">
    							 <label for="newEventEstimationCarbs">Estimate</label>
@@ -274,9 +278,10 @@
 						
 						</td>
 					</tr>
+					</tbody>
 				</table>
-				<p>serving size:</p>
-				<table class="define-event-page-table">
+				<p style="line-height: 40%;">Serving size:</p>
+				<table class="table-condensed">
 					<tr>
 						<td width="40%"><input type="number" id="newEventPortionSize"
 							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
@@ -322,8 +327,8 @@
 				and 'eat'</a> <a href="#deleteEventDialog" id="deleteEvent"
 				data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
-				style="display: none">Delete</a> <a data-rel="back"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
+				style="display: none">Delete</a> <a href="#event-list-page"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a><!-- Go back to event list page -->
 
 			<div data-role="navbar">
 				<ul>
@@ -366,6 +371,15 @@
 						data-icon="autobetes-synchronize" data-iconpos="left"
 						onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)">
 							&nbsp;&nbsp;&nbsp;Force synchronisation </a></li>
+					<li><a id="showSensorPlot" class="ios" data-role="button"
+						data-theme="a" data-icon="autobetes-run" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot 
+						<select class="ui-li-aside"
+							name="slider" id="flip-a" data-role="slider">
+								<option value="off">Off</option>
+								<option value="on">On</option>
+						</select></a>
+						
+					</li>
 					<!-- Is now a standard activity
 					<li><a id="settings-page-recordingEventsButton"  class="ui-btn">
 							<h3>Recording events</h3> <select style="float: right;"
@@ -448,16 +462,13 @@
 							data-clear-btn="true" step="1" pattern="[0-9]*"
 							placeholder="i.e. 1991">
 					</a></li>
+					<br>
+					<br>
+					<br>
 
 
 				</ul>
-				<a id="saveUserInfoButton" data-rel="back" data-corners="true"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
-					class="ui-btn-inner ui-btn-corner-all"> <span
-						class="ui-btn-text">Save</span>
-				</span>
-				</a> <br>
+			 <br>
 
 			</div>
 
@@ -466,6 +477,13 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+				<a id="saveUserInfoButton" data-rel="back" data-corners="true"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+					class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text">Save</span>
+				</span>
+				</a>
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page"
@@ -770,7 +788,7 @@
 			<h1>Delete event</h1>
 		</div>
 		<div data-role="content">
-			<p id="deleteEventDialogText"></p>
+			<p>Are you sure you want to delete <span id="deleteEventDialogEventName"></span></p>
 			<a id="deleteEventDialogConfirmButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
@@ -843,6 +861,12 @@
 						placeholder="i.e. 1991">
 				</a></li>
 			</ul>
+			<br>
+			<br>
+			<br>
+			
+			<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<a id="registrationDialogOkButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
@@ -851,6 +875,14 @@
 					class="ui-btn-text">Ok</span>
 			</span>
 			</a>
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#home-page"
+						class="ui-btn-active ui-state-persist">Dashboard</a></li>
+					<li><a href="#report-page">Report</a></li>
+				</ul>
+			</div>
+		</div>
 
 		</div>
 	</div>

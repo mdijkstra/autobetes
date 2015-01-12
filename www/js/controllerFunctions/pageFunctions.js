@@ -130,14 +130,6 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 	}
 
 });
-$(document).on('pagehide', '#define-event-page', function(){
-	//empty all variables
-	$('#newEventName').val('');
-	$('#newEventPageCarbs').val('');
-	$('#foodId').html('');
-	$('#newEventPageAlcoholicUnits').val(0);
-
-});
 
 
 $(document).on('pageshow', '#make-new-event-page', function(){

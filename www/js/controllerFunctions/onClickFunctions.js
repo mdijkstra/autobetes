@@ -111,7 +111,7 @@ $('#deleteEvent').click(function(){
 	//get name 
 	var eventName = $('#newEventName').val();
 	//insert name in dialog text
-	$('#deleteEventDialogText').html(ARE_YOU_SURE_DELETE+ eventName+'?');
+	$('#deleteEventDialogEventName').html(eventName);
 	//insert id in confirm and no button
 	$('#deleteEventDialogConfirmButton').val($('#foodId').html());
 	$('#deleteEventDialogNoButton').val($('#foodId').html());
@@ -133,7 +133,7 @@ $('#deleteEventDialogConfirmButton').click(function() {
 		//delete event
 		dbHandler.deleteEvent($('#deleteEventDialogConfirmButton').val());
 
-		view.toastMessage("deleted");
+		view.toastMessage("deleted "+ $('#deleteEventDialogEventName').html());
 	})
 });
 

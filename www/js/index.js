@@ -99,6 +99,7 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
+var EVENTALLREADYEXISTS = "event allready exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
@@ -117,6 +118,9 @@ $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 $("input[type='radio']").checkboxradio();
+
+var initialScreenSize = window.innerHeight;
+
 
 /*
 	
@@ -316,8 +320,11 @@ function onDeviceReady() {
 		//update current activity list and food event list
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
-	}, 10000); // ask server every 10s for new sensor plot
-
+	}, 10000); 
+	
+	var intervalSensorPlot =  setInterval(function() {
+		updateSensorPlot();
+		}, 10000); // ask server every 10s for new sensor plot
 }
 
 //onDeviceReady();
