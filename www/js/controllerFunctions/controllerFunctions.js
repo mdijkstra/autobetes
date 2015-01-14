@@ -326,11 +326,14 @@ function controller() {
 			requestData.push(row);
 			console.log(SERVER_URL+SYNCHRONISE_USER_INFO_URL);
 			console.log(JSON.stringify(requestData));
+			/*
+			 * TODO uncomment as soon as web-app is deployed to server
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 				console.log(JSON.stringify(data));
 
 				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
 			}, function(){});
+			*/
 		});
 	}
 	/*

@@ -93,7 +93,7 @@
 
 			<script id="current-activity-event-list-template"
 				type="text/x-handlebars-template">
-				<H4>Current activities:</H4>
+				<H4>Current special events:</H4>
 				<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
 				{{#each .}}
 					{{#if endHours}}
@@ -310,7 +310,13 @@
 					</tr> -->
 				</table>
 			</div>
-
+			<!-- br for android, enables visibility of field "serving size" if keyboard opens  -->
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
 			<p id="foodId" style="display: none"></p>
 
 
@@ -371,9 +377,9 @@
 						data-icon="autobetes-synchronize" data-iconpos="left"
 						onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)">
 							&nbsp;&nbsp;&nbsp;Force synchronisation </a></li>
-					<li><a id="showSensorPlot" class="ios" data-role="button"
-						data-theme="a" data-icon="autobetes-run" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot 
-						<select class="ui-li-aside"
+					<li><a class="ios" data-role="button"
+						data-theme="a" data-icon="autobetes-graph" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot 
+						<select class="ui-li-aside" id="sensorPlotSlider"
 							name="slider" id="flip-a" data-role="slider">
 								<option value="off">Off</option>
 								<option value="on">On</option>
@@ -597,6 +603,7 @@
 
 		<div role="main" class="ui-content">
 			<H3 id="edit-event-instance-name">Begin</H3>
+			<p id="editEventPortionSize" class="grayColor"></p>
 			<p id="edit-event-instance-cId" style="display: none"></p>
 			<p id="edit-event-instance-eventType" style="display: none"></p>
 			<!-- input name="mode7" id="mode7" type="text" data-role="datebox" data-icon="grid" data-options='{"mode":"timeflipbox", "useNewStyle":true, "overrideTimeFormat": 24}' class="ui-input-text ui-body-d ui-corner-all ui-icon-grid" readonly="readonly"-->

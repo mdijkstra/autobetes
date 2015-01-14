@@ -162,6 +162,15 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 50%;
 }
 
+.ui-icon-autobetes-graph {
+    background: url("images/autobetes_graph.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: -4px;
+	background-position-y: 50%;
+    background-size: 70px 70px;
+}
+
 .ui-icon-autobetes-fork {
     background: url("images/1416417254_fork.png") no-repeat;
     box-shadow: none;
@@ -170,7 +179,6 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 50%;
     background-size: 28px 28px;
 }
-
 
 .ui-icon-autobetes-run {
     background: url("images/1416417029_running_man-512.png") no-repeat;
@@ -208,6 +216,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-edit:after,
 .ui-icon-autobetes-fork:after,
 .ui-icon-autobetes-run:after,
+.ui-icon-autobetes-graph:after,
 .ui-icon-autobetes-special:after,
 .ui-icon-autobetes-history:after,
 .ui-icon-autobetes-edit2:after
