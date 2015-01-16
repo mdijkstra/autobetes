@@ -213,10 +213,12 @@ function startOrStopUpdatingSensorPlot(onOrOff){
 }
 
 function startUpdatingSensorPlot(){
-	$('#sensor-plot').show(); // show plot
+	// show plot
+	$('#sensor-plot').show(); 
+	$('#sensor-plot').attr('style', 'visibility: visible;');
 	updateSensorPlot();// and then auto refresh sensor-plot
 	intervalUpdateSensorPlot =  setInterval(function() {
-		//updateSensorPlot();
+		updateSensorPlot();
 		}, 10000); // ask server every 10s for new sensor plot	
 }
 
@@ -286,14 +288,12 @@ function handleOpenURL(url) {
 // TODO: Fix token!
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent';
     var sensor_plot_preload = new Image(),
 		sensor_plot = $('#sensor-plot');
     sensor_plot_preload.onload = function() {
 		$('#sensor-plot').attr("src", sensor_plot_preload.src);
 		$('#sensor-plot').attr('width', .90 * window.innerWidth);
-		$('#sensor-plot').attr('style', 'visibility: visible;');
     };
 
     sensor_plot_preload.src = img_url;
@@ -359,7 +359,6 @@ function onDeviceReady() {
 	
 	
 	setInterval(function() {
-		//updateSensorPlot();
 		//update current activity list and food event list
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
