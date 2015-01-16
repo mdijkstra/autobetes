@@ -39,18 +39,17 @@ $(document).on('pageshow', '#user-info-page', function(){
 			var bodyWeight = $('#bodyWeight').val(row.bodyWeight);
 			var length = $('#length').val(row.length);
 			var birthYear= $('#yearOfBirth').val(row.birthYear);
-			console.log("sdf"+JSON.stringify(row));
+
 			if(row.gender === "Male"){
-				console.log("male")
 				$("#radio-choice-h-2a").prop("checked", true);
 				$("#radio-choice-h-2b").prop("checked",false);
 			}
-			else{
+			else if(row.gender === "Female"){
 				$("#radio-choice-h-2a").prop("checked", false);
 				$("#radio-choice-h-2b").prop("checked",true);
 			}
+			
 			$("input[type='radio']").checkboxradio("refresh");
-			console.log(JSON.stringify(row));
 		}
 	});
 });
@@ -128,14 +127,6 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 		$("#radio-choice-h-2a").checkboxradio('enable');
 		$("#radio-choice-h-2b").checkboxradio('enable');
 	}
-
-});
-$(document).on('pagehide', '#define-event-page', function(){
-	//empty all variables
-	$('#newEventName').val('');
-	$('#newEventPageCarbs').val('');
-	$('#foodId').html('');
-	$('#newEventPageAlcoholicUnits').val(0);
 
 });
 
