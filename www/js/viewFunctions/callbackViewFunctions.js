@@ -142,6 +142,7 @@ function callbackView() {
 		var foodInstances = [];
 		var total = 0;
 		var unknownContent = false;
+		var estimatedContent = false;
 		var currentTime = new Date().getTime();
 		if(0< result.rows.length){
 
@@ -159,13 +160,20 @@ function callbackView() {
 					timeFirstEventExpires = timeThisEventExpires;
 				}
 				if(row.carbs){
-					foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+					if(row.estimationCarbs === 0){
+						estimatedContent = true;
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), estimationCarbs : true});
+					}
+					else{
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+					}
 					total = total+(row.carbs*row.amount);
 				}
 				else{
 					unknownContent = true;
-					foodInstances.push({id: row.id, name:row.name, amount:row.amount, carbs:("?")});
+					foodInstances.push({id: row.id, name:row.name, amount:row.amount});
 				}
+				
 
 			}
 		}
@@ -176,14 +184,18 @@ function callbackView() {
 			}, timeFirstEventExpires)
 			
 			$('#current-food-event-list').show();
+			var sumObject = {total:total};
+			
 			if(unknownContent){
-				//meal consist of a component with unknown amount of carbs
-				//this indicates that actual total is possibly higher than given
-				foodInstances.unshift({total:("at least "+total)});
+				//carb intake not precise 
+				sumObject.total = sumObject.total+" + ? ";
+				
 			}
-			else{
-				foodInstances.unshift({total:total});
+			if(estimatedContent){
+				sumObject.estimatedContent = true;
 			}
+			foodInstances.unshift(sumObject);
+			
 			//get template
 			var source = $("#current-food-event-list-template").html();
 			//compile to hanlebars template
@@ -204,7 +216,6 @@ function callbackView() {
 			//process results
 			
 			var row = result.rows.item(i);
-			console.log(JSON.stringify(row))
 			var date = new Date(row.beginTime);
 			var minutes = parseInt(date.getMinutes());
 			if (minutes < 10) {

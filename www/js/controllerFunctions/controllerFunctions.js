@@ -8,6 +8,7 @@ function controller() {
 	this.checkIfUserExists = checkIfUserExists;
 	this.login = login;
 	this.convertIntensityIntToTextAndColor = convertIntensityIntToTextAndColor;
+	//this.getPrev
 
 
 	/*
@@ -44,28 +45,43 @@ function controller() {
 
 		}
 		else{
-			var callbackFunction = function(generatedId){synchronise()};
-			
-			if(andConsume === false){
-				//go back to food event list page
-				//this food event need to be shown on top of the list
-				//show div
-				$('#recentlyAddedEvent').show();
-				//tag certain event to be presented on top. The method showlist handles
-				//this privilege
-				$('#eventnameOfAddedOrEditedEvent').text(eventName);
-				//go back to event list page
-				$.mobile.changePage('#'+EVENTLISTPAGE);
+			var callbackFunction;
+
+			if(!andConsume){
+
+				callbackFunction = function(generatedId){
+					if(generatedId === EVENTALLREADYEXISTS){
+						//allready an undeleted event with the same name in the database
+						view.showMessageDialog("", eventName+ ALLREADY_EXISTS);
+					}
+					else{
+						//go back to food event list page
+						//this food event need to be shown on top of the list
+
+						$('#recentlyAddedEvent').show();
+						//tag certain event to be presented on top. The method showlist handles
+						//this privilege
+						$('#eventnameOfAddedOrEditedEvent').text(eventName);
+						//go back to event list page
+						$.mobile.changePage('#'+EVENTLISTPAGE);
+						synchronise(); 
+						$('#foodId').html(generatedId);
+					}
+
+				};
+
 			}
 			else{
-				//start directly
-				//redirect to start-event-instance-page
-				$.mobile.changePage('#start-event-instance-page');
-				if(id === ''){
-					//event has no id, means that it is not saved in db yet
-					//Id will be generated in the db handler, so therefore
-					//define this callbackfunction.
-					callbackFunction = function(generatedId){
+
+				callbackFunction = function(generatedId){
+					if(generatedId === EVENTALLREADYEXISTS){
+						//allready an undeleted event with the same name in the database
+						view.showMessageDialog("", eventName+ ALLREADY_EXISTS);
+					}
+					else{
+						$('#foodId').html(generatedId);
+						//redirect to start-event-instance-page
+						$.mobile.changePage('#start-event-instance-page');
 						//timeout is necessary because this callback gets executed just before entity is added
 						setTimeout(function(){
 							view.populateStartEventInstanceScreen(generatedId);
@@ -73,16 +89,8 @@ function controller() {
 						}, 100);
 					}
 				}
-				else{
-					//event allready exists
-					callbackFunction = function(id){
-						//timeout is necessary because this callback gets executed just before entity is updated
-						setTimeout(function(){
-						view.populateStartEventInstanceScreen(id);
-						synchronise();
-						}, 100);
-					}
-				}
+
+
 
 			}
 			if(id === ''){
@@ -108,7 +116,7 @@ function controller() {
 			//delete instance
 			//$.mobile.back();//current page is the dialog, go to previous page. Goes back from where deleted
 			//$.mobile.changePage("#history-event-instance-page");
-			
+			view.toastMessage("deleted "+ eventName);
 			var deletedFrom = $("#delete-from").html();
 			if(deletedFrom === "edit-event-instance-page"){
 				//if deleted from edit-event-instance-page go back 2 pages, otherwise edit-event-instance-page pops up with the deleted event instance
@@ -118,7 +126,7 @@ function controller() {
 				window.history.go(-1);
 			}
 			$(window).ready(function(){
-				
+
 				dbHandler.deleteEventInstance(id);
 				//refresh list in history
 				var selectedTabIndex = $(document).data('selectedTabIndex2');
@@ -269,7 +277,7 @@ function controller() {
 	 */
 	function login(){
 
-	
+
 		if($(document).data(IS_LOGGING_IN) === false){
 			//ensure that app is not logging in multiple times simultaneously
 			$(document).data(IS_LOGGING_IN, true);
@@ -278,7 +286,7 @@ function controller() {
 				if(result.rows.length > 0){
 					var row = result.rows.item(0);
 					//try to log in with data
-					
+
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							//successfully logged in
@@ -310,7 +318,7 @@ function controller() {
 		}
 	}
 
-	
+
 	function syncUserInfo(){
 		dbHandler.getUserInfo(function(transaction,result){
 			var requestData = [];
@@ -318,11 +326,14 @@ function controller() {
 			requestData.push(row);
 			console.log(SERVER_URL+SYNCHRONISE_USER_INFO_URL);
 			console.log(JSON.stringify(requestData));
+			/*
+			 * TODO uncomment as soon as web-app is deployed to server
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 				console.log(JSON.stringify(data));
-				
+
 				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
 			}, function(){});
+			*/
 		});
 	}
 	/*

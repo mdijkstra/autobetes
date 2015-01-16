@@ -84,7 +84,7 @@
 			type : 'POST',
 			url : href,
 			data : '_method=DELETE',
-			async : false,
+			async : true,
 			success : callback.success,
 			error : callback.error
 		});
@@ -95,7 +95,7 @@
 		$.ajax({
 			dataType : 'json',
 			url : resourceUri + '/exist',
-			async : false,
+			async : true,
 			success : function(exists) {
 				result = exists;
 			}
@@ -111,7 +111,7 @@
 			headers: {'x-molgenis-token': self.token},
 			url: url,
 			data: JSON.stringify(data),
-			async: false,
+			async: true,
 			contentType: 'application/json',
 			success: function(data, textStatus, response) {
 				callback(data, textStatus, response);

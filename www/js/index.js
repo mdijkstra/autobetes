@@ -6,7 +6,7 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = true;
+var DEBUG = false;
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
@@ -99,10 +99,12 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
+var EVENTALLREADYEXISTS = "event allready exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
 var EventListType = FOOD;
+var intervalUpdateSensorPlot;
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -117,6 +119,9 @@ $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 $("input[type='radio']").checkboxradio();
+
+var initialScreenSize = window.innerHeight;
+
 
 /*
 	
@@ -192,6 +197,40 @@ $(document).on('blur', 'input, textarea', function() {
 	}, 0);
 });
 
+$("#sensorPlotSlider").change(function(){
+	dbHandler.setUpdatingSensorPlot($("#sensorPlotSlider").val());
+	startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
+});
+
+function startOrStopUpdatingSensorPlot(onOrOff){
+	$("#sensorPlotSlider").val(onOrOff);
+	if(onOrOff ==="on"){
+		startUpdatingSensorPlot();
+	}
+	else{
+		stopUpdatingSensorPlot();
+	}
+}
+
+function startUpdatingSensorPlot(){
+	// show plot
+	$('#sensor-plot').show(); 
+	$('#sensor-plot').attr('style', 'visibility: visible;');
+	updateSensorPlot();// and then auto refresh sensor-plot
+	intervalUpdateSensorPlot =  setInterval(function() {
+		updateSensorPlot();
+		}, 10000); // ask server every 10s for new sensor plot	
+}
+
+function stopUpdatingSensorPlot(){
+	
+	clearInterval(intervalUpdateSensorPlot);
+	$('#sensor-plot').html("")
+	$('#sensor-plot').hide(); // hide plot
+	$('#sensor-plot').attr('style', 'display: none;');
+}
+
+
 // $(document).on("pageinit", "home-page", function(event){
 // 	// $("div.ui-footer-dashboard").load('footerDashboard.html', function(){$(this).trigger("create")});
 // 		$("div.ui-footer").load('footer.html', function(){$(this).trigger("create")});
@@ -230,6 +269,7 @@ $(document).on('pageinit', function(event){
 	// }
 });
 
+
 /*
  * This method checks if the broser is from a mobile phone
  */
@@ -248,14 +288,12 @@ function handleOpenURL(url) {
 // TODO: Fix token!
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent';
     var sensor_plot_preload = new Image(),
 		sensor_plot = $('#sensor-plot');
     sensor_plot_preload.onload = function() {
 		$('#sensor-plot').attr("src", sensor_plot_preload.src);
 		$('#sensor-plot').attr('width', .90 * window.innerWidth);
-		$('#sensor-plot').attr('style', 'visibility: visible;');
     };
 
     sensor_plot_preload.src = img_url;
@@ -267,6 +305,17 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
+	
+	dbHandler.getUpdatingSensorPlot(function(transaction,result){
+		if ( result.rows.length > 0 && result.rows !== null) {
+			startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
+		}
+		else{
+			console.log("add sensor plot2")
+			dbHandler.addSensorPlot();
+		}
+		
+	});
 	// increase font of all h1's
 	$('h1').attr('style','font-size:1.3em;');
 	/*
@@ -307,16 +356,14 @@ function onDeviceReady() {
 	}, false);
 
 	synchronise();
-		
-	$('#sensor-plot').attr('style', 'visibility:hidden'); // hide plot first time
-	updateSensorPlot(); 	// and then auto refresh sensor-plot
+	
+	
 	setInterval(function() {
-		updateSensorPlot();
 		//update current activity list and food event list
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
-	}, 10000); // ask server every 10s for new sensor plot
-
+	}, 10000); 
+	
 }
 
 //onDeviceReady();
