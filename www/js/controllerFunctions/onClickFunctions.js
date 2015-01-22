@@ -1,6 +1,6 @@
 $('#connectToMoves').click(function(){
 	
-	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://autobetes.nl?token='+restClient.getToken();
+	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//autobetes.nl%3Ftoken%3D'+restClient.getToken();
 	console.log(link);
 	window.open(link, '_system' ,'');
 	

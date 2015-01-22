@@ -7,7 +7,10 @@ var restClient = new top.molgenis.RestClient();
 
 var token;
 var DEBUG = false;
+
+//currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
+//var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
 // get connection statistics
@@ -214,7 +217,7 @@ function startOrStopUpdatingSensorPlot(onOrOff){
 
 function startUpdatingSensorPlot(){
 	// show plot
-	$('#sensor-plot').show(); 
+	
 	$('#sensor-plot').attr('style', 'visibility: visible;');
 	updateSensorPlot();// and then auto refresh sensor-plot
 	intervalUpdateSensorPlot =  setInterval(function() {
@@ -225,8 +228,7 @@ function startUpdatingSensorPlot(){
 function stopUpdatingSensorPlot(){
 	
 	clearInterval(intervalUpdateSensorPlot);
-	$('#sensor-plot').html("")
-	$('#sensor-plot').hide(); // hide plot
+	//$('#sensor-plot').hide(); // hide plot
 	$('#sensor-plot').attr('style', 'display: none;');
 }
 
@@ -289,16 +291,18 @@ function handleOpenURL(url) {
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent';
-    var sensor_plot_preload = new Image(),
-		sensor_plot = $('#sensor-plot');
-    sensor_plot_preload.onload = function() {
-		$('#sensor-plot').attr("src", sensor_plot_preload.src);
-		$('#sensor-plot').attr('width', .90 * window.innerWidth);
-    };
-
-    sensor_plot_preload.src = img_url;
-	// $('#sensor-plot').css('width', .90 * window.innerWidth);
-	// $('#sensor-plot').attr("src", img_url );
+	//load immage async using ajax
+    $.ajax({ 
+        url : img_url, 
+        cache: true,
+        processData : false,
+        async : true,
+    }).always(function(){
+    	//set attributes once loading completes
+    	$('#sensor-plot').attr('width', .90 * window.innerWidth);
+        $("#sensor-plot").attr("src", img_url).fadeIn();
+    });   
+    
 }
 
 /*
