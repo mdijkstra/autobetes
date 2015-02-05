@@ -9,7 +9,7 @@ var token;
 var DEBUG = false;
 
 //currently only test server in use
-var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242';
+var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.242'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
@@ -122,6 +122,9 @@ $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
 $("input[type='radio']").checkboxradio();
+$("input[type='checkbox']").checkboxradio();
+
+
 
 var initialScreenSize = window.innerHeight;
 
@@ -290,7 +293,7 @@ function handleOpenURL(url) {
 // TODO: Fix token!
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenis-token=permanent';
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken=permanent';//+restClient.getToken();
 	//load immage async using ajax
     $.ajax({ 
         url : img_url, 

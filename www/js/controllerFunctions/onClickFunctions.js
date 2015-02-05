@@ -1,6 +1,6 @@
 $('#connectToMoves').click(function(){
 	
-	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//autobetes.nl%3Ftoken%3D'+restClient.getToken();
+	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http://localhost:8080//plugin/moves/connect?token=permanent';
 	console.log(link);
 	window.open(link, '_system' ,'');
 	
@@ -84,7 +84,6 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	$('[name=history-event-instance-list-navbar-buttons]').removeClass('ui-btn-active');
 	//highlight the button that is selected
 	$('[name=history-event-instance-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
-	console.log("type: "+ eventType);
 	dbHandler.listHistoryEvents(eventType, callbackView.showEventInstanceList);
 
 });
@@ -237,6 +236,9 @@ $('#saveUserInfoButton').click(function(){
 	var length = $('#length').val();
 	var birthYear= $('#yearOfBirth').val();
 	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+	controller.syncUserInfo()
+	view.toastMessage("Save user info");
+	$.mobile.back();//go to previous page
 });
 
 $('#registrationDialogOkButton').click(function(){
@@ -262,7 +264,8 @@ $('#registrationDialogOkButton').click(function(){
 			var bodyWeight = $('#bodyWeightRegisterScreen').val();
 			var length = $('#lengthRegisterScreen').val();
 			var birthYear= $('#yearOfBirthRegisterScreen').val();
-			dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear)
+			dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+			controller.syncUserInfo()
 			//console.log("add user info: "+ idOnPump+" "+gender+" "+bodyWeight+" "+length+" "+birthYear)
 			var userData = {
 					email: email,
