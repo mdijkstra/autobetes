@@ -658,8 +658,8 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function updateUser(email, password){
 		executeQuery(EDIT_USER, [email, password], function(){});
 	}
-	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear){
-		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,getCurrentTimestamp()],function(){});
+	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, callback){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,getCurrentTimestamp()],callback);
 	}
 	function serUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged){
 		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,lastchanged],function(){});

@@ -30,7 +30,6 @@ $(document).on('pageshow', '#login-page', function(){
 
 $(document).on('pageshow', '#user-info-page', function(){
 	dbHandler.getUserInfo(function(transaction,result){
-		
 		for (var i = 0; i < result.rows.length; i++) {
 			//process results
 			var row = result.rows.item(i);
@@ -47,6 +46,10 @@ $(document).on('pageshow', '#user-info-page', function(){
 			else if(row.gender === "Female"){
 				$("#radio-choice-h-2a").prop("checked", false);
 				$("#radio-choice-h-2b").prop("checked",true);
+			}
+			else if(row.gender === null){
+				$("#radio-choice-h-2a").prop("checked", false);
+				$("#radio-choice-h-2b").prop("checked",false);
 			}
 			
 			$("input[type='radio']").checkboxradio("refresh");
@@ -172,7 +175,7 @@ $(document).on('pageshow', '#report-page', function(){
 		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
 	}
 	
-	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token=permanent', function(data) {
+	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token='+ restClient.getToken(), function(data) {
 		var now =  new Date().getTime() / 1000; // convert to s
 		timestamp_last_seen_server = now;
 		timestamp_last_seen_raspberry = data.RPiLastSeen; 

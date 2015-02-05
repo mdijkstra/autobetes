@@ -114,7 +114,6 @@ function view() {
 
 
 				} else {
-					console.log("priton:"+ row.portionsize);
 					if(row.portionsize){
 						$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
 					}

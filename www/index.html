@@ -49,7 +49,7 @@
 			</div>
 
 			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot"
-				STYLE='visibility: hidden;' alt="Sensor plot">
+				STYLE='visibility: hidden;' >
 			<div id="current-food-event-list" data-role="controlgroup"
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template"
@@ -61,12 +61,12 @@
 						<li><a class="ui-btn" style=" font-size: 9pt;" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
 							{{#if carbs}}
 								{{#if estimationCarbs}}
-									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside"  style="font-size: 9pt; font-weight: bold;"> {{carbs}} gram ?</span>
+									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span  style="float:right; font-size: 9pt; font-weight: bold;"> {{carbs}} gram ?</span>
 								{{else}}
-									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside" style="font-size: 9pt; font-weight: bold"> {{carbs}} gram &#160;&#160;</span>
+									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span  style="float:right; font-size: 9pt; font-weight: bold"> {{carbs}} gram &#160;&#160;</span>
 								{{/if}}
 							{{else}}
-								<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span class="ui-li-aside" style="font-size: 9pt; font-weight: bold;"> ?</span>
+								<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span style="float:right; font-size: 9pt; font-weight: bold;"> ?</span>
 							{{/if}}
 						</a></li>
 					{{else}}
@@ -480,7 +480,7 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-				<a id="saveUserInfoButton" data-rel="back" data-corners="true"
+				<a id="saveUserInfoButton" data-corners="true"
 					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
 					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
 					class="ui-btn-inner ui-btn-corner-all"> <span
@@ -683,7 +683,7 @@
 			style="min-height: 55px;">
 			<a data-rel="back" data-icon="autobetes-back"
 				style="height: 30px;">&nbsp;</a>
-			<H1>Reports</H1>
+			<H1>Report</H1>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
