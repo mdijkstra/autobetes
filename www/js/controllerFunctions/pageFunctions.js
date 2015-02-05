@@ -175,7 +175,7 @@ $(document).on('pageshow', '#report-page', function(){
 		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
 	}
 	
-	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token='+ restClient.getToken(), function(data) {
+	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenisToken=permanent', function(data) {
 		var now =  new Date().getTime() / 1000; // convert to s
 		timestamp_last_seen_server = now;
 		timestamp_last_seen_raspberry = data.RPiLastSeen; 
