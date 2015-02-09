@@ -33,7 +33,7 @@ var synchronise = function(){
 
 			var callback1 = function(data, textStatus, response){
 				$(document).data(IS_SYNCHRONISING, false);
-				console.log(JSON.stringify(data))
+				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
 				dbHandler.updateLastUpdateTimeStamp(timeStampThisSync);
 				//now syncing is done it is time to send unsent exception records to server
@@ -69,7 +69,7 @@ var synchronise = function(){
 						pushEntitiesInArray(result, function(){
 							dbHandler.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 								pushEntitiesInArray(result, function(){
-									console.log(JSON.stringify(requestData))
+									//console.log(JSON.stringify(requestData))
 									restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler);
 								});
 							});

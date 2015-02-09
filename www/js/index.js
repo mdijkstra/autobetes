@@ -196,6 +196,8 @@ function onlyDigits(){
 }
 onlyDigits();
 
+
+
 //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
 $(document).on('blur', 'input, textarea', function() {
 	setTimeout(function() {
@@ -253,13 +255,17 @@ function stopUpdatingSensorPlot(){
 // // auto inject footer
 $(document).on('pageinit', function(event){
 	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
-		
 		if (0 === result.rows.length) $('#notLoggedIn').show();
 		else {
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
-			if (0 === lastUpdateTimeStamp) $('#notLoggedIn').show();
-			else $('#notLoggedIn').hide();
+			if (0 === lastUpdateTimeStamp){
+				
+				$('#notLoggedIn').show();
+			}
+			else{
+				$('#notLoggedIn').hide();
+			}
 		}		
 	});
 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
@@ -286,7 +292,7 @@ function checkMobileBrowser() {
 
 function handleOpenURL(url) {
 	  setTimeout(function() {
-	    alert("received url: " + url);
+	    //alert("received url: " + url);
 	  }, 0);
 }
 
@@ -318,7 +324,6 @@ function onDeviceReady() {
 			startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
 		}
 		else{
-			console.log("add sensor plot2")
 			dbHandler.addSensorPlot();
 		}
 		
@@ -355,7 +360,8 @@ function onDeviceReady() {
 
 	document.addEventListener("pause", function(e){
 		synchronise();
-		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
+		//restClient.logout(SERVER_URL+SERVER_LOGOUT_URL); logout performed before synchronise, which explains the fail in the synchronisation. 
+		//Logout not really necessary because logging in multiple times is possible and tokens expire within 2 hours.
 	}, false);
 
 	document.addEventListener("resume", function(e){

@@ -5,6 +5,7 @@ function controller() {
 	this.convertTimestampToTimeAndDate = convertTimestampToTimeAndDate;
 	this.updateEventInstance = updateEventInstance;
 	this.setNullIfFieldIsEmpty = setNullIfFieldIsEmpty;
+	this.setEmptyStringIfFieldIsUndefined = setEmptyStringIfFieldIsUndefined;
 	this.checkIfUserExists = checkIfUserExists;
 	this.login = login;
 	this.convertIntensityIntToTextAndColor = convertIntensityIntToTextAndColor;
@@ -244,7 +245,14 @@ function controller() {
 			return field
 		}
 	}
-
+	function setEmptyStringIfFieldIsUndefined(field){
+		if(field === undefined || field === null || field === 'undefined'){
+			return "";
+		}
+		else{
+			return field
+		}
+	}
 
 
 	/*
