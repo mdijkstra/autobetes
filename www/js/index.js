@@ -6,7 +6,7 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = false;
+var DEBUG = true;
 
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
@@ -47,7 +47,7 @@ var ALL = 'All';
 var TRUE = 'True';
 var ENDED = 'ended';
 var EDIT = "Edit";
-var EVENT_ALREADY_EXISTS = 'Event allready exists';
+var EVENT_ALREADY_EXISTS = 'Event already exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
 var LOGINDIALOG = "login-page";
 var HOMEPAGE = "home-page";
@@ -64,7 +64,7 @@ var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
-var ALLREADY_EXISTS = " allready exists"
+var ALLREADY_EXISTS = " already exists"
 var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
@@ -102,7 +102,7 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
-var EVENTALLREADYEXISTS = "event allready exists";
+var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
@@ -121,6 +121,7 @@ $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
+$('#home-page').page();
 $("input[type='radio']").checkboxradio();
 $("input[type='checkbox']").checkboxradio();
 
@@ -206,24 +207,28 @@ $(document).on('blur', 'input, textarea', function() {
 });
 
 $("#sensorPlotSlider").change(function(){
+	// setTimeout is a workaround, fixes problem if slider is slided quickly subsequently the plot is not correctly hidden/closed.
+	setTimeout(function(){
 	dbHandler.setUpdatingSensorPlot($("#sensorPlotSlider").val());
 	startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
+		
+	}, 2000);
 });
 
 function startOrStopUpdatingSensorPlot(onOrOff){
-	$("#sensorPlotSlider").val(onOrOff);
 	if(onOrOff ==="on"){
 		startUpdatingSensorPlot();
+		$('#sensor-plot').show();
 	}
 	else{
 		stopUpdatingSensorPlot();
+		$('#sensor-plot').hide();
 	}
 }
 
 function startUpdatingSensorPlot(){
 	// show plot
 	
-	$('#sensor-plot').attr('style', 'visibility: visible;');
 	updateSensorPlot();// and then auto refresh sensor-plot
 	intervalUpdateSensorPlot =  setInterval(function() {
 		updateSensorPlot();
@@ -233,8 +238,7 @@ function startUpdatingSensorPlot(){
 function stopUpdatingSensorPlot(){
 	
 	clearInterval(intervalUpdateSensorPlot);
-	//$('#sensor-plot').hide(); // hide plot
-	$('#sensor-plot').attr('style', 'display: none;');
+	
 }
 
 
@@ -299,7 +303,7 @@ function handleOpenURL(url) {
 // TODO: Fix token!
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken=permanent';//+restClient.getToken();
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
 	//load immage async using ajax
     $.ajax({ 
         url : img_url, 
@@ -322,6 +326,8 @@ function onDeviceReady() {
 	dbHandler.getUpdatingSensorPlot(function(transaction,result){
 		if ( result.rows.length > 0 && result.rows !== null) {
 			startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
+			//set slider to on or off
+			$("#sensorPlotSlider").val(result.rows.item(0).isUpdating);
 		}
 		else{
 			dbHandler.addSensorPlot();
