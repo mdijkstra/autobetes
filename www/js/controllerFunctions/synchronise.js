@@ -69,7 +69,7 @@ var synchronise = function(){
 						pushEntitiesInArray(result, function(){
 							dbHandler.getFoodEventInstancesAfterTimeStamp(lastUpdateTimeStamp- TIMESTAMPPENALTY, function(transaction,result){
 								pushEntitiesInArray(result, function(){
-									console.log(JSON.stringify(requestData))
+									//console.log(JSON.stringify(requestData))
 									restClient.update(SERVER_URL+SYNCHRONISE_URL, requestData, callback1, errorHandler);
 								});
 							});

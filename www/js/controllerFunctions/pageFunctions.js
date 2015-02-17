@@ -33,11 +33,11 @@ $(document).on('pageshow', '#user-info-page', function(){
 		for (var i = 0; i < result.rows.length; i++) {
 			//process results
 			var row = result.rows.item(i);
-			$('#pumpSerial').val(row.idOnPump);
+			$('#pumpSerial').val(controller.setEmptyStringIfFieldIsUndefined(row.idOnPump));
 			//var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
-			var bodyWeight = $('#bodyWeight').val(row.bodyWeight);
-			var length = $('#length').val(row.length);
-			var birthYear= $('#yearOfBirth').val(row.birthYear);
+			$('#bodyWeight').val(controller.setEmptyStringIfFieldIsUndefined(row.bodyWeight));
+			$('#length').val(controller.setEmptyStringIfFieldIsUndefined(row.length));
+			$('#yearOfBirth').val(controller.setEmptyStringIfFieldIsUndefined(row.birthYear));
 
 			if(row.gender === "Male"){
 				$("#radio-choice-h-2a").prop("checked", true);
@@ -175,7 +175,7 @@ $(document).on('pageshow', '#report-page', function(){
 		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
 	}
 	
-	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenis-token='+ restClient.getToken(), function(data) {
+	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?molgenisToken=permanent', function(data) {
 		var now =  new Date().getTime() / 1000; // convert to s
 		timestamp_last_seen_server = now;
 		timestamp_last_seen_raspberry = data.RPiLastSeen; 

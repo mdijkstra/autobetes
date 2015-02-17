@@ -51,8 +51,7 @@
 					data-iconpos="left" class="ios ">&nbsp;</a>
 			</div>
 
-			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot"
-				STYLE='visibility: hidden;' >
+			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot" >
 			<div id="current-food-event-list" data-role="controlgroup"
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template"
@@ -253,7 +252,7 @@
 		<div data-role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Food name">
+				name="text-7" value="" placeholder="Name">
 
 			<div id="newEventPageFoodInput">
 			<br>
@@ -434,7 +433,7 @@
 
 					<li class="ui-first-child"><a class="ui-btn">
 							<h3>Pump Id</h3> <input id="pumpSerial" type="text"
-							data-clear-btn="true" placeholder="1234567">
+							data-clear-btn="true" placeholder="e.g. 1234567">
 					</a></li>
 					<li><a class="ui-btn">
 							<h3>Gender</h3>
@@ -836,7 +835,7 @@
 						data-clear-btn="true" name="text-7" value=""> </a></li>
 				<li><a class="ui-btn"><h3>Pump id</h3>
 						<input id="registerPumpId" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="12345"></a></li>
+						name="text-7" value="" placeholder="e.g. 1234567"></a></li>
 
 				<li><a class="ui-btn"><h3>Gender</h3>
 
@@ -917,10 +916,10 @@
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
-				up</a> <a id="guideTourButton" href="#home-page" data-role="button"
+				up</a> <a id="guideTourButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
-				onclick="$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);"
+				onclick="//$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);$.mobile.changePage('#home-page');"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide
 				tour</a>
 

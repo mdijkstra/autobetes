@@ -41,7 +41,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.setUpdatingSensorPlot = setUpdatingSensorPlot;
 	this.getUpdatingSensorPlot = getUpdatingSensorPlot;
 	this.addSensorPlot = addSensorPlot;
-	
+
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
 	//create statements
@@ -58,7 +58,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var CREATE_CLIENT_EXCEPTION_LOG = 'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)';
 	var CREATE_USER_INFO = 'CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER)';
 	var CREATE_SENSOR_PLOT = 'CREATE TABLE IF NOT EXISTS SensorPlot(id INTEGER PRIMARY KEY, isUpdating TEXT)';
-	
+
 	//update statements
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
 	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=?, portionsize=?, estimationCarbs=? WHERE id=?';
@@ -79,10 +79,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
 	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?';
-	var SET_UPDATING_SENSOR_PLOT = 'UPDATE SensorPlot SET isUpdating=? WHERE id=1'
+	var SET_UPDATING_SENSOR_PLOT = 'UPDATE SensorPlot SET isUpdating=? WHERE id=1';
 
-		//select statements
-		var SELECT_EVENTS_WITH_NAME_REGEXP = 'SELECT * FROM Event WHERE name regexp(?))'	;
+	//select statements
+	var SELECT_EVENTS_WITH_NAME_REGEXP = 'SELECT * FROM Event WHERE name regexp(?))'	;
 
 	var GET_UNSENT_EXCEPTION_RECORDS = "SELECT * FROM ClientExceptionLog where isSent = 0";
 	var SELECT_LAST_UPDATE_TIMESTAMP = 'SELECT lastchanged FROM LastUpdate WHERE cId = 1';
@@ -90,21 +90,21 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var SELECT_FOOD_EVENT_INSTANCES = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ACTIVITY_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.deleted = 0  AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
 	var SELECT_ALL_EVENT_INSTANCES = 'SELECT e.beginTime, a.endtime, f.amount, a.intensity, e.id, ev.name, ev.eventType, fev.carbs from Event ev left join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId left join ActivityEventInstance a on a.id = e.id left join FoodEventInstance f on e.id = f.id WHERE e.deleted = 0  AND ev.deleted = 0 ORDER BY e.beginTime DESC;';
-	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;'
-		//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
-		var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
+	var SELECT_ALL_EVENTS = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
+	//var SELECT_ALL_EVENTS = 'SELECT * from Event where deleted = 0';
+	var SELECT_EVENTS_WITH_TYPE = 'SELECT e.id, e.name, count(*) FROM Event e LEFT JOIN EventInstance i on e.id = i.eventId WHERE e.eventType = ? AND e.deleted=0 GROUP BY e.name ORDER BY count(*) DESC;';
 	var SELECT_PARTICULAR_FOOD_EVENT_INSTANCE = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs, fev.estimationCarbs, fev.portionsize from Event ev join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id join FoodEvent fev on ev.id = fev.id where e.id =?;';
 	var SELECT_PARTICULAR_ACTIVITY_EVENT_INSTANCE = 'SELECT e.beginTime, a.endtime, a.intensity, e.id, ev.name, ev.eventType from Event ev join EventInstance e on ev.id = e.eventId join ActivityEventInstance a on e.id = a.id where e.id =?;';
-	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power, f.portionsize, f.estimationCarbs FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC'
-		var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
+	var SELECT_EVENTS_AFTER_TIMESTAMP = 'SELECT e.id, e.name, e.eventType, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, a.power, f.portionsize, f.estimationCarbs FROM Event e left join FoodEvent f on e.id = f.id left join ActivityEvent a on e.id = a.id WHERE lastchanged > ? ORDER BY lastchanged DESC';
+	var SELECT_ACTIVITY_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId, e.deleted, e.lastchanged, a.endTime, a.intensity from EventInstance e join ActivityEventInstance a on e.id = a.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_FOOD_EVENT_INSTANCES_AFTER_TIMESTAMP = 'SELECT e.id, e.Dtype, e.beginTime, e.eventId , e.deleted, e.lastchanged, f.amount from EventInstance e  join FoodEventInstance f on e.id = f.id where e.lastchanged > ? ORDER BY lastchanged DESC;';
 	var SELECT_PARTICULAR_EVENT_WITH_NAME = 'SELECT * FROM Event where name = ? and deleted=0;';
-	var SELECT_EVENT_WITH_OTHER_ID_BUT_SAME_NAME = 'SELECT * FROM Event WHERE name = ? and id != ?'
+	var SELECT_EVENT_WITH_OTHER_ID_BUT_SAME_NAME = 'SELECT * FROM Event WHERE name = ? and id != ?';
 	var SELECT_USER_CREDENTIALS = 'SELECT * FROM User LIMIT 1';
 	var SELECT_EVENT_WITH_ID = 'SELECT * FROM Event WHERE id=?';
 	var SELECT_EVENTINSTANCE_WITH_ID = 'SELECT * FROM EventInstance WHERE id=?';
-	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, f.portionsize, f.estimationCarbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?'
-		var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs, fev.estimationCarbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
+	var SELECT_PARTICULAR_EVENT = 'SELECT e.id, e.eventType, e.name, e.deleted, e.lastchanged, f.alcoholicUnits, f.carbs, f.portionsize, f.estimationCarbs, a.power FROM Event e LEFT JOIN FoodEvent f on e.id = f.id LEFT JOIN ActivityEvent a on e.id = a.id WHERE e.id =?';
+	var SELECT_CURRENT_PLANNED_FOOD = 'SELECT e.beginTime, f.amount, e.id, ev.name, ev.eventType, fev.carbs, fev.estimationCarbs from Event ev join FoodEvent fev on ev.id = fev.id join EventInstance e on ev.id = e.eventId join FoodEventInstance f on e.id = f.id where e.deleted = 0 AND ev.deleted = 0 AND e.beginTime > ? AND e.beginTime < ? ORDER BY e.beginTime DESC;';
 	var SELECT_USER_INFO = 'SELECT * FROM UserInfo';
 	var SELECT_UPDATING_SENSOR_PLOT = 'SELECT * FROM SensorPlot';
 
@@ -115,10 +115,10 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var ADD_ACTIVITY_INSTANCE = 'INSERT INTO ActivityEventInstance(id, intensity) VALUES (?,?)';
 	var ADD_EVENT = 'INSERT INTO Event(id, name, eventType,lastchanged) VALUES (?,?,?,?)';
 	var ADD_FOOD = 'INSERT INTO FoodEvent(id, alcoholicUnits, carbs, portionsize, estimationCarbs) VALUES(?,?,?,?,?)';
-	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)'
+	var ADD_ACTIVITY = 'INSERT INTO ActivityEvent(id, power) VALUES(?,?)';
 	var ADD_USER = 'INSERT INTO User(cId, email, password) VALUES (1,?,?)';
-	var ADD_SENSOR_PLOT = 'INSERT INTO SensorPlot(id, isUpdating) VALUES(1,"off")'
-	var ADD_USER_INFO= 'INSERT INTO UserInfo(cId, idOnPump,gender,bodyWeight,length,birthYear,lastchanged) VALUES(1,?,?,?,?,?,0)'
+	var ADD_SENSOR_PLOT = 'INSERT INTO SensorPlot(id, isUpdating) VALUES(1,"off")';
+	var ADD_USER_INFO= 'INSERT INTO UserInfo(cId, idOnPump,gender,bodyWeight,length,birthYear,lastchanged) VALUES(1,?,?,?,?,?,0)';
 	var ADD_LAST_UPDATE_TIMESTAMP = 'INSERT INTO LastUpdate(cId, lastchanged) VALUES(1,0)';
 	var SERVER_ADD_EVENT = 'INSERT INTO Event(id, name, eventType, deleted, lastchanged) VALUES(?,?,?,?,?)';
 	var SERVER_ADD_EVENT_INSTANCE = 'INSERT INTO EventInstance(id, eventId, beginTime, deleted, lastchanged) VALUES(?,?,?,?,?)';
@@ -224,7 +224,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
 
 		executeQuery('DROP TABLE IF EXISTS ClientExceptionLog', [], null);
-		
+
 		executeQuery('DROP TABLE IF EXISTS SensorPlot', [], null);
 
 		//execute
@@ -239,7 +239,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( CREATE_LAST_UPDATE, [], null);
 
 		executeQuery( CREATE_USER, [], null);
-		
+
 		executeQuery( CREATE_SENSOR_PLOT, [], null);
 
 		executeQuery( CREATE_EVENT, [], null);
@@ -256,7 +256,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], null);
 
 		executeQuery( CREATE_USER_INFO, [], null);
-		
+
 		//Create row with id 0 in table last update if not exists
 		executeQuery( SELECT_LAST_UPDATE_TIMESTAMP, [], function(transaction,result){
 			if(result.rows.length === 0){
@@ -276,7 +276,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				//create null user so it can be modified later
 				addUser(null, null);	
 				addUserInfo(null,null,null,null,null);
-				addSensorPlot();
+				//addSensorPlot();
 			}
 			else{
 				//table contains value
@@ -305,15 +305,15 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
 
 		executeQuery( 'DROP TABLE IF EXISTS UserInfo;', [], null);
-		
+
 		executeQuery('DROP TABLE IF EXISTS SensorPlot', [], null);
 
 		executeQuery( CREATE_USER_INFO, [], null);
-		
+
 		executeQuery( CREATE_SENSOR_PLOT, [], null);
 
 		addUserInfo(null,null,null,null,null);
-		
+
 		addSensorPlot();
 
 		createTablesIfNotExists();
@@ -414,7 +414,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	 * and the eventType(which can be altered as well).
 	 */
 	function updateEvent(id, eventName, eventType, carbs, alcoholicUnits, power, portionsize, estimationCarbs, callback){
-		
+
 		executeQuery(SELECT_EVENT_WITH_OTHER_ID_BUT_SAME_NAME, [eventName, id], function(transaction, result){
 			if(result.rows.length > 0){
 				//event other than this one has the name which the user wants to give to this event
@@ -648,7 +648,6 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		executeQuery(ADD_USER, [email, password], function(){});
 	}
 	function addSensorPlot(){
-		console.log("add sensor plot")
 		executeQuery(ADD_SENSOR_PLOT, [], function(){});
 	}
 	function addUserInfo(idOnPump,gender,bodyWeight,length,birthYear){
@@ -694,7 +693,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function setUpdatingSensorPlot(onOrOff){
 		executeQuery(SET_UPDATING_SENSOR_PLOT,[onOrOff],function(){});
 	}
-	
+
 	function getCurrentTimestamp(){
 		return new Date().getTime();
 
