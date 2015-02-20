@@ -157,7 +157,7 @@
 				{{#each .}}
 					{{#if standard}}
 						{{!-- The event is  standard so not editable --}}
-						<a onclick='$.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");' class="ui-btn ui-shadow ui-corner-all">{{name}}</a>
+						<a onclick=' if($("#editModeButton").val()==="off"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
 					{{else}}
 						<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 					{{/if}}
@@ -358,8 +358,7 @@
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
-			<div class="settingsList" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input">
+			<div data-role="controlgroup">
 				<ul class="ui-listview" data-icon="false">
 					<li class="ui-first-child"><a href="#login-page"
 						class="ui-btn">
@@ -427,13 +426,12 @@
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
-			<div class="settingsList" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input">
+			<div class="settingsList">
 				<ul class="ui-listview" data-icon="false">
 
 					<li class="ui-first-child"><a class="ui-btn">
 							<h3>Pump Id</h3> <input id="pumpSerial" type="text"
-							data-clear-btn="true" placeholder="e.g. 1234567">
+							data-clear-btn="true" placeholder="i.e. 1234567">
 					</a></li>
 					<li><a class="ui-btn">
 							<h3>Gender</h3>
@@ -449,6 +447,7 @@
 									class="radioChoiceNewEvent" for="radio-choice-h-2b">Female</label>
 
 							</fieldset>
+							
 
 					</a></li>
 
@@ -835,7 +834,7 @@
 						data-clear-btn="true" name="text-7" value=""> </a></li>
 				<li><a class="ui-btn"><h3>Pump id</h3>
 						<input id="registerPumpId" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="e.g. 1234567"></a></li>
+						name="text-7" value="" placeholder="i.e. 1234567"></a></li>
 
 				<li><a class="ui-btn"><h3>Gender</h3>
 

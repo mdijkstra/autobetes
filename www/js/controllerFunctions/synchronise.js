@@ -33,7 +33,7 @@ var synchronise = function(){
 
 			var callback1 = function(data, textStatus, response){
 				$(document).data(IS_SYNCHRONISING, false);
-				console.log(JSON.stringify(data))
+				//console.log(JSON.stringify(data))
 				iterateArrayRecursively(0, data);
 				dbHandler.updateLastUpdateTimeStamp(timeStampThisSync);
 				//now syncing is done it is time to send unsent exception records to server

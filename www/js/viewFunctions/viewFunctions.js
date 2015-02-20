@@ -188,9 +188,6 @@ function view() {
 	 */
 	function populateEditEventScreen(id){
 		dbHandler.getParticularEvent(id, function(transaction, result){
-			//eventtype cannot be changed after event is declared so disable checkbox
-			$("#radio-choice-h-2a").checkboxradio('disable');
-			$("#radio-choice-h-2b").checkboxradio('disable');
 
 			if(result.rows.length === 1){
 				//found event
