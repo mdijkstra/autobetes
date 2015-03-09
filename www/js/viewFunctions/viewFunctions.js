@@ -10,7 +10,22 @@ function view() {
 	this.setIntensityTextInScreen = setIntensityTextInScreen;
 	this.setNewEventScreen = setNewEventScreen;
 	this.emptyDefineEventPage = emptyDefineEventPage;
-
+	this.showLoadingWidget = showLoadingWidget;
+	this.hideLoadingWidget = hideLoadingWidget;
+	
+	function showLoadingWidget(){
+		$.mobile.loading( 'show', {
+			theme: 'z',
+			html: ""
+		});
+	}
+	function hideLoadingWidget(){
+		$.mobile.loading( 'hide', {
+			theme: 'z',
+			html: ""
+		});
+	}
+	
 	/*
 	 * Show dialog with message text
 	 */

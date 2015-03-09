@@ -102,10 +102,13 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
+var LOGIN = "Login";
+var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b"
 var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
+var IS_REGISTERING = false;
 var EventListType = FOOD;
 var intervalUpdateSensorPlot;
 $(document).data(IS_SYNCHRONISING, false);
@@ -352,7 +355,7 @@ function onDeviceReady() {
 	*/
 	MOBILE_DEVICE = checkMobileBrowser();
 	controller.checkIfUserExists();
-	
+	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);
 	//add event listeners
 	document.addEventListener("offline", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -365,12 +368,15 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
+		console.log("pause");
+		TestFairy.pause();
 		synchronise();
 		//restClient.logout(SERVER_URL+SERVER_LOGOUT_URL); logout performed before synchronise, which explains the fail in the synchronisation. 
 		//Logout not really necessary because logging in multiple times is possible and tokens expire within 2 hours.
 	}, false);
 
 	document.addEventListener("resume", function(e){
+		TestFairy.resume();
 		synchronise();
 	}, false);
 

@@ -1,9 +1,9 @@
 $('#connectToMoves').click(function(){
-	
+
 	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//195.169.22.237//plugin/moves/connect%3Ftoken%3D'+restClient.getToken();
 	console.log(link);
 	window.open(link, '_system' ,'');
-	
+
 	/*
 	if(MOVES_INSTSTALLED){
 
@@ -16,13 +16,13 @@ $('#connectToMoves').click(function(){
 		}
 	}
 	else{
-		
+
 		//moves is not installed on device
 		//link to the website
 		window.open(LINKTOMOVESWEBSITE, '_system' ,'location=no');
 		/*
-		 * OPTIMALIZATION link to the play/app store directly. This code works for android but not for
-		 *  not for ios, might be due to the lack of the app store app in the simulator
+	 * OPTIMALIZATION link to the play/app store directly. This code works for android but not for
+	 *  not for ios, might be due to the lack of the app store app in the simulator
 		if(OS === ANDROID){
 			//os is android
 			//open moves in play store
@@ -34,9 +34,9 @@ $('#connectToMoves').click(function(){
 			view.toastShortMessage("link to appstore");
 			window.open(LINKTOMOVESAPPSTORE, '_system' ,'location=no');
 		}
-		*/
+	 */
 	//}
-	
+
 });
 
 
@@ -58,7 +58,7 @@ $('[name=event-list-navbar-buttons]').click(function() {
 	//highlight the button that is selected
 	$('[name=event-list-navbar-buttons]:eq(' + index + ')').addClass('ui-btn-active');
 	//show list of events with certain eventType
-	
+
 	dbHandler.getEvents(eventType, callbackView.showEventList);
 });
 
@@ -70,7 +70,7 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	if(eventType ===SPECIAL){
 		eventType = ACTIVITY;//first it was activity now special
 	}
-	
+
 	var index = 0;
 	if (eventType === FOOD)
 		index = 1;
@@ -193,7 +193,7 @@ $('#startEventInstanceButton').click(function() {
 			dbHandler.addEventInstance(quantity, unixTime, eventType, eventId);
 			//set added text regarding which event is added
 			var addedText = "Added "+$('#startEventName').html();
-			
+
 			view.toastMessage(addedText);
 			//refresh list of current events
 			dbHandler.showCurrentActivityEventInstances();
@@ -205,7 +205,8 @@ $('#startEventInstanceButton').click(function() {
 
 
 $('#loginDialogOkButton').click(function(){
-	view.toastShortMessage("Login")
+	view.toastShortMessage(LOGIN);
+	view.showLoadingWidget();
 	//window.location.href =  '#home-page';
 	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val());
 	var password = controller.setNullIfFieldIsEmpty($('#loginPassword').val());
@@ -229,7 +230,7 @@ $('#loginDialogOkButton').click(function(){
 });
 
 $('#saveUserInfoButton').click(function(){
-	
+
 	var idOnPump = $('#pumpSerial').val();
 	var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
 	var bodyWeight = $('#bodyWeight').val();
@@ -247,9 +248,9 @@ $('#registrationDialogOkButton').click(function(){
 	var email = controller.setNullIfFieldIsEmpty($('#registerEmail').val());
 	var password = controller.setNullIfFieldIsEmpty($('#registerPassword').val());
 	var confirmPassword = controller.setNullIfFieldIsEmpty($('#registerConfirmPassword').val());
-	
-	
-	
+
+
+
 	//add tests to values
 	//validate email 
 	var validationPattern = /^.+@.+.[a-zA-Z]{2,3}$/;
@@ -257,62 +258,70 @@ $('#registrationDialogOkButton').click(function(){
 		//validate password
 		if(password === confirmPassword){
 			//reset db to ensure that data from another account not will end up in this account, 
-			dbHandler.resetDBExceptUserTable();
-			var idOnPump = $('#registerPumpId').val();
-			//var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-22"]:checked').val());
-			var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
-			var bodyWeight = $('#bodyWeightRegisterScreen').val();
-			var length = $('#lengthRegisterScreen').val();
-			var birthYear= $('#yearOfBirthRegisterScreen').val();
-			dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
-			controller.syncUserInfo()
-			//console.log("add user info: "+ idOnPump+" "+gender+" "+bodyWeight+" "+length+" "+birthYear)
-			var userData = {
-					email: email,
-					password: password
+			if(!IS_REGISTERING){
+				IS_REGISTERING = true;//avoid 2 attempts of registering if user clicks 2 times
+				dbHandler.resetDBExceptUserTable();
+				var idOnPump = $('#registerPumpId').val();
+				//var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-22"]:checked').val());
+				var gender = controller.setNullIfFieldIsEmpty($('[name="radio-choice-h-2"]:checked').val());
+				var bodyWeight = $('#bodyWeightRegisterScreen').val();
+				var length = $('#lengthRegisterScreen').val();
+				var birthYear= $('#yearOfBirthRegisterScreen').val();
+				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+				var userData = {
+						email: email,
+						password: password
+				}
+
+				view.toastShortMessage(CONNECT_TO_SERVER);
+				view.showLoadingWidget();
+
+				var registerCallbackError = function(response, textStatus, error){
+					IS_REGISTERING = false;
+					view.hideLoadingWidget();
+					if(response.responseText === ""){
+						//could not connect to server
+						view.showMessageDialog('Failed', SERVER_CONNECTION_FAIL+". "+TRY_AGAIN_LATER);
+
+					}
+					else{
+						//console.log(response.responseText)
+						view.toastShortMessage(response.responseText);
+					}
+				};
+
+				var registerCallbackSuccess = function(data, textStatus, response){
+					view.hideLoadingWidget();
+					IS_REGISTERING = false;
+					if(response.responseJSON.success){
+						dbHandler.updateUser(email, password);
+						$.mobile.back();//go to previous page
+						//alert(response.responseJSON.message);
+						setTimeout(function() {
+							//without this timeout the messageDialog appears only a fraction of a second before loginDialog,
+							//with this timeout it appears after loginDialog is loaded
+							view.showMessageDialog(SUCCEEDED, response.responseJSON.message + PLEASE_SYNC_WITH_PUMP);
+						}, 500)
+						//alert("Please synchronise the time settings of your insulin pump with those of your app!").
+
+					}
+					else{
+						view.showMessageDialog(FAILED, response.responseJSON.message);
+					}
+					//alert(data.message);
+
+					$("#messageText").html(data.message);
+					$( "#messageDialog" ).dialog();
+
+
+
+				};
+
+				restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
 			}
-
-			view.toastShortMessage(CONNECT_TO_SERVER);
-
-			var registerCallbackError = function(response, textStatus, error){
-
-				if(response.responseText === ""){
-					//could not connect to server
-					view.showMessageDialog('Failed', SERVER_CONNECTION_FAIL+". "+TRY_AGAIN_LATER);
-
-				}
-				else{
-					//console.log(response.responseText)
-					view.toastShortMessage(response.responseText);
-				}
-			};
-
-			var registerCallbackSuccess = function(data, textStatus, response){
-				if(response.responseJSON.success){
-					dbHandler.updateUser(email, password);
-					$.mobile.back();//go to previous page
-					//alert(response.responseJSON.message);
-					setTimeout(function() {
-						//without this timeout the messageDialog appears only a fraction of a second before loginDialog,
-						//with this timeout it appears after loginDialog is loaded
-						view.showMessageDialog(SUCCEEDED, response.responseJSON.message + PLEASE_SYNC_WITH_PUMP);
-					}, 500)
-					//alert("Please synchronise the time settings of your insulin pump with those of your app!").
-
-				}
-				else{
-					view.showMessageDialog(FAILED, response.responseJSON.message);
-				}
-				//alert(data.message);
-
-				$("#messageText").html(data.message);
-				$( "#messageDialog" ).dialog();
-
-
-
-			};
-
-			restClient.register(SERVER_URL+REGISTER_URL , userData,	registerCallbackSuccess, registerCallbackError);
+			else{
+				console.log('allready registering');
+			}
 		}
 		else{
 			view.showMessageDialog('', PASSWORDS_NOT_THE_SAME);
