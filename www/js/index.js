@@ -133,7 +133,7 @@ $("input[type='checkbox']").checkboxradio();
 var initialScreenSize = window.innerHeight;
 
 
-/*
+
 	
     var availableTags = [
       "ActionScript",
@@ -159,6 +159,7 @@ var initialScreenSize = window.innerHeight;
       "Scala",
       "Scheme"
     ];
+    /*
     $(function() {
     	
    	 var sugList = $("#suggestions");
