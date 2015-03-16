@@ -304,8 +304,10 @@ function handleOpenURL(url) {
 	  }, 0);
 }
 
-// TODO: Fix token!
+
 function updateSensorPlot() {
+	/*
+	 * Currently we show no sensor plot
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
 	//load immage async using ajax
@@ -319,7 +321,7 @@ function updateSensorPlot() {
     	$('#sensor-plot').attr('width', .90 * window.innerWidth);
         $("#sensor-plot").attr("src", img_url).fadeIn();
     });   
-    
+    */
 }
 
 /*
