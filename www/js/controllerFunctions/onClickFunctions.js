@@ -236,7 +236,12 @@ $('#saveUserInfoButton').click(function(){
 	var bodyWeight = $('#bodyWeight').val();
 	var length = $('#length').val();
 	var birthYear= $('#yearOfBirth').val();
-	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+	
+	//get timezone
+	var d = new Date()
+	var timezone = d.getTimezoneOffset();
+	
+	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone);
 	controller.syncUserInfo()
 	view.toastMessage("Save user info");
 	$.mobile.back();//go to previous page
@@ -267,7 +272,12 @@ $('#registrationDialogOkButton').click(function(){
 				var bodyWeight = $('#bodyWeightRegisterScreen').val();
 				var length = $('#lengthRegisterScreen').val();
 				var birthYear= $('#yearOfBirthRegisterScreen').val();
-				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear);
+				
+				//get timezone
+				var d = new Date()
+				var timezone = d.getTimezoneOffset();
+				
+				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone);
 				var userData = {
 						email: email,
 						password: password

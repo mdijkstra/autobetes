@@ -337,7 +337,7 @@ function controller() {
 			
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 
-				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
+				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timezone);
 			}, function(){});
 			
 		});

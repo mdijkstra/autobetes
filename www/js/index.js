@@ -1,12 +1,12 @@
 //declare all global variables
-var dbHandler = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
+var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = false;
+var DEBUG = true;
 
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
@@ -127,7 +127,6 @@ $('#make-new-event-page').page();
 $('#home-page').page();
 $("input[type='radio']").checkboxradio();
 $("input[type='checkbox']").checkboxradio();
-
 
 
 var initialScreenSize = window.innerHeight;
@@ -306,8 +305,6 @@ function handleOpenURL(url) {
 
 
 function updateSensorPlot() {
-	/*
-	 * Currently we show no sensor plot
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
 	//load immage async using ajax
@@ -321,13 +318,25 @@ function updateSensorPlot() {
     	$('#sensor-plot').attr('width', .90 * window.innerWidth);
         $("#sensor-plot").attr("src", img_url).fadeIn();
     });   
-    */
+    
 }
 
 /*
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
+	
+	dbHandler.getUserInfo(function(transaction, result){
+		var dbTimezone = result.rows.item(0).timezone;
+		var curTimezone = new Date().getTimezoneOffset();
+		console.log(dbTimezone);
+		console.log(curTimezone);
+		console.log(JSON.stringify(result.rows.item(0)))
+		if(dbTimezone !== curTimezone){
+			console.log("update timezone");
+			dbHandler.updateParticularFieldInUserInfo("timezone", curTimezone);
+		}
+	})
 	
 	dbHandler.getUpdatingSensorPlot(function(transaction,result){
 		if ( result.rows.length > 0 && result.rows !== null) {
