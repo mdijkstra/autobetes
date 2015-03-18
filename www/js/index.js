@@ -1,5 +1,5 @@
 //declare all global variables
-var dbHandler = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
+var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
@@ -102,10 +102,13 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
+var LOGIN = "Login";
+var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b"
 var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
+var IS_REGISTERING = false;
 var EventListType = FOOD;
 var intervalUpdateSensorPlot;
 $(document).data(IS_SYNCHRONISING, false);
@@ -126,11 +129,10 @@ $("input[type='radio']").checkboxradio();
 $("input[type='checkbox']").checkboxradio();
 
 
-
 var initialScreenSize = window.innerHeight;
 
 
-/*
+
 	
     var availableTags = [
       "ActionScript",
@@ -156,6 +158,7 @@ var initialScreenSize = window.innerHeight;
       "Scala",
       "Scheme"
     ];
+    /*
     $(function() {
     	
    	 var sugList = $("#suggestions");
@@ -300,7 +303,7 @@ function handleOpenURL(url) {
 	  }, 0);
 }
 
-// TODO: Fix token!
+
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
@@ -322,6 +325,18 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
+	
+	//check if user is in same timezone as last startup
+	//if not update timezone in db
+	dbHandler.getUserInfo(function(transaction, result){
+		//get timezone from db and current tz from device
+		var dbTimezone = result.rows.item(0).timezone;
+		var curTimezone = new Date().getTimezoneOffset();
+		if(dbTimezone !== curTimezone){
+			//not the same...update
+			dbHandler.updateParticularFieldInUserInfo("timezone", curTimezone);
+		}
+	})
 	
 	dbHandler.getUpdatingSensorPlot(function(transaction,result){
 		if ( result.rows.length > 0 && result.rows !== null) {
@@ -352,7 +367,7 @@ function onDeviceReady() {
 	*/
 	MOBILE_DEVICE = checkMobileBrowser();
 	controller.checkIfUserExists();
-	
+	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);
 	//add event listeners
 	document.addEventListener("offline", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -365,12 +380,15 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
+		console.log("pause");
+		TestFairy.pause();
 		synchronise();
 		//restClient.logout(SERVER_URL+SERVER_LOGOUT_URL); logout performed before synchronise, which explains the fail in the synchronisation. 
 		//Logout not really necessary because logging in multiple times is possible and tokens expire within 2 hours.
 	}, false);
 
 	document.addEventListener("resume", function(e){
+		TestFairy.resume();
 		synchronise();
 	}, false);
 

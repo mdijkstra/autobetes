@@ -38,7 +38,7 @@ $(document).on('pageshow', '#user-info-page', function(){
 			$('#bodyWeight').val(controller.setEmptyStringIfFieldIsUndefined(row.bodyWeight));
 			$('#length').val(controller.setEmptyStringIfFieldIsUndefined(row.length));
 			$('#yearOfBirth').val(controller.setEmptyStringIfFieldIsUndefined(row.birthYear));
-
+			
 			if(row.gender === "Male"){
 				$("#radio-choice-h-2a").prop("checked", true);
 				$("#radio-choice-h-2b").prop("checked",false);
@@ -53,6 +53,7 @@ $(document).on('pageshow', '#user-info-page', function(){
 			}
 			
 			$("input[type='radio']").checkboxradio("refresh");
+			
 		}
 	});
 });
@@ -126,9 +127,6 @@ $(document).on('pagehide', '#make-new-event-page', function(){
 		$('#newEventPageCarbs').val('');
 		$('#newEventPageAlcoholicUnits').val('');
 		$('#newEventPagePower').val('');
-		//checkbox might have been disabled
-		$("#radio-choice-h-2a").checkboxradio('enable');
-		$("#radio-choice-h-2b").checkboxradio('enable');
 	}
 
 });

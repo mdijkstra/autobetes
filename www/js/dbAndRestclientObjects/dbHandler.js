@@ -1,5 +1,4 @@
 function dbHandler(shortName, version, displayName, maxSize) {
-
 	this.shortName = shortName;
 	this.version = version;
 	this.displayName = displayName;
@@ -37,28 +36,34 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	this.updateUserInfo = updateUserInfo;
 	this.updateParticularFieldInUserInfo = updateParticularFieldInUserInfo;
 	this.getUserCredentials = getUserCredentials;
-	this.serUpdateUserInfo = serUpdateUserInfo;
+	this.serverUpdateUserInfo = serverUpdateUserInfo;
 	this.setUpdatingSensorPlot = setUpdatingSensorPlot;
 	this.getUpdatingSensorPlot = getUpdatingSensorPlot;
 	this.addSensorPlot = addSensorPlot;
 
 	var ID_STRING_LENGTH = 10;//length of the string of an id
 	//add all the sql queries
+	
+	var DROP_TABLES = ['DROP TABLE IF EXISTS UserInfo;','DROP TABLE IF EXISTS LastUpdate;', 'DROP TABLE IF EXISTS FoodEvent;', 
+	                          'DROP TABLE IF EXISTS ActivityEvent;','DROP TABLE IF EXISTS Event;', 'DROP TABLE IF EXISTS FoodEventInstance;', 
+	                          'DROP TABLE IF EXISTS ActivityEventInstance;','DROP TABLE IF EXISTS EventInstance;',
+	                          'DROP TABLE IF EXISTS ClientExceptionLog', 'DROP TABLE IF EXISTS SensorPlot']
+	var DROP_USER_TABLE = 'DROP TABLE IF EXISTS User;'; 
+	
 	//create statements
-	var CREATE_EVENT = 'CREATE TABLE IF NOT EXISTS Event(id TEXT PRIMARY KEY UNIQUE, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)';
-	var CREATE_FOOD_EVENT = 'CREATE TABLE IF NOT EXISTS FoodEvent(id TEXT PRIMARY KEY UNIQUE, alcoholicUnits INTEGER, carbs INTEGER, portionsize INTEGER, estimationCarbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
-	var CREATE_ACTIVITY_EVENT = 'CREATE TABLE IF NOT EXISTS ActivityEvent(id TEXT PRIMARY KEY UNIQUE, power INTEGER, CONSTRAINT FK_ActivityEvent_id FOREIGN KEY(id) REFERENCES Event(id))';
 
-	var CREATE_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS EventInstance ( id TEXT PRIMARY KEY UNIQUE, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, eventId STRING NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (eventId) REFERENCES Event (id))';
-	var CREATE_FOOD_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS FoodEventInstance(id TEXT PRIMARY KEY UNIQUE, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
-	var CREATE_ACTIVITY_EVENT_INSTANCE = 'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, special INTEGER DEFAULT 0, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))';
-
-	var CREATE_USER = 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, password TEXT)';
-	var CREATE_LAST_UPDATE = 'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)';
-	var CREATE_CLIENT_EXCEPTION_LOG = 'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)';
-	var CREATE_USER_INFO = 'CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER)';
-	var CREATE_SENSOR_PLOT = 'CREATE TABLE IF NOT EXISTS SensorPlot(id INTEGER PRIMARY KEY, isUpdating TEXT)';
-
+	var CREATE_TABLES = ['CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER, timezone INTEGER)'
+	                     , 'CREATE TABLE IF NOT EXISTS SensorPlot(id INTEGER PRIMARY KEY, isUpdating TEXT)',
+	                     'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)',
+	                     'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)',
+	                     , 'CREATE TABLE IF NOT EXISTS User(cId INTEGER PRIMARY KEY UNIQUE, email TEXT, password TEXT)',
+	                     'CREATE TABLE IF NOT EXISTS Event(id TEXT PRIMARY KEY UNIQUE, eventType TEXT NOT NULL, name TEXT NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL)',
+	                     'CREATE TABLE IF NOT EXISTS FoodEvent(id TEXT PRIMARY KEY UNIQUE, alcoholicUnits INTEGER, carbs INTEGER, portionsize INTEGER, estimationCarbs INTEGER, CONSTRAINT FK_FoodEvent_id FOREIGN KEY(id) REFERENCES Event(id))',
+	                     'CREATE TABLE IF NOT EXISTS ActivityEvent(id TEXT PRIMARY KEY UNIQUE, power INTEGER, CONSTRAINT FK_ActivityEvent_id FOREIGN KEY(id) REFERENCES Event(id))',
+	                     'CREATE TABLE IF NOT EXISTS EventInstance ( id TEXT PRIMARY KEY UNIQUE, Dtype TEXT DEFAULT NULL, beginTime INTEGER NOT NULL, eventId STRING NOT NULL, deleted INTEGER DEFAULT 0, lastchanged INTEGER NOT NULL, CONSTRAINT FK_EventInstance_Event FOREIGN KEY (eventId) REFERENCES Event (id))',
+	                     'CREATE TABLE IF NOT EXISTS FoodEventInstance(id TEXT PRIMARY KEY UNIQUE, amount INTEGER NOT NULL, CONSTRAINT FK_FoodEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))',
+	                     'CREATE TABLE IF NOT EXISTS ActivityEventInstance(id TEXT PRIMARY KEY UNIQUE, endTime INTEGER, intensity INTEGER NOT NULL, special INTEGER DEFAULT 0, CONSTRAINT FK_ActivityEventInstance_id FOREIGN KEY(id) REFERENCES EventInstance(id))',
+	                     ];
 	//update statements
 	var UPDATE_EVENT = 'UPDATE Event SET name=?, eventType =?, lastchanged=? WHERE id =?';
 	var UPDATE_FOOD_EVENT = 'UPDATE FoodEvent SET alcoholicUnits=?, carbs=?, portionsize=?, estimationCarbs=? WHERE id=?';
@@ -74,8 +79,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE id = ?';
 	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE id = ?';
 	var EDIT_USER = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
-	var EDIT_USER_INFO = 'UPDATE UserInfo SET idOnPump= ?,gender= ?,bodyWeight= ?,length= ?,birthYear= ?,lastchanged= ? WHERE cId = 1';
-	var EDIT_PARTICULAR_FIELD_USER_INFO = 'UPDATE UserInfo SET ?=?, lastchanged=? where cId = 1';
+	var EDIT_USER_INFO = 'UPDATE UserInfo SET idOnPump= ?,gender= ?,bodyWeight= ?,length= ?,birthYear= ?, timezone=?, lastchanged= ? WHERE cId = 1';
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
 	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?';
@@ -134,8 +138,20 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 	// open db, create if not exists
 
-	var db = openDatabase(shortName, version, displayName, maxSize);
-
+	var db = openDatabase(shortName, "", displayName, maxSize);
+	//resetDB();
+	
+	//check if versions are the same
+	if(db.version !== version)
+		{
+		//not the same, change version
+		db.changeVersion(db.version, version, function (t) {
+			//reset db
+			resetDBExceptUserTable();
+		    }, function(error){
+		    });
+		}
+	
 	//(thanks to Mirnal Kant, SQLManager)
 	//Version 2 -- Prevent Firefox crashing 
 //	-- Suspect a problem with continual creation of Regex objects
@@ -162,7 +178,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	Database.createFunction("REGEXP", 2, smDbFunctions.regexp);
 	 */
 	//resetDB();
-	createTablesIfNotExists();
+	//createTablesIfNotExists();
 
 	/*
 	 * Executes given query with arguments. Result will be processed in the callback function
@@ -199,63 +215,20 @@ function dbHandler(shortName, version, displayName, maxSize) {
 		});
 
 	}
-	/* 
-	 * Resets all tables
-	 */
-	function resetDB(){
-		//executeQuery( 'DROP TABLE IF EXISTS ClientExceptionLog;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS User;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS UserInfo;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS Event;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
-
-		executeQuery('DROP TABLE IF EXISTS ClientExceptionLog', [], null);
-
-		executeQuery('DROP TABLE IF EXISTS SensorPlot', [], null);
-
-		//execute
-	}
 	/*
 	 * Creates all tables if not exist
 	 */
 	function createTablesIfNotExists(){
 		//create tables if not exist
-		executeQuery( CREATE_CLIENT_EXCEPTION_LOG, [], null);
+		for (var pos in CREATE_TABLES) {
+			var query = CREATE_TABLES[pos];
+			executeQuery( query, [], null);
+		}
+		
+		//some tables need to have one row at the beginning.
+		addUserInfo(null,null,null,null,null);
 
-		executeQuery( CREATE_LAST_UPDATE, [], null);
-
-		executeQuery( CREATE_USER, [], null);
-
-		executeQuery( CREATE_SENSOR_PLOT, [], null);
-
-		executeQuery( CREATE_EVENT, [], null);
-
-
-		executeQuery( CREATE_FOOD_EVENT, [], null);
-
-		executeQuery( CREATE_ACTIVITY_EVENT, [], null);
-
-		executeQuery( CREATE_EVENT_INSTANCE, [], null);
-
-		executeQuery( CREATE_FOOD_EVENT_INSTANCE, [], null);
-
-		executeQuery( CREATE_ACTIVITY_EVENT_INSTANCE, [], null);
-
-		executeQuery( CREATE_USER_INFO, [], null);
+		addSensorPlot();
 
 		//Create row with id 0 in table last update if not exists
 		executeQuery( SELECT_LAST_UPDATE_TIMESTAMP, [], function(transaction,result){
@@ -275,7 +248,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 				//table contains no value
 				//create null user so it can be modified later
 				addUser(null, null);	
-				addUserInfo(null,null,null,null,null);
+				//addUserInfo(null,null,null,null,null);
 				//addSensorPlot();
 			}
 			else{
@@ -285,36 +258,27 @@ function dbHandler(shortName, version, displayName, maxSize) {
 
 
 	}
+	/* 
+	 * Resets all tables
+	 */
+	function resetDB(){
+		
+
+		executeQuery( DROP_USER_TABLE, [], null);
+		
+		resetDBExceptUserTable()
+	}
+	
 	/*
 	 * Resets all tables except for the user table. Used when user switches account
 	 */
 	function resetDBExceptUserTable(){
 		console.log("reset db");
-		executeQuery( 'DROP TABLE IF EXISTS LastUpdate;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS FoodEvent;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEvent;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS Event;', [], null);			
-
-		executeQuery( 'DROP TABLE IF EXISTS FoodEventInstance;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS ActivityEventInstance;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS EventInstance;', [], null);
-
-		executeQuery( 'DROP TABLE IF EXISTS UserInfo;', [], null);
-
-		executeQuery('DROP TABLE IF EXISTS SensorPlot', [], null);
-
-		executeQuery( CREATE_USER_INFO, [], null);
-
-		executeQuery( CREATE_SENSOR_PLOT, [], null);
-
-		addUserInfo(null,null,null,null,null);
-
-		addSensorPlot();
+		
+		for (var pos in DROP_TABLES) {
+			var query = DROP_TABLES[pos];
+			executeQuery( query, [], null);
+		}
 
 		createTablesIfNotExists();
 	}
@@ -657,14 +621,15 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function updateUser(email, password){
 		executeQuery(EDIT_USER, [email, password], function(){});
 	}
-	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, callback){
-		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,getCurrentTimestamp()],callback);
+	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone, callback){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timezone, getCurrentTimestamp()],callback);
 	}
-	function serUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged){
-		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear,lastchanged],function(){});
+	function serverUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged, timezone){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timezone, lastchanged],function(){});
 	}
 	function updateParticularFieldInUserInfo(fieldName,fieldValue){
-		executeQuery(EDIT_PARTICULAR_FIELD_USER_INFO, [fieldName,fieldValue,getCurrentTimestamp()],function(){});
+		var query = 'UPDATE UserInfo SET '+fieldName+'=?, lastchanged=? where cId = 1';
+		executeQuery(query, [fieldValue,getCurrentTimestamp()],function(){});
 	}
 	function getUserInfo(callback){
 		executeQuery(SELECT_USER_INFO, [],callback);

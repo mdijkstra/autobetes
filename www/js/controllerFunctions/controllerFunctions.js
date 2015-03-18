@@ -298,6 +298,7 @@ function controller() {
 
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
+							view.hideLoadingWidget();
 							//successfully logged in
 							$("#notLoggedIn").hide();
 							synchronise();
@@ -336,7 +337,7 @@ function controller() {
 			
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 
-				dbHandler.serUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged)
+				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timezone);
 			}, function(){});
 			
 		});
@@ -389,7 +390,8 @@ function controller() {
 	 * This method performs the right actions when login fails
 	 */
 	function callBackLoginError(response, textStatus, error){
-
+	
+		view.hideLoadingWidget();
 		//get id of current page
 		var currentPage = $.mobile.activePage[0].id;
 

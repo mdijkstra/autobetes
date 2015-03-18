@@ -5,3 +5,4 @@ hooks/
 merges/
 *~
 plugins/org.apache.cordova.statusbar/tests/
+www/js/data/vdData.js
