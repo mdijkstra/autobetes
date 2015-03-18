@@ -141,16 +141,14 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var db = openDatabase(shortName, "", displayName, maxSize);
 	//resetDB();
 	
-	console.log(db.version+" compare "+version);
-	
+	//check if versions are the same
 	if(db.version !== version)
 		{
-		console.log("change version")
+		//not the same, change version
 		db.changeVersion(db.version, version, function (t) {
-			
+			//reset db
 			resetDBExceptUserTable();
 		    }, function(error){
-		    	console.log("error: "+JSON.stringify(error));
 		    });
 		}
 	

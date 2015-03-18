@@ -326,14 +326,14 @@ function updateSensorPlot() {
  */
 function onDeviceReady() {
 	
+	//check if user is in same timezone as last startup
+	//if not update timezone in db
 	dbHandler.getUserInfo(function(transaction, result){
+		//get timezone from db and current tz from device
 		var dbTimezone = result.rows.item(0).timezone;
 		var curTimezone = new Date().getTimezoneOffset();
-		console.log(dbTimezone);
-		console.log(curTimezone);
-		console.log(JSON.stringify(result.rows.item(0)))
 		if(dbTimezone !== curTimezone){
-			console.log("update timezone");
+			//not the same...update
 			dbHandler.updateParticularFieldInUserInfo("timezone", curTimezone);
 		}
 	})
