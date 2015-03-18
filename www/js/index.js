@@ -330,11 +330,13 @@ function onDeviceReady() {
 	//if not update timezone in db
 	dbHandler.getUserInfo(function(transaction, result){
 		//get timezone from db and current tz from device
-		var dbTimezone = result.rows.item(0).timezone;
-		var curTimezone = new Date().getTimezoneOffset();
-		if(dbTimezone !== curTimezone){
+		var dbTimeOffset = result.rows.item(0).timeOffset;
+		var curTimeOffset = new Date().getTimezoneOffset();
+		//convert to Time offset (h) added to UTC (= GMT0).
+		curTimeOffset = -(curTimeOffset/60);
+		if(dbTimeOffset !== curTimeOffset){
 			//not the same...update
-			dbHandler.updateParticularFieldInUserInfo("timezone", curTimezone);
+			dbHandler.updateParticularFieldInUserInfo("timeOffset", curTimeOffset);
 		}
 	})
 	

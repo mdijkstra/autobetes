@@ -239,9 +239,9 @@ $('#saveUserInfoButton').click(function(){
 	
 	//get timezone
 	var d = new Date()
-	var timezone = d.getTimezoneOffset();
+	var timeOffset = d.getTimezoneOffset();
 	
-	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone);
+	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
 	controller.syncUserInfo()
 	view.toastMessage("Save user info");
 	$.mobile.back();//go to previous page
@@ -275,9 +275,9 @@ $('#registrationDialogOkButton').click(function(){
 				
 				//get timezone
 				var d = new Date()
-				var timezone = d.getTimezoneOffset();
+				var timeOffset = d.getTimezoneOffset();
 				
-				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone);
+				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
 				var userData = {
 						email: email,
 						password: password
