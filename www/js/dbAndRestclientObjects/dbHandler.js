@@ -6,6 +6,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var results = [];
 
 	//add functions to object
+	this.resetDB = resetDB;
 	this.addEvent = addEvent;
 	this.getEvents = getEvents;
 	this.updateEvent = updateEvent;

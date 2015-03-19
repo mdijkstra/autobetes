@@ -367,7 +367,7 @@
 		<div role="main" class="ui-content">
 			<div data-role="controlgroup">
 				<ul class="ui-listview" data-icon="false">
-					<li class="ui-first-child"><a href="#login-page"
+					<li class="ui-first-child"><a 
 						class="ui-btn">
 							<h3>Account</h3>
 							<p id="settingsPageAccount"></p>
@@ -395,6 +395,10 @@
 					<li>
 					<a id="feedback" href="mailto:autobetes@gmail.com" data-icon="autobetes-feedback" data-role="button" data-iconpos="left" data-theme="a"
 						class="ios">&nbsp;&nbsp;&nbsp;Feedback</a>
+					</li>
+					<li>
+					<a id="feedback" href="#login-page" data-icon="autobetes-logout" data-role="button" data-iconpos="left" data-theme="a"
+						onclick="dbHandler.resetDB()" class="ios">&nbsp;&nbsp;&nbsp;Logout</a>
 					</li>
 					
 					<!-- Is now a standard activity
