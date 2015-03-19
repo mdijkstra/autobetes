@@ -262,16 +262,16 @@ function stopUpdatingSensorPlot(){
 // // auto inject footer
 $(document).on('pageinit', function(event){
 	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
-		if (0 === result.rows.length) $('#notLoggedIn').show();
+		if (0 === result.rows.length) $.mobile.changePage(LOGINPAGE);
 		else {
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
 			if (0 === lastUpdateTimeStamp){
-				
-				$('#notLoggedIn').show();
+				//not logged in
+				$.mobile.changePage(LOGINPAGE);
 			}
 			else{
-				$('#notLoggedIn').hide();
+				
 			}
 		}		
 	});
