@@ -48,8 +48,7 @@
 					data-iconpos="left" class="ios ">&nbsp;</a>
 			</div>
 
-			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot"
-				STYLE='visibility: hidden;' >
+			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot" >
 			<div id="current-food-event-list" data-role="controlgroup"
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template"
@@ -155,7 +154,7 @@
 				{{#each .}}
 					{{#if standard}}
 						{{!-- The event is  standard so not editable --}}
-						<a onclick='$.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");' class="ui-btn ui-shadow ui-corner-all">{{name}}</a>
+						<a onclick=' if($("#editModeButton").val()!=="on"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
 					{{else}}
 						<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 					{{/if}}
@@ -250,7 +249,7 @@
 		<div data-role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Food name">
+				name="text-7" value="" placeholder="Name">
 
 			<div id="newEventPageFoodInput">
 			<br>
@@ -356,8 +355,7 @@
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
-			<div class="settingsList" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input">
+			<div data-role="controlgroup">
 				<ul class="ui-listview" data-icon="false">
 					<li class="ui-first-child"><a href="#login-page"
 						class="ui-btn">
@@ -374,6 +372,7 @@
 						data-icon="autobetes-synchronize" data-iconpos="left"
 						onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)">
 							&nbsp;&nbsp;&nbsp;Force synchronisation </a></li>
+				
 					<li><a class="ios" data-role="button"
 						data-theme="a" data-icon="autobetes-graph" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot 
 						<select class="ui-li-aside" id="sensorPlotSlider"
@@ -425,13 +424,12 @@
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
-			<div class="settingsList" data-role="controlgroup" data-filter="true"
-				data-input="#filterControlgroup-input">
+			<div class="settingsList">
 				<ul class="ui-listview" data-icon="false">
 
 					<li class="ui-first-child"><a class="ui-btn">
 							<h3>Pump Id</h3> <input id="pumpSerial" type="text"
-							data-clear-btn="true" placeholder="1234567">
+							data-clear-btn="true" placeholder="i.e. 1234567">
 					</a></li>
 					<li><a class="ui-btn">
 							<h3>Gender</h3>
@@ -447,6 +445,7 @@
 									class="radioChoiceNewEvent" for="radio-choice-h-2b">Female</label>
 
 							</fieldset>
+							
 
 					</a></li>
 
@@ -833,7 +832,7 @@
 						data-clear-btn="true" name="text-7" value=""> </a></li>
 				<li><a class="ui-btn"><h3>Pump id</h3>
 						<input id="registerPumpId" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="12345"></a></li>
+						name="text-7" value="" placeholder="i.e. 1234567"></a></li>
 
 				<li><a class="ui-btn"><h3>Gender</h3>
 
@@ -914,10 +913,10 @@
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
-				up</a> <a id="guideTourButton" href="#home-page" data-role="button"
+				up</a> <a id="guideTourButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
-				onclick="$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);"
+				onclick="//$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);$.mobile.changePage('#home-page');"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide
 				tour</a>
 

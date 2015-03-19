@@ -1,12 +1,12 @@
 //declare all global variables
-var dbHandler = new dbHandler('autoB', '1.0', 'Autobetes', 10000000);
+var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = false;
+var DEBUG = true;
 
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
@@ -47,7 +47,7 @@ var ALL = 'All';
 var TRUE = 'True';
 var ENDED = 'ended';
 var EDIT = "Edit";
-var EVENT_ALREADY_EXISTS = 'Event allready exists';
+var EVENT_ALREADY_EXISTS = 'Event already exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
 var LOGINDIALOG = "login-page";
 var HOMEPAGE = "home-page";
@@ -64,7 +64,7 @@ var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
-var ALLREADY_EXISTS = " allready exists"
+var ALLREADY_EXISTS = " already exists"
 var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
@@ -102,10 +102,13 @@ var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
-var EVENTALLREADYEXISTS = "event allready exists";
+var LOGIN = "Login";
+var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b"
+var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
+var IS_REGISTERING = false;
 var EventListType = FOOD;
 var intervalUpdateSensorPlot;
 $(document).data(IS_SYNCHRONISING, false);
@@ -121,15 +124,15 @@ $('#edit-event-instance-page').page();
 $('#editScreenActivity').page();
 $('#start-event-instance-page').page();
 $('#make-new-event-page').page();
+$('#home-page').page();
 $("input[type='radio']").checkboxradio();
 $("input[type='checkbox']").checkboxradio();
-
 
 
 var initialScreenSize = window.innerHeight;
 
 
-/*
+
 	
     var availableTags = [
       "ActionScript",
@@ -155,6 +158,7 @@ var initialScreenSize = window.innerHeight;
       "Scala",
       "Scheme"
     ];
+    /*
     $(function() {
     	
    	 var sugList = $("#suggestions");
@@ -196,6 +200,8 @@ function onlyDigits(){
 }
 onlyDigits();
 
+
+
 //workaround for the bug that caused misplacement of the header and footer after the keyboards pop up
 $(document).on('blur', 'input, textarea', function() {
 	setTimeout(function() {
@@ -204,24 +210,28 @@ $(document).on('blur', 'input, textarea', function() {
 });
 
 $("#sensorPlotSlider").change(function(){
+	// setTimeout is a workaround, fixes problem if slider is slided quickly subsequently the plot is not correctly hidden/closed.
+	setTimeout(function(){
 	dbHandler.setUpdatingSensorPlot($("#sensorPlotSlider").val());
 	startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
+		
+	}, 2000);
 });
 
 function startOrStopUpdatingSensorPlot(onOrOff){
-	$("#sensorPlotSlider").val(onOrOff);
 	if(onOrOff ==="on"){
 		startUpdatingSensorPlot();
+		$('#sensor-plot').show();
 	}
 	else{
 		stopUpdatingSensorPlot();
+		$('#sensor-plot').hide();
 	}
 }
 
 function startUpdatingSensorPlot(){
 	// show plot
 	
-	$('#sensor-plot').attr('style', 'visibility: visible;');
 	updateSensorPlot();// and then auto refresh sensor-plot
 	intervalUpdateSensorPlot =  setInterval(function() {
 		updateSensorPlot();
@@ -231,8 +241,7 @@ function startUpdatingSensorPlot(){
 function stopUpdatingSensorPlot(){
 	
 	clearInterval(intervalUpdateSensorPlot);
-	//$('#sensor-plot').hide(); // hide plot
-	$('#sensor-plot').attr('style', 'display: none;');
+	
 }
 
 
@@ -253,13 +262,17 @@ function stopUpdatingSensorPlot(){
 // // auto inject footer
 $(document).on('pageinit', function(event){
 	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
-		
 		if (0 === result.rows.length) $('#notLoggedIn').show();
 		else {
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
-			if (0 === lastUpdateTimeStamp) $('#notLoggedIn').show();
-			else $('#notLoggedIn').hide();
+			if (0 === lastUpdateTimeStamp){
+				
+				$('#notLoggedIn').show();
+			}
+			else{
+				$('#notLoggedIn').hide();
+			}
 		}		
 	});
 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
@@ -286,14 +299,14 @@ function checkMobileBrowser() {
 
 function handleOpenURL(url) {
 	  setTimeout(function() {
-	    alert("received url: " + url);
+	    //alert("received url: " + url);
 	  }, 0);
 }
 
-// TODO: Fix token!
+
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken=permanent';//+restClient.getToken();
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
 	//load immage async using ajax
     $.ajax({ 
         url : img_url, 
@@ -313,12 +326,25 @@ function updateSensorPlot() {
  */
 function onDeviceReady() {
 	
+	//check if user is in same timezone as last startup
+	//if not update timezone in db
+	dbHandler.getUserInfo(function(transaction, result){
+		//get timezone from db and current tz from device
+		var dbTimezone = result.rows.item(0).timezone;
+		var curTimezone = new Date().getTimezoneOffset();
+		if(dbTimezone !== curTimezone){
+			//not the same...update
+			dbHandler.updateParticularFieldInUserInfo("timezone", curTimezone);
+		}
+	})
+	
 	dbHandler.getUpdatingSensorPlot(function(transaction,result){
 		if ( result.rows.length > 0 && result.rows !== null) {
 			startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
+			//set slider to on or off
+			$("#sensorPlotSlider").val(result.rows.item(0).isUpdating);
 		}
 		else{
-			console.log("add sensor plot2")
 			dbHandler.addSensorPlot();
 		}
 		
@@ -341,7 +367,7 @@ function onDeviceReady() {
 	*/
 	MOBILE_DEVICE = checkMobileBrowser();
 	controller.checkIfUserExists();
-	
+	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);
 	//add event listeners
 	document.addEventListener("offline", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -354,11 +380,15 @@ function onDeviceReady() {
 	}, false);
 
 	document.addEventListener("pause", function(e){
+		console.log("pause");
+		TestFairy.pause();
 		synchronise();
-		restClient.logout(SERVER_URL+SERVER_LOGOUT_URL);
+		//restClient.logout(SERVER_URL+SERVER_LOGOUT_URL); logout performed before synchronise, which explains the fail in the synchronisation. 
+		//Logout not really necessary because logging in multiple times is possible and tokens expire within 2 hours.
 	}, false);
 
 	document.addEventListener("resume", function(e){
+		TestFairy.resume();
 		synchronise();
 	}, false);
 
