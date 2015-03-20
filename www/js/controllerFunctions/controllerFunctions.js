@@ -269,10 +269,11 @@ function controller() {
 				//user does not exist
 				//open dialog
 				var currentPage = $.mobile.activePage[0].id;
-				if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG){
+				if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG || currentPage === MESSAGEDIALOG){
 					//allready registering logging in, do nothing
 
 				}else{
+					console.log("1");
 					$.mobile.changePage(LOGINPAGE);
 
 				}
@@ -312,6 +313,7 @@ function controller() {
 
 							}
 							syncUserInfo();
+							checkIfMovesIsInstalled();
 
 
 						}
@@ -337,7 +339,7 @@ function controller() {
 			
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 
-				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timezone);
+				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timeOffset);
 			}, function(){});
 			
 		});
@@ -419,7 +421,8 @@ function controller() {
 
 
 			//open login screen because currently email and pw are not properly set
-			if(currentPage !== LOGINDIALOG){
+			if(currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
+				console.log("1");
 				$.mobile.changePage(LOGINPAGE);
 			}
 		}
@@ -428,5 +431,32 @@ function controller() {
 		}
 
 
+	}
+	/*
+	 * Asks server whether user is connected to moves.
+	 */
+	function checkIfMovesIsInstalled(){
+		
+		restClient.get(SERVER_URL+MOVES_CONNECTED_CHECK_URL, function(data, textStatus, response) {
+			if(data.success===false){
+				if(MOVES_INSTSTALLED){
+					//moves is installed but not connected yet.
+					//show connect-to-moves-message on homepage
+					$('#movesNotConnected').show();
+				}
+				else{
+					//moves not installed yet
+					//have to be installed before connecting
+					//show install-moves-message on homepage
+					$('#movesNotInstalled').show();		
+				}
+			}
+			else{
+				//user is connected to moves
+				//ensure connect-to-moves-message on homepage is hidden
+				$('#movesNotConnected').hide();
+			}
+			
+		},function(request, textStatus, error) {});
 	}
 }

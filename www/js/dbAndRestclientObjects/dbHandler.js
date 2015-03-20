@@ -6,6 +6,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var results = [];
 
 	//add functions to object
+	this.resetDB = resetDB;
 	this.addEvent = addEvent;
 	this.getEvents = getEvents;
 	this.updateEvent = updateEvent;
@@ -52,7 +53,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	
 	//create statements
 
-	var CREATE_TABLES = ['CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER, timezone INTEGER)'
+	var CREATE_TABLES = ['CREATE TABLE IF NOT EXISTS UserInfo(cId INTEGER PRIMARY KEY UNIQUE, idOnPump INTEGER, gender TEXT, bodyWeight INTEGER, length INTEGER, birthYear INTEGER, lastchanged INTEGER, timeOffset INTEGER)'
 	                     , 'CREATE TABLE IF NOT EXISTS SensorPlot(id INTEGER PRIMARY KEY, isUpdating TEXT)',
 	                     'CREATE TABLE IF NOT EXISTS ClientExceptionLog(id INTEGER PRIMARY KEY AUTOINCREMENT, clientDataAndTime INTEGER, exception TEXT, query TEXT, isSent INTEGER DEFAULT 0)',
 	                     'CREATE TABLE IF NOT EXISTS LastUpdate(cId INTEGER PRIMARY KEY UNIQUE, lastchanged INTEGER NOT NULL)',
@@ -79,7 +80,7 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	var DELETE_INSTANCE = 'UPDATE EventInstance SET deleted = 1, lastchanged=? WHERE id = ?';
 	var DELETE_EVENT = 'UPDATE Event SET deleted = 1, lastchanged=? WHERE id = ?';
 	var EDIT_USER = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
-	var EDIT_USER_INFO = 'UPDATE UserInfo SET idOnPump= ?,gender= ?,bodyWeight= ?,length= ?,birthYear= ?, timezone=?, lastchanged= ? WHERE cId = 1';
+	var EDIT_USER_INFO = 'UPDATE UserInfo SET idOnPump= ?,gender= ?,bodyWeight= ?,length= ?,birthYear= ?, timeOffset=?, lastchanged= ? WHERE cId = 1';
 	var UPDATE_EMAIL_AND_PASSWORD = 'UPDATE User SET email = ?, password = ? WHERE cId = 1';
 	var EDIT_LAST_UPDATE_TIMESTAMP = 'UPDATE LastUpdate SET lastchanged = ? WHERE cId = 1';
 	var SET_BEEN_SENT_CLIENT_EXCEPTION_RECORD = 'UPDATE ClientExceptionLog SET isSent=1 WHERE id =?';
@@ -621,11 +622,11 @@ function dbHandler(shortName, version, displayName, maxSize) {
 	function updateUser(email, password){
 		executeQuery(EDIT_USER, [email, password], function(){});
 	}
-	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timezone, callback){
-		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timezone, getCurrentTimestamp()],callback);
+	function updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset, callback){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timeOffset, getCurrentTimestamp()],callback);
 	}
-	function serverUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged, timezone){
-		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timezone, lastchanged],function(){});
+	function serverUpdateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, lastchanged, timeOffset){
+		executeQuery(EDIT_USER_INFO, [idOnPump,gender,bodyWeight,length,birthYear, timeOffset, lastchanged],function(){});
 	}
 	function updateParticularFieldInUserInfo(fieldName,fieldValue){
 		var query = 'UPDATE UserInfo SET '+fieldName+'=?, lastchanged=? where cId = 1';
