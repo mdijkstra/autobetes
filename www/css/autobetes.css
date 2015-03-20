@@ -4,6 +4,10 @@
 }
 */
 /* background */
+.homeButtonText{
+	position: relative; 
+	bottom: -6.75px;
+}
 #background{ 
 	position: fixed; 
 	top: 0; 
@@ -163,6 +167,15 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background-size: 70px 70px;
 }
 
+.ui-icon-autobetes-advice {
+    background: url("glyphicons/png/icon-advice_bw.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 10%;
+    background-size: 28px 28px;
+}
+
 .ui-icon-autobetes-fork {
     background: url("images/1416417254_fork.png") no-repeat;
     box-shadow: none;
@@ -218,7 +231,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 
 
 
-
+.ui-icon-autobetes-advice:after,
 .ui-icon-autobetes-settings:after,
 .ui-icon-autobetes-back:after,
 .ui-icon-autobetes-synchronize:after,

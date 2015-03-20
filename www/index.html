@@ -29,19 +29,19 @@
 				<ul>
 					<li><a id="homeStartButton" href="#event-list-page"
 					onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New')"
-					data-role="button" data-theme="a" data-icon="autobetes-fork"
-					 data-iconpos="top" class="ios">Food</a></li>
+					data-role="button" data-icon="autobetes-fork"
+					 ><span class="homeButtonText">Food</span></a></li>
 					<li><a
 					href="#event-list-page"
 					onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New')"
-					data-role="button" data-theme="a" data-icon="autobetes-special"
-					 data-iconpos="top" class="ios">Special</a></li>
+					data-role="button"  data-icon="autobetes-special"
+					  ><span class="homeButtonText">Special</span></a></li>
 					<li><a id="historyButton" href="#history-event-instance-page"
 					onclick="$(document).removeData('selectedTabIndex2');"
-					data-role="button" data-theme="a" data-icon="autobetes-history"
-					 data-iconpos="top" class="ios ">Log</a></li>
-						<li><a id="advicesButton" href="#advices-page"data-role="button" data-theme="a" data-icon="autobetes-history"
-					 data-iconpos="top" class="ios ">Advice</a></li>
+					data-role="button"  data-icon="autobetes-history"
+					  c><span class="homeButtonText">Log</span></a></li>
+						<li><a id="advicesButton" href="#advices-page"data-role="button"  data-icon="autobetes-advice"
+					><span class="homeButtonText">Advice</span></a></li>
 					
 				</ul>
 			</div>
@@ -507,8 +507,8 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
-					<li><a href="#settings-page">Settings</a></li>
+						>Home</a></li>
+					<li><a href="#settings-page" class="ui-btn-active ui-state-persist">Settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
