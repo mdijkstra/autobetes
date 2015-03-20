@@ -1,4 +1,25 @@
-$('#connectToMoves').click(function(){
+$('#linkToMovesWebsite').click(function(){
+	window.open(LINKTOMOVESWEBSITE, '_system' ,'');
+});
+
+$('.help-button').click(function(){
+	var currentPage = $.mobile.activePage[0].id;
+	var guideTourLink = "#"+currentPage+"-tour"
+	console.log(guideTourLink);
+	$(guideTourLink).joyride({
+		autoStart : true,
+		modal:true,
+		expose: true,
+		postRideCallback : function (index, tip) {
+			//guide tour is over
+			location.reload(true);//highlight correct button in footer (not help)
+		}
+	});
+		
+})
+
+
+$('.connectToMoves').click(function(){
 
 	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//195.169.22.237//plugin/moves/connect%3Ftoken%3D'+restClient.getToken();
 	console.log(link);
@@ -157,7 +178,7 @@ $('#editModeButton').click(function(){
 		//editmode was off, now need to be turned on
 		$('#editModeButton').val('on');
 		// $('#editModeButton').attr("style","background: #8df3e6 !important");
-		$('.eventButtons').attr("style","background: #8df3e6 !important");
+		$('.eventButtons').attr("style","background: #CCFFFF !important");
 
 		//change buttontext to Edit on make-new-event-page screen
 		$('#addOrEditEvent').text('Save');

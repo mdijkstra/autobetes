@@ -6,7 +6,7 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 
 var token;
-var DEBUG = true;
+var DEBUG = false;
 
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
@@ -22,7 +22,7 @@ var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
 // color stuff
 var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
 // TODO group colors here so we can easily change?
-
+var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
@@ -53,6 +53,7 @@ var LOGINDIALOG = "login-page";
 var HOMEPAGE = "home-page";
 var EVENTLISTPAGE = "event-list-page";
 var REGISTRATIONDIALOG = "registrationDialog";
+var MESSAGEDIALOG = "messageDialog";
 var DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER = 3;
 var DEFAULT_VALUE_FOOD_QUANTITY_SLIDER = 1;
 var MIN_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
@@ -98,7 +99,7 @@ var GUIDE_TOUR_HOMESCREEN_STOP_INT = "Start guide tour";
 var LINKTOMOVES = 'moves://';
 var LINKTOMOVESPLAYSTORE = "https://play.google.com/store/apps/details?id=com.protogeo.moves";//link to the android play store
 var LINKTOMOVESAPPSTORE = "http://itunes.com/apps/protogeo/moves";//link to the itunes app store
-var LINKTOMOVESWEBSITE = "'https://www.moves-app.com";
+var LINKTOMOVESWEBSITE = "https://www.moves-app.com";
 var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
@@ -133,7 +134,6 @@ var initialScreenSize = window.innerHeight;
 
 
 
-	
     var availableTags = [
       "ActionScript",
       "AppleScript",
@@ -262,12 +262,17 @@ function stopUpdatingSensorPlot(){
 // // auto inject footer
 $(document).on('pageinit', function(event){
 	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
-		if (0 === result.rows.length) $.mobile.changePage(LOGINPAGE);
+		var currentPage = $.mobile.activePage[0].id;
+		if (0 === result.rows.length && currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
+			//not logged in and on a page where you cannot be if not logged in
+			$.mobile.changePage(LOGINPAGE);
+		}
 		else {
 			var row = result.rows.item(0);
 			var lastUpdateTimeStamp = row.lastchanged;
-			if (0 === lastUpdateTimeStamp){
-				//not logged in
+			if (0 === lastUpdateTimeStamp && currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
+				//not logged in and on a page where you cannot be if not logged in
+				
 				$.mobile.changePage(LOGINPAGE);
 			}
 			else{
@@ -299,7 +304,7 @@ function checkMobileBrowser() {
 
 function handleOpenURL(url) {
 	  setTimeout(function() {
-	    //alert("received url: " + url);
+	    alert("received url: " + url);
 	  }, 0);
 }
 
@@ -353,20 +358,25 @@ function onDeviceReady() {
 	});
 	// increase font of all h1's
 	$('h1').attr('style','font-size:1.3em;');
-	/*
+	
 	//check if moves is installed on device
+	if(typeof appAvailability !== 'undefined'){
 	appAvailability.check(
 			LINKTOMOVES, // URI Scheme
 		    function() {  // Success callback
 		        //alert('Moves is available');
 		        MOVES_INSTSTALLED = true;
+		        $('#movesNotInstalled').hide();
+		        //check if user connected moves with this application
+		        restClient.get
 		    },
 		    function() {  // Error callback
 		    	//alert('Moves is not available');
 		    	MOVES_INSTSTALLED = false;
+		    	$('#movesNotInstalled').show();
 		    }
 		);
-	*/
+	}
 	MOBILE_DEVICE = checkMobileBrowser();
 	controller.checkIfUserExists();
 	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);

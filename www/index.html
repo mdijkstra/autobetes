@@ -28,37 +28,42 @@
 			<div id="home-page-navbar" data-role="navbar">
 				<ul>
 					<li><a id="homeStartButton" href="#event-list-page"
-					onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New')"
-					data-role="button" data-icon="autobetes-fork"
-					 ><span class="homeButtonText">Food</span></a></li>
-					<li><a
-					href="#event-list-page"
-					onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New')"
-					data-role="button"  data-icon="autobetes-special"
-					  ><span class="homeButtonText">Special</span></a></li>
+						onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New')"
+						data-role="button" data-icon="autobetes-fork"><span
+							class="homeButtonText">Food</span></a></li>
+					<li><a href="#event-list-page"
+						onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New')"
+						data-role="button" data-icon="autobetes-special"><span
+							class="homeButtonText">Special</span></a></li>
 					<li><a id="historyButton" href="#history-event-instance-page"
-					onclick="$(document).removeData('selectedTabIndex2');"
-					data-role="button"  data-icon="autobetes-history"
-					  c><span class="homeButtonText">Log</span></a></li>
-						<li><a id="advicesButton" href="#advices-page"data-role="button"  data-icon="autobetes-advice"
-					><span class="homeButtonText">Advice</span></a></li>
-					
+						onclick="$(document).removeData('selectedTabIndex2');"
+						data-role="button" data-icon="autobetes-logbook" c><span
+							class="homeButtonText">Log</span></a></li>
+					<li><a id="advicesButton" href="#advice-page"
+						data-role="button" data-icon="autobetes-advice"><span
+							class="homeButtonText">Advice</span></a></li>
+
 				</ul>
 			</div>
-			
-			
+
+
 		</div>
 
-		<!-- <SPAN style="text-align: center"><h1 id="notLoggedIn"
-				style="display: none">
-				Please <a href="#login-page" style="text-decoration: none">sign
-					up / log in</a> first!
-			</h1></SPAN>-->
+		<h3 id="movesNotInstalled" style="display: none; text-align: center;"
+				>
+				Please install the <a id="linkToMovesWebsite" style="text-decoration: none">Moves
+					app</a> to record activities automatically
+			</h3>
+		<h3 id="movesNotConnected" style="display: none; text-align: center;"
+				>
+				You have Moves installed, please click <a class="connectToMoves" style="text-decoration: none">this
+					link</a> to connect it with this app
+			</h3>
 		<div role="main" id="mainScreen" class="ui-content">
 			<div id="background"></div>
 
 
-			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot" >
+			<IMG ID="test-plot" alt=""> <IMG ID="sensor-plot">
 			<div id="current-food-event-list" data-role="controlgroup"
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="current-food-event-list-template"
@@ -121,7 +126,7 @@
 		<div data-role="footer" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -134,8 +139,7 @@
 	<div data-role="page" id="event-list-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<h1 id="event-list-page-header">My food / special events</h1>
 			<a id="editModeButton" data-icon="autobetes-edit"
 				style="height: 30px;">&nbsp;</a>
@@ -178,7 +182,7 @@
 		<div data-role="footer" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -192,8 +196,7 @@
 	<div data-role="page" id="start-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<p id="start-event-instance-page-event-cId" style="display: none"></p>
 			<p id="start-event-instance-page-eventType" style="display: none"></p>
 			<H1 id="startEventInstanceHeader">Eat</H1>
@@ -235,10 +238,11 @@
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<A id="startEventInstanceButton"
-				class="ui-btn ui-shadow ui-corner-all">Save</A> <a href="#event-list-page"
+				class="ui-btn ui-shadow ui-corner-all">Save</A> <a
+				href="#event-list-page"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -250,8 +254,7 @@
 	<!-- /page -->
 	<div data-role="page" id="define-event-page">
 		<div data-role="header" style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1 id="headerName">New food</H1>
 		</div>
 		<!-- /header -->
@@ -262,28 +265,29 @@
 				name="text-7" value="" placeholder="Name">
 
 			<div id="newEventPageFoodInput">
-			<br>
-			<p style="line-height: 40%;">Carbs in a serving:</p>
+				<br>
+				<p style="line-height: 40%;">Carbs in a serving:</p>
 				<table class="table-condensed">
-				<thead>
-				</thead>
-				<tbody>
-					<tr>
-						<td width="50%"><input type="number" id="newEventPageCarbs"
-							data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?"
-							placeholder="unknown"></td>
-						<td width="20%">
-							<p>gram</p>
-						</td>
-						<td width="30%">
-							<form>
-   							 <input type="checkbox" name="checkbox-mini-0" id="newEventEstimationCarbs" data-mini="true">
-   							 <label for="newEventEstimationCarbs">Estimate</label>
-							</form>
-							
-						
-						</td>
-					</tr>
+					<thead>
+					</thead>
+					<tbody>
+						<tr>
+							<td width="50%"><input type="number" id="newEventPageCarbs"
+								data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?"
+								placeholder="unknown"></td>
+							<td width="20%">
+								<p>gram</p>
+							</td>
+							<td width="30%">
+								<form>
+									     <input type="checkbox" name="checkbox-mini-0"
+										id="newEventEstimationCarbs" data-mini="true">      <label
+										for="newEventEstimationCarbs">Estimate</label>
+								</form>
+
+
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<p style="line-height: 40%;">Serving size:</p>
@@ -295,7 +299,7 @@
 						<td width="60%">
 							<p>gram</p>
 						</td>
-						
+
 					</tr>
 					<!-- 
 					<tr>
@@ -317,12 +321,7 @@
 				</table>
 			</div>
 			<!-- br for android, enables visibility of field "serving size" if keyboard opens  -->
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
-			<br>
+			<br> <br> <br> <br> <br> <br>
 			<p id="foodId" style="display: none"></p>
 
 
@@ -340,10 +339,11 @@
 				data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a> <a href="#event-list-page"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a><!-- Go back to event list page -->
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ">Cancel</a>
+			<!-- Go back to event list page -->
 
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -358,8 +358,7 @@
 	<div data-role="page" id="settings-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>Settings</H1>
 		</div>
 		<!-- /header -->
@@ -367,40 +366,38 @@
 		<div role="main" class="ui-content">
 			<div data-role="controlgroup">
 				<ul class="ui-listview" data-icon="false">
-					<li class="ui-first-child"><a 
-						class="ui-btn">
+					<li class="ui-first-child"><a id="account-button" class="ui-btn">
 							<h3>Account</h3>
 							<p id="settingsPageAccount"></p>
 					</a></li>
-					<li><a href="#user-info-page" class="ios" data-role="button"
+					<li><a id="user-info-button" href="#user-info-page" class="ios" data-role="button"
 						data-theme="a" data-icon="autobetes-edit2" data-iconpos="left">
 							&nbsp;&nbsp;&nbsp;Edit user info </a></li>
-					<li><a id="connectToMoves" class="ios" data-role="button"
+					<li><a id="connect-to-moves-button" class="connectToMoves" data-role="button"
 						data-theme="a" data-icon="autobetes-run" data-iconpos="left">&nbsp;&nbsp;&nbsp;Connect
 							to moves</a></li>
-					<li><a class="ios" data-role="button" data-theme="a"
+					<li><a id="force-sync-button" class="ios" data-role="button" data-theme="a"
 						data-icon="autobetes-synchronize" data-iconpos="left"
 						onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)">
 							&nbsp;&nbsp;&nbsp;Force synchronisation </a></li>
-				
-					<li><a class="ios" data-role="button"
-						data-theme="a" data-icon="autobetes-graph" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot 
-						<select class="ui-li-aside" id="sensorPlotSlider"
+
+					<li><a id="sensor-plot-slider-button" class="ios" data-role="button" data-theme="a"
+						data-icon="autobetes-graph" data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor
+							plot <select class="ui-li-aside" id="sensorPlotSlider"
 							name="slider" id="flip-a" data-role="slider">
 								<option value="off">Off</option>
 								<option value="on">On</option>
-						</select></a>
-						
+						</select>
+					</a></li>
+					<li><a id="feedback-button" href="mailto:autobetes@gmail.com"
+						data-icon="autobetes-feedback" data-role="button"
+						data-iconpos="left" data-theme="a" class="ios">&nbsp;&nbsp;&nbsp;Feedback</a>
 					</li>
-					<li>
-					<a id="feedback" href="mailto:autobetes@gmail.com" data-icon="autobetes-feedback" data-role="button" data-iconpos="left" data-theme="a"
-						class="ios">&nbsp;&nbsp;&nbsp;Feedback</a>
-					</li>
-					<li>
-					<a id="feedback" href="#login-page" data-icon="autobetes-logout" data-role="button" data-iconpos="left" data-theme="a"
-						onclick="dbHandler.resetDB()" class="ios">&nbsp;&nbsp;&nbsp;Logout</a>
-					</li>
-					
+					<li><a id="logout-button" href="#login-page"
+						data-icon="autobetes-logout" data-role="button"
+						data-iconpos="left" data-theme="a" onclick="dbHandler.resetDB()"
+						class="ios">&nbsp;&nbsp;&nbsp;Logout</a></li>
+
 					<!-- Is now a standard activity
 					<li><a id="settings-page-recordingEventsButton"  class="ui-btn">
 							<h3>Recording events</h3> <select style="float: right;"
@@ -423,9 +420,10 @@
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page">Home</a></li>
-					<li><a href="#settings-page" class="ui-btn-active ui-state-persist">Settings</a></li>
+					<li><a href="#settings-page"
+						class="ui-btn-active ui-state-persist">Settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -435,8 +433,7 @@
 	<div data-role="page" data-id="settingsHeader" id="user-info-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>Edit user info</H1>
 		</div>
 		<!-- /header -->
@@ -463,7 +460,7 @@
 									class="radioChoiceNewEvent" for="radio-choice-h-2b">Female</label>
 
 							</fieldset>
-							
+
 
 					</a></li>
 
@@ -488,7 +485,7 @@
 
 
 				</ul>
-			 <br>
+				<br>
 
 			</div>
 
@@ -497,18 +494,18 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-				<a id="saveUserInfoButton" data-corners="true"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
-					class="ui-btn-inner ui-btn-corner-all"> <span
-						class="ui-btn-text">Save</span>
-				</span>
-				</a>
+			<a id="saveUserInfoButton" data-corners="true" data-shadow="true"
+				data-iconshadow="true" data-wrapperels="span"
+				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+				class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Save</span>
+			</span>
+			</a>
 			<div data-role="navbar">
-				<ul>
-					<li><a href="#home-page"
-						>Home</a></li>
-					<li><a href="#settings-page" class="ui-btn-active ui-state-persist">Settings</a></li>
+				<ul><li><a class="help-button">Help</a></li>
+					<li><a href="#home-page">Home</a></li>
+					<li><a href="#settings-page"
+						class="ui-btn-active ui-state-persist">Settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -521,8 +518,7 @@
 	<div data-role="page" id="history-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>History</H1>
 			<div id="history-event-instance-list-navbar" data-role="navbar">
 				<ul>
@@ -595,7 +591,7 @@
 		<div data-role="footer" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -608,8 +604,7 @@
 	<div data-role="page" id="edit-event-instance-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>Edit</H1>
 
 		</div>
@@ -686,7 +681,7 @@
 				CLASS="ui-btn ui-shadow ui-corner-all" data-rel="dialog"
 				data-transition="slidedown" title="Delete">Delete</a>
 			<div data-role="navbar">
-				<ul>
+				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
 						class="ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
@@ -694,7 +689,27 @@
 			</div>
 		</div>
 	</div>
-<!-- 
+	<div data-role="page" id="advice-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Advice</H1>
+		</div>
+		<div role="main" class="ui-content"></div>
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+			<div data-role="navbar">
+				<ul><li><a class="help-button">Help</a></li>
+					<li><a href="#home-page"
+						class="ui-btn-active ui-state-persist">Home</a></li>
+					<li><a href="#settings-page">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 
 	<div data-role="page" id="report-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
@@ -735,8 +750,7 @@
 	<div data-role="page" id="pumpSettings">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>Pump settings</H1>
 
 		</div>
@@ -748,8 +762,8 @@
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
-				<ul>
-					<li><a href="#home-page">Dashboard</a></li>
+				<ul><li><a class="help-button">Help</a></li>
+					<li><a href="#home-page">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -809,7 +823,10 @@
 			<h1>Delete event</h1>
 		</div>
 		<div data-role="content">
-			<p>Are you sure you want to delete <span id="deleteEventDialogEventName"></span></p>
+			<p>
+				Are you sure you want to delete <span
+					id="deleteEventDialogEventName"></span>
+			</p>
 			<a id="deleteEventDialogConfirmButton" data-role="button"
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
@@ -830,26 +847,24 @@
 
 	<div data-role="page" id="registrationDialog" data-position="window">
 		<div data-role="header">
-			<a data-rel="back" data-icon="autobetes-back"
-				style="height: 30px;">&nbsp;</a>
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<h1>Sign up</h1>
 		</div>
 		<div data-role="content">
 			<ul class="ui-listview" data-icon="false">
-				<li><a class="ui-btn"><h3>Email</h3>
-						<input id="registerEmail" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="example@autobetes.com">
-				</a></li>
+				<li><a class="ui-btn"><h3>Email</h3> <input
+						id="registerEmail" type="text" data-clear-btn="true" name="text-7"
+						value="" placeholder="example@autobetes.com"> </a></li>
 
-				<li><a class="ui-btn"><h3>Password</h3>
-						<input id="registerPassword" type="password" data-clear-btn="true"
+				<li><a class="ui-btn"><h3>Password</h3> <input
+						id="registerPassword" type="password" data-clear-btn="true"
 						name="text-7" value=""> </a></li>
 
-				<li><a class="ui-btn"><h3>Confirm password</h3>
-						<input id="registerConfirmPassword" type="password"
-						data-clear-btn="true" name="text-7" value=""> </a></li>
-				<li><a class="ui-btn"><h3>Pump id</h3>
-						<input id="registerPumpId" type="text" data-clear-btn="true"
+				<li><a class="ui-btn"><h3>Confirm password</h3> <input
+						id="registerConfirmPassword" type="password" data-clear-btn="true"
+						name="text-7" value=""> </a></li>
+				<li><a class="ui-btn"><h3>Pump id</h3> <input
+						id="registerPumpId" type="text" data-clear-btn="true"
 						name="text-7" value="" placeholder="i.e. 1234567"></a></li>
 
 				<li><a class="ui-btn"><h3>Gender</h3>
@@ -882,28 +897,20 @@
 						placeholder="i.e. 1991">
 				</a></li>
 			</ul>
-			<br>
-			<br>
-			<br>
-			
+			<br> <br> <br>
+
 			<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<a id="registrationDialogOkButton" data-role="button"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span"
-				class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
-				class="ui-btn-inner ui-btn-corner-all"> <span
-					class="ui-btn-text">Ok</span>
-			</span>
-			</a>
-			<div data-role="navbar">
-				<ul>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
-					<li><a href="#settings-page">Settings</a></li>
-				</ul>
+				class="ui-footer ui-bar-a ui-footer-fixed slideup">
+				<a id="registrationDialogOkButton" data-role="button"
+					data-corners="true" data-shadow="true" data-iconshadow="true"
+					data-wrapperels="span"
+					class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-b"> <span
+					class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text">Ok</span>
+				</span>
+				</a>
+
 			</div>
-		</div>
 
 		</div>
 	</div>
@@ -911,7 +918,7 @@
 	<div data-role="page" id="login-page" data-position="window">
 
 		<div data-role="header">
-			
+
 			<h1>Login</h1>
 		</div>
 		<div data-role="content">
@@ -930,19 +937,19 @@
 				data-corners="true" data-shadow="true" data-iconshadow="true"
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
-				up</a> <a id="guideTourButton" data-role="button"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span"
+				up</a> 
+				<!-- 
+				<a id="guideTourButton" data-role="button" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
 				onclick="//$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);$.mobile.changePage('#home-page');"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide
 				tour</a>
-
+				 -->
 		</div>
-		
+
 	</div>
 	<div data-role="page" id="guideTours" data-position="window">
-
-		<ol id="homeScreenTourFirstStop">
+		<ol id="home-page-tour">
 			<li data-id="homeStartButton" data-text="Next" class="custom">
 				<h2>Start event</h2>
 				<p>Click here to start an event</p>
@@ -954,27 +961,8 @@
 
 		</ol>
 
-		<ol id="homeScreenTourSecondStop">
 
-			<li data-id="current-activity-event-list" data-text="Next"
-				class="custom">
-				<h2>Current activities</h2>
-				<p>Once an activity is started it will be listed here at the
-					begin screen.</p>
-			</li>
-			<li data-id="endActivityEventButton" data-text="Next" class="custom">
-				<h2>End activity</h2>
-				<p>Press this button to end the activity</p>
-			</li>
-			<li data-id="current-food-event-list" data-text="Next" class="custom">
-				<h2>Current food intake</h2>
-				<p>Here the current planned food intake is listed</p>
-			</li>
-
-		</ol>
-
-		<ol id="startEventScreenTour">
-
+		<ol id="event-list-page-tour">
 			<li data-id="event-list" data-text="Next" class="custom">
 				<h2>Start event</h2>
 				<p>Click a button in this list to start an event</p>
@@ -997,8 +985,8 @@
 			</li>
 
 		</ol>
-
-		<ol id="newEventScreenTour">
+		
+		<ol id="define-event-page-tour">
 			<li data-class="radioChoiceNewEvent" data-text="Next" class="custom">
 				<h2>Define a new event</h2>
 				<p>Once you define a new event , specify event type here</p>
@@ -1025,8 +1013,8 @@
 			</li>
 
 		</ol>
-
-		<ol id="startEventInstancePageTour">
+		
+		<ol id="start-event-instance-page-tour">
 			<li data-id="mydate" data-text="Next" class="custom">
 				<h2>Date</h2>
 				<p>Once you start an event, here you can specify the start date</p>
@@ -1053,28 +1041,8 @@
 				<p>Your event is registered once you press the start button</p>
 			</li>
 		</ol>
-
-
-
-		<ol id="editEventInstancePageTour">
-			<li data-id="edit-event-instance-page-end-date-field"
-				data-text="Next" class="custom">
-				<h2>End date</h2>
-				<p>Once you end an activity, you can specify the end date here</p>
-			</li>
-			<li data-id="edit-event-instance-page-end-time-field"
-				data-text="Next" class="custom">
-				<h2>End time</h2>
-				<p>Specify time here</p>
-			</li>
-			<li data-id="edit-event-instance-page-save-button" data-text="Next"
-				class="custom">
-				<h2>Save</h2>
-				<p>Input will be saved once you press the save button</p>
-			</li>
-		</ol>
-
-		<ol id="historyEventPageTour">
+		
+		<ol id="history-event-instance-page-tour">
 			<li data-id="history-event-instance-list" data-text="Next"
 				class="custom">
 				<h2>History events</h2>
@@ -1090,11 +1058,41 @@
 				<h2>Filter list</h2>
 				<p>Filter list here</p>
 			</li>
-
-
-
 		</ol>
-
+		<ol id="settings-page-tour">
+			<li data-id="account-button" data-text="Next"
+				class="custom">
+				<h2>Account</h2>
+				<p>Here you see your account.</p>
+			</li>
+			<li data-id="user-info-button" data-text="Next" class="custom">
+				<h2>Edit user info</h2>
+				<p>Press this button to edit your user info.</p>
+			</li>
+			<li data-id="connect-to-moves-button" data-text="Next"
+				class="custom">
+				<h2>Connect to moves</h2>
+				<p>For analysis we want you to be connected to moves, for recording activity automatically. Once you installed
+				the Moves app, press this button to connect to it.</p>
+			</li>
+			<li data-id="force-sync-button" data-text="Next" class="custom">
+				<h2>Force sync</h2>
+				<p>To force a sync with the serverp press this button.</p>
+			</li>
+			<li data-id="sensor-plot-slider-button" data-text="Next" class="custom">
+				<h2>Sensor plot</h2>
+				<p>If you have your recent sensor values uploaded to the server you can see the sensor plot 
+				at the home screen. Switch to on to see the plot.</p>
+			</li>
+			<li data-id="feedback-button" data-text="Next" class="custom">
+				<h2>Feedback</h2>
+				<p>If you have any remarks regarding this application. Please press this button and tell us!</p>
+			</li>
+			<li data-id="logout-button" data-text="Next" class="custom">
+				<h2>Logout</h2>
+				<p>Press this button to log out from your account</p>
+			</li>
+		</ol>
 
 
 	</div>
