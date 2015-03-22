@@ -124,6 +124,25 @@
 
 
 	}
+	
+	molgenis.RestClient.prototype.get = function(url, callback, errorHandler) {
+		$.ajax({
+			type: 'GET',
+			headers: {'x-molgenis-token': self.token},
+			url: url,
+			async: true,
+			contentType: 'application/json',
+			success: function(data, textStatus, response) {
+				callback(data, textStatus, response);
+			},
+			error: function(request, textStatus, error) {
+				console.log("ERROR:" + error);
+				errorHandler(request, textStatus, error);
+			}
+		});
+
+
+	}
 
 	molgenis.RestClient.prototype.update = function(url, data, callback, errorHandler) {
 		
