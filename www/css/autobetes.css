@@ -113,16 +113,16 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 }
 */
 
-
+/*
 .ui-icon-autobetes-settings {
-    background: url("glyphicons/png/glyphicons_280_settings.png") no-repeat;
+    background: url("glyphicons/png/glyphicons_136_cogwheel.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
 	background-position-x: 50%;
 	background-position-y: 50%;
     background-size: 65%;
 }
-
+*/
 
 .ui-icon-autobetes-synchronize {
     background: url("glyphicons/png/glyphicons_081_refresh.png") no-repeat;
@@ -195,7 +195,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 }
 
 .ui-icon-autobetes-special {
-    background: url("images/thunderbolt1.png") no-repeat;
+    background: url("images/event_icon.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
 	background-position-x: 50%;
@@ -236,7 +236,30 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 20%;
     background-size: 28px 28px;
 }
-
+.ui-icon-autobetes-home {
+    background: url("glyphicons/png/glyphicons_020_home.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 10%;
+    background-size: 20px 20px;
+}
+.ui-icon-autobetes-help {
+    background: url("glyphicons/png/glyphicons_195_circle_info.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 10%;
+    background-size: 20px 20px;
+}
+.ui-icon-autobetes-settings {
+    background: url("glyphicons/png/glyphicons_136_cogwheel.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 10%;
+    background-size: 20px 20px;
+}
 
 .ui-icon-autobetes-logbook:after,
 .ui-icon-autobetes-advice:after,
@@ -251,6 +274,8 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-history:after,
 .ui-icon-autobetes-feedback:after,
 .ui-icon-autobetes-logout:after,
+.ui-icon-autobetes-home:after,
+.ui-icon-autobetes-help:after,
 .ui-icon-autobetes-edit2:after
 {
 	background-color: transparent /*{global-icon-color}*/;
