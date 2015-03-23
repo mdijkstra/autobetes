@@ -4,15 +4,39 @@ $('#linkToMovesWebsite').click(function(){
 
 $('.help-button').click(function(){
 	var currentPage = $.mobile.activePage[0].id;
-	var guideTourLink = "#"+currentPage+"-tour"
-	console.log(guideTourLink);
+	var guideTourLink = "#"+currentPage+"-tour";
+	
+	var highlightButton;
+	if(currentPage ==="user-info-page" || currentPage ==="settings-page"){
+		//settings button need to be highlighted
+		highlightButton = ".settings-button";
+	}
+	else{
+		highlightButton = ".home-button";
+	}
+	$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
+	
 	$(guideTourLink).joyride({
 		autoStart : true,
 		modal:true,
 		expose: true,
 		postRideCallback : function (index, tip) {
 			//guide tour is over
-			location.reload(true);//highlight correct button in footer (not help)
+			//but help button is still highlighted
+			//location.reload(true);//highlight correct button in footer (not help)
+			
+			//unhighlight help button
+			$(".help-button").removeClass('ui-btn-active');
+			
+		},
+		preStepCallback : function(index, tip){
+			//set tooltip back at bottom after index 2
+			console.log("index"+ index);
+			if(index === 4){
+				console.log("at bottom");
+				$(this)[0].tipLocation = 'top';
+
+			}
 		}
 	});
 		

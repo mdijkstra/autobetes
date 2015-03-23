@@ -31,7 +31,7 @@
 						onclick="EventListType = FOOD; $('#event-list-page-header').html('My food'); $('#event-list-page-define-new-event-button').html('New')"
 						data-role="button" data-icon="autobetes-fork"><span
 							class="homeButtonText">Food</span></a></li>
-					<li><a href="#event-list-page"
+					<li><a id="homeSpecialButton" href="#event-list-page"
 						onclick="EventListType = ACTIVITY; $('#event-list-page-header').html('Special'); $('#event-list-page-define-new-event-button').html('New')"
 						data-role="button" data-icon="autobetes-special"><span
 							class="homeButtonText">Special</span></a></li>
@@ -127,9 +127,9 @@
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
-					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
-					<li><a href="#settings-page">Settings</a></li>
+					<li><a href="#home-page" id="homepageFooterHomeButon"
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
+					<li><a class="settings-button" href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
 		</div>
@@ -184,7 +184,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -244,7 +244,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -345,7 +345,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -593,7 +593,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -683,7 +683,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -701,7 +701,7 @@
 			<div data-role="navbar">
 				<ul><li><a class="help-button">Help</a></li>
 					<li><a href="#home-page"
-						class="ui-btn-active ui-state-persist">Home</a></li>
+						class="home-button ui-btn-active ui-state-persist">Home</a></li>
 					<li><a href="#settings-page">Settings</a></li>
 				</ul>
 			</div>
@@ -952,11 +952,24 @@
 		<ol id="home-page-tour">
 			<li data-id="homeStartButton" data-text="Next" class="custom">
 				<h2>Start event</h2>
-				<p>Click here to start an event</p>
+				<p>Click here to start an event.</p>
+			</li>
+			<li data-id="homeSpecialButton" data-text="Next" class="custom">
+			<h2>Start special</h2>
+				<p>Click here to start a special event. A special event is anything that potentially influences
+				your sugar values.</p>
 			</li>
 			<li data-id="historyButton" data-text="Next" class="custom">
-				<h2>Stop #2</h2>
-				<p>History can be found here</p>
+				<h2>Log-book</h2>
+				<p>Here you can view all your past events.</p>
+			</li>
+			<li data-id="advicesButton" data-text="Next" class="custom">
+				<h2>Advices</h2>
+				<p>Click here to go to the advices page.</p>
+			</li>
+			<li data-id="homepageFooterHomeButon" data-text="Next" class="custom">
+			<h2>Home button</h2>
+				<p>Anywhere in this app, you can always go back to this page by pressing this button.</p>
 			</li>
 
 		</ol>
