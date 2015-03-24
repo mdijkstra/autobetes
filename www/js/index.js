@@ -331,6 +331,7 @@ function updateSensorPlot() {
  */
 function onDeviceReady() {
 	
+	
 	//check if user is in same timezone as last startup
 	//if not update timezone in db
 	dbHandler.getUserInfo(function(transaction, result){

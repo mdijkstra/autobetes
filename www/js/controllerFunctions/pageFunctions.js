@@ -1,3 +1,9 @@
+$(document).on('pageshow', '#advice-page', function() {
+	 
+	$("#password-protection-dialog").popup();
+	$("#password-protection-dialog").popup("open");
+});
+
 $(document).on('pageshow', '#event-list-page', function() {
 	if($(document).data(TOURMODE)){
 		//app is in tour modus

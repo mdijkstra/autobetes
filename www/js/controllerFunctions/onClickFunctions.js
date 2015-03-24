@@ -1,3 +1,11 @@
+$('#enterAdvicePassword').click(function(){
+	view.showLoadingWidget();
+	setTimeout(function(){
+		view.hideLoadingWidget();
+		view.toastShortMessage("Incorrect password");
+	},3000);
+});
+
 $('#linkToMovesWebsite').click(function(){
 	window.open(LINKTOMOVESWEBSITE, '_system' ,'');
 });
@@ -6,6 +14,9 @@ $('.help-button').click(function(){
 	var currentPage = $.mobile.activePage[0].id;
 	var guideTourLink = "#"+currentPage+"-tour";
 	
+	//once user presses the help-button the other(home/settings button) gets unhighlighted
+	//which we don't prefer
+	//highlight correct button again
 	var highlightButton;
 	if(currentPage ==="user-info-page" || currentPage ==="settings-page"){
 		//settings button need to be highlighted
@@ -14,7 +25,10 @@ $('.help-button').click(function(){
 	else{
 		highlightButton = ".home-button";
 	}
-	$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
+	//highlight footer button
+	setTimeout(function(){
+		$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
+	},0)
 	
 	$(guideTourLink).joyride({
 		autoStart : true,
@@ -23,8 +37,7 @@ $('.help-button').click(function(){
 		postRideCallback : function (index, tip) {
 			//guide tour is over
 			//but help button is still highlighted
-			//location.reload(true);//highlight correct button in footer (not help)
-			
+		
 			//unhighlight help button
 			$(".help-button").removeClass('ui-btn-active');
 			
