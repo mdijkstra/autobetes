@@ -4,6 +4,13 @@
 }
 */
 /* background */
+.ui-checkbox{
+	margin:0px;padding:0px;
+}
+.ui-table-columntoggle-btn{
+	/*We do not want to have the columntoggle button at our tables*/
+	display: none !important;
+}
 
 #advice-table, 
 #password-protection-div

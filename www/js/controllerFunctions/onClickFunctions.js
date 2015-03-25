@@ -97,6 +97,14 @@ $('.connectToMoves').click(function(){
 
 });
 
+$('[name=advice-navbar-buttons]').click(function() {
+	//get event type that user clicked
+	var eventType = $(this).html() === 'basal' ? null : $(this).html();
+	var data =  controller.getAdviceTableData();
+	 
+	 view.showAdviceTable(eventType ,data);
+});
+
 
 $('[name=event-list-navbar-buttons]').click(function() {
 	//get event type that user clicked

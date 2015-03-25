@@ -1,7 +1,16 @@
+$(document).on('pageshow', '#define-event-page', function() {
+	$('#voedingsDagboekSearch').parent().find(".ui-input-clear").unbind();//unbind to avoid an accumulation of binding functions (+1 everytime this page opens)
+	//if user presses the clear button in the text field of the voedingsdagboek plugin
+	//this seems the only way possible to trigger an event and empty the list of meals
+	$('#voedingsDagboekSearch').parent().find(".ui-input-clear").click(function(){
+		$('#voedingsDagboekMeals').html('');
+		$('#voedingsDagboekSearch').val('');
+	});
+});
 $(document).on('pageshow', '#advice-page', function() {
-	 
-	$("#password-protection-dialog").popup();
-	$("#password-protection-dialog").popup("open");
+	 var data =  controller.getAdviceTableData();
+	 $('#advice-button-active-on-show-page').addClass('ui-btn-active');
+	 view.showAdviceTable("Basal" ,data);
 });
 
 $(document).on('pageshow', '#event-list-page', function() {
