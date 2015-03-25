@@ -4,6 +4,57 @@
 }
 */
 /* background */
+.ui-checkbox{
+	margin:0px;padding:0px;
+}
+.ui-table-columntoggle-btn{
+	/*We do not want to have the columntoggle button at our tables*/
+	display: none !important;
+}
+
+#advice-table, 
+#password-protection-div
+{
+    width: 100%;
+    height: 100%;
+   
+}
+#lock-icon-div{
+	 position: relative;
+	z-index: 2;
+}
+#advice-table{
+	
+}
+#password-protection-dialog{
+	width:100% !important;
+	
+}
+/*
+#password-protection-div{
+	background-color: rgba(196,196,196,0.9);
+	position: absolute;
+	z-index:3;
+    height: 30%;
+    top: 25%;
+    width:100%;
+    
+}
+#password-protection-fields{
+	margin:20px;
+	z-index:4;
+	left: 20%;
+	postion:relative;
+}
+*/
+#lock-icon{
+	width:80%;
+	position: relative;
+	max-height: 400px;
+}
+th {
+    border-bottom: 1px solid #d6d6d6;
+}
 .homeButtonText{
 	position: relative; 
 	bottom: -6.75px;

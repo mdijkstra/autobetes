@@ -12,7 +12,47 @@ function view() {
 	this.emptyDefineEventPage = emptyDefineEventPage;
 	this.showLoadingWidget = showLoadingWidget;
 	this.hideLoadingWidget = hideLoadingWidget;
-	
+	this.showAdviceTable = showAdviceTable;
+
+	function showAdviceTable(type, data){
+		if(type=== "HbA1C"){
+			$('#advice-table-div').hide();
+			$('#HbA1cAdvice').show();
+			$('#HbA1cAdvice').html("No HbA1c estimation yet");
+		}
+		else{
+			$('#advice-table-div').show();
+			$('#HbA1cAdvice').hide();
+			var source = $("#advice-table-header-template").html();
+			var headerTemplate = Handlebars.compile(source);
+			var tableData;
+			var tableHeader;
+			if(type ==="Basal"){
+				tableData = data.Basal;
+				tableHeader = headerTemplate([{Basal:"o"}]);
+
+			}
+			else if(type ==="Sensitivity"){
+				tableData = data.Sensitivity;
+				tableHeader = headerTemplate([{Sensitivity:"o"}]);
+
+			}
+			else if(type ==="Carbs"){
+				tableData = data.Carbs;
+				tableHeader = headerTemplate([{Carbs:"o"}]);
+
+			}
+
+			//get template
+			source = $("#advice-table-template").html();
+			//compile to hanlebars template
+			var template = Handlebars.compile(source);
+			//fill template with events and add screen to page
+			$("#advice-table").html(tableHeader+ template(tableData));
+			//$('.ui-table-columntoggle-btn').hide();
+		}
+	}
+
 	function showLoadingWidget(){
 		$.mobile.loading( 'show', {
 			theme: 'z',
@@ -25,7 +65,7 @@ function view() {
 			html: ""
 		});
 	}
-	
+
 	/*
 	 * Show dialog with message text
 	 */
@@ -157,7 +197,7 @@ function view() {
 					//if user slides the #intensity-slider-label-intensity-indication changes accordingly
 
 					var intensity = parseFloat($('#edit-event-instance-quantity-slider').val());
-					
+
 					if(row.carbs){
 						if(row.estimationCarbs === 0){
 							//amount of carbs is an estimation
@@ -166,7 +206,7 @@ function view() {
 						else{
 							$('#edit-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' +parseInt(Math.round(Number(row.carbs*intensity)))+' gram</span>' );
 						}
-						
+
 					}
 					if(row.intensity){
 						setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(intensity));
@@ -174,7 +214,7 @@ function view() {
 				});
 				//show and hide the right elements according to event type
 				if(row.carbs){
-					
+
 					$('#start-event-instance-amount-of-grams-text').show();
 					if(row.estimationCarbs === 0){
 						//amount of carbs is an estimation
@@ -184,7 +224,7 @@ function view() {
 						$('#edit-event-instance-amount-of-grams-text').html('Carbs: <span class="boldAndOrange">' +parseInt(Math.round(Number(row.carbs*row.amount)))+' gram</span>' );
 					}
 					$('#edit-event-instance-amount-of-grams-text').show();
-					
+
 				}
 				else if(row.amount){
 					$('#edit-event-instance-amount-of-grams-text').html('Carbs: ' +'unknown' );
@@ -234,7 +274,7 @@ function view() {
 						$('#newEventEstimationCarbs').prop('checked', false); 
 					}
 					$('#newEventEstimationCarbs').checkboxradio('refresh');
-					$('#addOrEditEventAndStart').html("Save and 'eat'");
+					$('#addOrEditEventAndStart').html("Save and 'consume	'");
 				}
 				else{
 					$("#newEventPageFoodInput").hide();
@@ -311,7 +351,7 @@ function view() {
 				//add event screen varies by event type
 				$('#start-event-instance-page-eventType').text(row.eventType);
 				if (row.eventType === FOOD) {
-					$('#startEventInstanceHeader').text("Eat");
+					$('#startEventInstanceHeader').text("Consume");
 					$('#start-event-instance-activity-quantity-slider-label').hide();
 					$('#start-event-instance-food-quantity-slider-label').show();
 					$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);

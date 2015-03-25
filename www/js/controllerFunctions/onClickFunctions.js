@@ -1,18 +1,102 @@
+$('#enterAdvicePassword').click(function(){
+	view.showLoadingWidget();
+	setTimeout(function(){
+		view.hideLoadingWidget();
+		view.toastShortMessage("Incorrect password");
+	},3000);
+});
+
 $('#linkToMovesWebsite').click(function(){
 	window.open(LINKTOMOVESWEBSITE, '_system' ,'');
 });
 
 $('.help-button').click(function(){
 	var currentPage = $.mobile.activePage[0].id;
-	var guideTourLink = "#"+currentPage+"-tour"
-	console.log(guideTourLink);
+	var guideTourLink = "#"+currentPage+"-tour";
+	
+	//once user presses the help-button the other(home/settings button) gets unhighlighted
+	//which we don't prefer
+	//highlight correct button again
+	var highlightButton;
+	if(currentPage ==="user-info-page" || currentPage ==="settings-page"){
+		//settings button need to be highlighted
+		highlightButton = ".settings-button";
+	}
+	else{
+		highlightButton = ".home-button";
+	}
+	//highlight footer button
+	setTimeout(function(){
+		$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
+	},0)
+	
+	
+	if(currentPage==="event-list-page"||currentPage==="define-event-page"||currentPage==="start-event-instance-page")
+	{
+		//these pages come in two forms. 1) it are food pages 2) it are event (previously called Activity) pages
+		//therefore we need to start the correct tour
+		//check which form it is currently and adjust link accordingly
+		if(EventListType === FOOD){
+			//it is food
+			guideTourLink = guideTourLink+"-food";
+		}
+		else{
+			//it is event (previously called Activity)
+			guideTourLink = guideTourLink+"-event";
+		}
+	}
+	
 	$(guideTourLink).joyride({
 		autoStart : true,
 		modal:true,
 		expose: true,
 		postRideCallback : function (index, tip) {
 			//guide tour is over
-			location.reload(true);//highlight correct button in footer (not help)
+			//but help button is still highlighted
+		
+			//unhighlight help button
+			$(".help-button").removeClass('ui-btn-active');
+			$(this).joyride("destroy");
+			
+		},
+		preStepCallback : function(index, tip){
+			//set tooltip back at bottom after index 2
+			console.log("index"+ index);
+			console.log($.mobile.activePage[0].id);
+			if(index === 0){
+				$(this)[0].tipLocation = 'bottom';
+			}
+			if($.mobile.activePage[0].id==="home-page" && index === 4){			
+				$(this)[0].tipLocation = 'top';
+
+			}
+			if($.mobile.activePage[0].id==="event-list-page" && index === 1){	
+				$(this)[0].tipLocation = 'left';
+			}
+			if($.mobile.activePage[0].id==="event-list-page" && index === 3){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
+			if($.mobile.activePage[0].id==="define-event-page" && index === 4 && EventListType === FOOD){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="start-event-instance-page" && index === 2){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
+			if($.mobile.activePage[0].id==="define-event-page" && index === 1 && EventListType !== FOOD){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="settings-page" && index === 4){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="user-info-page" && index === 3){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="advice-page" && index === 4){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
 		}
 	});
 		
@@ -58,6 +142,14 @@ $('.connectToMoves').click(function(){
 	 */
 	//}
 
+});
+
+$('[name=advice-navbar-buttons]').click(function() {
+	//get event type that user clicked
+	var eventType = $(this).html() === 'basal' ? null : $(this).html();
+	var data =  controller.getAdviceTableData();
+	 
+	 view.showAdviceTable(eventType ,data);
 });
 
 

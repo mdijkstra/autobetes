@@ -10,6 +10,7 @@ function controller() {
 	this.login = login;
 	this.convertIntensityIntToTextAndColor = convertIntensityIntToTextAndColor;
 	this.syncUserInfo = syncUserInfo;
+	this.getAdviceTableData = getAdviceTableData;
 	//this.getPrev
 
 
@@ -336,12 +337,12 @@ function controller() {
 			var requestData = [];
 			var row = result.rows.item(0);
 			requestData.push(row);
-			
+
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 
 				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timeOffset);
 			}, function(){});
-			
+
 		});
 	}
 	/*
@@ -392,7 +393,7 @@ function controller() {
 	 * This method performs the right actions when login fails
 	 */
 	function callBackLoginError(response, textStatus, error){
-	
+
 		view.hideLoadingWidget();
 		//get id of current page
 		var currentPage = $.mobile.activePage[0].id;
@@ -436,7 +437,7 @@ function controller() {
 	 * Asks server whether user is connected to moves.
 	 */
 	function checkIfMovesIsInstalled(){
-		
+
 		restClient.get(SERVER_URL+MOVES_CONNECTED_CHECK_URL, function(data, textStatus, response) {
 			if(data.success===false){
 				if(MOVES_INSTSTALLED){
@@ -456,7 +457,78 @@ function controller() {
 				//ensure connect-to-moves-message on homepage is hidden
 				$('#movesNotConnected').hide();
 			}
-			
+
 		},function(request, textStatus, error) {});
+	}
+
+	function getAdviceTableData(type){
+		//TODO: currently we use dummy data, but eventually this needs to be retrieved from the server
+		var adviceData = {
+				"Basal":[{
+					from: "00:00",
+					to:"06:00",
+					currentSetting:"5.8"
+				},
+				{
+					from: "06:00",
+					to:"10:00",
+					currentSetting:"7.3"
+				},
+				{
+					from: "10:00",
+					to:"16:00",
+					currentSetting:"4.2"
+				},
+				{
+					from: "16:00",
+					to:"24:00",
+					currentSetting:"5.9"
+				}
+				],
+		"Sensitivity":[{
+			from: "00:00",
+			to:"06:00",
+			currentSetting:"5.0"
+		},
+		{
+			from: "06:00",
+			to:"10:00",
+			currentSetting:"7.3"
+		},
+		{
+			from: "10:00",
+			to:"16:00",
+			currentSetting:"7.7"
+		},
+		{
+			from: "16:00",
+			to:"24:00",
+			currentSetting:"5.2"
+		}
+		],
+		
+		"Carbs":[{
+			from: "00:00",
+			to:"06:00",
+			currentSetting:"9.0"
+		},
+		{
+			from: "06:00",
+			to:"10:00",
+			currentSetting:"10.3"
+		},
+		{
+			from: "10:00",
+			to:"16:00",
+			currentSetting:"8.7"
+		},
+		{
+			from: "16:00",
+			to:"24:00",
+			currentSetting:"8.2"
+		}
+		]
+		}
+		return adviceData;
 	}
 }

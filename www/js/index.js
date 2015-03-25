@@ -60,7 +60,7 @@ var MIN_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var MIN_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
 var STEP_VALUE_ACTIVITY_QUANTITY_SLIDER = 1;
 var STEP_VALUE_FOOD_QUANTITY_SLIDER = 0.25;
-var PLUSMINRANGEFOODEVENT = 1200000;
+var PLUSMINRANGEFOODEVENT = 1800000;
 var IS_SYNCHRONISING =  'isSynchronising';
 var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
@@ -158,6 +158,65 @@ var initialScreenSize = window.innerHeight;
       "Scala",
       "Scheme"
     ];
+       $(function() {
+        var listVoedingsDagboek = $("#voedingsDagboekMeals");
+      	$('#voedingsdagboek-dialog').bind({
+      	    
+			   popupafterclose: function(event, ui) { 
+				   //popup closes
+				   listVoedingsDagboek.html('');
+				   $('#voedingsDagboekSearch').val('');
+			   }
+
+      	});
+      	    $("#voedingsDagboekSearch").on("input", function(e) {
+      	        var text = $(this).val();
+      	        if(text.length < 2) {
+      	        	listVoedingsDagboek.html("");
+      	        	listVoedingsDagboek.listview("refresh");
+      	        } else {
+      	        	//dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
+      	        		listVoedingsDagboek.html("");
+      	        	var str = "";
+      	        	var language = $('#flip-language').val();
+      	        	for (var i in vdData) {
+      					var row = vdData[i];
+      					var productname;
+      					if(language === 'en'){
+      						productname = row.enName;
+      					}
+      					else{
+      						productname = row.nlName;
+      					}
+      					if(productname.toUpperCase().indexOf(text.toUpperCase()) > -1){
+      						//if(row.servingSize)
+      						if(row.servingSize !== ""){
+      							/*
+      							 *  carbs / 100 (g) : is row.carbs 
+   								carbs /serving : (row.servingsize/100)*row.carbs
+      							 */
+      							var carbsPerServing = (parseInt(row.servingSize)/100)*parseInt(row.carbs);
+      							
+      							var carbsAndServings = "carbs= "+row.carbs+" /100g, servingsize= " +row.servingSize+"g, carbs per serving= "+carbsPerServing+"g"; 
+      		   					str += '<li><a onclick="view.toastMessage('+"'"+ carbsAndServings +"'" + ')">'+productname+"</a></li>";	
+      						}
+      						else{
+      							
+      							str += '<li><a onclick="view.toastMessage('+"'carbs:"+ row.carbs +"/100g'" + ')">'+productname+"</a></li>";	
+
+      						}
+       				}
+      	        	}
+      	                
+      	        	listVoedingsDagboek.html(str);
+      	        	listVoedingsDagboek.listview("refresh");
+      	               
+      	           // },"json");
+      	        
+      	          //});
+      	        }
+      	 });
+   });
     /*
     $(function() {
     	
@@ -330,6 +389,7 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
+	
 	
 	//check if user is in same timezone as last startup
 	//if not update timezone in db
