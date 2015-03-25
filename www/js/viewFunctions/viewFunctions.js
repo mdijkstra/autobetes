@@ -351,7 +351,7 @@ function view() {
 				//add event screen varies by event type
 				$('#start-event-instance-page-eventType').text(row.eventType);
 				if (row.eventType === FOOD) {
-					$('#startEventInstanceHeader').text("Eat");
+					$('#startEventInstanceHeader').text("Consume");
 					$('#start-event-instance-activity-quantity-slider-label').hide();
 					$('#start-event-instance-food-quantity-slider-label').show();
 					$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_FOOD_QUANTITY_SLIDER);

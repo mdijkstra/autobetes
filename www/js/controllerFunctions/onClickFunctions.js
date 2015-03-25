@@ -30,6 +30,22 @@ $('.help-button').click(function(){
 		$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
 	},0)
 	
+	
+	if(currentPage==="event-list-page"||currentPage==="define-event-page"||currentPage==="start-event-instance-page")
+	{
+		//these pages come in two forms. 1) it are food pages 2) it are event (previously called Activity) pages
+		//therefore we need to start the correct tour
+		//check which form it is currently and adjust link accordingly
+		if(EventListType === FOOD){
+			//it is food
+			guideTourLink = guideTourLink+"-food";
+		}
+		else{
+			//it is event (previously called Activity)
+			guideTourLink = guideTourLink+"-event";
+		}
+	}
+	
 	$(guideTourLink).joyride({
 		autoStart : true,
 		modal:true,
@@ -40,16 +56,47 @@ $('.help-button').click(function(){
 		
 			//unhighlight help button
 			$(".help-button").removeClass('ui-btn-active');
+			$(this).joyride("destroy");
 			
 		},
 		preStepCallback : function(index, tip){
 			//set tooltip back at bottom after index 2
 			console.log("index"+ index);
-			if(index === 4){
-				console.log("at bottom");
+			console.log($.mobile.activePage[0].id);
+			if(index === 0){
+				$(this)[0].tipLocation = 'bottom';
+			}
+			if($.mobile.activePage[0].id==="home-page" && index === 4){			
 				$(this)[0].tipLocation = 'top';
 
 			}
+			if($.mobile.activePage[0].id==="event-list-page" && index === 1){	
+				$(this)[0].tipLocation = 'left';
+			}
+			if($.mobile.activePage[0].id==="event-list-page" && index === 3){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
+			if($.mobile.activePage[0].id==="define-event-page" && index === 4 && EventListType === FOOD){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="start-event-instance-page" && index === 2){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
+			if($.mobile.activePage[0].id==="define-event-page" && index === 1 && EventListType !== FOOD){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="settings-page" && index === 4){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="user-info-page" && index === 3){	
+				$(this)[0].tipLocation = 'top';
+			}
+			if($.mobile.activePage[0].id==="advice-page" && index === 4){	
+				$(this)[0].tipLocation = 'top';
+			}
+			
 		}
 	});
 		

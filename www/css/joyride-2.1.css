@@ -11,13 +11,13 @@ body {
 .joyride-tip-guide {
   position: absolute;
   background: #000;
-  background: rgba(245,245,245,0.85);
+  background: rgba(245,245,245,0.95);
   border-style: solid;
      border-color: #737373;
   display: none;
   color: #00000;
   width: 300px;
-  z-index: 103;
+  z-index: 2000;
   top: 0; /* keeps the page from scrolling when calculating position */
   left: 0;
   font-family: "caption";
