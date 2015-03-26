@@ -16,12 +16,12 @@ function view() {
 
 	function showAdviceTable(type, data){
 		if(type=== "HbA1C"){
-			$('#advice-table-div').hide();
+			$('#advice-container').hide();
 			$('#HbA1cAdvice').show();
-			$('#HbA1cAdvice').html("No HbA1c estimation yet");
+			$('#HbA1cAdvice').html("Your estimated HbA1C is: "+data.hba1c);
 		}
 		else{
-			$('#advice-table-div').show();
+			$('#advice-container').show();
 			$('#HbA1cAdvice').hide();
 			var source = $("#advice-table-header-template").html();
 			var headerTemplate = Handlebars.compile(source);
