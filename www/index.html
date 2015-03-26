@@ -272,7 +272,7 @@
 		<div data-role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Name">
+				name="text-7" value="" placeholder="Food name">
 
 			<div id="newEventPageFoodInput">
 				<a data-role="button" data-corners="true" data-shadow="true"
@@ -281,14 +281,16 @@
 					onclick="$('#voedingsdagboek-dialog').show(); $('#voedingsdagboek-dialog').popup(); $('#voedingsdagboek-dialog').popup('open');"
 					class="ui-btn ui-btn-inline ui-icon-bullets ui-btn-icon-left ui-corner-all">
 					<span class="ui-btn-inner ui-btn-corner-all"> <span
-						class="ui-btn-text">Consult food data table</span>
+						class="ui-btn-text">Carbs lookup table</span>
 				</span>
-				</a> <br>
-				<p style="line-height: 20%;">Carbs in a serving:</p>
-
+				</a>
+				<br/>
+				<br/>
 				<table class="table-condensed">
 					<tr>
-						<td width="50%!important"><input type="number"
+						<td width="50%!important">
+							Amount of carbs per serving:
+							<input type="number"
 							id="newEventPageCarbs" data-clear-btn="true" step="0.1"
 							pattern="[0-9]+\.?[0-9]?" placeholder="unknown"></td>
 						<td width="0%">
@@ -300,16 +302,15 @@
 							data-mini="true">      <label id="guess-carbs-checkbox"
 							for="newEventEstimationCarbs" style="font-size: 9pt;">I
 								guess</label>
-
-
-
 						</td>
 					</tr>
 				</table>
-				<p style="line-height: 40%;">Serving size:</p>
+
 				<table class="table-condensed">
 					<tr>
-						<td width="50%"><input type="number" id="newEventPortionSize"
+						<td width="50%">
+							Serving size:
+							<input type="number" id="newEventPortionSize"
 							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
 							placeholder="unknown"></td>
 						<td width="50%">
@@ -352,14 +353,14 @@
 
 					<form>
 						<select id="flip-language" name="flip-1" data-role="slider">
-							<option value="en">EN</option>
 							<option value="nl">NL</option>
+							<option value="en">EN</option>
 						</select>
 					</form>
-					<p>Search in the table of food items.</p>
+					<p>Look up the carbohydrate content of a given product.</p>
 
 					<input id="voedingsDagboekSearch" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="Food name"> <br>
+						name="text-7" value="" placeholder="Type product name..."> <br>
 					<div>
 						<ul id="voedingsDagboekMeals" data-role="listview">
 						</ul>
@@ -777,10 +778,9 @@
 				</div>
 				<a data-role="button" data-corners="true" id="unlock-advices-button"
 					onclick="$('#password-protection-dialog').show(); $('#password-protection-dialog').popup(); $('#password-protection-dialog').popup('open');"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="autobetes-logbook"
 					class="ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all"> <span
-					class="ui-btn-inner ui-btn-corner-all"> <span
-						class="ui-btn-text">Unlock advices</span></span></a>
+					class="ui-btn-inner ui-btn-corner-all"> <span class="ui-btn-text"><img id="lock-icon" src="img/open_lock.png" style="width:20px"/>&nbsp;&nbsp;Unlock advices</span></span></a>
 			</div>
 			<br> <br>
 			<script id="advice-table-template" type="text/x-handlebars-template">
@@ -810,22 +810,22 @@
 					{{#if Basal}}
 							<tr>
 								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(I/H)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(I/H)</span></th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(IU/h)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(IU/h)</span></th>
 							</tr>
 						
 					{{else}}
 							{{#if Sensitivity}}
 							<tr>
 								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(I/g&nbsp;carbs)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(I/g&nbsp;carbs)</span></th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(mM/IU)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(mM/IU)</span></th>
 							</tr>
 							{{else}}
 							<tr>
 								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(g&nbsp;carbs/mmol/L)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(g&nbsp;carbs/mmol/L)</span></th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(g/IU)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(g/IU)</span></th>
 							</tr>
 							{{/if}}
 					{{/if}}
@@ -1131,107 +1131,48 @@
 		<ol id="home-page-tour">
 			<li data-id="homeStartButton" data-text="Next" class="custom">
 				<h2>Food</h2>
-				<p>Here you can add and edit different types of food that you
-					consume.</p>
+				<p>Please record the food you consume, here.</p>
 			</li>
 			<li data-id="homeSpecialButton" data-text="Next" class="custom">
-				<h2>Events</h2>
-				<p>Here you can add and edit all events that influence your
-					blood glucose levels.</p>
+				<h2>Events that affect sugar level</h2>
+				<p>Please record special events that affect your blood sugar level, here. Such events include 'stress' and activities (e.g. fitness, swimming) that are not automatically recorded by the Moves app (walk, run, bike).</p>
 			</li>
 			<li data-id="historyButton" data-text="Next" class="custom">
-				<h2>Log</h2>
-				<p>Here you can see your past activities.</p>
+				<h2>Logbook</h2>
+				<p>The logbook lists your food and events recorded so far.</p>
 			</li>
 			<li data-id="advicesButton" data-text="Next" class="custom">
 				<h2>Advice</h2>
-				<p>Here you can see the advices based upon your personal data.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Plot</h2>
-				<p>If you uploaded your sensor data recently, you can see your
-					sugar curve here.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Food intake</h2>
-				<p>If you recently recorded food intake, it is listed here.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Events</h2>
-				<p>If you have events currently going, it is listed here.</p>
+				<p>Here you can find current and advised settings: (1) basal insulin, (2) carb-ratio, (3) insulin sensitivity, (4) HbA1c.</p>
 			</li>
 		</ol>
 
 
 		<ol id="event-list-page-tour-food">
-
-			<li data-id="searchEventsInputForm" data-text="Next" class="custom">
-				<h2>Search food</h2>
-				<p>You can use the search bar to search for a specific
-					food/drink.</p>
-			</li>
 			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit button</h2>
-				<p>Press this button to edit a certain food/drink.</p>
+				<h2>Edit</h2>
+				<p>Press to edit a food item.</p>
 			</li>
 
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
-				<h2>Define food</h2>
-				<p>If you press this button you can define a new food/drink.</p>
-			</li>
-			<li data-id="event-list-content" data-text="Next" class="custom">
-				<h2>Food/drink list</h2>
-				<p>Defined foods/drinks are listed here. Click one to consume.</p>
+				<h2>Define new food</h2>
+				<p>Please add new food if it is not in the list yet!</p>
 			</li>
 		</ol>
 
 		<ol id="define-event-page-tour-food">
-			<li data-id="newEventName" data-text="Next" class="custom">
-				<h2>Name</h2>
-				<p>Here you can name your food/drink.</p>
-			</li>
-			<li data-id="voedingsdagboek-plugin-button" data-text="Next"
-				class="custom">
-				<h2>CarbTable</h2>
-				<p>You can use the Carb-Table to look up the carb content of
-					food/drinks.</p>
-			</li>
-
-			<li data-id="newEventPageCarbs" data-text="Next" class="custom">
-				<h2>Carbs</h2>
-				<p>Here you can fill in the amount of carbs.</p>
-			</li>
 			<li data-id="guess-carbs-checkbox" data-text="Next" class="custom">
-				<h2>Guess</h2>
-				<p>If you guess the carb content of your food/drink, check this
-					checkbox.</p>
+				<h2>I guess</h2>
+				<p>Please check if you are unsure about the amount of carbs in this food item.</p>
 			</li>
 			<li data-id="newEventPortionSize" data-text="Next" class="custom">
 				<h2>Serving size</h2>
-				<p>Here you can fill in the size of the serving.</p>
+				<p>Weight of one serving of this food item.</p>
 			</li>
-			<li data-id="addOrSaveFoodEvent" data-text="Next" class="custom">
-				<h2>Save</h2>
-				<p>Here you can save your food/drink.</p>
-			</li>
-			<li data-id="addOrEditEventAndStart" data-text="Next" class="custom">
-				<h2>Save and consume</h2>
-				<p>Pressing this buttong saves your food/drink and you can
-					immediately consume it.</p>
-			</li>
-			<li data-id="cancel-new-event" data-text="Next" class="custom">
-				<h2>Cancel</h2>
-				<p>Cancel creating a new food/drink.</p>
-			</li>
-
 		</ol>
 
-		<ol id="start-event-instance-page-tour-food">
-			<li data-id="mydate" data-text="Next" class="custom">
-				<h2>Time</h2>
-				<p>Here you can define the date of consumption.</p>
-			</li>
+		<!--ol id="start-event-instance-page-tour-food">
 			<li data-id="mytime" data-text="Next" class="custom">
 				<h2>Time</h2>
 				<p>Here you can define the time of consumption.</p>
@@ -1251,32 +1192,22 @@
 				<h2>Cancel</h2>
 				<p>Press this button to cancel this recording.</p>
 			</li>
-
-		</ol>
+		</ol-->
 
 		<ol id="event-list-page-tour-event">
-
-			<li data-id="searchEventsInputForm" data-text="Next" class="custom">
-				<h2>Search event</h2>
-				<p>You can use the search bar to search for a specific event.</p>
-			</li>
 			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit button</h2>
-				<p>Press this button to edit a certain event.</p>
+				<h2>Edit</h2>
+				<p>Press to edit an event.</p>
 			</li>
 
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
-				<h2>Define event</h2>
-				<p>If you press this button you can define a new event.</p>
-			</li>
-			<li data-id="event-list-content" data-text="Next" class="custom">
-				<h2>Event list</h2>
-				<p>Defined events are listed here. Click one to start.</p>
+				<h2>Events that affect sugar level</h2>
+				<p>List of special events that affect your blood sugar level, here. Such events include 'stress' and activities (e.g. fitness, swimming) that are not automatically recorded by the Moves app (walk, run, bike).</p>
 			</li>
 		</ol>
 
-		<ol id="define-event-page-tour-event">
+		<!--ol id="define-event-page-tour-event">
 			<li data-id="newEventName" data-text="Next" class="custom">
 				<h2>Event name</h2>
 				<p>Specify the name of the event here.</p>
@@ -1294,153 +1225,65 @@
 				<h2>Cancel</h2>
 				<p>Here you can cancel creating the new event.</p>
 			</li>
-
-
-		</ol>
+		</ol-->
 
 
 		<ol id="start-event-instance-page-tour-event">
 			<li data-id="mydate" data-text="Next" class="custom">
-				<h2>Date</h2>
-				<p>Once you start an event, here you can specify the start date
-					and time.</p>
+				<h2>Start</h2>
+				<p>When does this event start?</p>
 			</li>
-			<li data-id="mytime" data-text="Next" class="custom">
-				<h2>Time</h2>
-				<p>Specify the duration of the event here.</p>
-			</li>
-			<li data-id="startEventQuantitySliderField" data-text="Next"
-				class="custom">
+			<li data-id="startEventQuantitySliderField" data-text="Next" class="custom">
 				<h2>Degree</h2>
-				<p>Use this slider to specify the intensity degree of this
-					event.</p>
-			</li>
-			<li data-id="startEventInstanceButton" data-text="Next"
-				class="custom">
-				<h2>Save event</h2>
-				<p>Pressing this button will save this recording.</p>
-			</li>
-			<li data-id="start-event-instance-cancel-button" data-text="Next"
-				class="custom">
-				<h2>Cancel</h2>
-				<p>Press this button to cancel this recording.</p>
+				<p>Please indicate your perception of the intensity at which this event takes place. For example, do you experience a lot of stress, or only a little?</p>
 			</li>
 		</ol>
 
 		<ol id="history-event-instance-page-tour">
-			<li data-id="history-event-instance-list" data-text="Next"
-				class="custom">
-				<h2>Log activities</h2>
-				<p>This is where all the past activities are listed. Pressing
-					one of the activities enables you to edit the recording.</p>
-			</li>
-			<li data-class="deleteEvent" data-text="Next" class="custom">
-				<h2>Delete activities</h2>
-				<p>With this button you can delete an activity.</p>
-			</li>
-			<li data-id="history-event-instance-list-navbar" data-text="Next"
-				class="custom">
-				<h2>Filter list</h2>
-				<p>Filter the different activities here.</p>
+			<li data-id="history-event-instance-list-navbar" data-text="Next" class="custom">
+				<h2>Logbook</h2>
+				<p>The logbook lists the consumptions and events that you have recorded so far. Here you can edit them.</p>
 			</li>
 		</ol>
 
 		<ol id="advice-page-tour">
-			<li data-class="ui-block-a" data-text="Next" class="custom">
-				<h2>BasalInsulinTabel</h2>
-				<p>If you uploaded your glucose sensor data. You can view here your basal settings (in Insulin units/hour) per period of the day.</p>
-			</li>
-			<li data-class="ui-block-b" data-text="Next" class="custom">
-				<h2>Insuline sensitivity</h2>
-				<p>Here you can view your insulin sensitivity settings (in Insulin units/gram of carbs).</p>
-			</li>
-			<li data-class="ui-block-c" data-text="Next" class="custom">
-				<h2>Carb ratio</h2>
-				<p>Here you can view your carbohydrate sensitivity settings (in gram of carbs/ per mmol/L).</p>
-			</li>
-			<li data-class="ui-block-d" data-text="Next" class="custom">
-				<h2>HbA1c</h2>
-				<p>Here you can see the estimated HbA1c levels.</p>
-			</li>
-			<li data-id="advice-table-div" data-text="Next" class="custom">
-				<h2>Advices</h2>
-				<p>Here the current settings and the advice are listed per period.</p>
-			</li>
 			<li data-id="unlock-advices-button" data-text="Next" class="custom">
-				<h2>Unlock your advices</h2>
-				<p>You need to see the advices together with your physician, therefore it is password protected. Contact your physician for this.</p>
+				<h2>Advices</h2>
+				<p>Currently, this app is not approved to come up with advices directly for its users. During your consult, you may ask your physician to unlock our advices.</p>
 			</li>
 			
 		</ol>
 
 		<ol id="settings-page-tour">
-			<li data-id="account-button" data-text="Next" class="custom">
-				<h2>Account</h2>
-				<p>Here you can see your account.</p>
-			</li>
-			<li data-id="user-info-button" data-text="Next" class="custom">
-				<h2>Edit user info</h2>
-				<p>Here you can edit your personal info.</p>
-			</li>
 			<li data-id="connect-to-moves-button" data-text="Next" class="custom">
-				<h2>Connect to moves</h2>
-				<p>Here you can connect to the Moves application. For analytic
-					purpose we want you to be connected to this application, so your
-					activity is recorded automatically.</p>
+				<h2>Connect to moves (only once!)</h2>
+				<p>Please press this button to connect the Autobetes app to the 'Moves app'. We make use of that app to automatically track your physical activities for later analysis.</p>
 			</li>
 			<li data-id="force-sync-button" data-text="Next" class="custom">
 				<h2>Force synchronization</h2>
-				<p>Here you can synchronize with the server for up to date
-					analysis.</p>
+				<p>Your data should be automatically uploaded to our server for analysis. If this does not happen, please press this button.</p>
 			</li>
 			<li data-id="sensor-plot-slider-button" data-text="Next"
 				class="custom">
 				<h2>Sensor plot</h2>
-				<p>Here you can switch the sensor plot on and off. If you have
-					your recent sensor values uploaded to the server you can see the
-					sensor plot at the home screen.</p>
+				<p>Expert option: only for users with a Raspberry Pi.</p>
 			</li>
 			<li data-id="feedback-button" data-text="Next" class="custom">
 				<h2>Feedback</h2>
-				<p>Here you can give us feedback about the application. If you
-					have any question regarding the Autobetes application you can ask
-					it here, we are always happy to help you and trying to improve the
-					application.</p>
+				<p>We are happy to receive your feedback, questions and suggestions! We are happy to help you!</p>
 			</li>
 			<li data-id="logout-button" data-text="Next" class="custom">
 				<h2>Logout</h2>
-				<p>Here you can log out from your account.</p>
+				<p>Here you can log out from your account. Only use if needed.</p>
 			</li>
 		</ol>
 
 		<ol id="user-info-page-tour">
 			<li data-id="pump-id-button" data-text="Next" class="custom">
-				<h2>Pump Id</h2>
-				<p>Here you define your pump Id.</p>
-			</li>
-			<li data-id="gender-button" data-text="Next" class="custom">
-				<h2>Gender</h2>
-				<p>Here you can define your gender.</p>
-			</li>
-			<li data-id="body-weight-button" data-text="Next" class="custom">
-				<h2>Body weight</h2>
-				<p>Here you can define your body weight in kilograms.</p>
-			</li>
-			<li data-id="length-button" data-text="Next" class="custom">
-				<h2>Length</h2>
-				<p>Here you can define your length in centimeters.</p>
-			</li>
-			<li data-id="birth-button" data-text="Next" class="custom">
-				<h2>Year of birth</h2>
-				<p>Here you can define your date of birth.</p>
-			</li>
-			<li data-id="saveUserInfoButton" data-text="Next" class="custom">
-				<h2>Save</h2>
-				<p>Press this button to save your user info.</p>
+				<h2>Pump serial number</h2>
+				<p>Please look at the backside of your insulin pump for the six digits in "Serial: PBRxxxxxx".</p>
 			</li>
 		</ol>
-
-
 	</div>
 	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 
