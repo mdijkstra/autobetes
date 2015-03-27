@@ -1,32 +1,31 @@
+
 //declare all global variables
 var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
-
 var token;
 var DEBUG = false;
-
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
 
-// get connection statistics
+//get connection statistics
 var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
-var timestamp_last_seen_server		= 0 // ms since 1970 in GMT0; 0 means never seen
-var timestamp_last_seen_raspberry	= 0 // ms since 1970 in GMT0; 0 means never seen
-var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
+	var timestamp_last_seen_server		= 0 // ms since 1970 in GMT0; 0 means never seen
+	var timestamp_last_seen_raspberry	= 0 // ms since 1970 in GMT0; 0 means never seen
+	var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
 
-// color stuff
-var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
-// TODO group colors here so we can easily change?
+//	color stuff
+	var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
+//TODO group colors here so we can easily change?
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/api/v1/login'
-var SERVER_LOGOUT_URL = '/api/v1/logout';
+	var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
@@ -66,7 +65,7 @@ var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var ALLREADY_EXISTS = " already exists"
-var USERISDISABLEDREGEX= /User is disabled/;
+	var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
@@ -105,13 +104,16 @@ var ANDROID = "Android";
 var IOS = "iOS";
 var LOGIN = "Login";
 var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b"
-var EVENTALLREADYEXISTS = "event already exists";
+	var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
 var IS_REGISTERING = false;
 var EventListType = FOOD;
 var intervalUpdateSensorPlot;
+var currentGuideTour;//current guide tour is in this object
+var currentlyGuiding = false;
+var HBA1C = "HbA1C";
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -134,92 +136,92 @@ var initialScreenSize = window.innerHeight;
 
 
 
-    var availableTags = [
-      "ActionScript",
-      "AppleScript",
-      "Asp",
-      "BASIC",
-      "C",
-      "C++",
-      "Clojure",
-      "COBOL",
-      "ColdFusion",
-      "Erlang",
-      "Fortran",
-      "Groovy",
-      "Haskell",
-      "Java",
-      "JavaScript",
-      "Lisp",
-      "Perl",
-      "PHP",
-      "Python",
-      "Ruby",
-      "Scala",
-      "Scheme"
-    ];
-       $(function() {
-        var listVoedingsDagboek = $("#voedingsDagboekMeals");
-      	$('#voedingsdagboek-dialog').bind({
-      	    
-			   popupafterclose: function(event, ui) { 
-				   //popup closes
-				   listVoedingsDagboek.html('');
-				   $('#voedingsDagboekSearch').val('');
-			   }
+var availableTags = [
+                     "ActionScript",
+                     "AppleScript",
+                     "Asp",
+                     "BASIC",
+                     "C",
+                     "C++",
+                     "Clojure",
+                     "COBOL",
+                     "ColdFusion",
+                     "Erlang",
+                     "Fortran",
+                     "Groovy",
+                     "Haskell",
+                     "Java",
+                     "JavaScript",
+                     "Lisp",
+                     "Perl",
+                     "PHP",
+                     "Python",
+                     "Ruby",
+                     "Scala",
+                     "Scheme"
+                     ];
+$(function() {
+	var listVoedingsDagboek = $("#voedingsDagboekMeals");
+	$('#voedingsdagboek-dialog').bind({
 
-      	});
-      	    $("#voedingsDagboekSearch").on("input", function(e) {
-      	        var text = $(this).val();
-      	        if(text.length < 2) {
-      	        	listVoedingsDagboek.html("");
-      	        	listVoedingsDagboek.listview("refresh");
-      	        } else {
-      	        	//dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
-      	        		listVoedingsDagboek.html("");
-      	        	var str = "";
-      	        	var language = $('#flip-language').val();
-      	        	for (var i in vdData) {
-      					var row = vdData[i];
-      					var productname;
-      					if(language === 'en'){
-      						productname = row.enName;
-      					}
-      					else{
-      						productname = row.nlName;
-      					}
-      					if(productname.toUpperCase().indexOf(text.toUpperCase()) > -1){
-      						//if(row.servingSize)
-      						if(row.servingSize !== ""){
-      							/*
-      							 *  carbs / 100 (g) : is row.carbs 
+		popupafterclose: function(event, ui) { 
+			//popup closes
+			listVoedingsDagboek.html('');
+			$('#voedingsDagboekSearch').val('');
+		}
+
+	});
+	$("#voedingsDagboekSearch").on("input", function(e) {
+		var text = $(this).val();
+		if(text.length < 2) {
+			listVoedingsDagboek.html("");
+			listVoedingsDagboek.listview("refresh");
+		} else {
+			//dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
+			listVoedingsDagboek.html("");
+			var str = "";
+			var language = $('#flip-language').val();
+			for (var i in vdData) {
+				var row = vdData[i];
+				var productname;
+				if(language === 'en'){
+					productname = row.enName;
+				}
+				else{
+					productname = row.nlName;
+				}
+				if(productname.toUpperCase().indexOf(text.toUpperCase()) > -1){
+					//if(row.servingSize)
+					if(row.servingSize !== ""){
+						/*
+						 *  carbs / 100 (g) : is row.carbs 
    								carbs /serving : (row.servingsize/100)*row.carbs
-      							 */
-      							var carbsPerServing = (parseInt(row.servingSize)/100)*parseInt(row.carbs);
-      							
-      							var carbsAndServings = "carbs= "+row.carbs+" /100g, servingsize= " +row.servingSize+"g, carbs per serving= "+carbsPerServing+"g"; 
-      		   					str += '<li><a onclick="view.toastMessage('+"'"+ carbsAndServings +"'" + ')">'+productname+"</a></li>";	
-      						}
-      						else{
-      							
-      							str += '<li><a onclick="view.toastMessage('+"'carbs:"+ row.carbs +"/100g'" + ')">'+productname+"</a></li>";	
+						 */
+						var carbsPerServing = (parseInt(row.servingSize)/100)*parseInt(row.carbs);
 
-      						}
-       				}
-      	        	}
-      	                
-      	        	listVoedingsDagboek.html(str);
-      	        	listVoedingsDagboek.listview("refresh");
-      	               
-      	           // },"json");
-      	        
-      	          //});
-      	        }
-      	 });
-   });
-    /*
+						var carbsAndServings = "carbs= "+row.carbs+" /100g, servingsize= " +row.servingSize+"g, carbs per serving= "+carbsPerServing+"g"; 
+						str += '<li><a onclick="view.toastMessage('+"'"+ carbsAndServings +"'" + ')">'+productname+"</a></li>";	
+					}
+					else{
+
+						str += '<li><a onclick="view.toastMessage('+"'carbs:"+ row.carbs +"/100g'" + ')">'+productname+"</a></li>";	
+
+					}
+				}
+			}
+
+			listVoedingsDagboek.html(str);
+			listVoedingsDagboek.listview("refresh");
+
+			// },"json");
+
+			//});
+		}
+	});
+});
+/*
     $(function() {
-    	
+
    	 var sugList = $("#suggestions");
 
    	    $("#newEventName").on("input", function(e) {
@@ -234,22 +236,22 @@ var initialScreenSize = window.innerHeight;
    	        	console.log(text);
    	        	for (var i = 0; i < result.rows.length; i++) {
    					var row = result.rows.item(i);
-   					
+
    					if(row.name.toUpperCase().indexOf(text.toUpperCase()) > -1){
    					str += "<li>"+row.name+"</li>";
    					}
    	        	}
-   	                
+
    	                sugList.html(str);
    	                sugList.listview("refresh");
-   	               
+
    	           // },"json");
-   	        
+
    	          });
    	        }
    	 });
 });
-   */
+ */
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
@@ -271,9 +273,9 @@ $(document).on('blur', 'input, textarea', function() {
 $("#sensorPlotSlider").change(function(){
 	// setTimeout is a workaround, fixes problem if slider is slided quickly subsequently the plot is not correctly hidden/closed.
 	setTimeout(function(){
-	dbHandler.setUpdatingSensorPlot($("#sensorPlotSlider").val());
-	startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
-		
+		dbHandler.setUpdatingSensorPlot($("#sensorPlotSlider").val());
+		startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
+
 	}, 2000);
 });
 
@@ -290,66 +292,18 @@ function startOrStopUpdatingSensorPlot(onOrOff){
 
 function startUpdatingSensorPlot(){
 	// show plot
-	
+
 	updateSensorPlot();// and then auto refresh sensor-plot
 	intervalUpdateSensorPlot =  setInterval(function() {
 		updateSensorPlot();
-		}, 10000); // ask server every 10s for new sensor plot	
+	}, 10000); // ask server every 10s for new sensor plot	
 }
 
 function stopUpdatingSensorPlot(){
-	
+
 	clearInterval(intervalUpdateSensorPlot);
-	
+
 }
-
-
-// $(document).on("pageinit", "home-page", function(event){
-// 	// $("div.ui-footer-dashboard").load('footerDashboard.html', function(){$(this).trigger("create")});
-// 		$("div.ui-footer").load('footer.html', function(){$(this).trigger("create")});
-// 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
-// 	// $("a.footerTab1").addClass('ui-btn-active').trigger("create");
-// 	// alert('xxx');
-// });
-//
-// $(document).on("pageshow", "report-page", function(event){
-// 	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
-// 	// $("a.footerTab2").addClass('ui-btn-active').trigger("create");
-// });
-//
-//
-// // auto inject footer
-$(document).on('pageinit', function(event){
-	dbHandler.getLastUpdateTimeStamp(function(transaction, result){
-		var currentPage = $.mobile.activePage[0].id;
-		if (0 === result.rows.length && currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
-			//not logged in and on a page where you cannot be if not logged in
-			$.mobile.changePage(LOGINPAGE);
-		}
-		else {
-			var row = result.rows.item(0);
-			var lastUpdateTimeStamp = row.lastchanged;
-			if (0 === lastUpdateTimeStamp && currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
-				//not logged in and on a page where you cannot be if not logged in
-				
-				$.mobile.changePage(LOGINPAGE);
-			}
-			else{
-				
-			}
-		}		
-	});
-	// $("div.ui-footer").html('<div data-role="navbar"><ul><li><a href="#home-page" class="footerTab1">Dashboard</a></li><li><a href="#report-page"  class="footerTab2">Report</a></li></ul></div>').trigger("create");
-	 // $("div.ui-footer").load('footerDashboard.html', function(){$(this).trigger("create")});
-	// alert('hoi');
-	// if (undefined === $.mobile.activePage) $("a.footerTab1").addClass('ui-btn-active').trigger("create");
-	// else
-	// {
-	// 	alert($.mobile.activePage[0].id);
-	// 	if ("home-page" === $.mobile.activePage[0].id) $("a.footerTab1").addClass('ui-btn-active').trigger("create");
-	// 	if ("report-page" === $.mobile.activePage[0].id) $("a.footerTab2").addClass('ui-btn-active').trigger("create");
-	// }
-});
 
 
 /*
@@ -362,9 +316,9 @@ function checkMobileBrowser() {
 }
 
 function handleOpenURL(url) {
-	  setTimeout(function() {
-	    alert("received url: " + url);
-	  }, 0);
+	setTimeout(function() {
+		alert("received url: " + url);
+	}, 0);
 }
 
 
@@ -372,73 +326,86 @@ function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
 	//load immage async using ajax
-    $.ajax({ 
-        url : img_url, 
-        cache: true,
-        processData : false,
-        async : true,
-    }).always(function(){
-    	//set attributes once loading completes
-    	$('#sensor-plot').attr('width', .90 * window.innerWidth);
-        $("#sensor-plot").attr("src", img_url).fadeIn();
-    });   
-    
+	$.ajax({ 
+		url : img_url, 
+		cache: true,
+		processData : false,
+		async : true,
+	}).always(function(){
+		//set attributes once loading completes
+		$('#sensor-plot').attr('width', .90 * window.innerWidth);
+		$("#sensor-plot").attr("src", img_url).fadeIn();
+	});   
+
 }
 
 /*
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
-	
-	
-	//check if user is in same timezone as last startup
-	//if not update timezone in db
-	dbHandler.getUserInfo(function(transaction, result){
-		//get timezone from db and current tz from device
-		var dbTimeOffset = result.rows.item(0).timeOffset;
-		var curTimeOffset = new Date().getTimezoneOffset();
-		//convert to Time offset (h) added to UTC (= GMT0).
-		curTimeOffset = -(curTimeOffset/60);
-		if(dbTimeOffset !== curTimeOffset){
-			//not the same...update
-			dbHandler.updateParticularFieldInUserInfo("timeOffset", curTimeOffset);
-		}
-	})
-	
-	dbHandler.getUpdatingSensorPlot(function(transaction,result){
-		if ( result.rows.length > 0 && result.rows !== null) {
-			startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
-			//set slider to on or off
-			$("#sensorPlotSlider").val(result.rows.item(0).isUpdating);
-		}
-		else{
-			dbHandler.addSensorPlot();
-		}
-		
-	});
+	setTimeOut(function(){
+		//the functions that call the database are in this timeout of 500 millisec to be sure that the database is made before
+		controller.checkIfUserExists();
+		dbHandler.getLastUpdateTimeStamp(function(transaction, result){
+			var currentPage = $.mobile.activePage[0].id;
+			var row = result.rows.item(0);
+			var lastUpdateTimeStamp = row.lastchanged;
+
+			if(lastUpdateTimeStamp !== 0){
+				window.location.href =  "#"+HOMEPAGE;
+				$.mobile.changePage("#"+HOMEPAGE);
+			}
+
+		});
+
+
+		//check if user is in same timezone as last startup
+		//if not update timezone in db
+		dbHandler.getUserInfo(function(transaction, result){
+			//get timezone from db and current tz from device
+			var dbTimeOffset = result.rows.item(0).timeOffset;
+			var curTimeOffset = new Date().getTimezoneOffset();
+			//convert to Time offset (h) added to UTC (= GMT0).
+			curTimeOffset = -(curTimeOffset/60);
+			if(dbTimeOffset !== curTimeOffset){
+				//not the same...update
+				dbHandler.updateParticularFieldInUserInfo("timeOffset", curTimeOffset);
+			}
+		})
+
+		dbHandler.getUpdatingSensorPlot(function(transaction,result){
+			if ( result.rows.length > 0 && result.rows !== null) {
+				startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
+				//set slider to on or off
+				$("#sensorPlotSlider").val(result.rows.item(0).isUpdating);
+			}
+			else{
+				dbHandler.addSensorPlot();
+			}
+
+		});
+
+	}, 500);
 	// increase font of all h1's
 	$('h1').attr('style','font-size:1.3em;');
-	
+
 	//check if moves is installed on device
 	if(typeof appAvailability !== 'undefined'){
-	appAvailability.check(
-			LINKTOMOVES, // URI Scheme
-		    function() {  // Success callback
-		        //alert('Moves is available');
-		        MOVES_INSTSTALLED = true;
-		        $('#movesNotInstalled').hide();
-		        //check if user connected moves with this application
-		        restClient.get
-		    },
-		    function() {  // Error callback
-		    	//alert('Moves is not available');
-		    	MOVES_INSTSTALLED = false;
-		    	$('#movesNotInstalled').show();
-		    }
+		appAvailability.check(
+				LINKTOMOVES, // URI Scheme
+				function() {  // Success callback
+					//alert('Moves is available');
+					MOVES_INSTSTALLED = true;
+					$('#movesNotInstalled').hide();
+				},
+				function() {  // Error callback
+					//alert('Moves is not available');
+					MOVES_INSTSTALLED = false;
+					$('#movesNotInstalled').show();
+				}
 		);
 	}
 	MOBILE_DEVICE = checkMobileBrowser();
-	controller.checkIfUserExists();
 	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);
 	//add event listeners
 	document.addEventListener("offline", function(e) {
@@ -465,14 +432,14 @@ function onDeviceReady() {
 	}, false);
 
 	synchronise();
-	
-	
+
+
 	setInterval(function() {
 		//update current activity list and food event list
 		dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 		dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 	}, 10000); 
-	
+
 }
 
 //onDeviceReady();
@@ -481,7 +448,7 @@ function onDeviceReady() {
 if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
 	OS =  IOS;
 	LINKTOMOVES = "moves://";
-    document.addEventListener("deviceready", onDeviceReady, false);
+	document.addEventListener("deviceready", onDeviceReady, false);
 } 
 else if(navigator.userAgent.match(/(Android)/)){
 	OS = ANDROID;
@@ -489,7 +456,7 @@ else if(navigator.userAgent.match(/(Android)/)){
 	document.addEventListener("deviceready", onDeviceReady, false);
 }
 else {
-    onDeviceReady();
+	onDeviceReady();
 }
 
 //document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
@@ -502,4 +469,4 @@ else{
 	//no waiting for phonegap needed
 	onDeviceReady();
 }
-*/
+ */

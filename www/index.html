@@ -16,6 +16,39 @@
 </head>
 <body>
 
+	<div data-role="page" id="login-page" data-position="window">
+
+		<div data-role="header">
+
+			<h1>Login</h1>
+		</div>
+		<div data-role="content">
+
+			<input id="loginEmail" type="text" data-clear-btn="true"
+				name="text-7" value="" placeholder="Email"> <input
+				id="loginPassword" type="password" data-clear-btn="true"
+				name="text-7" value="" placeholder="Password"> <a
+				id="loginDialogOkButton" data-role="button" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+				<span class="ui-btn-inner ui-btn-corner-all"> <span
+					class="ui-btn-text">Login</span>
+			</span>
+			</a> <a id="registerButton" href="#registrationDialog" data-role="button"
+				data-corners="true" data-shadow="true" data-iconshadow="true"
+				data-wrapperels="span"
+				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
+				up</a>
+			<!-- 
+				<a id="guideTourButton" data-role="button" data-corners="true"
+				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+				onclick="//$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);$.mobile.changePage('#home-page');"
+				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide
+				tour</a>
+				 -->
+		</div>
+
+	</div>
 
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
@@ -190,9 +223,7 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -252,9 +283,7 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -387,9 +416,7 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -556,9 +583,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page"
-						class="settings-button ui-btn-active ui-state-persist"
-						data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -586,9 +611,7 @@
 			<!-- /navbar -->
 		</div>
 		<!-- /header -->
-
 		<div role="main" class="ui-content">
-
 			<div id="history-event-instance-list" data-role="controlgroup"
 				data-filter="true" data-input="#filterControlgroup-input"></div>
 			<script id="history-event-instance-list-template"
@@ -647,7 +670,6 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
 						data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
@@ -739,7 +761,6 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
 						data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
@@ -766,6 +787,7 @@
 			</div>
 		</div>
 		<div role="main" class="ui-content">
+		<p id="HbA1cAdvice" style="display: none"></p>
 			<div id="advice-container">
 				<div id="advice-content">
 					<div id="advice-table-div">
@@ -773,7 +795,7 @@
 							class=" ui-responsive table-stripe" id="advice-table">
 						</table>
 					</div>
-					<p id="HbA1cAdvice" style="display: none"></p>
+					
 				</div>
 				<a data-role="button" data-corners="true" id="unlock-advices-button"
 					onclick="$('#password-protection-dialog').show(); $('#password-protection-dialog').popup(); $('#password-protection-dialog').popup('open');"
@@ -875,7 +897,6 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page"
-						class="home-button ui-btn-active ui-state-persist"
 						data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
@@ -1094,39 +1115,6 @@
 		</div>
 	</div>
 
-	<div data-role="page" id="login-page" data-position="window">
-
-		<div data-role="header">
-
-			<h1>Login</h1>
-		</div>
-		<div data-role="content">
-
-			<input id="loginEmail" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Email"> <input
-				id="loginPassword" type="password" data-clear-btn="true"
-				name="text-7" value="" placeholder="Password"> <a
-				id="loginDialogOkButton" data-role="button" data-corners="true"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
-				<span class="ui-btn-inner ui-btn-corner-all"> <span
-					class="ui-btn-text">Login</span>
-			</span>
-			</a> <a id="registerButton" href="#registrationDialog" data-role="button"
-				data-corners="true" data-shadow="true" data-iconshadow="true"
-				data-wrapperels="span"
-				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
-				up</a>
-			<!-- 
-				<a id="guideTourButton" data-role="button" data-corners="true"
-				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
-				onclick="//$(document).data(TOURMODE, true); $(document).data(GUIDE_TOUR_HOMESCREEN_STOP_INT, 0);$.mobile.changePage('#home-page');"
-				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Guide
-				tour</a>
-				 -->
-		</div>
-
-	</div>
 	<div data-role="page" id="guideTours" data-position="window">
 		<ol id="home-page-tour">
 			<li data-id="homeStartButton" data-text="Next" class="custom">
@@ -1146,19 +1134,6 @@
 			<li data-id="advicesButton" data-text="Next" class="custom">
 				<h2>Advice</h2>
 				<p>Here you can see the advices based upon your personal data.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Plot</h2>
-				<p>If you uploaded your sensor data recently, you can see your
-					sugar curve here.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Food intake</h2>
-				<p>If you recently recorded food intake, it is listed here.</p>
-			</li>
-			<li data-id="homepage-content" data-text="Next" class="custom">
-				<h2>Events</h2>
-				<p>If you have events currently going, it is listed here.</p>
 			</li>
 		</ol>
 
@@ -1328,20 +1303,20 @@
 		</ol>
 
 		<ol id="history-event-instance-page-tour">
-			<li data-id="history-event-instance-list" data-text="Next"
-				class="custom">
-				<h2>Log activities</h2>
-				<p>This is where all the past activities are listed. Pressing
-					one of the activities enables you to edit the recording.</p>
-			</li>
-			<li data-class="deleteEvent" data-text="Next" class="custom">
-				<h2>Delete activities</h2>
-				<p>With this button you can delete an activity.</p>
-			</li>
 			<li data-id="history-event-instance-list-navbar" data-text="Next"
 				class="custom">
 				<h2>Filter list</h2>
-				<p>Filter the different activities here.</p>
+				<p>Here you can filter on food/drinks and events.</p>
+			</li>
+			<li data-class="ui-li-has-alt" data-text="Next"
+				class="custom">
+				<h2>Log activities</h2>
+				<p>This is where all the past events and consumed food/drinks are listed. Pressing
+					one enables you to edit the recording.</p>
+			</li>
+			<li data-class="deleteEvent" data-text="Next" class="custom">
+				<h2>Delete activities</h2>
+				<p>With this button you can delete an food/drink or event.</p>
 			</li>
 		</ol>
 
