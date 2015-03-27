@@ -263,7 +263,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
     background-size: 28px 28px;
 }
 .ui-icon-autobetes-feedback {
-    background: url("glyphicons/png/glyphicons_245_chat.png") no-repeat;
+    background: url("../img/feedback_bw.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
 	background-position-x: 15px;
@@ -311,10 +311,19 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 10%;
     background-size: 20px 20px;
 }
+.ui-icon-autobetes-about {
+    background: url("../img/autobetes_icon_bw.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 8px;
+	background-position-y: 50%;
+    background-size: 40px 40px;
+}
 
 .ui-icon-autobetes-logbook:after,
 .ui-icon-autobetes-advice:after,
 .ui-icon-autobetes-settings:after,
+.ui-icon-autobetes-about:after,
 .ui-icon-autobetes-back:after,
 .ui-icon-autobetes-synchronize:after,
 .ui-icon-autobetes-edit:after,
