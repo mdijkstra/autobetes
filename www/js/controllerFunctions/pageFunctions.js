@@ -7,10 +7,14 @@ $(document).on('pageshow', '#define-event-page', function() {
 		$('#voedingsDagboekSearch').val('');
 	});
 });
+
+$("body").find("div").on('pageshow',function(){
+	$('.joyride-close-tip').click();//ensure guide tour is closed on load of every page
+});
+
 $(document).on('pageshow', '#advice-page', function() {
-	 var data =  controller.getAdviceTableData();
-	 $('#advice-button-active-on-show-page').addClass('ui-btn-active');
-	 view.showAdviceTable("Basal" ,data);
+	 var data =  controller.getAdviceTableData("Basal", view.showAdviceTable);
+	
 });
 
 $(document).on('pageshow', '#event-list-page', function() {

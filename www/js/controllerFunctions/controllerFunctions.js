@@ -264,22 +264,10 @@ function controller() {
 
 			if(result.rows.length > 0 && result.rows.item(0).email){
 				//user exists
+
 				login();
 			}
-			else{
-				//user does not exist
-				//open dialog
-				var currentPage = $.mobile.activePage[0].id;
-				if(currentPage === LOGINDIALOG || currentPage === REGISTRATIONDIALOG || currentPage === MESSAGEDIALOG){
-					//allready registering logging in, do nothing
 
-				}else{
-					console.log("1");
-					$.mobile.changePage(LOGINPAGE);
-
-				}
-
-			}
 		}
 		dbHandler.getUserCredentials(checkCallBack);
 	}
@@ -310,6 +298,7 @@ function controller() {
 							if(currentPage === LOGINDIALOG){
 								//$.mobile.back();//go to previous page
 								window.location.href =  "#"+HOMEPAGE;
+								$.mobile.changePage("#"+HOMEPAGE);
 								view.toastMessage(SUCCESSFULLY_LOGGED_IN);
 
 							}
@@ -420,12 +409,6 @@ function controller() {
 			//set timeout, so message dialog appears after #loginpage is opened
 			view.toastMessage(BAD_CREDENTIALS_TEXT);
 
-
-			//open login screen because currently email and pw are not properly set
-			if(currentPage !== LOGINDIALOG && currentPage !== REGISTRATIONDIALOG && currentPage !== MESSAGEDIALOG){
-				console.log("1");
-				$.mobile.changePage(LOGINPAGE);
-			}
 		}
 		else{
 			view.toastShortMessage(response.responseText);
@@ -461,74 +444,91 @@ function controller() {
 		},function(request, textStatus, error) {});
 	}
 
-	function getAdviceTableData(type){
-		//TODO: currently we use dummy data, but eventually this needs to be retrieved from the server
-		var adviceData = {
-				"Basal":[{
-					from: "00:00",
-					to:"06:00",
-					currentSetting:"5.8"
-				},
-				{
-					from: "06:00",
-					to:"10:00",
-					currentSetting:"7.3"
-				},
-				{
-					from: "10:00",
-					to:"16:00",
-					currentSetting:"4.2"
-				},
-				{
-					from: "16:00",
-					to:"24:00",
-					currentSetting:"5.9"
-				}
-				],
-		"Sensitivity":[{
-			from: "00:00",
-			to:"06:00",
-			currentSetting:"5.0"
-		},
-		{
-			from: "06:00",
-			to:"10:00",
-			currentSetting:"7.3"
-		},
-		{
-			from: "10:00",
-			to:"16:00",
-			currentSetting:"7.7"
-		},
-		{
-			from: "16:00",
-			to:"24:00",
-			currentSetting:"5.2"
+	function getAdviceTableData(type, callback){
+
+		if(type === HBA1C){
+			var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+			$("#HbA1cAdvice").hide();//hide for now, show once data is in
+			view.showLoadingWidget();
+			restClient.get(url, function(data, textStatus, response){
+				//success callback
+
+				view.hideLoadingWidget();
+				callback(type, JSON.parse(data));
+			},function(){
+				//error callback
+				view.showLoadingWidget();
+			});
 		}
-		],
-		
-		"Carbs":[{
-			from: "00:00",
-			to:"06:00",
-			currentSetting:"9.0"
-		},
-		{
-			from: "06:00",
-			to:"10:00",
-			currentSetting:"10.3"
-		},
-		{
-			from: "10:00",
-			to:"16:00",
-			currentSetting:"8.7"
-		},
-		{
-			from: "16:00",
-			to:"24:00",
-			currentSetting:"8.2"
+		else{
+			var adviceData = {
+					//TODO: currently we use dummy data, but eventually this needs to be retrieved from the server
+					"Basal":[{
+						from: "00:00",
+						to:"06:00",
+						currentSetting:"5.8"
+					},
+					{
+						from: "06:00",
+						to:"10:00",
+						currentSetting:"7.3"
+					},
+					{
+						from: "10:00",
+						to:"16:00",
+						currentSetting:"4.2"
+					},
+					{
+						from: "16:00",
+						to:"24:00",
+						currentSetting:"5.9"
+					}
+					],
+					"Sensitivity":[{
+						from: "00:00",
+						to:"06:00",
+						currentSetting:"5.0"
+					},
+					{
+						from: "06:00",
+						to:"10:00",
+						currentSetting:"7.3"
+					},
+					{
+						from: "10:00",
+						to:"16:00",
+						currentSetting:"7.7"
+					},
+					{
+						from: "16:00",
+						to:"24:00",
+						currentSetting:"5.2"
+					}
+					],
+
+					"Carbs":[{
+						from: "00:00",
+						to:"06:00",
+						currentSetting:"9.0"
+					},
+					{
+						from: "06:00",
+						to:"10:00",
+						currentSetting:"10.3"
+					},
+					{
+						from: "10:00",
+						to:"16:00",
+						currentSetting:"8.7"
+					},
+					{
+						from: "16:00",
+						to:"24:00",
+						currentSetting:"8.2"
+					}
+					]
+			}
+			callback(type, adviceData);
 		}
-		]
-		}
-		return adviceData;
 	}
 }
