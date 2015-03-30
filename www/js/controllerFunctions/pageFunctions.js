@@ -25,12 +25,12 @@ $(document).on('pageshow', '#carbs-advice-page', function() {
 	 var data =  controller.getAdviceTableData("Carbs", view.showAdviceTable);
 	
 });
-$(document).on('pageshow', '#hbA1C-advice-page', function() {
+$(document).on('pageshow', '#hba1c-advice-page', function() {
 	 var data =  controller.getAdviceTableData("HbA1C", view.showAdviceTable);
 	
 });
 
-$(document).on('pageshow', '#sensor-plot-page',function(){
+$(document).on('pageshow', '#autopilot-page',function(){
 
 	$('#sensor-plot').show();
 
@@ -41,7 +41,7 @@ $(document).on('pageshow', '#sensor-plot-page',function(){
 	
 });
 
-$(document).on('pagehide', '#sensor-plot-page',function(){
+$(document).on('pagehide', '#autopilot-page',function(){
 	$('#sensor-plot').hide();
 	clearInterval(intervalUpdateSensorPlot);
 	
