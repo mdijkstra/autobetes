@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg4149"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   width="1068.8634"
+   height="1023.9879"
+   viewBox="0 0 1068.8634 1023.9879"
+   sodipodi:docname="autopilot.svg"
+   inkscape:export-filename="/Users/mdijkstra/Documents/git/autobetes-app/www/img/advice/autopilot/autopilot.png"
+   inkscape:export-xdpi="90.349998"
+   inkscape:export-ydpi="90.349998">
+  <metadata
+     id="metadata4155">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4153" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1560"
+     inkscape:window-height="888"
+     id="namedview4151"
+     showgrid="false"
+     inkscape:zoom="0.42236328"
+     inkscape:cx="633.54687"
+     inkscape:cy="674.23768"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4149"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <path
+     style="fill:#000000"
+     d="m 642,1023.1918 c 0,-0.9449 -8.56912,-92.06427 -21.03774,-223.70389 -20.55493,-217.01243 -30.00722,-314.76373 -30.51648,-315.58773 -0.62552,-1.01211 -19.86058,8.53847 -115.44579,57.32103 -123.77319,63.1685 -198.21316,101.6053 -202.92699,104.78058 -2.70813,1.82422 -2.90588,3.2575 -9.51824,68.98612 -9.09489,90.40563 -10.61946,104.53438 -11.50669,106.63647 -1.38641,3.28479 -62.52801,39.33059 -64.01451,37.73951 -0.45013,-0.48179 -6.97884,-24.27598 -14.50827,-52.87598 C 147.12703,710.01432 137.99315,675.95629 136.74381,673.06752 135.7189,670.69768 87.3432,620.49708 13.27753,544.94367 5.97489,537.49434 0,530.89058 0,530.26865 c 0,-1.66706 62.26415,-35.65322 65,-35.4795 0.825,0.0524 35.7,16.23002 77.5,35.95031 41.8,19.72028 77.47868,36.45487 79.28596,37.18797 3.20836,1.30144 3.55076,1.17233 14.5,-5.46748 42.91697,-26.02559 286.00973,-177.53794 290.16393,-180.85039 1.63799,-1.30609 2.56974,-2.78085 2.16781,-3.43118 C 527.31417,376.06922 478.95217,340.14664 210,141.51388 95.64146,57.055178 94.42728,56.126325 96.15605,54.42332 98.02272,52.58448 111.31174,45.151582 156.07592,20.908569 L 194.68313,0 222.59156,12.090927 C 538.52445,148.9643 749.71909,239.98791 751.36227,239.98791 c 0.71267,0 7.7852,-4.11065 15.71674,-9.13477 61.25887,-38.80358 134.32679,-82.50093 157.12642,-93.96747 16.64644,-8.37194 40.73438,-17.05176 59.79457,-21.54632 14.31564,-3.37576 38.4947,-4.36631 48,-1.96645 9.7204,2.45418 18.3038,7.18568 24.0417,13.25262 15.9863,16.90311 17.0594,42.49985 3.0184,71.99255 -8.9632,18.82679 -20.9134,33.18966 -36.0601,43.34011 -14.4976,9.71551 -109.2094,67.81303 -177.6283,108.95968 -9.42056,5.66546 -18.3059,11.26141 -19.7452,12.43544 -2.35775,1.92322 -2.81048,3.47154 -4.57151,15.63461 -3.29181,22.73575 -16.95266,123.68841 -40.05454,296 -31.96596,238.42665 -38.57039,286.7157 -39.56998,289.32059 -0.33896,0.88332 -4.06198,3.80859 -8.27338,6.50062 -13.13188,8.3942 -89.02584,53.17878 -90.11916,53.17878 -0.57086,0 -1.03793,-0.3582 -1.03793,-0.7961 z"
+     id="path4159"
+     inkscape:connector-curvature="0" />
+</svg>
