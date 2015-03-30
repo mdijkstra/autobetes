@@ -25,8 +25,8 @@ $(document).on('pageshow', '#carbs-advice-page', function() {
 	 var data =  controller.getAdviceTableData("Carbs", view.showAdviceTable);
 	
 });
-$(document).on('pageshow', '#hbA1C-advice-page', function() {
-	 var data =  controller.getAdviceTableData("HbA1C", view.showAdviceTable);
+$(document).on('pageshow', '#hbA1c-advice-page', function() {
+	 var data =  controller.getAdviceTableData(HBA1C, view.showAdviceTable);
 	
 });
 
