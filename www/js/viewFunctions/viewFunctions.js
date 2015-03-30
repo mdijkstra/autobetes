@@ -18,7 +18,7 @@ function view() {
 		if(type=== "HbA1C"){
 			$('#advice-container').hide();
 			$('#HbA1cAdvice').show();
-			$('#HbA1cAdvice').html("Based on your data we estimate your HbA1c: "+data.hba1c+" %");
+			$('#HbA1cAdvice').html(data.hba1c);
 		}
 		else{
 			$('#advice-container').show();
