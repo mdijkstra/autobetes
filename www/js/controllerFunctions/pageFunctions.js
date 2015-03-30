@@ -9,6 +9,7 @@ $(document).on('pageshow', '#define-event-page', function() {
 });
 
 $("body").find("div").on('pageshow',function(){
+	//listener for every page show
 	$('.joyride-close-tip').click();//ensure guide tour is closed on load of every page
 });
 

@@ -343,7 +343,7 @@ function updateSensorPlot() {
  * This method performs required functions once device is ready with loading all scripts
  */
 function onDeviceReady() {
-	setTimeOut(function(){
+	setTimeout(function(){
 		//the functions that call the database are in this timeout of 500 millisec to be sure that the database is made before
 		controller.checkIfUserExists();
 		dbHandler.getLastUpdateTimeStamp(function(transaction, result){
