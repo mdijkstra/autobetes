@@ -13,8 +13,37 @@ $("body").find("div").on('pageshow',function(){
 	$('.joyride-close-tip').click();//ensure guide tour is closed on load of every page
 });
 
-$(document).on('pageshow', '#advice-page', function() {
+$(document).on('pageshow', '#basal-advice-page', function() {
 	 var data =  controller.getAdviceTableData("Basal", view.showAdviceTable);
+	
+});
+$(document).on('pageshow', '#sensitivity-advice-page', function() {
+	 var data =  controller.getAdviceTableData("Sensitivity", view.showAdviceTable);
+	
+});
+$(document).on('pageshow', '#carbs-advice-page', function() {
+	 var data =  controller.getAdviceTableData("Carbs", view.showAdviceTable);
+	
+});
+$(document).on('pageshow', '#hbA1C-advice-page', function() {
+	 var data =  controller.getAdviceTableData("HbA1C", view.showAdviceTable);
+	
+});
+
+$(document).on('pageshow', '#sensor-plot-page',function(){
+
+	$('#sensor-plot').show();
+
+		updateSensorPlot();// and then auto refresh sensor-plot
+		intervalUpdateSensorPlot =  setInterval(function() {
+			updateSensorPlot();
+		}, 10000); // ask server every 10s for new sensor plot	
+	
+});
+
+$(document).on('pagehide', '#sensor-plot-page',function(){
+	$('#sensor-plot').hide();
+	clearInterval(intervalUpdateSensorPlot);
 	
 });
 

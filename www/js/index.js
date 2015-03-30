@@ -269,7 +269,7 @@ $(document).on('blur', 'input, textarea', function() {
 		window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
 	}, 0);
 });
-
+/*
 $("#sensorPlotSlider").change(function(){
 	// setTimeout is a workaround, fixes problem if slider is slided quickly subsequently the plot is not correctly hidden/closed.
 	setTimeout(function(){
@@ -277,8 +277,8 @@ $("#sensorPlotSlider").change(function(){
 		startOrStopUpdatingSensorPlot($("#sensorPlotSlider").val());
 
 	}, 2000);
-});
-
+});*/
+/*
 function startOrStopUpdatingSensorPlot(onOrOff){
 	if(onOrOff ==="on"){
 		startUpdatingSensorPlot();
@@ -290,21 +290,12 @@ function startOrStopUpdatingSensorPlot(onOrOff){
 	}
 }
 
-function startUpdatingSensorPlot(){
-	// show plot
-
-	updateSensorPlot();// and then auto refresh sensor-plot
-	intervalUpdateSensorPlot =  setInterval(function() {
-		updateSensorPlot();
-	}, 10000); // ask server every 10s for new sensor plot	
-}
-
 function stopUpdatingSensorPlot(){
 
 	clearInterval(intervalUpdateSensorPlot);
 
 }
-
+*/
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -372,7 +363,7 @@ function onDeviceReady() {
 				dbHandler.updateParticularFieldInUserInfo("timeOffset", curTimeOffset);
 			}
 		})
-
+		/*
 		dbHandler.getUpdatingSensorPlot(function(transaction,result){
 			if ( result.rows.length > 0 && result.rows !== null) {
 				startOrStopUpdatingSensorPlot(result.rows.item(0).isUpdating);
@@ -383,7 +374,7 @@ function onDeviceReady() {
 				dbHandler.addSensorPlot();
 			}
 
-		});
+		});*/
 
 	}, 500);
 	// increase font of all h1's
