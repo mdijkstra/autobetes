@@ -25,9 +25,14 @@ $(document).on('pageshow', '#carbs-advice-page', function() {
 	 var data =  controller.getAdviceTableData("Carbs", view.showAdviceTable);
 	
 });
-
-$(document).on('pageshow', '#hba1c-advice-page', function() {
+<<<<<<< HEAD
+$(document).on('pageshow', '#hbA1c-advice-page', function() {
 	 var data =  controller.getAdviceTableData(HBA1C, view.showAdviceTable);
+=======
+$(document).on('pageshow', '#hba1c-advice-page', function() {
+	 var data =  controller.getAdviceTableData("HbA1C", view.showAdviceTable);
+>>>>>>> b1caecfde0087b63a278b02d4fe34192c81291a3
+	
 });
 
 $(document).on('pageshow', '#autopilot-page',function(){
