@@ -74,7 +74,7 @@
 						onclick="$(document).removeData('selectedTabIndex2');"
 						data-role="button" data-icon="autobetes-logbook" c><span
 							class="homeButtonText">Log</span></a></li>
-					<li><a id="advicesButton" href="#advice-page"
+					<li><a id="advicesButton" href="#basal-advice-page"
 						data-role="button" data-icon="autobetes-advice"><span
 							class="homeButtonText">Advice</span></a></li>
 
@@ -98,7 +98,7 @@
 			<div id="background"></div>
 
 			<div id="homepage-content">
-				<IMG ID="sensor-plot">
+				
 				<div id="current-food-event-list" data-role="controlgroup"
 					data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template"
@@ -301,7 +301,7 @@
 		<div data-role="main" class="ui-content">
 
 			<input id="newEventName" type="text" data-clear-btn="true"
-				name="text-7" value="" placeholder="Food name">
+				name="text-7" value="" placeholder="Name">
 
 			<div id="newEventPageFoodInput">
 				<a data-role="button" data-corners="true" data-shadow="true"
@@ -312,16 +312,12 @@
 					<span class="ui-btn-inner ui-btn-corner-all"> <span
 						class="ui-btn-text">Carbs lookup table</span>
 				</span>
-				</a>
-				<br/>
-				<br/>
+				</a> <br /> <br />
 				<table class="table-condensed">
 					<tr>
-						<td width="50%!important">
-							Amount of carbs per serving:
-							<input type="number"
-							id="newEventPageCarbs" data-clear-btn="true" step="0.1"
-							pattern="[0-9]+\.?[0-9]?" placeholder="unknown"></td>
+						<td width="50%!important">Amount of carbs per serving: <input
+							type="number" id="newEventPageCarbs" data-clear-btn="true"
+							step="0.1" pattern="[0-9]+\.?[0-9]?" placeholder="unknown"></td>
 						<td width="0%">
 							<p>gram</p>
 						</td>
@@ -337,11 +333,9 @@
 
 				<table class="table-condensed">
 					<tr>
-						<td width="50%">
-							Serving size:
-							<input type="number" id="newEventPortionSize"
-							step="0.1" data-clear-btn="true" pattern="[0-9]+\.?[0-9]?"
-							placeholder="unknown"></td>
+						<td width="50%">Serving size: <input type="number"
+							id="newEventPortionSize" step="0.1" data-clear-btn="true"
+							pattern="[0-9]+\.?[0-9]?" placeholder="unknown"></td>
 						<td width="50%">
 							<p>gram</p>
 						</td>
@@ -389,7 +383,8 @@
 					<p>Look up the carbohydrate content of a given product.</p>
 
 					<input id="voedingsDagboekSearch" type="text" data-clear-btn="true"
-						name="text-7" value="" placeholder="Type product name..."> <br>
+						name="text-7" value="" placeholder="Type product name...">
+					<br>
 					<div>
 						<ul id="voedingsDagboekMeals" data-role="listview">
 						</ul>
@@ -439,7 +434,7 @@
 			<div data-role="controlgroup">
 				<ul class="ui-listview" data-icon="false">
 					<li class="ui-first-child"><a id="account-button"
-						class="ui-btn">
+						class="ui-btn" disabled>
 							<h3>Account</h3>
 							<p id="settingsPageAccount"></p>
 					</a></li>
@@ -456,7 +451,7 @@
 						onclick="synchronise(); view.toastShortMessage(SYNCHRONISE)">
 							&nbsp;&nbsp;&nbsp;Force synchronisation </a></li>
 
-					<li><a id="sensor-plot-slider-button" class="ios"
+					<!-- <li><a id="sensor-plot-slider-button" class="ios"
 						data-role="button" data-theme="a" data-icon="autobetes-graph"
 						data-iconpos="left">&nbsp;&nbsp;&nbsp;Sensor plot <select
 							class="ui-li-aside" id="sensorPlotSlider" name="slider"
@@ -464,15 +459,14 @@
 								<option value="off">Off</option>
 								<option value="on">On</option>
 						</select>
-					</a></li>
+					</a></li> -->
 					<li><a id="feedback-button" href="mailto:autobetes@gmail.com"
 						data-icon="autobetes-feedback" data-role="button"
 						data-iconpos="left" data-theme="a" class="ios">&nbsp;&nbsp;&nbsp;Feedback</a>
 					</li>
-					<li><a id="about-button" href="#about-page"
-						class="ios" data-role="button" data-theme="a" data-icon="autobetes-about" class="ios"
-						data-iconpos="left">
-							&nbsp;&nbsp;&nbsp;About</a></li>
+					<li><a id="about-button" href="#about-page" class="ios"
+						data-role="button" data-theme="a" data-icon="autobetes-about"
+						class="ios" data-iconpos="left"> &nbsp;&nbsp;&nbsp;About</a></li>
 					<li>
 					<li><a id="logout-button" href="#login-page"
 						data-icon="autobetes-logout" data-role="button"
@@ -513,7 +507,7 @@
 		</div>
 		<!-- /footer -->
 	</div>
-	
+
 	<div data-role="page" id="about-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
@@ -523,8 +517,9 @@
 		<!-- /header -->
 
 		<div role="main" class="ui-content">
-		<img src="img/autobetes_icon_text.png" style="display: block;margin-left: auto;margin-right: auto; width:25%">
-		<p>Je kan hiero typen</p>
+			<img src="img/autobetes_icon_text.png"
+				style="display: block; margin-left: auto; margin-right: auto; width: 25%">
+			<p>Je kan hiero typen</p>
 		</div>
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
@@ -533,8 +528,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page"
-						class="settings-button"
+					<li><a href="#settings-page" class="settings-button"
 						data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -542,8 +536,8 @@
 		</div>
 		<!-- /footer -->
 	</div>
-	
-	
+
+
 	<div data-role="page" data-id="settingsHeader" id="user-info-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
@@ -706,8 +700,7 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -797,113 +790,70 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div data-role="page" id="advice-page">
+	<div data-role="page" id="basal-advice-page">
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
 			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<H1>Advice</H1>
 			<div id="advice-navbar" data-role="navbar">
 				<ul>
-					<li><a href="#" class="ui-btn-active"
+					<li><a href="#basal-advice-page"
+						class="ui-btn-active ui-state-persist"
 						id="advice-button-active-on-show-page"
 						name="advice-navbar-buttons">Basal</a></li>
-					<li><a name="advice-navbar-buttons" href="#"
-						name="advice-navbar-button">Sensitivity</a></li>
-					<li><a name="advice-navbar-buttons" href="#"
+					<li><a name="advice-navbar-buttons"
+						href="#sensitivity-advice-page" name="advice-navbar-button">Sensitivity</a></li>
+					<li><a name="advice-navbar-buttons" href="#carbs-advice-page"
 						name="advice-navbar-button">Carbs</a></li>
-					<li><a name="advice-navbar-buttons" href="#"
+					<li><a name="advice-navbar-buttons" href="#hbA1c-advice-page"
 						name="advice-navbar-button">HbA1C</a></li>
+					<li><a name="advice-navbar-buttons" href="#sensor-plot-page"
+						name="advice-navbar-button">Sensor plot</a></li>
 				</ul>
 			</div>
 		</div>
 		<div role="main" class="ui-content">
-		<p id="HbA1cAdvice" style="display: none"></p>
+			<p>Info over Basal advice</p>
 			<div id="advice-container">
 				<div id="advice-content">
 					<div id="advice-table-div">
 						<table data-role="table" data-mode="columntoggle"
-							class=" ui-responsive table-stripe" id="advice-table">
+							class="advice-table ui-responsive table-stripe">
 						</table>
 					</div>
-					
+
 				</div>
-				<a data-role="button" data-corners="true" id="unlock-advices-button"
-					onclick="$('#password-protection-dialog').show(); $('#password-protection-dialog').popup(); $('#password-protection-dialog').popup('open');"
-					data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="autobetes-logbook"
-					class="ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all"> <span
-					class="ui-btn-inner ui-btn-corner-all"> <span class="ui-btn-text"><img id="lock-icon" src="img/open_lock.png" style="width:20px"/>&nbsp;&nbsp;Unlock advices</span></span></a>
+				<a data-role="button" data-corners="true"
+					onclick="$('#password-protection-dialog1').show(); $('#password-protection-dialog1').popup(); $('#password-protection-dialog1').popup('open');"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					data-icon="autobetes-logbook"
+					class="unlock-advices-button ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all">
+					<span class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text"><img id="lock-icon"
+							src="img/open_lock.png" style="width: 20px" />&nbsp;&nbsp;Unlock
+							advices</span></span>
+				</a>
 			</div>
 			<br> <br>
-			<script id="advice-table-template" type="text/x-handlebars-template">
-						<tbody>				
-				{{#each .}}
-					<tr>
-						<td>{{from}} - {{to}}</td>
-						<td>{{currentSetting}}</td>
-					{{#if advice}}
-							<td>{{advice}}</td>
-							
-					{{else}}
-						<td>{{advice}}</td>
 
-					{{/if}}
-					</tr>
-				{{/each}}
-				</tbody>
-				</table>
-			</script>
-			<script id="advice-table-header-template"
-				type="text/x-handlebars-template">
-					<table data-role="table" data-mode="columntoggle"
-					class=" ui-responsive table-stripe" id="advice-table">
-					{{#each .}}
-					<thead>
-					{{#if Basal}}
-							<tr>
-								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(IU/h)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(IU/h)</span></th>
-							</tr>
-						
-					{{else}}
-							{{#if Sensitivity}}
-							<tr>
-								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(mM/IU)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(mM/IU)</span></th>
-							</tr>
-							{{else}}
-							<tr>
-								<th data-priority="8" style="padding-right: 0px">Period</th>
-								<th data-priority="9">Current <span style=" font-size: 9pt;">(g/IU)</span></th>
-								<th data-priority="10">Advice <span style=" font-size: 9pt;">(g/IU)</span></th>
-							</tr>
-							{{/if}}
-					{{/if}}
-					</thead>
-					{{/each}}
-			</script>
-
-			<div id="password-protection-dialog" data-rel="popup"
+			<div id="password-protection-dialog1" data-rel="popup"
 				data-overlay-theme="a" data-dismissible="true" style="display: none">
 				<div data-role="header">
 					<h1>Password</h1>
 				</div>
 				<div data-role="content">
 					<p>Together with your physician you can unlock the advices.</p>
-					<input id="advicePassword" type="password" data-clear-btn="true"
+					<input class="advicePassword" type="password" data-clear-btn="true"
 						name="text-7" value="" placeholder="Password"> <a
-						data-rel="back" id="enterAdvicePassword" data-role="button"
-						data-corners="true" data-shadow="true" data-iconshadow="true"
-						data-wrapperels="span"
-						class="ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+						data-rel="back" data-role="button" data-corners="true"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="enterAdvicePassword ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
 						<span class="ui-btn-inner ui-btn-corner-all"> <span
 							class="ui-btn-text">Enter</span>
 					</span>
@@ -932,8 +882,274 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page"
-						data-icon="autobetes-home">Home</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div data-role="page" id="sensitivity-advice-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Advice</H1>
+			<div id="advice-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#basal-advice-page"
+						id="advice-button-active-on-show-page"
+						name="advice-navbar-buttons">Basal</a></li>
+					<li><a name="advice-navbar-buttons"
+						href="#sensitivity-advice-page"
+						class="ui-btn-active ui-state-persist" name="advice-navbar-button">Sensitivity</a></li>
+					<li><a name="advice-navbar-buttons" href="#carbs-advice-page"
+						name="advice-navbar-button">Carbs</a></li>
+					<li><a name="advice-navbar-buttons" href="#hbA1c-advice-page"
+						name="advice-navbar-button">HbA1C</a></li>
+					<li><a name="advice-navbar-buttons" href="#sensor-plot-page"
+						name="advice-navbar-button">Sensor plot</a></li>
+				</ul>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<p>Info over sensitivity advice</p>
+			<div id="advice-container">
+				<div id="advice-content">
+					<div id="advice-table-div">
+						<table data-role="table" data-mode="columntoggle"
+							class="advice-table ui-responsive table-stripe">
+						</table>
+					</div>
+
+				</div>
+				<a data-role="button" data-corners="true"
+					onclick="$('#password-protection-dialog2').show(); $('#password-protection-dialog2').popup(); $('#password-protection-dialog2').popup('open');"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					data-icon="autobetes-logbook"
+					class="unlock-advices-button ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all">
+					<span class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text"><img id="lock-icon"
+							src="img/open_lock.png" style="width: 20px" />&nbsp;&nbsp;Unlock
+							advices</span></span>
+				</a>
+			</div>
+			<br> <br>
+
+			<div id="password-protection-dialog2" data-rel="popup"
+				data-overlay-theme="a" data-dismissible="true" style="display: none">
+				<div data-role="header">
+					<h1>Password</h1>
+				</div>
+				<div data-role="content">
+					<p>Together with your physician you can unlock the advices.</p>
+					<input class="advicePassword" type="password" data-clear-btn="true"
+						name="text-7" value="" placeholder="Password"> <a
+						data-rel="back" data-role="button" data-corners="true"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="enterAdvicePassword ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+						<span class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Enter</span>
+					</span>
+					</a> <a data-role="button" data-corners="true" data-rel="back"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all"> <span
+						class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Cancel</span>
+					</span>
+					</a>
+
+				</div>
+			</div>
+
+			<!-- 
+			<div id="lock-icon-div">
+				<!-- We curently do not show the advices in the table, but we put a lock logo abo
+				<img id="lock-icon" src="img/lock_clip_art_10182.png" />
+			</div>
+ -->
+		</div>
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+
+			<div data-role="navbar">
+				<ul>
+					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div data-role="page" id="carbs-advice-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Advice</H1>
+			<div id="advice-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#basal-advice-page"
+						id="advice-button-active-on-show-page"
+						name="advice-navbar-buttons">Basal</a></li>
+					<li><a name="advice-navbar-buttons"
+						href="#sensitivity-advice-page" name="advice-navbar-button">Sensitivity</a></li>
+					<li><a name="advice-navbar-buttons" href="#carbs-advice-page"
+						class="ui-btn-active ui-state-persist" name="advice-navbar-button">Carbs</a></li>
+					<li><a name="advice-navbar-buttons" href="#hbA1c-advice-page"
+						name="advice-navbar-button">HbA1C</a></li>
+					<li><a name="advice-navbar-buttons" href="#sensor-plot-page"
+						name="advice-navbar-button">Sensor plot</a></li>
+				</ul>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<p>Info over carbs advice</p>
+
+			<div id="advice-container">
+				<div id="advice-content">
+					<div id="advice-table-div">
+						<table data-role="table" data-mode="columntoggle"
+							class="advice-table ui-responsive table-stripe">
+						</table>
+					</div>
+
+				</div>
+				<a data-role="button" data-corners="true"
+					onclick="$('#password-protection-dialog3').show(); $('#password-protection-dialog3').popup(); $('#password-protection-dialog3').popup('open');"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					data-icon="autobetes-logbook"
+					class="unlock-advices-button ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all">
+					<span class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text"><img id="lock-icon"
+							src="img/open_lock.png" style="width: 20px" />&nbsp;&nbsp;Unlock
+							advices</span></span>
+				</a>
+			</div>
+			<br> <br>
+
+			<div id="password-protection-dialog3" data-rel="popup"
+				data-overlay-theme="a" data-dismissible="true" style="display: none">
+				<div data-role="header">
+					<h1>Password</h1>
+				</div>
+				<div data-role="content">
+					<p>Together with your physician you can unlock the advices.</p>
+					<input class="advicePassword" type="password" data-clear-btn="true"
+						name="text-7" value="" placeholder="Password"> <a
+						data-rel="back" data-role="button" data-corners="true"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="enterAdvicePassword ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+						<span class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Enter</span>
+					</span>
+					</a> <a data-role="button" data-corners="true" data-rel="back"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all"> <span
+						class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Cancel</span>
+					</span>
+					</a>
+
+				</div>
+			</div>
+
+			<!-- 
+			<div id="lock-icon-div">
+				<!-- We curently do not show the advices in the table, but we put a lock logo abo
+				<img id="lock-icon" src="img/lock_clip_art_10182.png" />
+			</div>
+ -->
+		</div>
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+
+			<div data-role="navbar">
+				<ul>
+					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div data-role="page" id="hbA1c-advice-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Advice</H1>
+			<div id="advice-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#basal-advice-page"
+						id="advice-button-active-on-show-page"
+						name="advice-navbar-buttons">Basal</a></li>
+					<li><a name="advice-navbar-buttons"
+						href="#sensitivity-advice-page" name="advice-navbar-button">Sensitivity</a></li>
+					<li><a name="advice-navbar-buttons" href="#carbs-advice-page"
+						name="advice-navbar-button">Carbs</a></li>
+					<li><a name="advice-navbar-buttons" href="#hbA1c-advice-page"
+						class="ui-btn-active ui-state-persist" name="advice-navbar-button">HbA1C</a></li>
+					<li><a name="advice-navbar-buttons" href="#sensor-plot-page"
+						name="advice-navbar-button">Sensor plot</a></li>
+				</ul>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<p>Info over HbA1C advice</p>
+
+			<p id="HbA1cAdvice"></p>
+
+		</div>
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+
+			<div data-role="navbar">
+				<ul>
+					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div data-role="page" id="sensor-plot-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Advice</H1>
+			<div id="advice-navbar" data-role="navbar">
+				<ul>
+					<li><a href="#basal-advice-page"
+						id="advice-button-active-on-show-page"
+						name="advice-navbar-buttons">Basal</a></li>
+					<li><a name="advice-navbar-buttons"
+						href="#sensitivity-advice-page" name="advice-navbar-button">Sensitivity</a></li>
+					<li><a name="advice-navbar-buttons" href="#carbs-advice-page"
+						name="advice-navbar-button">Carbs</a></li>
+					<li><a name="advice-navbar-buttons" href="#hbA1c-advice-page"
+						 name="advice-navbar-button">HbA1C</a></li>
+					<li><a name="advice-navbar-buttons" href="#sensor-plot-page" class="ui-btn-active ui-state-persist"
+						name="advice-navbar-button">Sensor plot</a></li>
+				</ul>
+			</div>
+		</div>
+		<div role="main" class="ui-content">
+			<p>Info over sensor plot</p>
+			
+			<IMG ID="sensor-plot">
+		</div>
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+
+			<div data-role="navbar">
+				<ul>
+					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
 					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
 				</ul>
 			</div>
@@ -1159,7 +1375,10 @@
 			</li>
 			<li data-id="homeSpecialButton" data-text="Next" class="custom">
 				<h2>Events that affect sugar level</h2>
-				<p>Please record special events that affect your blood sugar level, here. Such events include 'stress' and activities (e.g. fitness, swimming) that are not automatically recorded by the Moves app (walk, run, bike).</p>
+				<p>Please record special events that affect your blood sugar
+					level, here. Such events include 'stress' and activities (e.g.
+					fitness, swimming) that are not automatically recorded by the Moves
+					app (walk, run, bike).</p>
 			</li>
 			<li data-id="historyButton" data-text="Next" class="custom">
 				<h2>Logbook</h2>
@@ -1167,7 +1386,9 @@
 			</li>
 			<li data-id="advicesButton" data-text="Next" class="custom">
 				<h2>Advice</h2>
-				<p>Here you can find current and advised settings: (1) basal insulin, (2) carb-ratio, (3) insulin sensitivity. Moreover, we estimate your HbA1c.</p>
+				<p>Here you can find current and advised settings: (1) basal
+					insulin, (2) carb-ratio, (3) insulin sensitivity. Moreover, we
+					estimate your HbA1c.</p>
 			</li>
 		</ol>
 
@@ -1188,7 +1409,8 @@
 		<ol id="define-event-page-tour-food">
 			<li data-id="guess-carbs-checkbox" data-text="Next" class="custom">
 				<h2>I guess</h2>
-				<p>Please check if you are unsure about the amount of carbs in this food item.</p>
+				<p>Please check if you are unsure about the amount of carbs in
+					this food item.</p>
 			</li>
 			<li data-id="newEventPortionSize" data-text="Next" class="custom">
 				<h2>Serving size</h2>
@@ -1227,7 +1449,10 @@
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
 				<h2>Events that affect sugar level</h2>
-				<p>List of special events that affect your blood sugar level, here. Such events include 'stress' and activities (e.g. fitness, swimming) that are not automatically recorded by the Moves app (walk, run, bike).</p>
+				<p>List of special events that affect your blood sugar level,
+					here. Such events include 'stress' and activities (e.g. fitness,
+					swimming) that are not automatically recorded by the Moves app
+					(walk, run, bike).</p>
 			</li>
 		</ol>
 
@@ -1257,44 +1482,77 @@
 				<h2>Start</h2>
 				<p>When does this event start?</p>
 			</li>
-			<li data-id="startEventQuantitySliderField" data-text="Next" class="custom">
+			<li data-id="startEventQuantitySliderField" data-text="Next"
+				class="custom">
 				<h2>Degree</h2>
-				<p>Please indicate your perception of the intensity at which this event takes place. For example, do you experience a lot of stress, or only a little?</p>
+				<p>Please indicate your perception of the intensity at which
+					this event takes place. For example, do you experience a lot of
+					stress, or only a little?</p>
 			</li>
 		</ol>
 
 		<ol id="history-event-instance-page-tour">
-			<li data-id="history-event-instance-list-navbar" data-text="Next" class="custom">
+			<li data-id="history-event-instance-list-navbar" data-text="Next"
+				class="custom">
 				<h2>Logbook</h2>
-				<p>The logbook lists the consumptions and events that you have recorded so far. Here you can edit them.</p>
+				<p>The logbook lists the consumptions and events that you have
+					recorded so far. Here you can edit them.</p>
 			</li>
 		</ol>
 
-		<ol id="advice-page-tour">
-			<li data-id="unlock-advices-button" data-text="Next" class="custom">
+		<ol id="basal-advice-page-tour">
+			<li data-class="unlock-advices-button" data-text="Next"
+				class="custom">
 				<h2>Advices</h2>
-				<p>Currently, this app is not approved to come up with advices directly for its users. During your consult, you may ask your physician to unlock our advices.</p>
+				<p>Currently, this app is not approved to come up with advices
+					directly for its users. During your consult, you may ask your
+					physician to unlock our advices.</p>
 			</li>
-			
+
+		</ol>
+		<ol id="sensitivity-advice-page-tour">
+			<li data-class="unlock-advices-button" data-text="Next"
+				class="custom">
+				<h2>Advices</h2>
+				<p>Currently, this app is not approved to come up with advices
+					directly for its users. During your consult, you may ask your
+					physician to unlock our advices.</p>
+			</li>
+
+		</ol>
+		<ol id="carbs-advice-page-tour">
+			<li data-class="unlock-advices-button" data-text="Next"
+				class="custom">
+				<h2>Advices</h2>
+				<p>Currently, this app is not approved to come up with advices
+					directly for its users. During your consult, you may ask your
+					physician to unlock our advices.</p>
+			</li>
+
 		</ol>
 
 		<ol id="settings-page-tour">
 			<li data-id="connect-to-moves-button" data-text="Next" class="custom">
 				<h2>Connect to moves (only once!)</h2>
-				<p>Please press this button to connect the Autobetes app to the 'Moves app'. We make use of that app to automatically track your physical activities for later analysis.</p>
+				<p>Please press this button to connect the Autobetes app to the
+					'Moves app'. We make use of that app to automatically track your
+					physical activities for later analysis.</p>
 			</li>
 			<li data-id="force-sync-button" data-text="Next" class="custom">
 				<h2>Force synchronization</h2>
-				<p>Your data should be automatically uploaded to our server for analysis. If this does not happen, please press this button.</p>
+				<p>Your data should be automatically uploaded to our server for
+					analysis. If this does not happen, please press this button.</p>
 			</li>
+			<!-- 
 			<li data-id="sensor-plot-slider-button" data-text="Next"
 				class="custom">
 				<h2>Sensor plot</h2>
 				<p>Expert option: only for users with a Raspberry Pi.</p>
-			</li>
+			</li> -->
 			<li data-id="feedback-button" data-text="Next" class="custom">
 				<h2>Feedback</h2>
-				<p>We are happy to receive your feedback, questions and suggestions! We are happy to help you!</p>
+				<p>We are happy to receive your feedback, questions and
+					suggestions! We are happy to help you!</p>
 			</li>
 			<li data-id="logout-button" data-text="Next" class="custom">
 				<h2>Logout</h2>
@@ -1305,10 +1563,61 @@
 		<ol id="user-info-page-tour">
 			<li data-id="pump-id-button" data-text="Next" class="custom">
 				<h2>Pump serial number</h2>
-				<p>Please look at the backside of your insulin pump for the six digits in "Serial: PBRxxxxxx".</p>
+				<p>Please look at the backside of your insulin pump for the six
+					digits in "Serial: PBRxxxxxx".</p>
 			</li>
 		</ol>
 	</div>
+	<script id="advice-table-template" type="text/x-handlebars-template">
+						<tbody>				
+				{{#each .}}
+					<tr>
+						<td>{{from}} - {{to}}</td>
+						<td>{{currentSetting}}</td>
+					{{#if advice}}
+							<td>{{advice}}</td>
+							
+					{{else}}
+						<td>{{advice}}</td>
+
+					{{/if}}
+					</tr>
+				{{/each}}
+				</tbody>
+				</table>
+			</script>
+	<script id="advice-table-header-template"
+		type="text/x-handlebars-template">
+					<table data-role="table" data-mode="columntoggle"
+					class=" ui-responsive table-stripe" id="advice-table">
+					{{#each .}}
+					<thead>
+					{{#if Basal}}
+							<tr>
+								<th data-priority="8" style="padding-right: 0px">Period</th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(IU/h)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(IU/h)</span></th>
+							</tr>
+						
+					{{else}}
+							{{#if Sensitivity}}
+							<tr>
+								<th data-priority="8" style="padding-right: 0px">Period</th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(mM/IU)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(mM/IU)</span></th>
+							</tr>
+							{{else}}
+							<tr>
+								<th data-priority="8" style="padding-right: 0px">Period</th>
+								<th data-priority="9">Current <span style=" font-size: 9pt;">(g/IU)</span></th>
+								<th data-priority="10">Advice <span style=" font-size: 9pt;">(g/IU)</span></th>
+							</tr>
+							{{/if}}
+					{{/if}}
+					</thead>
+					{{/each}}
+			</script>
+
 	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 
 	<script src="js/libraries/handlebars-v1.3.0.js"></script>

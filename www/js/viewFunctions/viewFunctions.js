@@ -48,7 +48,7 @@ function view() {
 			//compile to hanlebars template
 			var template = Handlebars.compile(source);
 			//fill template with events and add screen to page
-			$("#advice-table").html(tableHeader+ template(tableData));
+			$(".advice-table").html(tableHeader+ template(tableData));
 			//$('.ui-table-columntoggle-btn').hide();
 		}
 	}

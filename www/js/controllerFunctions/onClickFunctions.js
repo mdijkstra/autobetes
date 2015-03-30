@@ -1,4 +1,4 @@
-$('#enterAdvicePassword').click(function(){
+$('.enterAdvicePassword').click(function(){
 	view.showLoadingWidget();
 	setTimeout(function(){
 		view.hideLoadingWidget();
@@ -96,9 +96,6 @@ $('.help-button').click(function(){
 				if($.mobile.activePage[0].id==="user-info-page" && index === 3){	
 					$(this)[0].tipLocation = 'top';
 				}
-				if($.mobile.activePage[0].id==="advice-page" && index === 4){	
-					$(this)[0].tipLocation = 'top';
-				}
 				if($.mobile.activePage[0].id==="history-event-instance-page" && index === 2){	
 					$(this)[0].tipLocation = 'left';
 				}
@@ -149,12 +146,12 @@ $('.connectToMoves').click(function(){
 	//}
 
 });
-
+/*
 $('[name=advice-navbar-buttons]').click(function() {
 	//get event type that user clicked
 	var type = $(this).html() === 'basal' ? null : $(this).html();
 	var data =  controller.getAdviceTableData(type, view.showAdviceTable);
-});
+});*/
 
 
 $('[name=event-list-navbar-buttons]').click(function() {

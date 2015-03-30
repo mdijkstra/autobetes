@@ -326,7 +326,7 @@ function controller() {
 			var requestData = [];
 			var row = result.rows.item(0);
 			requestData.push(row);
-
+			console.log(JSON.stringify(requestData));
 			restClient.update(SERVER_URL+SYNCHRONISE_USER_INFO_URL, requestData, function(data, textStatus, response){
 
 				dbHandler.serverUpdateUserInfo(data.idOnPump,data.gender,data.bodyWeight,data.length, data.birthYear, data.lastchanged, data.timeOffset);
