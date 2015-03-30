@@ -319,6 +319,49 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 50%;
     background-size: 40px 40px;
 }
+.ui-icon-autobetes-basal-insulin {
+    background: url("../img/advice/basal.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
+.ui-icon-autobetes-insulin-sensitivity {
+    background: url("../img/advice/sensitivity.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
+.ui-icon-autobetes-carb-ratio {
+    background: url("../img/advice/carbs.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
+.ui-icon-autobetes-hba1c {
+    background: url("../img/advice/hba1c.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
+.ui-icon-autobetes-autopilot {
+    background: url("../img/advice/autopilot/autopilot.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
+
+
+
 
 .ui-icon-autobetes-logbook:after,
 .ui-icon-autobetes-advice:after,
@@ -336,6 +379,11 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-logout:after,
 .ui-icon-autobetes-home:after,
 .ui-icon-autobetes-help:after,
+.ui-icon-autobetes-basal-insulin:after,
+.ui-icon-autobetes-insulin-sensitivity:after,
+.ui-icon-autobetes-carb-ratio:after,
+.ui-icon-autobetes-hba1c:after,
+.ui-icon-autobetes-autopilot:after,
 .ui-icon-autobetes-edit2:after
 {
 	background-color: transparent /*{global-icon-color}*/;
