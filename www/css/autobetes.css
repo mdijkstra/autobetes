@@ -12,6 +12,11 @@
 	display: none !important;
 }
 
+.phelp {
+    color:lightgrey;
+	text-shadow: 0 0px 0 #f3f3f3;
+}
+
 #advice-table, 
 #password-protection-div
 {
