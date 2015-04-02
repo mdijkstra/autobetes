@@ -447,7 +447,6 @@ function controller() {
 
 		if(type === HBA1C){
 			var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
-			$("#HbA1cAdvice").hide();//hide for now, show once data is in
 			view.showLoadingWidget();
 			restClient.get(url, function(data, textStatus, response){
 				//success callback

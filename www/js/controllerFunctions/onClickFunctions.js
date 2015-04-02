@@ -10,6 +10,10 @@ $('#linkToMovesWebsite').click(function(){
 	window.open(LINKTOMOVESWEBSITE, '_system' ,'');
 });
 
+$('.linkToAutobetesServerWebsite').click(function(){
+	window.open(SERVER_URL, '_system' ,'');
+});
+
 $('.help-button').click(function(){
 	var currentPage = $.mobile.activePage[0].id;
 	var highlightButton;
