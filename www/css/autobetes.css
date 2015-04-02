@@ -333,6 +333,14 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 50%;
     background-size: 40px 40px;
 }
+.ui-icon-autobetes-bolus-calculator {
+    background: url("../img/advice/bolus-calculator.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 15px;
+	background-position-y: 50%;
+    background-size: 25px 25px;
+}
 .ui-icon-autobetes-basal-insulin {
     background: url("../img/advice/basal.png") no-repeat;
     box-shadow: none;
@@ -394,6 +402,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-logout:after,
 .ui-icon-autobetes-home:after,
 .ui-icon-autobetes-help:after,
+.ui-icon-autobetes-bolus-calculator:after,
 .ui-icon-autobetes-basal-insulin:after,
 .ui-icon-autobetes-insulin-sensitivity:after,
 .ui-icon-autobetes-carb-ratio:after,
