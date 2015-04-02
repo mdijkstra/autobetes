@@ -16,7 +16,6 @@ function view() {
 
 	function showAdviceTable(type, data){
 		if(type=== "HbA1C"){
-			$('#advice-container').hide();
 			$('#HbA1cAdvice').show();
 			$('#HbA1cAdvice').html(data.hba1c);
 		}
