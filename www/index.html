@@ -101,33 +101,23 @@
 			<div role="main" class="ui-content"> <!-- adds space between carb / activity table and side of screen -->
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-				{{#each .}}
-					{{#if amount}}
-						<li><a class="ui-btn" style=" font-size: 9pt;" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", FOOD)'>
-							{{#if carbs}}
-								{{#if estimationCarbs}}
-									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span  style="float:right; font-size: 9pt; font-weight: bold;"> {{carbs}} gram ?</span>
-								{{else}}
-									<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span  style="float:right; font-size: 9pt; font-weight: bold"> {{carbs}} gram &#160;&#160;</span>
-								{{/if}}
-							{{else}}
-								<span style="font-size: 9pt; font-weight: bold;">{{amount}}x {{name}} </span><span style="float:right; font-size: 9pt; font-weight: bold;"> ?</span>
-							{{/if}}
-						</a></li>
-					{{else}}
-						{{#if total}}
-							{{#if estimatedContent}}
-								<p style="line-height: 40%;">Total carbs: <B>{{total}} gram</B> (Approximately)</p><p style="line-height: 40%;"><span class="grayColor" style="font-size: 9pt">(taken +/- 30 minutes from now)</span></p>
-							{{else}}
-								<p style="line-height: 40%;">Total carbs: <B>{{total}} gram</B></p><p style="line-height: 40%;"><span class="grayColor" style="font-size: 9pt">(taken +/- 30 minutes from now)</span></p>
-							{{/if}}
-							<ul class="ui-listview" data-role="listview" data-theme="a">
-							<br>
-							
-						{{/if}}
-					{{/if}}					
-				{{/each}}
-				</ul>
+					<table style="margin: 0px auto;border:1px solid black;">
+					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
+					{{#each .}}
+						{{#if amount}}
+							<tr onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
+								<td style="text-align: right;">{{amount}}&nbsp;&nbsp;</td>
+								<td>{{name}}</td>
+								<td style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
+								<td>{{#if estimationCarbs}}?{{/if}}</td>
+							</tr>
+						{{/if}}					
+					{{/each}}
+					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
+					{{#each .}}{{#if total}}<tr><td><I>Total:</I></td><td></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
+					<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Consumed between +/- 30 min. from now (click to edit).<BR/>
+						? means that your were not sure.</I></td></tr>
+					</table>
 			</script>
 				<br><br>
 				<br>

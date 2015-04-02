@@ -12,9 +12,19 @@
 	display: none !important;
 }
 
+
+/* make ugly orange lines less ugly */
+.ui-listview>.ui-li-static, .ui-listview>.ui-li-divider, .ui-listview>li>a.ui-btn {
+  border-width: 0px 0 0 0;
+  border-style: none;
+}
+
+/* color help text*/
 .phelp {
-    color:grey;
-	text-shadow: 0 0px 0 #000;
+    color:#A4A4A4;
+}
+.grayColor{
+	color: #A4A4A4;
 }
 
 #advice-table, 
@@ -95,9 +105,6 @@ div.ui-slider-switch{
 
 .boldAndOrange{
 	font-weight: bold; color: #f89406;
-}
-.grayColor{
-	color: #A4A4A4;
 }
 
 .custom{

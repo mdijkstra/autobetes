@@ -188,7 +188,7 @@ function callbackView() {
 			
 			if(unknownContent){
 				//carb intake not precise 
-				sumObject.total = sumObject.total+" + ? ";
+				sumObject.total = sumObject.total;
 				
 			}
 			if(estimatedContent){
