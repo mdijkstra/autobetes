@@ -304,7 +304,7 @@ function controller() {
 							}
 							syncUserInfo();
 							checkIfMovesIsInstalled();
-
+							loadAdvice(function(){});
 
 						}
 
@@ -456,10 +456,23 @@ function controller() {
 				callback(type, JSON.parse(data));
 			},function(){
 				//error callback
-				view.showLoadingWidget();
+				view.hideLoadingWidget();
 			});
 		}
 		else{
+			var url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+			view.showLoadingWidget();
+			restClient.get(url, function(data, textStatus, response){
+				//success callback
+				settingsData = data;
+				console.log(data);
+				view.hideLoadingWidget();
+				callback(type, JSON.parse(data));
+			},function(){
+				//error callback
+				view.hideLoadingWidget();
+			});
+			
 			var adviceData = {
 					//TODO: currently we use dummy data, but eventually this needs to be retrieved from the server
 					"Basal":[{

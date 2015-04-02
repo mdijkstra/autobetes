@@ -1,4 +1,3 @@
-
 //declare all global variables
 var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
@@ -6,7 +5,7 @@ var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 var token;
-var DEBUG = false;
+var DEBUG = true;
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
@@ -65,7 +64,7 @@ var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var ALLREADY_EXISTS = " already exists"
-	var USERISDISABLEDREGEX= /User is disabled/;
+var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
@@ -114,6 +113,9 @@ var intervalUpdateSensorPlot;
 var currentGuideTour;//current guide tour is in this object
 var currentlyGuiding = false;
 var HBA1C = "HbA1C";
+var hba1cData;
+var settingsData;
+
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -134,32 +136,6 @@ $("input[type='checkbox']").checkboxradio();
 
 var initialScreenSize = window.innerHeight;
 
-
-
-var availableTags = [
-                     "ActionScript",
-                     "AppleScript",
-                     "Asp",
-                     "BASIC",
-                     "C",
-                     "C++",
-                     "Clojure",
-                     "COBOL",
-                     "ColdFusion",
-                     "Erlang",
-                     "Fortran",
-                     "Groovy",
-                     "Haskell",
-                     "Java",
-                     "JavaScript",
-                     "Lisp",
-                     "Perl",
-                     "PHP",
-                     "Python",
-                     "Ruby",
-                     "Scala",
-                     "Scheme"
-                     ];
 $(function() {
 	var listVoedingsDagboek = $("#voedingsDagboekMeals");
 	$('#voedingsdagboek-dialog').bind({
@@ -219,39 +195,8 @@ $(function() {
 		}
 	});
 });
-/*
-    $(function() {
 
-   	 var sugList = $("#suggestions");
-
-   	    $("#newEventName").on("input", function(e) {
-   	        var text = $(this).val();
-   	        if(text.length < 1) {
-   	            sugList.html("");
-   	            sugList.listview("refresh");
-   	        } else {
-   	        	dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
-   	        		sugList.html("");
-   	        	var str = "";
-   	        	console.log(text);
-   	        	for (var i = 0; i < result.rows.length; i++) {
-   					var row = result.rows.item(i);
-
-   					if(row.name.toUpperCase().indexOf(text.toUpperCase()) > -1){
-   					str += "<li>"+row.name+"</li>";
-   					}
-   	        	}
-
-   	                sugList.html(str);
-   	                sugList.listview("refresh");
-
-   	           // },"json");
-
-   	          });
-   	        }
-   	 });
-});
- */
+ 
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
@@ -312,7 +257,20 @@ function handleOpenURL(url) {
 	}, 0);
 }
 
-
+function loadAdvice(callback){
+	var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+	restClient.get(url, function(data, textStatus, response){
+	//success callback
+	hba1cData = JSON.parse(data);
+	callback(hba1cData)
+	});
+	url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+	restClient.get(url, function(data, textStatus, response){
+		//success callback
+		settingsData = JSON.parse(data);
+		callback(type, JSON.parse(data));
+	})
+}
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
