@@ -12,13 +12,6 @@
 	display: none !important;
 }
 
-
-/* make ugly orange lines less ugly */
-.ui-listview>.ui-li-static, .ui-listview>.ui-li-divider, .ui-listview>li>a.ui-btn {
-  border-width: 0px 0 0 0;
-  border-style: none;
-}
-
 /* color help text*/
 .phelp {
     color:#A4A4A4;
@@ -26,6 +19,19 @@
 .grayColor{
 	color: #A4A4A4;
 }
+.homeButtonText{
+	position: relative; 
+	bottom: -6.75px;
+	font-size: 12.5px;	
+}
+
+.ui-header .ui-navbar .ui-btn{
+	border-bottom-width: 1px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+}
+
 
 #advice-table, 
 #password-protection-div
@@ -69,10 +75,6 @@
 }
 th {
     border-bottom: 1px solid #d6d6d6;
-}
-.homeButtonText{
-	position: relative; 
-	bottom: -6.75px;
 }
 #background{ 
 	position: fixed; 
@@ -332,6 +334,14 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 10%;
     background-size: 20px 20px;
 }
+.ui-icon-autobetes-settings-top-button {
+    background: url("glyphicons/png/glyphicons_136_cogwheel.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 20%;
+    background-size: 28px 28px;
+}
 .ui-icon-autobetes-about {
     background: url("../img/autobetes_icon_bw.png") no-repeat;
     box-shadow: none;
@@ -396,6 +406,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-advice:after,
 .ui-icon-autobetes-advice-footer:after,
 .ui-icon-autobetes-settings:after,
+.ui-icon-autobetes-settings-top-button:after,
 .ui-icon-autobetes-about:after,
 .ui-icon-autobetes-back:after,
 .ui-icon-autobetes-synchronize:after,
