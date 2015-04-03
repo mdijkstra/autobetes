@@ -74,10 +74,9 @@
 						onclick="$(document).removeData('selectedTabIndex2');"
 						data-role="button" data-icon="autobetes-logbook" c><span
 							class="homeButtonText">Log</span></a></li>
-					<li><a id="advicesButton" href="#advice-page"
-						data-role="button" data-icon="autobetes-advice"><span
-							class="homeButtonText">Advice</span></a></li>
-
+					<li><a id="settingsButton" href="#settings-page"
+						data-role="button" data-icon="autobetes-settings-top-button"><span
+							class="homeButtonText">Settings</span></a></li>
 				</ul>
 			</div>
 
@@ -154,8 +153,7 @@
 					<li><a href="#home-page" id="homepageFooterHomeButon"
 						class="home-button ui-btn-active ui-state-persist"
 						data-icon="autobetes-home">Home</a></li>
-					<li><a class="settings-button" href="#settings-page"
-						data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 		</div>
@@ -214,7 +212,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 		</div>
@@ -274,7 +272,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 		</div>
@@ -403,7 +401,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -511,11 +509,11 @@
 				style="display: block; margin-left: auto; margin-right: auto; width: 25%">
 			<p><a href="#" onclick="window.open('http://autobetes.nl', '_system');">We</a> want to automate the management of your diabetes by predicting optimal settings for your</p>
 			<ol>
+				<li><a href="#bolus-calculator-advice-page">bolus calculator</a></li>
 				<li><a href="#basal-advice-page">basal insulin</a></li>
 				<li><a href="#sensitivity-advice-page">insulin sensitivity</a></li>
 				<li><a href="#carbs-advice-page">carb-ratio</a></li>
 				<li>the impact of exercise</li>
-				<li>bolus calculator</li>
 			</ol>
 			<p>And, eventually an autopilot that regulates your blood sugar levels automatically, just like a normal pancreas does!</p>
 			<p><a href="mailto:autobetes@gmail.com">Feedback</a>, compliments, suggestions, and error reports are more than welcome!</p>
@@ -700,7 +698,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 		</div>
@@ -790,7 +788,7 @@
 				<ul>
 					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
 					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+					<li><a href="#advice-page" data-icon="autobetes-advice-footer">Advice</a></li>
 				</ul>
 			</div>
 		</div>
@@ -897,6 +895,87 @@
 			</div>
 		</div>
 	</div>
+
+	<div data-role="page" id="basal-advice-page">
+		<div data-role="header" data-position="fixed"
+			style="min-height: 55px;">
+			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
+			<H1>Basal insulin</H1>
+		</div>
+		<div role="main" class="ui-content">
+			<p class="phelp">The table below shows your 'basal insulin' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
+				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
+
+			<p><B>Example:</B> A basal setting of 1 IU/h means that pump adminsters 1 unit of insulin per hour.</p>
+
+			<div id="advice-container">
+				<div id="advice-content">
+					<div id="advice-table-div">
+						<table data-role="table" data-mode="columntoggle"
+							class="advice-table ui-responsive table-stripe">
+						</table>
+					</div>
+
+				</div>
+				<a data-role="button" data-corners="true"
+					onclick="$('#password-protection-dialog1').show(); $('#password-protection-dialog1').popup(); $('#password-protection-dialog1').popup('open');"
+					data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+					data-icon="autobetes-logbook"
+					class="unlock-advices-button ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all">
+					<span class="ui-btn-inner ui-btn-corner-all"> <span
+						class="ui-btn-text"><img id="lock-icon"
+							src="img/open_lock.png" style="width: 20px" />&nbsp;&nbsp;Unlock advice</span></span>
+				</a>
+			</div>
+			<br> <br>
+
+			<div id="password-protection-dialog1" data-rel="popup"
+				data-overlay-theme="a" data-dismissible="true" style="display: none">
+				<div data-role="header">
+					<h1>Password</h1>
+				</div>
+				<div data-role="content">
+					<p>Please ask your physician to unlock the advice.</p>
+					<input class="advicePassword" type="password" data-clear-btn="true"
+						name="text-7" value="" placeholder="Password"> <a
+						data-rel="back" data-role="button" data-corners="true"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="enterAdvicePassword ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left ui-corner-all">
+						<span class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Enter</span>
+					</span>
+					</a> <a data-role="button" data-corners="true" data-rel="back"
+						data-shadow="true" data-iconshadow="true" data-wrapperels="span"
+						class="ui-btn ui-btn-inline ui-btn-icon-left ui-corner-all"> <span
+						class="ui-btn-inner ui-btn-corner-all"> <span
+							class="ui-btn-text">Cancel</span>
+					</span>
+					</a>
+
+				</div>
+			</div>
+
+			<!-- 
+			<div id="lock-icon-div">
+				<!-- We curently do not show the advices in the table, but we put a lock logo abo
+				<img id="lock-icon" src="img/lock_clip_art_10182.png" />
+			</div>
+ -->
+		</div>
+
+		<div data-role="footer" data-id="foo1" data-position="relative"
+			class="ui-footer ui-bar-a ui-footer-fixed slideup">
+
+			<div data-role="navbar">
+				<ul>
+					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
+					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
+					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
 
 	<div data-role="page" id="sensitivity-advice-page">
 		<div data-role="header" data-position="fixed"
@@ -1162,34 +1241,6 @@
 	</div>
 
  -->
-	<div data-role="page" id="pumpSettings">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
-			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
-			<H1>Pump settings</H1>
-
-		</div>
-		<!-- /header -->
-		<div role="main" class="ui-content">
-			<!--<iframe src="http://195.169.22.242/settings" style="width:100%; height:100%;" frameborder="0" name="iframe_a"></iframe>-->
-
-		</div>
-		<div data-role="footer" data-id="foo1" data-position="relative"
-			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-			<div data-role="navbar">
-				<ul>
-					<li><a class="help-button" data-icon="autobetes-help">Help</a></li>
-					<li><a href="#home-page" data-icon="autobetes-home">Home</a></li>
-					<li><a href="#settings-page" data-icon="autobetes-settings">Settings</a></li>
-				</ul>
-			</div>
-			<!-- /navbar -->
-		</div>
-		<!-- /footer -->
-
-	</div>
-	<!-- /page -->
-
 	<!-- /content -->
 	<!-- /page -->
 
