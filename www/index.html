@@ -91,20 +91,17 @@
 			app
 		</h3>
 		<div role="main" id="mainScreen" class="ui-content">
-			<div id="background"></div>
-			<div id="homepage-content">
-			<div role="main" class="ui-content"> <!-- adds space between carb / activity table and side of screen -->
-			<TABLE style="margin: 0px auto;">
+			<TABLE style="margin: 0px auto; font-size: 10pt;">
 				<TR><TD>
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-					<table style="margin: 0px auto;border:1px solid #A4A4A4; width:100%">
+					<table id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout: fixed;">
 					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
 					{{#each .}}
 						{{#if amount}}
 							<tr onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
 								<td style="text-align: right;">{{amount}}&nbsp;&nbsp;</td>
-								<td>{{name}}</td>
+								<td style="overflow: hidden;">{{name}}</td>
 								<td style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
 								<td>{{#if estimationCarbs}}?{{/if}}</td>
 							</tr>
@@ -121,7 +118,7 @@
 				<TR><TD>
 				<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-activity-event-list-template" type="text/x-handlebars-template">
-					<table style="margin: 0px auto;border:1px solid #A4A4A4; width:100%">
+					<table id="event-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; width:100%;">
 					<tr><th>What</th><th>Degree</th><th>From</th><th></th><th>To</th></tr>
 
 					<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
@@ -138,23 +135,26 @@
 						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to edit/stop).</I></td>
 					</tr>
 					</table>
+					<script type = 'text/javascript'>
+					var maxTableWidth = .85 * initialScreenWidth;
+					var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
+
+					if (maxTableWidth < widestTable)
+					{
+						$('#food-table-home-page').width(maxTableWidth, 0);
+						$('#event-table-home-page').width(maxTableWidth, 0);		
+						$('#event-table-home-page').css('table-layout', 'fixed')
+						$('#food-table-home-page').css('table-layout', 'fixed')				
+					}
+					</script>
 				</script>
 				</td></tr>
 				<TR><TD style="text-align: right;">
-				
-				
-				
 				<a href="#bolus-calculator-advice-page" data-role="button" data-corners="true" data-icon="autobetes-bolus-calculator" class="ui-btn-inline ui-btn-icon-left ui-corner-all">
 					Bolus calculator
 				</a>
-				
-				
-				
-				
 				</TD></TR>
 				</table>
-			</div> <!-- END OF adds space between carb / activity table and side of screen -->
-			</div>
 		</div>
 		<div data-role="footer" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
