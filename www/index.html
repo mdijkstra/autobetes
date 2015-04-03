@@ -92,12 +92,13 @@
 		</h3>
 		<div role="main" id="mainScreen" class="ui-content">
 			<div id="background"></div>
-
 			<div id="homepage-content">
 			<div role="main" class="ui-content"> <!-- adds space between carb / activity table and side of screen -->
+			<TABLE style="margin: 0px auto;">
+				<TR><TD>
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-					<table style="margin: 0px auto;border:1px solid #A4A4A4;">
+					<table style="margin: 0px auto;border:1px solid #A4A4A4; width:100%">
 					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
 					{{#each .}}
 						{{#if amount}}
@@ -114,13 +115,13 @@
 					<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Consumed between +/- 30 min. from now (click to edit).<BR/>
 						? means that your were not sure.</I></td></tr>
 					</table>
-			</script>
-				<br><br>
-				
-				<br>
+				</script>
+
+				</TD></TR>
+				<TR><TD>
 				<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-activity-event-list-template" type="text/x-handlebars-template">
-					<table style="margin: 0px auto;border:1px solid #A4A4A4;">
+					<table style="margin: 0px auto;border:1px solid #A4A4A4; width:100%">
 					<tr><th>What</th><th>Degree</th><th>From</th><th></th><th>To</th></tr>
 
 					<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
@@ -130,7 +131,7 @@
 							<td style="text-align: center;">{{intensityValue}}<!-- ({{intensityText}})--></td>
 							<td>{{beginHours}}:{{beginMinutes}}</td>
 							<td>-</td>
-							<td>{{#if endHours}}{{endHours}}:{{endMinutes}}{{/if}}</td>
+							<td style="text-align: right;">{{#if endHours}}{{endHours}}:{{endMinutes}}{{/if}}</td>
 						</tr>
 					{{/each}}
 					<tr>
@@ -138,7 +139,8 @@
 					</tr>
 					</table>
 				</script>
-				<br>
+				</td></tr>
+				</table>
 			</div> <!-- END OF adds space between carb / activity table and side of screen -->
 			</div>
 		</div>
