@@ -120,22 +120,27 @@
 					</table>
 			</script>
 				<br><br>
+				
 				<br>
 				<div id="current-activity-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-activity-event-list-template" type="text/x-handlebars-template">
+					<table style="margin: 0px auto;border:1px solid black;">
+					<tr><th>What</th><th>Degree</th><th>From</th><th></th><th>To</th></tr>
+
 					<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
 					{{#each .}}
-						{{#if endHours}}
-						<li class="ui-li-has-alt">
-							<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} - {{endHours}}:{{endMinutes}}</span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
-						</li>
-						{{else}}
-						<li class="ui-li-has-alt">
-							<a class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong><span>{{beginHours}}</span>:<span>{{beginMinutes}} </span></strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</span></p></a><a id="endActivityEventButton" href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="endEvent ui-btn ui-icon-stop"  title="End"></a>
-						</li>
-						{{/if}}
+						<tr onclick="view.populateEditEventInstancePage('{{id}}', '{{eventType}}'); document.location = '#edit-event-instance-page'" style='cursor:pointer'>
+							<td>{{name}}</td>
+							<td style="text-align: center;">{{intensityValue}}<!-- ({{intensityText}})--></td>
+							<td>{{beginHours}}:{{beginMinutes}}</td>
+							<td>-</td>
+							<td>{{#if endHours}}{{endHours}}:{{endMinutes}}{{/if}}</td>
+						</tr>
 					{{/each}}
-					</ul>
+					<tr>
+						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to edit/stop).</I></td>
+					</tr>
+					</table>
 				</script>
 				<br>
 			</div> <!-- END OF adds space between carb / activity table and side of screen -->

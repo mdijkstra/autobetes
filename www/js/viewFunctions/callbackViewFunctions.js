@@ -89,6 +89,7 @@ function callbackView() {
 			}
 			var button = {
 					name : row.name,
+					intensityValue: row.intensity,
 					intensityText: intensityTextAndColor.text,
 					intensityColorInterpretation: intensityTextAndColor.color,
 					beginHours : date.getHours(),
