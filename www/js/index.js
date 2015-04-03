@@ -135,8 +135,11 @@ $("input[type='checkbox']").checkboxradio();
 
 
 var initialScreenSize = window.innerHeight;
+var initialScreenWidth = window.innerWidth;
 
 $(function() {
+	$('#food-table-home-page').width(.85 * initialScreenWidth, 0);
+	$('#event-table-home-page').width(.85 * initialScreenWidth, 0);
 	var listVoedingsDagboek = $("#voedingsDagboekMeals");
 	$('#voedingsdagboek-dialog').bind({
 
