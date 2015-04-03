@@ -95,7 +95,7 @@
 				<TR><TD>
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-					<table id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout: fixed;">
+					<table id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; width:100%;">
 					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
 					{{#each .}}
 						{{#if amount}}
@@ -135,18 +135,6 @@
 						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to edit/stop).</I></td>
 					</tr>
 					</table>
-					<script type = 'text/javascript'>
-					var maxTableWidth = .85 * initialScreenWidth;
-					var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
-
-					if (maxTableWidth < widestTable)
-					{
-						$('#food-table-home-page').width(maxTableWidth, 0);
-						$('#event-table-home-page').width(maxTableWidth, 0);		
-						$('#event-table-home-page').css('table-layout', 'fixed')
-						$('#food-table-home-page').css('table-layout', 'fixed')				
-					}
-					</script>
 				</script>
 				</td></tr>
 				<TR><TD style="text-align: right;">

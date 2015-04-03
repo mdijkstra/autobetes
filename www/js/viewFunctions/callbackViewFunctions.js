@@ -129,11 +129,24 @@ function callbackView() {
 			var template = Handlebars.compile(source);	
 			//fill template with events and add screen to page
 			$('#current-activity-event-list').html(template(buttons));
+			
+			
+			alert('NU');
+			var maxTableWidth = .85 * initialScreenWidth;
+			var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
+
+			if (maxTableWidth < widestTable)
+			{
+				$('#food-table-home-page').width(maxTableWidth, 0);
+				$('#event-table-home-page').width(maxTableWidth, 0);		
+				$('#event-table-home-page').css('table-layout', 'fixed')
+				$('#food-table-home-page').css('table-layout', 'fixed')				
+			}
+			
 		}
 		else{
 			$('#current-activity-event-list').hide();
 		}
-
 	}
 	/*
 	 * This method present list of current food events retrieved from db at the home screen
@@ -207,11 +220,9 @@ function callbackView() {
 		else{
 			$('#current-food-event-list').hide();
 		}
-
 	}
 
 	function showEventInstanceList(inputType, result) {
-
 		var eventInstances = [];
 		for (var i = 0; i < result.rows.length; i++) {
 			//process results
@@ -283,6 +294,5 @@ function callbackView() {
 		var template = Handlebars.compile(source);
 		//fill template with events and add screen to page
 		$('#history-event-instance-list').html(template(eventInstances));
-
 	}
 }
