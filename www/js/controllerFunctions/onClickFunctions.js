@@ -326,7 +326,7 @@ $('#loginDialogOkButton').click(function(){
 	view.toastShortMessage(LOGIN);
 	view.showLoadingWidget();
 	//window.location.href =  '#home-page';
-	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val());
+	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val()).toLowerCase();
 	var password = controller.setNullIfFieldIsEmpty($('#loginPassword').val());
 	//check if user switched account
 	dbHandler.getUserCredentials(function(transaction, result){
@@ -368,7 +368,7 @@ $('#saveUserInfoButton').click(function(){
 $('#registrationDialogOkButton').click(function(){
 	//console.log("start registering");
 	//get values
-	var email = controller.setNullIfFieldIsEmpty($('#registerEmail').val());
+	var email = controller.setNullIfFieldIsEmpty($('#registerEmail').val()).toLowerCase();
 	var password = controller.setNullIfFieldIsEmpty($('#registerPassword').val());
 	var confirmPassword = controller.setNullIfFieldIsEmpty($('#registerConfirmPassword').val());
 

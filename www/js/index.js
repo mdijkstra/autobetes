@@ -1,4 +1,3 @@
-
 //declare all global variables
 var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
@@ -6,7 +5,7 @@ var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 var token;
-var DEBUG = false;
+var DEBUG = true;
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
@@ -114,6 +113,9 @@ var intervalUpdateSensorPlot;
 var currentGuideTour;//current guide tour is in this object
 var currentlyGuiding = false;
 var HBA1C = "HbA1C";
+var hba1cData;
+var settingsData;
+
 $(document).data(IS_SYNCHRONISING, false);
 $(document).data(IS_LOGGING_IN, false);
 $(document).data(CONNECTED_TO_INTERNET, false);
@@ -134,32 +136,6 @@ $("input[type='checkbox']").checkboxradio();
 
 var initialScreenSize = window.innerHeight;
 
-
-
-var availableTags = [
-                     "ActionScript",
-                     "AppleScript",
-                     "Asp",
-                     "BASIC",
-                     "C",
-                     "C++",
-                     "Clojure",
-                     "COBOL",
-                     "ColdFusion",
-                     "Erlang",
-                     "Fortran",
-                     "Groovy",
-                     "Haskell",
-                     "Java",
-                     "JavaScript",
-                     "Lisp",
-                     "Perl",
-                     "PHP",
-                     "Python",
-                     "Ruby",
-                     "Scala",
-                     "Scheme"
-                     ];
 $(function() {
 	var listVoedingsDagboek = $("#voedingsDagboekMeals");
 	$('#voedingsdagboek-dialog').bind({
@@ -219,39 +195,8 @@ $(function() {
 		}
 	});
 });
-/*
-    $(function() {
 
-   	 var sugList = $("#suggestions");
 
-   	    $("#newEventName").on("input", function(e) {
-   	        var text = $(this).val();
-   	        if(text.length < 1) {
-   	            sugList.html("");
-   	            sugList.listview("refresh");
-   	        } else {
-   	        	dbHandler.getEventsWithNameRegexpInput(text, function(transaction, result) {
-   	        		sugList.html("");
-   	        	var str = "";
-   	        	console.log(text);
-   	        	for (var i = 0; i < result.rows.length; i++) {
-   					var row = result.rows.item(i);
-
-   					if(row.name.toUpperCase().indexOf(text.toUpperCase()) > -1){
-   					str += "<li>"+row.name+"</li>";
-   					}
-   	        	}
-
-   	                sugList.html(str);
-   	                sugList.listview("refresh");
-
-   	           // },"json");
-
-   	          });
-   	        }
-   	 });
-});
- */
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
@@ -295,7 +240,7 @@ function stopUpdatingSensorPlot(){
 	clearInterval(intervalUpdateSensorPlot);
 
 }
-*/
+ */
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -311,8 +256,58 @@ function handleOpenURL(url) {
 		alert("received url: " + url);
 	}, 0);
 }
+var settingsFromServer;
+function loadAdvice(callback, callbackError){
+	var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+	restClient.get(url, function(data, textStatus, response){
+		//success callback
+		hba1cData = JSON.parse(data);
+		callback(hba1cData)
+	},callbackError);
+	
+	url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+	restClient.get(url, function(data, textStatus, response){
+		//success callback
+		settingsData = {Basal :[], Sensitivity:[], Carbs: []}
+		settingsFromServer = JSON.parse(data);
+		settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
+		settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
+		settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
 
+		callback(settingsData);
+	}, callbackError)
+}
 
+function convertServerdata(startTimes, currentSettings)
+{
+	var returnObject = [];
+	for(var i = 0; i < startTimes.length ; i++){
+		var from = startTimes[i];
+		var to;
+		if(i === startTimes.length-1)
+		{
+			to = startTimes[0]
+		}
+		else
+		{
+			to = startTimes[i+1]
+		}
+		from = convertTimestampToTime(from);
+		to = convertTimestampToTime(to);
+		
+		var row = {from: from, to:to, currentSetting: currentSettings[i]};
+		returnObject.push(row);
+	}
+	return returnObject;
+}
+function convertTimestampToTime(timestamp)
+{
+	var hours = Math.floor(timestamp/1000/60/60);
+	var minutes = Math.floor((timestamp/1000/60)%60);
+	if(hours<10)hours = "0"+hours;
+	if(minutes<10)minutes = "0"+minutes;
+	return (hours+":"+minutes);
+}
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
