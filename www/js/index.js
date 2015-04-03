@@ -64,7 +64,7 @@ var IS_LOGGING_IN = "IsLoggingIn";
 var TIMESTAMPPENALTY = 86400000;
 var TIMESTAMP_LAST_SYNC = 'timeStampLastSync';
 var ALLREADY_EXISTS = " already exists"
-var USERISDISABLEDREGEX= /User is disabled/;
+	var USERISDISABLEDREGEX= /User is disabled/;
 var CHECKONLYDIGITSREGEXPATTERN = /[^0-9\.\,]/;
 var BADCREDENTIALSREGEX= /Bad credentials/;
 var REGISTRATIONSUCCESSFULREGEX = /Registration successful/;
@@ -196,7 +196,7 @@ $(function() {
 	});
 });
 
- 
+
 //workaround for the input field at the sliders, this ensures that input are only integers with or without
 //digits
 function onlyDigits(){
@@ -240,7 +240,7 @@ function stopUpdatingSensorPlot(){
 	clearInterval(intervalUpdateSensorPlot);
 
 }
-*/
+ */
 
 /*
  * This method checks if the broser is from a mobile phone
@@ -256,20 +256,57 @@ function handleOpenURL(url) {
 		alert("received url: " + url);
 	}, 0);
 }
-
-function loadAdvice(callback){
+var settingsFromServer;
+function loadAdvice(callback, callbackError){
 	var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
 	restClient.get(url, function(data, textStatus, response){
-	//success callback
-	hba1cData = JSON.parse(data);
-	callback(hba1cData)
-	});
+		//success callback
+		hba1cData = JSON.parse(data);
+		callback(hba1cData)
+	},callbackError);
+	
 	url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
 	restClient.get(url, function(data, textStatus, response){
 		//success callback
-		settingsData = JSON.parse(data);
-		callback(type, JSON.parse(data));
-	})
+		settingsData = {Basal :[], Sensitivity:[], Carbs: []}
+		settingsFromServer = JSON.parse(data);
+		settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
+		settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
+		settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
+
+		callback(settingsData);
+	}, callbackError)
+}
+
+function convertServerdata(startTimes, currentSettings)
+{
+	var returnObject = [];
+	for(var i = 0; i < startTimes.length ; i++){
+		var from = startTimes[i];
+		var to;
+		if(i === startTimes.length-1)
+		{
+			to = startTimes[0]
+		}
+		else
+		{
+			to = startTimes[i+1]
+		}
+		from = convertTimestampToTime(from);
+		to = convertTimestampToTime(to);
+		
+		var row = {from: from, to:to, currentSetting: currentSettings[i]};
+		returnObject.push(row);
+	}
+	return returnObject;
+}
+function convertTimestampToTime(timestamp)
+{
+	var hours = Math.floor(timestamp/1000/60/60);
+	var minutes = Math.floor((timestamp/1000/60)%60);
+	if(hours<10)hours = "0"+hours;
+	if(minutes<10)minutes = "0"+minutes;
+	return (hours+":"+minutes);
 }
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
