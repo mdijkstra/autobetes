@@ -304,7 +304,7 @@ function controller() {
 							}
 							syncUserInfo();
 							checkIfMovesIsInstalled();
-
+							loadAdvice(function(){},function(){});
 
 						}
 
@@ -447,86 +447,49 @@ function controller() {
 
 		if(type === HBA1C){
 			var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
-			view.showLoadingWidget();
+			if(typeof hba1cData === "undefined")
+			{
+				view.showLoadingWidget();
+				loadAdvice(function(data){
+					view.hideLoadingWidget();
+					callback(type, data)
+				}, function(request, textStatus, error){
+					view.hideLoadingWidget();
+					view.toastMessage(error);
+				});
+			}
+
+
 			restClient.get(url, function(data, textStatus, response){
 				//success callback
-
 				view.hideLoadingWidget();
 				callback(type, JSON.parse(data));
-			},function(){
+			},function(request, textStatus, error){
 				//error callback
-				view.showLoadingWidget();
+				view.hideLoadingWidget();
+				view.toastMessage(error);
 			});
 		}
 		else{
-			var adviceData = {
-					//TODO: currently we use dummy data, but eventually this needs to be retrieved from the server
-					"Basal":[{
-						from: "00:00",
-						to:"06:00",
-						currentSetting:"5.8"
-					},
-					{
-						from: "06:00",
-						to:"10:00",
-						currentSetting:"7.3"
-					},
-					{
-						from: "10:00",
-						to:"16:00",
-						currentSetting:"4.2"
-					},
-					{
-						from: "16:00",
-						to:"24:00",
-						currentSetting:"5.9"
-					}
-					],
-					"Sensitivity":[{
-						from: "00:00",
-						to:"06:00",
-						currentSetting:"5.0"
-					},
-					{
-						from: "06:00",
-						to:"10:00",
-						currentSetting:"7.3"
-					},
-					{
-						from: "10:00",
-						to:"16:00",
-						currentSetting:"7.7"
-					},
-					{
-						from: "16:00",
-						to:"24:00",
-						currentSetting:"5.2"
-					}
-					],
+			var url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
 
-					"Carbs":[{
-						from: "00:00",
-						to:"06:00",
-						currentSetting:"9.0"
-					},
-					{
-						from: "06:00",
-						to:"10:00",
-						currentSetting:"10.3"
-					},
-					{
-						from: "10:00",
-						to:"16:00",
-						currentSetting:"8.7"
-					},
-					{
-						from: "16:00",
-						to:"24:00",
-						currentSetting:"8.2"
-					}
-					]
+			if(typeof settingsData === "undefined")
+			{
+				//data not loaded yet
+				view.showLoadingWidget();
+				loadAdvice(function(data){
+					view.hideLoadingWidget();
+					callback(type, data);
+				}, function(request, textStatus, error){
+					view.hideLoadingWidget();
+					view.toastMessage(error);
+
+				});
 			}
-			callback(type, adviceData);
+			else{
+				callback(type, settingsData);
+			}
+
 		}
 	}
 }

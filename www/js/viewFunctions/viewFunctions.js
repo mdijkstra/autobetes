@@ -15,6 +15,7 @@ function view() {
 	this.showAdviceTable = showAdviceTable;
 
 	function showAdviceTable(type, data){
+		
 		if(type=== "HbA1C"){
 			$('#HbA1cAdvice').show();
 			$('#HbA1cAdvice').html(data.hba1c);
