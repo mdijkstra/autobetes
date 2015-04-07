@@ -265,11 +265,10 @@ $('#deleteEventDialogConfirmButton').click(function() {
 
 
 $('#editModeButton').click(function(){
-
-	if($('#editModeButton').val() ==="on"){
+	if($('#editModeButtonFlip').val() ==="off"){
 
 		//editmode was on, now need to be turned off
-		$('#editModeButtonFlip').val('off');
+		// $('#editModeButtonFlip').val('off');
 		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 
@@ -280,7 +279,7 @@ $('#editModeButton').click(function(){
 	else{
 
 		//editmode was off, now need to be turned on
-		$('#editModeButtonFlip').val('on');
+		// $('#editModeButtonFlip').val('on');
 		// $('#editModeButton').attr("style","background: #8df3e6 !important");
 		$('.eventButtons').attr("style","background: #CCFFFF !important");
 

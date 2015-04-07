@@ -208,6 +208,7 @@ function callbackView() {
 			if(estimatedContent){
 				sumObject.estimatedContent = true;
 			}
+			sumObject.currentTime = currentTime;
 			foodInstances.unshift(sumObject);
 			
 			//get template

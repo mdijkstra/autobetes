@@ -110,6 +110,8 @@ function view() {
 			//include delete button so user can delete event
 			$('#addOrEditFoodEvent').html("Edit");
 			$('#deleteEvent').show();
+			$('#addOrSaveFoodEvent').show();
+			$('#addOrEditEventAndStart').hide();
 			//edit mode is on, the screen define-event-page will be used
 			$.mobile.changePage('#define-event-page');
 			populateEditEventScreen(eventId);
@@ -273,12 +275,12 @@ function view() {
 						$('#newEventEstimationCarbs').prop('checked', false); 
 					}
 					$('#newEventEstimationCarbs').checkboxradio('refresh');
-					$('#addOrEditEventAndStart').html("Save and 'consume	'");
+					// $('#addOrEditEventAndStart').html("Save and 'consume'");
 				}
 				else{
 					$("#newEventPageFoodInput").hide();
 					$('#define-event-page').find('#newEventName').val(row.name);
-					$('#addOrEditEventAndStart').html("Save and start");
+					// $('#addOrEditEventAndStart').html("Save and start");
 					/*
 				$('#make-new-event-page').find('#newEventPagePower').val(row.power);
 				$('#make-new-event-page').find('#newEventPageCarbs').val("");
@@ -446,7 +448,7 @@ function view() {
 			$('#headerName').text('New food');
 			$('#newEventPageActivityInput').hide();
 			$('#newEventPageFoodInput').show();
-			$('#addOrEditEventAndStart').html("Save and 'eat'")
+			// $('#addOrEditEventAndStart').html("Save and 'eat'")
 			$("#newEventPageFoodInput").show();
 		}
 		else{
@@ -454,13 +456,15 @@ function view() {
 			$('#headerName').text('New special event');
 			$('#newEventPageFoodInput').hide();
 			$('#newEventPageActivityInput').show();
-			$('#addOrEditEventAndStart').html("Save and start")
+			// $('#addOrEditEventAndStart').html("Save and start")
 		}
 
 		$('#addOrEditEvent').text('Add');
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
 		$('#newEventName').val($('#filterControlgroup-input').val());
 
+		$('#addOrSaveFoodEvent').hide();
+		$('#addOrEditEventAndStart').show();
 	}
 
 	function emptyDefineEventPage(){

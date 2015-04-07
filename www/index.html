@@ -17,13 +17,10 @@
 <body>
 
 	<div data-role="page" id="login-page" data-position="window">
-
 		<div data-role="header">
-
 			<h1>Login</h1>
 		</div>
 		<div data-role="content">
-
 			<input id="loginEmail" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Email"> <input
 				id="loginPassword" type="password" data-clear-btn="true"
@@ -39,6 +36,8 @@
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
 				up</a>
+
+			</a> <a href="#home-page" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Debug</a>
 			<!-- 
 				<a id="guideTourButton" data-role="button" data-corners="true"
 				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
@@ -104,8 +103,10 @@
 					{{/each}}
 					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
 					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
-					<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Consumed between +/- 30 min. from now (click to edit).<BR/>
-						? means that your were not sure.</I></td></tr>
+					
+					{{#each .}}{{#if currentTime}}<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Food above is consumed between {{currentTime}}.</I></td></tr>{{/if}}{{/each}}
+					
+					
 					</table>
 				</script>
 
@@ -392,8 +393,7 @@
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save</a>
 			<a id="addOrEditEventAndStart"
 				onclick="controller.saveOrEditFoodEvent(true)"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save
-				and 'consume'</a> <a href="#deleteEventDialog" id="deleteEvent"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-carat-r ui-btn-icon-left">Next</a> <a href="#deleteEventDialog" id="deleteEvent"
 				data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a> <a href="#event-list-page"
@@ -778,7 +778,6 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-
 			<a id="edit-event-instance-page-save-button"
 				onclick="controller.updateEventInstance()"
 				id="edit-event-instance-page-save-button"
