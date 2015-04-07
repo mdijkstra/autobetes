@@ -131,7 +131,7 @@ function callbackView() {
 			$('#current-activity-event-list').html(template(buttons));
 			
 			
-			alert('NU');
+/*			alert('NU');
 			var maxTableWidth = .85 * initialScreenWidth;
 			var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
 
@@ -142,7 +142,7 @@ function callbackView() {
 				$('#event-table-home-page').css('table-layout', 'fixed')
 				$('#food-table-home-page').css('table-layout', 'fixed')				
 			}
-			
+*/			
 		}
 		else{
 			$('#current-activity-event-list').hide();

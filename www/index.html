@@ -91,16 +91,16 @@
 			app
 		</h3>
 		<div role="main" id="mainScreen" class="ui-content">
-			<TABLE style="margin: 0px auto; font-size: 10pt;">
+			<TABLE style="margin: 0px auto; font-size: 9pt; width: 90%">
 				<TR><TD>
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-					<table id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; width:100%;">
-					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
+					<TABLE id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout:fixed; width:100%;">
+					<tr><th style="width:auto;">#</th><th style="width:65%;">Food</th><th>Carbs&nbsp;(g)</th><th style="width:5%;"></th></tr>
 					{{#each .}}
 						{{#if amount}}
 							<tr onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
-								<td style="text-align: right;">{{amount}}&nbsp;&nbsp;</td>
+								<td style="text-align: center;">{{amount}}&nbsp;&nbsp;</td>
 								<td style="overflow: hidden;">{{name}}</td>
 								<td style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
 								<td>{{#if estimationCarbs}}?{{/if}}</td>
@@ -108,7 +108,7 @@
 						{{/if}}					
 					{{/each}}
 					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
-					{{#each .}}{{#if total}}<tr><td><I>Total:</I></td><td></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
+					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
 					<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Consumed between +/- 30 min. from now (click to edit).<BR/>
 						? means that your were not sure.</I></td></tr>
 					</table>
@@ -132,7 +132,7 @@
 						</tr>
 					{{/each}}
 					<tr>
-						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to edit/stop).</I></td>
+						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to stop).</I></td>
 					</tr>
 					</table>
 				</script>
