@@ -44,7 +44,7 @@ function controller() {
 
 		if(eventName === ""){
 			//field event name cannot be empty
-			view.toastShortMessage("Please define the event name");
+			view.toastShortMessage("Please provide a name!");
 
 		}
 		else{
