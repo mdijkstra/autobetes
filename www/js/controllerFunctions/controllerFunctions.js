@@ -30,7 +30,7 @@ function controller() {
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
-		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val()); // depricated
 		var newEvent= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
 		var estimationCarbs = controller.setNullIfFieldIsEmpty($('#newEventEstimationCarbs').is(':checked'));
 		//convert boolean to integer

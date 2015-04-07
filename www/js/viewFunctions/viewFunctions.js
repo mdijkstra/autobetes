@@ -170,12 +170,12 @@ function view() {
 
 
 				} else {
-					if(row.portionsize){
-						$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
-					}
-					else{
-						$('#editEventPortionSize').html("Serving size: unknown");
-					}
+					// if(row.portionsize){
+					// 	$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
+					// }
+					// else{
+					// 	$('#editEventPortionSize').html("Serving size: unknown");
+					// }
 					$('#editEventPortionSize').show();
 					//set slider for food
 					$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
@@ -341,13 +341,13 @@ function view() {
 				var timeStringForMyTime = currentHours + ":" + currentMinutes;
 				$('#mytime').val(timeStringForMyTime);
 
-				if(row.portionsize){
-					$('#startEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
-				}
-				else{
-					$('#startEventPortionSize').html("Serving size: unknown");
-					$('#startEventPortionSize').show();
-				}
+				// if(row.portionsize){
+				// 	$('#startEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
+				// }
+				// else{
+				// 	$('#startEventPortionSize').html("Serving size: unknown");
+				// 	$('#startEventPortionSize').show();
+				// }
 
 				//add event screen varies by event type
 				$('#start-event-instance-page-eventType').text(row.eventType);
