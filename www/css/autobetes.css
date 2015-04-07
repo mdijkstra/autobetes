@@ -334,12 +334,20 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 	background-position-y: 10%;
     background-size: 20px 20px;
 }
-.ui-icon-autobetes-settings-top-button {
+.ui-icon-autobetes-settings-top-button { /*Deze kan weg?*/
     background: url("glyphicons/png/glyphicons_136_cogwheel.png") no-repeat;
     box-shadow: none;
     -webkit-box-shadow: none;
 	background-position-x: 50%;
 	background-position-y: 20%;
+    background-size: 28px 28px;
+}
+.ui-icon-autobetes-settings-header-button {
+    background: url("glyphicons/png/glyphicons_136_cogwheel.png") no-repeat;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+	background-position-x: 50%;
+	background-position-y: 50%;
     background-size: 28px 28px;
 }
 .ui-icon-autobetes-about {
@@ -407,6 +415,7 @@ ul.touch li.ui-li-has-alt a.ui-btn {
 .ui-icon-autobetes-advice-footer:after,
 .ui-icon-autobetes-settings:after,
 .ui-icon-autobetes-settings-top-button:after,
+.ui-icon-autobetes-settings-header-button:after,
 .ui-icon-autobetes-about:after,
 .ui-icon-autobetes-back:after,
 .ui-icon-autobetes-synchronize:after,
