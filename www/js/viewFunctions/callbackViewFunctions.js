@@ -205,9 +205,12 @@ function callbackView() {
 			// 	sumObject.total = sumObject.total;
 			//
 			// }
-			if(estimatedContent){
+			if (estimatedContent)
+			{
 				sumObject.estimatedContent = true;
 			}
+			
+			sumObject.unsure = estimatedContent || unknownContent;
 			
 			// inject from-to times
 			var consumedFrom = 	new Date(currentTime - PLUSMINRANGEFOODEVENT);

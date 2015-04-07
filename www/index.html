@@ -104,7 +104,9 @@
 					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
 					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
 					
-					{{#each .}}{{#if from}}<tr><td colspan=4 class="pHelpSmall"><I>This table shows only food consumed between {{from}} - {{to}} h.</I></td></tr>{{/if}}{{/each}}
+					{{#each .}}{{#if from}}<tr><td colspan=4 class="pHelpSmall"><I>This table shows only food consumed between {{from}} - {{to}} h.
+						{{#if unsure}}We have added a "<SPAN class="boldAndOrange">?</SPAN>", because you have guessed the carbs.{{/if}}
+					</I></td></tr>{{/if}}{{/each}}
 					
 					
 					</table>
