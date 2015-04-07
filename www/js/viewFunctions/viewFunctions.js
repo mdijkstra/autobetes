@@ -106,8 +106,7 @@ function view() {
 	 * is not on, the start-event-instance-page screen will be set.
 	 */
 	function setAddOrEditScreen(eventId){
-
-		if($('#editModeButton').val() ==="on"){
+		if($('#editModeButtonFlip').val() ==="on"){
 			//include delete button so user can delete event
 			$('#addOrEditFoodEvent').html("Edit");
 			$('#deleteEvent').show();

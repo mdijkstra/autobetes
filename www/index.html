@@ -159,14 +159,24 @@
 			style="min-height: 55px;">
 			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<h1 id="event-list-page-header">My food / special events</h1>
-			<a id="editModeButton" data-icon="autobetes-edit"
-				style="height: 30px;">&nbsp;</a>
 			<div id="searchEventsInputForm">
 				<input data-type="search" id="filterControlgroup-input">
 			</div>
 		</div>
 
 		<div data-role="main" class="ui-content">
+			<P id="foodAndEventListHelp" class="pHelpSmall">
+				Please select/edit a food/activity.
+			</P>
+			<DIV style="text-align: right"> <I class="pHelpSmall">Edit mode:</I>
+				<a id="editModeButton">
+					<select id="editModeButtonFlip" data-role="flipswitch" data-mini="true">
+						<option value="off">off</option>
+						<option value="on">on</option>
+					</select>
+				</a>				
+			</DIV>
+						
 			<div id="recentlyAddedEvent" style="display: none">
 				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
 				<A id="recentAddedEventButton"
@@ -189,7 +199,7 @@
 				{{#each .}}
 					{{#if standard}}
 						{{!-- The event is  standard so not editable --}}
-						<a onclick=' if($("#editModeButton").val()!=="on"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
+						<a onclick=' if($("#editModeButtonFlip").val()!=="on"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
 					{{else}}
 						<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 					{{/if}}
@@ -1414,11 +1424,6 @@
 
 
 		<ol id="event-list-page-tour-food">
-			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit</h2>
-				<p>Press to edit a food item.</p>
-			</li>
-
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
 				<h2>Define new food</h2>
@@ -1461,11 +1466,6 @@
 		</ol-->
 
 		<ol id="event-list-page-tour-event">
-			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit</h2>
-				<p>Press to edit an event.</p>
-			</li>
-
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
 				<h2>Events that affect sugar level</h2>
