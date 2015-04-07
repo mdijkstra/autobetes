@@ -200,15 +200,20 @@ function callbackView() {
 			$('#current-food-event-list').show();
 			var sumObject = {total:total};
 			
-			if(unknownContent){
-				//carb intake not precise 
-				sumObject.total = sumObject.total;
-				
-			}
+			// if(unknownContent){
+			// 	//carb intake not precise
+			// 	sumObject.total = sumObject.total;
+			//
+			// }
 			if(estimatedContent){
 				sumObject.estimatedContent = true;
 			}
-			sumObject.currentTime = currentTime;
+			
+			// inject from-to times
+			var consumedFrom = 	new Date(currentTime - PLUSMINRANGEFOODEVENT);
+			var consumedTo = 	new Date(currentTime + PLUSMINRANGEFOODEVENT);
+			sumObject.from = consumedFrom.getHours() + ":" + ('0' + consumedFrom.getMinutes()).slice(-2);
+			sumObject.to = consumedTo.getHours() + ":" + ('0' + consumedTo.getMinutes()).slice(-2);			
 			foodInstances.unshift(sumObject);
 			
 			//get template

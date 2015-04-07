@@ -104,7 +104,7 @@
 					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
 					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
 					
-					{{#each .}}{{#if currentTime}}<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Food above is consumed between {{currentTime}}.</I></td></tr>{{/if}}{{/each}}
+					{{#each .}}{{#if from}}<tr><td colspan=4 class="pHelpSmall"><I>This table shows only food consumed between {{from}} - {{to}} h.</I></td></tr>{{/if}}{{/each}}
 					
 					
 					</table>
@@ -128,7 +128,7 @@
 						</tr>
 					{{/each}}
 					<tr>
-						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to stop).</I></td>
+						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>This table shows your current events/activities. Click to stop an event.</I></td>
 					</tr>
 					</table>
 				</script>
@@ -1515,7 +1515,7 @@
 				class="custom">
 				<h2>Logbook</h2>
 				<p>The logbook lists the consumptions and events that you have
-					recorded so far. Here you can edit them.</p>
+					recorded so far. Here you can edit or delete them.</p>
 			</li>
 		</ol>
 
