@@ -24,7 +24,7 @@ function controller() {
 	function saveOrEditFoodEvent(andConsume){
 		//extract values
 		var cannotAddOrEdit = false;
-		var eventName = $('#newEventName').val();
+		var eventName = $('#newEventName').val().trim();
 		var eventType = EventListType;
 		var id = $('#foodId').html();
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
