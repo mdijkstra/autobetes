@@ -106,11 +106,12 @@ function view() {
 	 * is not on, the start-event-instance-page screen will be set.
 	 */
 	function setAddOrEditScreen(eventId){
-
-		if($('#editModeButton').val() ==="on"){
+		if($('#editModeButtonFlip').val() ==="on"){
 			//include delete button so user can delete event
 			$('#addOrEditFoodEvent').html("Edit");
 			$('#deleteEvent').show();
+			$('#addOrSaveFoodEvent').show();
+			$('#addOrEditEventAndStart').hide();
 			//edit mode is on, the screen define-event-page will be used
 			$.mobile.changePage('#define-event-page');
 			populateEditEventScreen(eventId);
@@ -169,12 +170,12 @@ function view() {
 
 
 				} else {
-					if(row.portionsize){
-						$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
-					}
-					else{
-						$('#editEventPortionSize').html("Serving size: unknown");
-					}
+					// if(row.portionsize){
+					// 	$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
+					// }
+					// else{
+					// 	$('#editEventPortionSize').html("Serving size: unknown");
+					// }
 					$('#editEventPortionSize').show();
 					//set slider for food
 					$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_FOOD_QUANTITY_SLIDER);
@@ -274,12 +275,12 @@ function view() {
 						$('#newEventEstimationCarbs').prop('checked', false); 
 					}
 					$('#newEventEstimationCarbs').checkboxradio('refresh');
-					$('#addOrEditEventAndStart').html("Save and 'consume	'");
+					// $('#addOrEditEventAndStart').html("Save and 'consume'");
 				}
 				else{
 					$("#newEventPageFoodInput").hide();
 					$('#define-event-page').find('#newEventName').val(row.name);
-					$('#addOrEditEventAndStart').html("Save and start");
+					// $('#addOrEditEventAndStart').html("Save and start");
 					/*
 				$('#make-new-event-page').find('#newEventPagePower').val(row.power);
 				$('#make-new-event-page').find('#newEventPageCarbs').val("");
@@ -340,13 +341,13 @@ function view() {
 				var timeStringForMyTime = currentHours + ":" + currentMinutes;
 				$('#mytime').val(timeStringForMyTime);
 
-				if(row.portionsize){
-					$('#startEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
-				}
-				else{
-					$('#startEventPortionSize').html("Serving size: unknown");
-					$('#startEventPortionSize').show();
-				}
+				// if(row.portionsize){
+				// 	$('#startEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
+				// }
+				// else{
+				// 	$('#startEventPortionSize').html("Serving size: unknown");
+				// 	$('#startEventPortionSize').show();
+				// }
 
 				//add event screen varies by event type
 				$('#start-event-instance-page-eventType').text(row.eventType);
@@ -447,7 +448,7 @@ function view() {
 			$('#headerName').text('New food');
 			$('#newEventPageActivityInput').hide();
 			$('#newEventPageFoodInput').show();
-			$('#addOrEditEventAndStart').html("Save and 'eat'")
+			// $('#addOrEditEventAndStart').html("Save and 'eat'")
 			$("#newEventPageFoodInput").show();
 		}
 		else{
@@ -455,13 +456,15 @@ function view() {
 			$('#headerName').text('New special event');
 			$('#newEventPageFoodInput').hide();
 			$('#newEventPageActivityInput').show();
-			$('#addOrEditEventAndStart').html("Save and start")
+			// $('#addOrEditEventAndStart').html("Save and start")
 		}
 
 		$('#addOrEditEvent').text('Add');
 		$('#addOrEditEvent').attr('class', 'ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left');
 		$('#newEventName').val($('#filterControlgroup-input').val());
 
+		$('#addOrSaveFoodEvent').hide();
+		$('#addOrEditEventAndStart').show();
 	}
 
 	function emptyDefineEventPage(){

@@ -24,13 +24,13 @@ function controller() {
 	function saveOrEditFoodEvent(andConsume){
 		//extract values
 		var cannotAddOrEdit = false;
-		var eventName = $('#newEventName').val();
+		var eventName = $('#newEventName').val().trim();
 		var eventType = EventListType;
 		var id = $('#foodId').html();
 		var carbs = controller.setNullIfFieldIsEmpty($('#newEventPageCarbs').val());
 		var alcoholicUnits = controller.setNullIfFieldIsEmpty($('#newEventPageAlcoholicUnits').val());
 		var power = controller.setNullIfFieldIsEmpty($('#newEventPagePower').val());
-		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
+		var portionsize= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val()); // depricated
 		var newEvent= controller.setNullIfFieldIsEmpty($('#newEventPortionSize').val());
 		var estimationCarbs = controller.setNullIfFieldIsEmpty($('#newEventEstimationCarbs').is(':checked'));
 		//convert boolean to integer
@@ -44,10 +44,17 @@ function controller() {
 
 		if(eventName === ""){
 			//field event name cannot be empty
-			view.toastShortMessage("Please define the event name");
-
+			view.toastShortMessage("Please provide a name!");
 		}
-		else{
+		else if (FOOD === eventType && null === carbs)
+		{
+			view.toastShortMessage("Please provide a best guess for the amount of carbs. Check 'I guess' if you are not sure about that number.");
+		} else if (FOOD === eventType && carbs < 0)
+		{
+			view.toastShortMessage("Please provide positive amount of carbs!");
+		}
+		else
+		{
 			var callbackFunction;
 
 			if(!andConsume){

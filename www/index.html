@@ -17,13 +17,10 @@
 <body>
 
 	<div data-role="page" id="login-page" data-position="window">
-
 		<div data-role="header">
-
 			<h1>Login</h1>
 		</div>
 		<div data-role="content">
-
 			<input id="loginEmail" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Email"> <input
 				id="loginPassword" type="password" data-clear-btn="true"
@@ -39,6 +36,8 @@
 				data-wrapperels="span"
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
 				up</a>
+
+			</a> <a href="#home-page" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Debug</a>
 			<!-- 
 				<a id="guideTourButton" data-role="button" data-corners="true"
 				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
@@ -52,11 +51,9 @@
 
 	<!-- Start of first page -->
 	<div data-role="page" id="home-page">
-		<div data-role="header" data-position="fixed"
-			style="min-height: 55px;">
+		<div data-role="header" data-position="fixed" style="min-height: 55px;">
 			<h1>Autobetes</h1>
-			<!-- <a href="#settings-page" data-icon="autobetes-settings"
-				style="height: 30px;">&nbsp;</a> -->
+			<a href="#settings-page" data-icon="autobetes-settings-header-button" class="ui-btn-right" style="height: 30px; border: none;  background-color: transparent">&nbsp;</a>
 			<div id="home-page-navbar" data-role="navbar">
 				<ul>
 					<li>
@@ -73,9 +70,6 @@
 						onclick="$(document).removeData('selectedTabIndex2');"
 						data-role="button" data-icon="autobetes-logbook"><span
 							class="homeButtonText">Log</span></a></li>
-					<li><a id="settingsButton" href="#settings-page"
-						data-role="button" data-icon="autobetes-settings-top-button"><span
-							class="homeButtonText">Settings</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -91,16 +85,16 @@
 			app
 		</h3>
 		<div role="main" id="mainScreen" class="ui-content">
-			<TABLE style="margin: 0px auto; font-size: 10pt;">
+			<TABLE style="margin: 0px auto; font-size: 9pt; width: 90%">
 				<TR><TD>
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
-					<table id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout: fixed;">
-					<tr><th>Servings</th><th>Food</th><th>Carbs (g)</th><th></th></tr>
+					<TABLE id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout:fixed; width:100%;">
+					<tr><th style="width:auto;">#</th><th style="width:65%;">Food</th><th>Carbs&nbsp;(g)</th><th style="width:5%;"></th></tr>
 					{{#each .}}
 						{{#if amount}}
 							<tr onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
-								<td style="text-align: right;">{{amount}}&nbsp;&nbsp;</td>
+								<td style="text-align: center;">{{amount}}&nbsp;&nbsp;</td>
 								<td style="overflow: hidden;">{{name}}</td>
 								<td style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
 								<td>{{#if estimationCarbs}}?{{/if}}</td>
@@ -108,9 +102,13 @@
 						{{/if}}					
 					{{/each}}
 					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
-					{{#each .}}{{#if total}}<tr><td><I>Total:</I></td><td></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
-					<tr><td colspan=4 class="grayColor" style="font-size: 9pt;"><I>Consumed between +/- 30 min. from now (click to edit).<BR/>
-						? means that your were not sure.</I></td></tr>
+					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
+					
+					{{#each .}}{{#if from}}<tr><td colspan=4 class="pHelpSmall"><I>This table shows only food consumed between {{from}} - {{to}} h.
+						{{#if unsure}}We have added a "<SPAN class="boldAndOrange">?</SPAN>", because you have guessed the carbs.{{/if}}
+					</I></td></tr>{{/if}}{{/each}}
+					
+					
 					</table>
 				</script>
 
@@ -132,21 +130,9 @@
 						</tr>
 					{{/each}}
 					<tr>
-						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>Current events/activities (click to edit/stop).</I></td>
+						<td colspan=5 class="grayColor" style="font-size: 9pt;"><I>This table shows your current events/activities. Click to stop an event.</I></td>
 					</tr>
 					</table>
-					<script type = 'text/javascript'>
-					var maxTableWidth = .85 * initialScreenWidth;
-					var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
-
-					if (maxTableWidth < widestTable)
-					{
-						$('#food-table-home-page').width(maxTableWidth, 0);
-						$('#event-table-home-page').width(maxTableWidth, 0);		
-						$('#event-table-home-page').css('table-layout', 'fixed')
-						$('#food-table-home-page').css('table-layout', 'fixed')				
-					}
-					</script>
 				</script>
 				</td></tr>
 				<TR><TD style="text-align: right;">
@@ -176,14 +162,24 @@
 			style="min-height: 55px;">
 			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
 			<h1 id="event-list-page-header">My food / special events</h1>
-			<a id="editModeButton" data-icon="autobetes-edit"
-				style="height: 30px;">&nbsp;</a>
 			<div id="searchEventsInputForm">
 				<input data-type="search" id="filterControlgroup-input">
 			</div>
 		</div>
 
 		<div data-role="main" class="ui-content">
+			<P id="foodAndEventListHelp" class="pHelpSmall">
+				Please select/edit a food/activity.
+			</P>
+			<DIV style="text-align: right"> <I class="pHelpSmall">Edit mode:</I>
+				<a id="editModeButton">
+					<select id="editModeButtonFlip" data-role="flipswitch" data-mini="true">
+						<option value="off">off</option>
+						<option value="on">on</option>
+					</select>
+				</a>				
+			</DIV>
+						
 			<div id="recentlyAddedEvent" style="display: none">
 				<span id="eventnameOfAddedOrEditedEvent" style="display: none"></span>
 				<A id="recentAddedEventButton"
@@ -206,7 +202,7 @@
 				{{#each .}}
 					{{#if standard}}
 						{{!-- The event is  standard so not editable --}}
-						<a onclick=' if($("#editModeButton").val()!=="on"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
+						<a onclick=' if($("#editModeButtonFlip").val()!=="on"){ $.mobile.changePage("#start-event-instance-page"); view.populateStartEventInstanceScreen("{{id}}");}' class="ui-btn ui-shadow ui-corner-all" style="background: #FCE5F4 !important">{{name}}</a>
 					{{else}}
 						<a onclick='view.setAddOrEditScreen("{{id}}")' class="eventButtons ui-btn ui-shadow ui-corner-all">{{name}}</a>
 					{{/if}}
@@ -298,7 +294,7 @@
 		<!-- /header -->
 
 		<div data-role="main" class="ui-content">
-
+			<p id="newFoodAndEventHelp" class="pHelpSmall">Please provide info for your new food or event.</p>
 			<input id="newEventName" type="text" data-clear-btn="true"
 				name="text-7" value="" placeholder="Name">
 
@@ -330,7 +326,7 @@
 					</tr>
 				</table>
 
-				<table class="table-condensed">
+				<!--table class="table-condensed">
 					<tr>
 						<td width="50%">Serving size: <input type="number"
 							id="newEventPortionSize" step="0.1" data-clear-btn="true"
@@ -357,7 +353,7 @@
 							class="ui-btn ui-icon-info ui-btn-icon-notext ui-corner-all"></a>
 						</td>
 					</tr> -->
-				</table>
+					<!--/table-->
 			</div>
 			<!-- br for android, enables visibility of field "serving size" if keyboard opens  -->
 			<br> <br> <br> <br> <br> <br>
@@ -399,8 +395,7 @@
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save</a>
 			<a id="addOrEditEventAndStart"
 				onclick="controller.saveOrEditFoodEvent(true)"
-				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left">Save
-				and 'consume'</a> <a href="#deleteEventDialog" id="deleteEvent"
+				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-carat-r ui-btn-icon-left">Next</a> <a href="#deleteEventDialog" id="deleteEvent"
 				data-rel="dialog" data-transition="slidedown"
 				class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left"
 				style="display: none">Delete</a> <a href="#event-list-page"
@@ -785,7 +780,6 @@
 		<!-- /content -->
 		<div data-role="footer" data-id="foo1" data-position="relative"
 			class="ui-footer ui-bar-a ui-footer-fixed slideup">
-
 			<a id="edit-event-instance-page-save-button"
 				onclick="controller.updateEventInstance()"
 				id="edit-event-instance-page-save-button"
@@ -812,8 +806,8 @@
 			<H1>Advice</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">We have analysed your <a class="linkToAutobetesServerWebsite">uploaded data</a> and produced some advices.</p>
-			<p class="phelp"><FONT color=red><B><I>Warning:</I></B></FONT> Please don't use any of these predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
+			<p class="pHelpSmall">We have analysed your <a class="linkToAutobetesServerWebsite">uploaded data</a> and produced some advices.</p>
+			<p class="pHelpSmall"><FONT color=red><B><I>Warning:</I></B></FONT> Please don't use any of these predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 			<div role="main" class="ui-content">
 				<div data-role="controlgroup">
 					<ul class="ui-listview" data-icon="false">
@@ -860,7 +854,7 @@
 			<H1>Autopilot</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">Just after <a class="linkToAutobetesServerWebsite">uploading</a> your data you can find a forecast/prediction of your sensor level in the graph below.
+			<p class="pHelpSmall">Just after <a class="linkToAutobetesServerWebsite">uploading</a> your data you can find a forecast/prediction of your sensor level in the graph below.
 				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 			
 			<IMG ID="sensor-plot">
@@ -886,12 +880,12 @@
 			<H1>Bolus calculator</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">Based on your food and planned activity, we predict the following insulin dose.</p>
-			<p class="phelp"><FONT color=red><B><I>Warning:</I></B></FONT> Please don't use any of these predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
+			<p class="pHelpSmall">Based on your food and planned activity, we predict the following insulin dose.</p>
+			<p class="pHelpSmall"><FONT color=red><B><I>Warning:</I></B></FONT> Please don't use any of these predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 			
 			<p>HERE WE WANT FOOD TABLE IN WHICH USER CAN (DE)SELECT FOODS.</p>
 
-			<p class="phelp">The prediction is based on the settings in your pump, which you can <a class="linkToAutobetesServerWebsite">upload</a> to our website if changed.</p>
+			<p class="pHelpSmall">The prediction is based on the settings in your pump, which you can <a class="linkToAutobetesServerWebsite">upload</a> to our website if changed.</p>
 		</div>
 
 		<div data-role="footer" data-id="foo1" data-position="relative"
@@ -914,7 +908,7 @@
 			<H1>Basal insulin</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">The table below shows your 'basal insulin' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
+			<p class="pHelpSmall">The table below shows your 'basal insulin' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
 				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 
 			<p><B>Example:</B> A basal setting of 1 IU/h means that pump adminsters 1 unit of insulin per hour.</p>
@@ -993,10 +987,10 @@
 		<div data-role="header" data-position="fixed"
 			style="min-height: 55px;">
 			<a data-rel="back" data-icon="autobetes-back" style="height: 30px;">&nbsp;</a>
-			<H1>Insulin sensitivity</H1>
+			<H1>Sensitivity</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">The table below shows your 'insulin sensitivity' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
+			<p class="pHelpSmall">The table below shows your 'insulin sensitivity' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
 				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 				
 			<p><B>Example:</B> An insulin sensitivity of 10 mM/IU means that your blood sugar level decreases 10 mM per unit of insulin.</p>
@@ -1077,7 +1071,7 @@
 			<H1>Carb-ratio</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">The table below shows your 'carb-ratio' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
+			<p class="pHelpSmall">The table below shows your 'carb-ratio' settings according to your last <a class="linkToAutobetesServerWebsite">upload</a>. We analyse your data and predict how you can optimize your settings.
 				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 
 			<p><B>Example:</B> A carb-ratio of 10 g/IU means that you need to consume 10 grams of carbohydrates to compensate for 1 unit of insulin.</p>
@@ -1158,12 +1152,12 @@
 			<H1>HbA1c</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">Glycated hemoglobin (HbA1c) is a marker for average blood sugar levels over about the previous three months. High values indicate poorer control.
+			<p class="pHelpSmall">Glycated hemoglobin (HbA1c) is a marker for average blood sugar levels over about the previous three months. High values indicate poorer control.
 				We estimate your HbA1c based on your sensor values. Please ask your physician for a lab test to measure your real value.</p>
 
 			<p><B>HbA1c: <SPAN id="HbA1cAdvice"><FONT color="lightgrey">N/A</FONT></SPAN>%</B> (date: <SPAN id="HbA1cAdviceDate"><FONT color="lightgrey"> N/A</FONT></SPAN>).</p>
 			
-			<p class="phelp">To get a more recent value, please <a class="linkToAutobetesServerWebsite">upload</a> your data first.</p>
+			<p class="pHelpSmall">To get a more recent value, please <a class="linkToAutobetesServerWebsite">upload</a> your data first.</p>
 			<table data-role="table" data-mode="columntoggle" class="ui-responsive table-stripe">
 				<tr style="color:black"><th>HbA1c (%)</th><th>Regulation</th></tr>
 				<tr><td>&le; 7.0</td><td>General target</td></tr>
@@ -1195,7 +1189,7 @@
 			<H1>Autopilot</H1>
 		</div>
 		<div role="main" class="ui-content">
-			<p class="phelp">Just after <a class="linkToAutobetesServerWebsite">uploading</a> your data you can find a forecast/prediction of your sensor level in the graph below.
+			<p class="pHelpSmall">Just after <a class="linkToAutobetesServerWebsite">uploading</a> your data you can find a forecast/prediction of your sensor level in the graph below.
 				Please don't use our predictions and advices as they are for educational purposes and a discussion with your physician only.</p>
 			
 			<IMG ID="sensor-plot">
@@ -1431,11 +1425,6 @@
 
 
 		<ol id="event-list-page-tour-food">
-			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit</h2>
-				<p>Press to edit a food item.</p>
-			</li>
-
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
 				<h2>Define new food</h2>
@@ -1448,10 +1437,6 @@
 				<h2>I guess</h2>
 				<p>Please check if you are unsure about the amount of carbs in
 					this food item.</p>
-			</li>
-			<li data-id="newEventPortionSize" data-text="Next" class="custom">
-				<h2>Serving size</h2>
-				<p>Weight of one serving of this food item.</p>
 			</li>
 		</ol>
 
@@ -1478,11 +1463,6 @@
 		</ol-->
 
 		<ol id="event-list-page-tour-event">
-			<li data-id="editModeButton" data-text="Next" class="custom">
-				<h2>Edit</h2>
-				<p>Press to edit an event.</p>
-			</li>
-
 			<li data-id="define-new-event-button-list" data-text="Next"
 				class="custom">
 				<h2>Events that affect sugar level</h2>
@@ -1533,7 +1513,7 @@
 				class="custom">
 				<h2>Logbook</h2>
 				<p>The logbook lists the consumptions and events that you have
-					recorded so far. Here you can edit them.</p>
+					recorded so far. Here you can edit or delete them.</p>
 			</li>
 		</ol>
 
