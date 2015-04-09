@@ -195,8 +195,9 @@ $(document).on('pagehide', '#event-list-page', function(){
 		$('#filterControlgroup-input').val('');
 		//ensure the button with the new event(in green) will be hidden
 		$('#recentlyAddedEvent').hide();
-		//get out of edit mode
-		$('#editModeButton').val('off');
+
+		$('#editModeButtonFlip').val('off').flipswitch('refresh');			
+
 		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 	}

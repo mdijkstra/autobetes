@@ -1,3 +1,12 @@
+$('#homeStartButton').click(function(){
+    $('#foodAndEventListHelp').html('Please select the food you want to eat, or click "new" if your food is not yet in the list.');
+	$('#newFoodAndEventHelp').html('Please provide the name of the item you want to consume, and the number of grams carbohydrates in it. Select \'I guess\' if you are not sure about the amount of carbohydrates.');
+});
+$('#homeSpecialButton').click(function(){
+    $('#foodAndEventListHelp').html('Please select the event that affects your sugar level, or click "new" if your event is not yet in the list.');
+	$('#newFoodAndEventHelp').html('Please provide the name of the event or activity that affects your sugar level.');
+});
+
 $('.enterAdvicePassword').click(function(){
 	view.showLoadingWidget();
 	setTimeout(function(){
@@ -258,11 +267,10 @@ $('#deleteEventDialogConfirmButton').click(function() {
 
 
 $('#editModeButton').click(function(){
-
-	if($('#editModeButton').val() ==="on"){
+	if($('#editModeButtonFlip').val() ==="off"){
 
 		//editmode was on, now need to be turned off
-		$('#editModeButton').val('off');
+		// $('#editModeButtonFlip').val('off');
 		// $('#editModeButton').attr("style","");
 		$('.eventButtons').attr("style","");
 
@@ -273,7 +281,7 @@ $('#editModeButton').click(function(){
 	else{
 
 		//editmode was off, now need to be turned on
-		$('#editModeButton').val('on');
+		// $('#editModeButtonFlip').val('on');
 		// $('#editModeButton').attr("style","background: #8df3e6 !important");
 		$('.eventButtons').attr("style","background: #CCFFFF !important");
 

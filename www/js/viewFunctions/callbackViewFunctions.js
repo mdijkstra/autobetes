@@ -129,11 +129,24 @@ function callbackView() {
 			var template = Handlebars.compile(source);	
 			//fill template with events and add screen to page
 			$('#current-activity-event-list').html(template(buttons));
+			
+			
+/*			alert('NU');
+			var maxTableWidth = .85 * initialScreenWidth;
+			var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
+
+			if (maxTableWidth < widestTable)
+			{
+				$('#food-table-home-page').width(maxTableWidth, 0);
+				$('#event-table-home-page').width(maxTableWidth, 0);		
+				$('#event-table-home-page').css('table-layout', 'fixed')
+				$('#food-table-home-page').css('table-layout', 'fixed')				
+			}
+*/			
 		}
 		else{
 			$('#current-activity-event-list').hide();
 		}
-
 	}
 	/*
 	 * This method present list of current food events retrieved from db at the home screen
@@ -187,14 +200,23 @@ function callbackView() {
 			$('#current-food-event-list').show();
 			var sumObject = {total:total};
 			
-			if(unknownContent){
-				//carb intake not precise 
-				sumObject.total = sumObject.total;
-				
-			}
-			if(estimatedContent){
+			// if(unknownContent){
+			// 	//carb intake not precise
+			// 	sumObject.total = sumObject.total;
+			//
+			// }
+			if (estimatedContent)
+			{
 				sumObject.estimatedContent = true;
 			}
+			
+			sumObject.unsure = estimatedContent || unknownContent;
+			
+			// inject from-to times
+			var consumedFrom = 	new Date(currentTime - PLUSMINRANGEFOODEVENT);
+			var consumedTo = 	new Date(currentTime + PLUSMINRANGEFOODEVENT);
+			sumObject.from = consumedFrom.getHours() + ":" + ('0' + consumedFrom.getMinutes()).slice(-2);
+			sumObject.to = consumedTo.getHours() + ":" + ('0' + consumedTo.getMinutes()).slice(-2);			
 			foodInstances.unshift(sumObject);
 			
 			//get template
@@ -207,11 +229,9 @@ function callbackView() {
 		else{
 			$('#current-food-event-list').hide();
 		}
-
 	}
 
 	function showEventInstanceList(inputType, result) {
-
 		var eventInstances = [];
 		for (var i = 0; i < result.rows.length; i++) {
 			//process results
@@ -283,6 +303,5 @@ function callbackView() {
 		var template = Handlebars.compile(source);
 		//fill template with events and add screen to page
 		$('#history-event-instance-list').html(template(eventInstances));
-
 	}
 }

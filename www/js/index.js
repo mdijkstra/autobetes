@@ -18,7 +18,7 @@ var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
 	var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
 
 //	color stuff
-	var COLOR_EDIT_MODE = "#8df3e6"; // is same as in autobetes theme-a
+	var COLOR_EDIT_MODE = "#CCFFFF"; // is same as in autobetes theme-a
 //TODO group colors here so we can easily change?
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
 var SERVER_EVENT_URL = '/api/v1/event';
