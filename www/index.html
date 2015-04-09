@@ -307,21 +307,17 @@
 					<span class="ui-btn-inner ui-btn-corner-all"> <span
 						class="ui-btn-text">Carbs lookup table</span>
 				</span>
-				</a> <br /> <br />
-				<table class="table-condensed">
+				</a> <br/> <br/>
+				
+				<table>
+					<tr><td colspan=2 style="line-height:0px;" class="pHelpSmall">Amount of carbs per serving:</td></tr>
+					<tr style="line-height:0px;">
+						<td><input id="newEventPageCarbs" type="number" data-clear-btn="true" step="0.1" pattern="[0-9]+\.?[0-9]?" placeholder="Carbs"></td>
+						<td>&nbsp;gram</td>
+					</tr>
 					<tr>
-						<td width="50%!important">Amount of carbs per serving: <input
-							type="number" id="newEventPageCarbs" data-clear-btn="true"
-							step="0.1" pattern="[0-9]+\.?[0-9]?" placeholder="unknown"></td>
-						<td width="0%">
-							<p>gram</p>
-						</td>
-
-						<td width="0%">     <input type="checkbox"
-							name="checkbox-mini-0" id="newEventEstimationCarbs"
-							data-mini="true">      <label id="guess-carbs-checkbox"
-							for="newEventEstimationCarbs" style="font-size: 9pt;">I
-								guess</label>
+						<td><input type="checkbox" name="checkbox-mini-0" id="newEventEstimationCarbs" data-mini="true">
+							<label id="guess-carbs-checkbox" for="newEventEstimationCarbs">I'm not sure about the carbs</label>
 						</td>
 					</tr>
 				</table>
