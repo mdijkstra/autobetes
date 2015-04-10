@@ -379,7 +379,8 @@ function controller() {
 		case 10:
 			textAndColor = {color:'#721212',text:'Very much'};
 			break;
-
+			default:
+				textAndColor = {color:'#721212',text:''};
 		}
 		return textAndColor;
 	}
@@ -465,17 +466,14 @@ function controller() {
 					view.toastMessage(error);
 				});
 			}
-
-
-			restClient.get(url, function(data, textStatus, response){
-				//success callback
-				view.hideLoadingWidget();
-				callback(type, JSON.parse(data));
-			},function(request, textStatus, error){
-				//error callback
-				view.hideLoadingWidget();
-				view.toastMessage(error);
-			});
+			else{
+				//show cached data
+				callback(type, hba1cData);
+				//load potential new data
+				loadAdvice(function(data){
+					callback(type, data);
+				},function(){});
+			}
 		}
 		else{
 			var url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
@@ -494,7 +492,12 @@ function controller() {
 				});
 			}
 			else{
+				//show cached data
 				callback(type, settingsData);
+				//get potential new data
+				loadAdvice(function(data){
+					callback(type, data);
+				},function(){});
 			}
 
 		}

@@ -37,7 +37,7 @@
 				class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Sign
 				up</a>
 
-			</a> <a href="#home-page" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Debug</a>
+			<!-- <a href="#home-page" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-btn-inline ui-icon-plus ui-btn-icon-left ui-corner-all">Debug</a> -->
 			<!-- 
 				<a id="guideTourButton" data-role="button" data-corners="true"
 				data-shadow="true" data-iconshadow="true" data-wrapperels="span"
@@ -122,7 +122,11 @@
 					<ul class="ui-listview" data-role="listview" data-icon="false" data-split-icon="delete">
 					{{#each .}}
 						<tr onclick="view.populateEditEventInstancePage('{{id}}', '{{eventType}}'); document.location = '#edit-event-instance-page'" style='cursor:pointer'>
+							{{#if pausetracking}}
+							<td><span style="color:blue">{{name}}</span></td>
+							{{else}}
 							<td>{{name}}</td>
+							{{/if}}
 							<td style="text-align: center;">{{intensityValue}}<!-- ({{intensityText}})--></td>
 							<td>{{beginHours}}:{{beginMinutes}}</td>
 							<td>-</td>
@@ -635,7 +639,7 @@
 					<li><a href="#"
 						name="history-event-instance-list-navbar-buttons">Food</a></li>
 					<li><a href="#"
-						name="history-event-instance-list-navbar-buttons">Special</a></li>
+						name="history-event-instance-list-navbar-buttons">Event</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -657,7 +661,13 @@
 							<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Amount: {{amount}} </strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' class="deleteEvent ui-btn ui-btn-icon-notext ui-icon-delete" data-rel="dialog" data-transition="slidedown" title="Delete"></a>
 						{{/if}}
 					{{else}}
-						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3><p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p><p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
+						<a href="#edit-event-instance-page" onclick='view.populateEditEventInstancePage("{{id}}", "{{eventType}}")' class="ui-btn"><h3>{{name}}</h3>
+						{{#if pausetracking}}
+						
+						{{else}}
+						<p class ="topic"><strong>Degree: <span style="color:{{intensityColorInterpretation}}">{{intensityText}}</span></strong></p>
+						{{/if}}	
+						<p class="ui-li-aside"><strong>{{beginHours}}:{{beginMinutes}} - {{endHours}}:{{endMinutes}}</strong><br><span>{{beginDay}}-{{beginMonth}}-{{beginYear}}</p></a><a href="#deleteEventInstanceDialog" onclick='$("#delete-from").html($.mobile.activePage[0].id); controller.deleteEventInstance("{{name}}", "{{id}}", "{{eventType}}");' data-rel="dialog" data-transition="slidedown" class="ui-btn ui-btn-icon-notext ui-icon-delete"></a>
 					
 					{{/if}}
 					</li>
@@ -757,7 +767,7 @@
 			</div>
 
 
-			<div class="ui-field-contain">
+			<div id="edit-event-instance-slider-div" class="ui-field-contain">
 				<p id="edit-event-instance-amount-of-grams-text"
 					style="display: none"></p>
 				<label id="edit-event-instance-food-quantity-slider-label">Servings</label>

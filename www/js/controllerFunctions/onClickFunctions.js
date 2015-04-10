@@ -194,8 +194,8 @@ $('[name=history-event-instance-list-navbar-buttons]').click(function() {
 	//get event type
 	var eventType = $(this).html() === 'All' ? null : $(this).html();
 	//get index
-	if(eventType ===SPECIAL){
-		eventType = ACTIVITY;//first it was activity now special
+	if(eventType ===EVENT){
+		eventType = ACTIVITY;//first it was activity now event
 	}
 
 	var index = 0;
