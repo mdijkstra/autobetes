@@ -379,7 +379,8 @@ function controller() {
 		case 10:
 			textAndColor = {color:'#721212',text:'Very much'};
 			break;
-
+			default:
+				textAndColor = {color:'#721212',text:''};
 		}
 		return textAndColor;
 	}
