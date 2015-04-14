@@ -19,6 +19,7 @@ function view() {
 		if(type=== "HbA1C"){
 			$('#HbA1cAdvice').show();
 			$('#HbA1cAdvice').html(data.hba1c);
+			$('#HbA1cAdviceDate').html(data.date);
 		}
 		else{
 			$('#advice-container').show();

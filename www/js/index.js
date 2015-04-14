@@ -6,6 +6,8 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 var token;
 var DEBUG = true;
+var MOLGENIS_TOKEN_URL_DASH = 'molgenis-token';
+var MOLGENIS_TOKEN_URL = 'molgenisToken';
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
@@ -23,7 +25,7 @@ var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
-var SERVER_LOGIN_URL = '/api/v1/login'
+var SERVER_LOGIN_URL = '/api/v2/login'
 	var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
@@ -261,14 +263,16 @@ function handleOpenURL(url) {
 }
 var settingsFromServer;
 function loadAdvice(callback, callbackError){
-	var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+	var token = restClient.getToken();
+	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
+	var url = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl;
 	restClient.get(url, function(data, textStatus, response){
 		//success callback
 		hba1cData = JSON.parse(data);
 		callback(hba1cData)
-	},callbackError);
+	}, callbackError);
 	
-	url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+	url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl;
 	restClient.get(url, function(data, textStatus, response){
 		//success callback
 		settingsData = {Basal :[], Sensitivity:[], Carbs: []}
@@ -313,7 +317,9 @@ function convertTimestampToTime(timestamp)
 }
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
+	var token = restClient.getToken();
+	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&' + tokenUrl;
 	//load immage async using ajax
 	$.ajax({ 
 		url : img_url, 

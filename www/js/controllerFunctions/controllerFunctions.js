@@ -311,7 +311,7 @@ function controller() {
 							}
 							syncUserInfo();
 							checkIfMovesIsInstalled();
-							loadAdvice(function(){},function(){});
+							//loadAdvice(function(){},function(){}); Willen we hier toch niet?
 
 						}
 
@@ -453,7 +453,10 @@ function controller() {
 	function getAdviceTableData(type, callback){
 
 		if(type === HBA1C){
-			var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+			var token = restClient.getToken();
+			var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
+			
+			var url = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl;
 			if(typeof hba1cData === "undefined")
 			{
 				view.showLoadingWidget();
@@ -478,7 +481,10 @@ function controller() {
 			});
 		}
 		else{
-			var url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+			var token = restClient.getToken();
+			var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
+			
+			var url = SERVER_URL +'/scripts/get_pump_settings/run?' + tokenUrl;
 
 			if(typeof settingsData === "undefined")
 			{
