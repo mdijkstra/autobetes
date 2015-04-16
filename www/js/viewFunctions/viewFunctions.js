@@ -15,7 +15,7 @@ function view() {
 	this.showAdviceTable = showAdviceTable;
 
 	function showAdviceTable(type, data){
-		
+
 		if(type=== "HbA1C"){
 			$('#HbA1cAdvice').show();
 			$('#HbA1cAdvice').html(data.hba1c);
@@ -155,22 +155,31 @@ function view() {
 					else{
 						endDateAndTime = controller.convertTimestampToTimeAndDate(row.endTime);
 					}
-					//set slider for activity
-					$('#endTimeField').show();
-					$('#edit-event-instance-page-end-time-field').val(endDateAndTime.time);
-					$('#edit-event-instance-page-end-date-field').val(endDateAndTime.date);
-					$('#edit-event-instance-food-quantity-slider-label').hide();
-					$('#edit-event-instance-activity-quantity-slider-label').show();
-					$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
-					$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
-					$('#edit-event-instance-quantity-slider').val(row.intensity).slider('refresh');
-					$('#edit-event-instance-page-begin-time-text').show();
+					
+					
+						$("#edit-event-instance-slider-div").show();
+						//set slider for activity
+						$('#endTimeField').show();
+						$('#edit-event-instance-page-end-time-field').val(endDateAndTime.time);
+						$('#edit-event-instance-page-end-date-field').val(endDateAndTime.date);
+						$('#edit-event-instance-food-quantity-slider-label').hide();
+						$('#edit-event-instance-activity-quantity-slider-label').show();
+						$('#edit-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
+						$('#edit-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
+						$('#edit-event-instance-quantity-slider').val(row.intensity).slider('refresh');
+						$('#edit-event-instance-page-begin-time-text').show();
 
-					setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(row.intensity));
-
+						setIntensityTextInScreen('#intensity-slider-label-intensity-indication', parseInt(row.intensity));
+					
+						if(row.eventId === IDPAUSETRACKING){
+							//no degree for pause tracking
+							$("#edit-event-instance-slider-div").hide();
+							$('#edit-event-instance-quantity-slider').val("");
+						}
 
 
 				} else {
+					$("#edit-event-instance-slider-div").show();
 					// if(row.portionsize){
 					// 	$('#editEventPortionSize').html("Serving size: "+ row.portionsize+" gram");
 					// }
@@ -306,6 +315,7 @@ function view() {
 	 * key to the event.
 	 */
 	function populateStartEventInstanceScreen(id){
+
 		dbHandler.getParticularEvent(id, function(transaction, result){
 
 			if(result.rows.length === 1){
@@ -353,6 +363,7 @@ function view() {
 				//add event screen varies by event type
 				$('#start-event-instance-page-eventType').text(row.eventType);
 				if (row.eventType === FOOD) {
+					$("#startEventQuantitySliderField").show();
 					$('#startEventInstanceHeader').text("Consume");
 					$('#start-event-instance-activity-quantity-slider-label').hide();
 					$('#start-event-instance-food-quantity-slider-label').show();
@@ -361,19 +372,24 @@ function view() {
 					$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_FOOD_QUANTITY_SLIDER).slider('refresh');
 
 				} else {
-					$('#startEventPortionSize').hide();
-					$('#startEventInstanceHeader').text("Start event");
-					$('#start-event-instance-food-quantity-slider-label').hide();
-					$('#start-event-instance-activity-quantity-slider-label').show();
-					$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
-					$('#start-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
-					$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER).slider('refresh');
-					setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
+					if(id === IDPAUSETRACKING)
+					{
+						//pause tracking event has no degree
+						$("#startEventQuantitySliderField").hide();
+						$('#start-event-instance-quantity-slider').val("");
+					}
+					else{
+						$("#startEventQuantitySliderField").show();
 
-
-
-
-
+						$('#startEventPortionSize').hide();
+						$('#startEventInstanceHeader').text("Start event");
+						$('#start-event-instance-food-quantity-slider-label').hide();
+						$('#start-event-instance-activity-quantity-slider-label').show();
+						$('#start-event-instance-quantity-slider').attr('min', MIN_VALUE_ACTIVITY_QUANTITY_SLIDER);
+						$('#start-event-instance-quantity-slider').attr('step', STEP_VALUE_ACTIVITY_QUANTITY_SLIDER);
+						$('#start-event-instance-quantity-slider').val(DEFAULT_VALUE_ACTIVITY_QUANTITY_SLIDER).slider('refresh');
+						setIntensityTextInScreen('#intensityToText', parseInt($('#start-event-instance-quantity-slider').val()));
+					}
 				}
 				$('#start-event-instance-quantity-slider').unbind();
 				onlyDigits();//after unbind add the only digits function to slider

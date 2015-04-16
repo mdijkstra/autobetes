@@ -1,5 +1,5 @@
 //declare all global variables
-var dbHandler = new dbHandler('autoB', '1.1', 'Autobetes', 10000000);
+var dbHandler = new dbHandler('autoB', '1.2', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
@@ -104,9 +104,10 @@ var OS;
 var ANDROID = "Android";
 var IOS = "iOS";
 var LOGIN = "Login";
-var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b"
-	var EVENTALLREADYEXISTS = "event already exists";
+var MY_APP_TESTFAIRY_TOKEN= "f731f3cd56b4434dbe63eb86020641ea40ee858b";
+var EVENTALLREADYEXISTS = "event already exists";
 var ADMINIDPREPOSITION = "adminsdf7897dfjgjfug8dfug89ur234sdf";//ids of common events yield this string
+var IDPAUSETRACKING = ADMINIDPREPOSITION+"2";
 var MOBILE_DEVICE = true;//TODO something to determine by appAvailability plugin, but for now keep it true
 var MOVES_INSTSTALLED = false;
 var IS_REGISTERING = false;

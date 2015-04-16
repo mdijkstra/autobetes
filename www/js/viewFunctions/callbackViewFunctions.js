@@ -44,11 +44,17 @@ function callbackView() {
 				else{
 					//push button in array
 					if(row.id.indexOf(ADMINIDPREPOSITION) > -1){
-						//event is common, add param common=true
+						//event is standard event, add param common=true
 						row.standard = true;
 					}
 					
+					if(row.id.indexOf(IDPAUSETRACKING) > -1){
+						//this is the event t
+						rows.unshift(row);
+					}
+					else{
 					rows.push(row);
+					}
 				}
 
 			}
@@ -114,7 +120,12 @@ function callbackView() {
 				button.endMinutes = endMinutes;
 				button.endHours = endHours;
 			}
-
+			
+			if(row.eventId === IDPAUSETRACKING)
+				{
+					//pause tracking event needs special color
+					button.pausetracking = "yes";
+				}
 			//add button to array
 			buttons.push(button);
 
@@ -292,6 +303,9 @@ function callbackView() {
 					}
 					button.endHours = endDate.getHours();
 					button.endMinutes = endMinutes;
+				}
+				if(row.eventId === IDPAUSETRACKING){
+					button.pausetracking = "yes";
 				}
 				eventInstances.push(button);
 			}
