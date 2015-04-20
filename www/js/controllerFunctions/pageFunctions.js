@@ -13,21 +13,24 @@ $("body").find("div").on('pageshow',function(){
 	$('.joyride-close-tip').click();//ensure guide tour is closed on load of every page
 });
 
+// $(document).on('pageshow', '#bolus-calculator-advice-page', function() {
+// 	controller.getBolusCalculatorData(view.showBolusCalculatorTable);
+// });
+
 $(document).on('pageshow', '#basal-advice-page', function() {
-	 var data =  controller.getAdviceTableData("Basal", view.showAdviceTable);
-	
+	controller.getAdviceTableData("Basal", view.showAdviceTable);
 });
+
 $(document).on('pageshow', '#sensitivity-advice-page', function() {
-	 var data =  controller.getAdviceTableData("Sensitivity", view.showAdviceTable);
-	
+	controller.getAdviceTableData("Sensitivity", view.showAdviceTable);
 });
+
 $(document).on('pageshow', '#carbs-advice-page', function() {
-	 var data =  controller.getAdviceTableData("Carbs", view.showAdviceTable);
-	
+	controller.getAdviceTableData("Carbs", view.showAdviceTable);
 });
+
 $(document).on('pageshow', '#hba1c-advice-page', function() {
-	 var data =  controller.getAdviceTableData("HbA1C", view.showAdviceTable);
-	
+	controller.getAdviceTableData("HbA1C", view.showAdviceTable);
 });
 
 $(document).on('pageshow', '#autopilot-page',function(){

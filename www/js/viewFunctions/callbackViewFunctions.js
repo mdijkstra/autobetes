@@ -222,6 +222,8 @@ function callbackView() {
 			var template = Handlebars.compile(source);	
 			//fill template with events and add screen to page
 			$('#current-food-event-list').html(template(foodInstances));
+			
+			getCurrentFoodTableInsulin(sumObject.total, view.showFoodTableInsulin);
 		}
 		else{
 			$('#current-food-event-list').hide();

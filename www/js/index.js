@@ -116,6 +116,8 @@ var intervalUpdateSensorPlot;
 var currentGuideTour;//current guide tour is in this object
 var currentlyGuiding = false;
 var HBA1C = "HbA1C";
+
+var settingsFromServer;
 var hba1cData;
 var settingsData;
 
@@ -262,28 +264,100 @@ function handleOpenURL(url) {
 		alert("received url: " + url);
 	}, 0);
 }
-var settingsFromServer;
-function loadAdvice(callback, callbackError){
+
+function tokenUrl()
+{
 	var token = restClient.getToken();
-	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
-	var url = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl;
-	restClient.get(url, function(data, textStatus, response){
-		//success callback
-		hba1cData = JSON.parse(data);
-		callback(hba1cData)
-	}, callbackError);
+	return( MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token );
+}
+
+function getMsSinceMidnight()
+{
+	d = new Date();
+	var e = new Date(d);
+	return ( d - e.setHours(0,0,0,0) );
+}
+
+function getCurrentCarbRatio(callback)
+{
+	view.showLoadingWidget();
+	loadCurrentSettings(function(data){
+		view.hideLoadingWidget();
+		
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= data.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
+		
+		callback( data.CarbRatioTS.value[i] );
+
+	}, function(request, textStatus, error){
+		view.hideLoadingWidget();
+		view.toastMessage(error);
+	});
+}
+
+function getCurrentFoodTableInsulin(totalCarbs, callback)
+{
+	// view.showLoadingWidget();
+	loadCurrentSettings(function(data){
+		// view.hideLoadingWidget();
+		
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= data.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
 	
-	url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl;
+		callback( (Math.round(totalCarbs / data.CarbRatioTS.value[i] * 10 ) / 10).toFixed(1) );	
+
+	}, function(request, textStatus, error){
+		// view.hideLoadingWidget();
+		view.toastMessage(error);
+	});
+}
+
+function loadCurrentSettings(callback, callbackError)
+{
+	var url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl();
 	restClient.get(url, function(data, textStatus, response){
 		//success callback
-		settingsData = {Basal :[], Sensitivity:[], Carbs: []}
+		settingsData = {BasalTS: [], SensitivityTS: [], CarbRatioTS: [], Basal :[], Sensitivity:[], Carbs: []}
 		settingsFromServer = JSON.parse(data);
+		
+		settingsData.BasalTS		= {from: settingsFromServer.Basal.startTime,		value: settingsFromServer.Basal.rate};
+		settingsData.SensitivityTS	= {from: settingsFromServer.Sensitivity.startTime,	value: settingsFromServer.Sensitivity.amount};
+		settingsData.CarbRatioTS	= {from: settingsFromServer.Carbs.startTime,		value: settingsFromServer.Carbs.amount};
 		settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
 		settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
 		settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
 
 		callback(settingsData);
-	}, callbackError)
+	}, callbackError)	
+}
+
+function loadHbA1c(callback, callbackError)
+{
+	var url_hba1c = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl();
+	restClient.get(url_hba1c, function(data, textStatus, response){
+		//success callback
+		hba1cData = JSON.parse(data);
+		callback(hba1cData)
+	}, callbackError);	
+}
+
+function loadAdvice(callback, callbackError){
+	loadCurrentSettings(callback, callbackError);
+	loadHbA1c(callback, callbackError);
 }
 
 function convertServerdata(startTimes, currentSettings)

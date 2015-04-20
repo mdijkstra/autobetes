@@ -13,9 +13,14 @@ function view() {
 	this.showLoadingWidget = showLoadingWidget;
 	this.hideLoadingWidget = hideLoadingWidget;
 	this.showAdviceTable = showAdviceTable;
+	this.showFoodTableInsulin = showFoodTableInsulin;
 
-	function showAdviceTable(type, data){
+	function showFoodTableInsulin(data)
+	{
+		$('#current-food-event-list-bolus').html(data);
+	}
 
+	function showAdviceTable(type, data) {
 		if(type=== "HbA1C"){
 			$('#HbA1cAdvice').show();
 			$('#HbA1cAdvice').html(data.hba1c);
@@ -28,20 +33,20 @@ function view() {
 			var headerTemplate = Handlebars.compile(source);
 			var tableData;
 			var tableHeader;
+			
 			if(type ==="Basal"){
 				tableData = data.Basal;
 				tableHeader = headerTemplate([{Basal:"o"}]);
-
 			}
+			
 			else if(type ==="Sensitivity"){
 				tableData = data.Sensitivity;
 				tableHeader = headerTemplate([{Sensitivity:"o"}]);
-
 			}
+			
 			else if(type ==="Carbs"){
 				tableData = data.Carbs;
 				tableHeader = headerTemplate([{Carbs:"o"}]);
-
 			}
 
 			//get template

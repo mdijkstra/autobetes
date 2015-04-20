@@ -452,12 +452,7 @@ function controller() {
 	}
 
 	function getAdviceTableData(type, callback){
-
-		if(type === HBA1C){
-			var token = restClient.getToken();
-			var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
-			
-			var url = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl;
+		if (type === HBA1C) {
 			if(typeof hba1cData === "undefined")
 			{
 				view.showLoadingWidget();
@@ -469,7 +464,8 @@ function controller() {
 					view.toastMessage(error);
 				});
 			}
-			else{
+			else
+			{
 				//show cached data
 				callback(type, hba1cData);
 				//load potential new data
@@ -479,31 +475,25 @@ function controller() {
 			}
 		}
 		else{
-			var token = restClient.getToken();
-			var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
-			
-			var url = SERVER_URL +'/scripts/get_pump_settings/run?' + tokenUrl;
-
 			if(typeof settingsData === "undefined")
 			{
 				//data not loaded yet
 				view.showLoadingWidget();
-				loadAdvice(function(data){
+				loadCurrentSettings(function(data){
 					view.hideLoadingWidget();
 					callback(type, data);
 				}, function(request, textStatus, error){
 					view.hideLoadingWidget();
 					view.toastMessage(error);
-
 				});
 			}
 			else{
 				//show cached data
 				callback(type, settingsData);
 				//get potential new data
-				loadAdvice(function(data){
-					callback(type, data);
-				},function(){});
+				// loadAdvice(function(data){
+				// 	callback(type, data);
+				// },function(){});
 			}
 
 		}
