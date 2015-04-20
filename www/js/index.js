@@ -301,6 +301,28 @@ function getCurrentCarbRatio(callback)
 		view.toastMessage(error);
 	});
 }
+function getInsulinForAmountOfCarbs(carbs)
+{
+	if(typeof(settingsData) === "undefined" )
+	{
+		return 0;
+		alert('nul');
+	}
+	else
+	{
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= settingsData.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
+	
+		return( carbs / settingsData.CarbRatioTS.value[i] );
+	}
+}
 
 function getCurrentFoodTableInsulin(totalCarbs, callback)
 {
@@ -319,7 +341,7 @@ function getCurrentFoodTableInsulin(totalCarbs, callback)
 		i--;
 	
 		callback( (Math.round(totalCarbs / data.CarbRatioTS.value[i] * 10 ) / 10).toFixed(1) );	
-
+		
 	}, function(request, textStatus, error){
 		// view.hideLoadingWidget();
 		view.toastMessage(error);
@@ -328,21 +350,27 @@ function getCurrentFoodTableInsulin(totalCarbs, callback)
 
 function loadCurrentSettings(callback, callbackError)
 {
-	var url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl();
-	restClient.get(url, function(data, textStatus, response){
-		//success callback
-		settingsData = {BasalTS: [], SensitivityTS: [], CarbRatioTS: [], Basal :[], Sensitivity:[], Carbs: []}
-		settingsFromServer = JSON.parse(data);
+	if(typeof(settingsData) === "undefined")
+	{
+		var url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl();
+		restClient.get(url, function(data, textStatus, response){
+			//success callback
+			settingsData = {BasalTS: [], SensitivityTS: [], CarbRatioTS: [], Basal :[], Sensitivity:[], Carbs: []}
+			settingsFromServer = JSON.parse(data);
 		
-		settingsData.BasalTS		= {from: settingsFromServer.Basal.startTime,		value: settingsFromServer.Basal.rate};
-		settingsData.SensitivityTS	= {from: settingsFromServer.Sensitivity.startTime,	value: settingsFromServer.Sensitivity.amount};
-		settingsData.CarbRatioTS	= {from: settingsFromServer.Carbs.startTime,		value: settingsFromServer.Carbs.amount};
-		settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
-		settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
-		settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
+			settingsData.BasalTS		= {from: settingsFromServer.Basal.startTime,		value: settingsFromServer.Basal.rate};
+			settingsData.SensitivityTS	= {from: settingsFromServer.Sensitivity.startTime,	value: settingsFromServer.Sensitivity.amount};
+			settingsData.CarbRatioTS	= {from: settingsFromServer.Carbs.startTime,		value: settingsFromServer.Carbs.amount};
+			settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
+			settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
+			settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
 
+			callback(settingsData);
+		}, callbackError)	
+	}
+	else{
 		callback(settingsData);
-	}, callbackError)	
+	}
 }
 
 function loadHbA1c(callback, callbackError)
@@ -528,6 +556,20 @@ else if(navigator.userAgent.match(/(Android)/)){
 else {
 	onDeviceReady();
 }
+
+function recalculateTotal(checkboxInstance, amount){
+	var total = parseFloat($("#current-food-event-list-bolus").text());
+	console.log(total);
+	console.log(amount);
+	if(checkboxInstance.is(':checked')==true){
+		total += parseFloat(amount);
+	}
+	else{
+		total -= parseFloat(amount);
+	}
+	total = (Math.round(10 * total) / 10).toFixed(1);	
+	$("#current-food-event-list-bolus").text(total);
+};
 
 //document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
 /*

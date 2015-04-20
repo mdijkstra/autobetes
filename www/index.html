@@ -90,19 +90,20 @@
 				<div id="current-food-event-list" data-role="controlgroup" data-filter="true" data-input="#filterControlgroup-input"></div>
 				<script id="current-food-event-list-template" type="text/x-handlebars-template">
 					<TABLE id="food-table-home-page" style="margin: 0px auto;border:1px solid #A4A4A4; table-layout:fixed; width:100%;">
-					<tr><th style="width:auto;">#</th><th style="width:65%;">Food</th><th>Carbs&nbsp;(g)</th><th style="width:5%;"></th></tr>
+					<tr><th></th><th style="width:auto;">#</th><th style="width:65%;">Food</th><th>Carbs&nbsp;(g)</th><th style="width:5%;"></th></tr>
 					{{#each .}}
 						{{#if amount}}
-							<tr onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
-								<td style="text-align: center;">{{amount}}&nbsp;&nbsp;</td>
-								<td style="overflow: hidden;">{{name}}</td>
-								<td style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
-								<td>{{#if estimationCarbs}}?{{/if}}</td>
+							<tr style="cursor:pointer" {{#if estimationCarbs}}class='grayColor'{{/if}}  {{#unless carbs}}class='grayColor'{{/unless}}>
+								<td><input type="checkbox" class="include-checkbox" checked onclick="recalculateTotal($(this), {{insulin}})"></input></td>
+								<td onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="text-align: center;">{{amount}}&nbsp;&nbsp;</td>
+								<td onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="overflow: hidden;">{{name}}</td>
+								<td onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';" style="text-align: right;">{{#if carbs}}{{carbs}}{{else}}N/A{{/if}}</td>
+								<td onclick="view.populateEditEventInstancePage('{{id}}', FOOD); document.location = '#edit-event-instance-page';">{{#if estimationCarbs}}?{{/if}}</td>
 							</tr>
 						{{/if}}					
 					{{/each}}
-					<tr><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
-					{{#each .}}{{#if total}}<tr><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
+					<tr><td></td><td></td><td></td><td style="text-align: right;"><hr></td><td>+</td></tr>
+					{{#each .}}{{#if total}}<tr><td></td><td></td><td style="text-align: right;"><I>Total:</I></td><td style="text-align: right;" class="boldAndOrange">{{total}}</td><td class="boldAndOrange">{{#if estimatedContent}}?{{/if}}</td></tr>{{/if}}{{/each}}
 					
 					{{#each .}}{{#if from}}<tr><td colspan=4 class="pHelpSmall"><I>This table shows only food consumed between {{from}} - {{to}} h.
 						{{#if unsure}}We have added a "<SPAN class="boldAndOrange">?</SPAN>", because you have guessed the carbs.{{/if}}

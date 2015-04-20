@@ -170,13 +170,16 @@ function callbackView() {
 				else{
 					timeFirstEventExpires = timeThisEventExpires;
 				}
+				//get insulin units
+				var insulin = getInsulinForAmountOfCarbs(row.carbs*row.amount);
+				
 				if(row.carbs){
 					if(row.estimationCarbs === 0){
 						estimatedContent = true;
-						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), estimationCarbs : true});
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), estimationCarbs : true, insulin : insulin});
 					}
 					else{
-						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), insulin : insulin});
 					}
 					total = total+(row.carbs*row.amount);
 				}
