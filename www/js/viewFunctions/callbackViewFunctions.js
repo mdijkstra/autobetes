@@ -195,6 +195,7 @@ function callbackView() {
 			}, timeFirstEventExpires)
 			
 			$('#current-food-event-list').show();
+			$('#current-food-event-list-bolus-div').show();
 			var sumObject = {total:total};
 			
 			// if(unknownContent){
@@ -227,6 +228,7 @@ function callbackView() {
 		}
 		else{
 			$('#current-food-event-list').hide();
+			$('#current-food-event-list-bolus-div').hide();
 		}
 	}
 
