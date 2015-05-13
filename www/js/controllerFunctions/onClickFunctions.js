@@ -365,7 +365,7 @@ $('#saveUserInfoButton').click(function(){
 
 	//get timezone
 	var d = new Date()
-	var timeOffset = d.getTimezoneOffset();
+	var timeOffset = -d.getTimezoneOffset()/60;//Time offset (h) added to UTC (= GMT0).
 
 	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
 	controller.syncUserInfo()
@@ -401,7 +401,7 @@ $('#registrationDialogOkButton').click(function(){
 
 				//get timezone
 				var d = new Date()
-				var timeOffset = d.getTimezoneOffset();
+				var timeOffset = -d.getTimezoneOffset()/60;//Time offset (h) added to UTC (= GMT0).
 
 				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
 				var userData = {

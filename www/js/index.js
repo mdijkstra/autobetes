@@ -7,9 +7,9 @@ var restClient = new top.molgenis.RestClient();
 var token;
 var DEBUG = true;
 //currently only test server in use
-var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
+var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.227';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
-var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
+var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.227';
 
 //get connection statistics
 var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
