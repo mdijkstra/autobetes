@@ -292,7 +292,7 @@ function controller() {
 				if(result.rows.length > 0){
 					var row = result.rows.item(0);
 					//try to log in with data
-
+					
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							view.hideLoadingWidget();
@@ -454,7 +454,7 @@ function controller() {
 	function getAdviceTableData(type, callback){
 
 		if(type === HBA1C){
-			var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
+			var url = SERVER_URL + SCRIPTS_URL +'HbA1c/run?molgenisToken='+restClient.getToken();
 			if(typeof hba1cData === "undefined")
 			{
 				view.showLoadingWidget();
@@ -476,7 +476,7 @@ function controller() {
 			}
 		}
 		else{
-			var url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
+			var url = SERVER_URL + SCRIPTS_URL +"get-settings/run?molgenisToken="+restClient.getToken();
 
 			if(typeof settingsData === "undefined")
 			{

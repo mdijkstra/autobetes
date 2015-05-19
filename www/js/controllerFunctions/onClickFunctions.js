@@ -121,7 +121,7 @@ $('.help-button').click(function(){
 
 $('.connectToMoves').click(function(){
 
-	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//195.169.22.237//plugin/moves/connect%3Ftoken%3D'+restClient.getToken();
+	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//195.169.22.227//plugin/moves/connect%3Ftoken%3D'+restClient.getToken();
 	console.log(link);
 	window.open(link, '_system' ,'');
 
