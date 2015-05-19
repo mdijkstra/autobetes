@@ -12,7 +12,11 @@
 	display: none !important;
 }
 
-/* color help text*/
+/* colored text*/
+.boldAndGreen {
+	font-weight: bold;
+	color:#00FF00;
+}
 .phelp {
     color:#A4A4A4;
 }
@@ -20,16 +24,16 @@
     color:#A4A4A4;
 	font-size: 9pt;
 }
-.grayColor{
+.grayColor {
 	color: #A4A4A4;
 }
-.homeButtonText{
+.homeButtonText {
 	position: relative; 
 	bottom: -6.75px;
 	font-size: 12.5px;	
 }
 
-.ui-header .ui-navbar .ui-btn{
+.ui-header .ui-navbar .ui-btn {
 	border-bottom-width: 1px;
 	border-top-width: 1px;
 	border-right-width: 1px;
@@ -110,7 +114,8 @@ div.ui-slider-switch{
 }
 
 .boldAndOrange{
-	font-weight: bold; color: #f89406;
+	font-weight: bold;
+	color: #f89406;
 }
 
 .custom{

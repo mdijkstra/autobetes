@@ -44,11 +44,11 @@ function controller() {
 
 		if(eventName === ""){
 			//field event name cannot be empty
-			view.toastShortMessage("Please provide a name!");
+			view.toastMessage("Please provide a name!");
 		}
 		else if (FOOD === eventType && null === carbs)
 		{
-			view.toastShortMessage("Please provide a best guess for the amount of carbs. Check 'I guess' if you are not sure about that number.");
+			view.toastMessage("Please provide a best guess for the amount of carbs.");
 		} else if (FOOD === eventType && carbs < 0)
 		{
 			view.toastShortMessage("Please provide positive amount of carbs!");
@@ -311,7 +311,7 @@ function controller() {
 							}
 							syncUserInfo();
 							checkIfMovesIsInstalled();
-							loadAdvice(function(){},function(){});
+							//loadAdvice(function(){},function(){}); Willen we hier toch niet?
 
 						}
 
@@ -453,8 +453,7 @@ function controller() {
 
 	function getAdviceTableData(type, callback){
 
-		if(type === HBA1C){
-			var url = SERVER_URL + SCRIPTS_URL +'HbA1c/run?molgenisToken='+restClient.getToken();
+		if (type === HBA1C) {
 			if(typeof hba1cData === "undefined")
 			{
 				view.showLoadingWidget();
@@ -466,38 +465,36 @@ function controller() {
 					view.toastMessage(error);
 				});
 			}
-			else{
+			else
+			{
 				//show cached data
 				callback(type, hba1cData);
 				//load potential new data
 				loadAdvice(function(data){
-					callback(type, data);
+					//callback(type, data);
 				},function(){});
 			}
 		}
 		else{
-			var url = SERVER_URL + SCRIPTS_URL +"get-settings/run?molgenisToken="+restClient.getToken();
-
 			if(typeof settingsData === "undefined")
 			{
 				//data not loaded yet
 				view.showLoadingWidget();
-				loadAdvice(function(data){
+				loadCurrentSettings(function(data){
 					view.hideLoadingWidget();
 					callback(type, data);
 				}, function(request, textStatus, error){
 					view.hideLoadingWidget();
 					view.toastMessage(error);
-
 				});
 			}
 			else{
 				//show cached data
 				callback(type, settingsData);
 				//get potential new data
-				loadAdvice(function(data){
-					callback(type, data);
-				},function(){});
+				 loadAdvice(function(data){
+				 	//callback(type, data);
+				 },function(){});
 			}
 
 		}

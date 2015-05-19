@@ -1,3 +1,4 @@
+
 $('#homeStartButton').click(function(){
     $('#foodAndEventListHelp').html('Please select the food you want to eat, or click "new" if your food is not yet in the list.');
 	$('#newFoodAndEventHelp').html('Please provide the name and carbs of the item you want to consume.');
