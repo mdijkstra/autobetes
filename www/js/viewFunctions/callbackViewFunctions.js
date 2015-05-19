@@ -139,21 +139,7 @@ function callbackView() {
 			//compile to hanlebars template
 			var template = Handlebars.compile(source);	
 			//fill template with events and add screen to page
-			$('#current-activity-event-list').html(template(buttons));
-			
-			
-/*			alert('NU');
-			var maxTableWidth = .85 * initialScreenWidth;
-			var widestTable = Math.max($('#food-table-home-page').width(), $('#event-table-home-page').width());
-
-			if (maxTableWidth < widestTable)
-			{
-				$('#food-table-home-page').width(maxTableWidth, 0);
-				$('#event-table-home-page').width(maxTableWidth, 0);		
-				$('#event-table-home-page').css('table-layout', 'fixed')
-				$('#food-table-home-page').css('table-layout', 'fixed')				
-			}
-*/			
+			$('#current-activity-event-list').html(template(buttons));	
 		}
 		else{
 			$('#current-activity-event-list').hide();
@@ -184,13 +170,16 @@ function callbackView() {
 				else{
 					timeFirstEventExpires = timeThisEventExpires;
 				}
+				//get insulin units
+				var insulin = getInsulinForAmountOfCarbs(row.carbs*row.amount);
+				
 				if(row.carbs){
 					if(row.estimationCarbs === 0){
 						estimatedContent = true;
-						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), estimationCarbs : true});
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), estimationCarbs : true, insulin : insulin});
 					}
 					else{
-						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount)});
+						foodInstances.push({id: row.id, name : row.name, amount : row.amount, carbs:(row.carbs*row.amount), insulin : insulin});
 					}
 					total = total+(row.carbs*row.amount);
 				}
@@ -209,6 +198,7 @@ function callbackView() {
 			}, timeFirstEventExpires)
 			
 			$('#current-food-event-list').show();
+			$('#current-food-event-list-bolus-div').show();
 			var sumObject = {total:total};
 			
 			// if(unknownContent){
@@ -236,9 +226,12 @@ function callbackView() {
 			var template = Handlebars.compile(source);	
 			//fill template with events and add screen to page
 			$('#current-food-event-list').html(template(foodInstances));
+			
+			getCurrentFoodTableInsulin(sumObject.total, view.showFoodTableInsulin);
 		}
 		else{
 			$('#current-food-event-list').hide();
+			$('#current-food-event-list-bolus-div').hide();
 		}
 	}
 

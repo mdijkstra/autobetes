@@ -6,6 +6,8 @@ var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 var token;
 var DEBUG = true;
+var MOLGENIS_TOKEN_URL_DASH = 'molgenis-token';
+var MOLGENIS_TOKEN_URL = 'molgenisToken';
 //currently only test server in use
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
 //var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
@@ -23,7 +25,7 @@ var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
-var SERVER_LOGIN_URL = '/api/v1/login'
+var SERVER_LOGIN_URL = '/api/v2/login'
 	var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
@@ -114,6 +116,8 @@ var intervalUpdateSensorPlot;
 var currentGuideTour;//current guide tour is in this object
 var currentlyGuiding = false;
 var HBA1C = "HbA1C";
+
+var settingsFromServer;
 var hba1cData;
 var settingsData;
 
@@ -260,26 +264,128 @@ function handleOpenURL(url) {
 		alert("received url: " + url);
 	}, 0);
 }
-var settingsFromServer;
-function loadAdvice(callback, callbackError){
-	var url = SERVER_URL + '/scripts/HbA1c/run?molgenisToken='+restClient.getToken();
-	restClient.get(url, function(data, textStatus, response){
+
+function tokenUrl()
+{
+	var token = restClient.getToken();
+	return( MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token );
+}
+
+function getMsSinceMidnight()
+{
+	d = new Date();
+	var e = new Date(d);
+	return ( d - e.setHours(0,0,0,0) );
+}
+
+function getCurrentCarbRatio(callback)
+{
+	view.showLoadingWidget();
+	loadCurrentSettings(function(data){
+		view.hideLoadingWidget();
+		
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= data.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
+		
+		callback( data.CarbRatioTS.value[i] );
+
+	}, function(request, textStatus, error){
+		view.hideLoadingWidget();
+		view.toastMessage(error);
+	});
+}
+function getInsulinForAmountOfCarbs(carbs)
+{
+	if(typeof(settingsData) === "undefined" )
+	{
+		return 0;
+		alert('nul');
+	}
+	else
+	{
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= settingsData.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
+	
+		return( carbs / settingsData.CarbRatioTS.value[i] );
+	}
+}
+
+function getCurrentFoodTableInsulin(totalCarbs, callback)
+{
+	// view.showLoadingWidget();
+	loadCurrentSettings(function(data){
+		// view.hideLoadingWidget();
+		
+		// get current time in ms since 0:00 AM today.
+		var now	= getMsSinceMidnight();
+		var ts	= data.CarbRatioTS.from;
+		var i	= 0;
+		while (i < ts.length && ts[i] < now)
+		{
+			i++;
+		}
+		i--;
+	
+		callback( (Math.round(totalCarbs / data.CarbRatioTS.value[i] * 10 ) / 10).toFixed(1) );	
+		
+	}, function(request, textStatus, error){
+		// view.hideLoadingWidget();
+		view.toastMessage(error);
+	});
+}
+
+function loadCurrentSettings(callback, callbackError)
+{
+	if(typeof(settingsData) === "undefined")
+	{
+		var url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl();
+		restClient.get(url, function(data, textStatus, response){
+			//success callback
+			settingsData = {BasalTS: [], SensitivityTS: [], CarbRatioTS: [], Basal :[], Sensitivity:[], Carbs: []}
+			settingsFromServer = JSON.parse(data);
+		
+			settingsData.BasalTS		= {from: settingsFromServer.Basal.startTime,		value: settingsFromServer.Basal.rate};
+			settingsData.SensitivityTS	= {from: settingsFromServer.Sensitivity.startTime,	value: settingsFromServer.Sensitivity.amount};
+			settingsData.CarbRatioTS	= {from: settingsFromServer.Carbs.startTime,		value: settingsFromServer.Carbs.amount};
+			settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
+			settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
+			settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
+
+			callback(settingsData);
+		}, callbackError)	
+	}
+	else{
+		callback(settingsData);
+	}
+}
+
+function loadHbA1c(callback, callbackError)
+{
+	var url_hba1c = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl();
+	restClient.get(url_hba1c, function(data, textStatus, response){
 		//success callback
 		hba1cData = JSON.parse(data);
 		callback(hba1cData)
-	},callbackError);
-	
-	url = SERVER_URL +"/scripts/get-settings/run?molgenisToken="+restClient.getToken();
-	restClient.get(url, function(data, textStatus, response){
-		//success callback
-		settingsData = {Basal :[], Sensitivity:[], Carbs: []}
-		settingsFromServer = JSON.parse(data);
-		settingsData.Basal = convertServerdata(settingsFromServer.Basal.startTime, settingsFromServer.Basal.rate);
-		settingsData.Sensitivity = convertServerdata(settingsFromServer.Sensitivity.startTime, settingsFromServer.Sensitivity.amount);
-		settingsData.Carbs = convertServerdata(settingsFromServer.Carbs.startTime, settingsFromServer.Carbs.amount);
+	}, callbackError);	
+}
 
-		callback(settingsData);
-	}, callbackError)
+function loadAdvice(callback, callbackError){
+	loadCurrentSettings(callback, callbackError);
+	loadHbA1c(callback, callbackError);
 }
 
 function convertServerdata(startTimes, currentSettings)
@@ -314,7 +420,9 @@ function convertTimestampToTime(timestamp)
 }
 function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&molgenisToken='+restClient.getToken();
+	var token = restClient.getToken();
+	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
+	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&' + tokenUrl;
 	//load immage async using ajax
 	$.ajax({ 
 		url : img_url, 
@@ -448,6 +556,20 @@ else if(navigator.userAgent.match(/(Android)/)){
 else {
 	onDeviceReady();
 }
+
+function recalculateTotal(checkboxInstance, amount){
+	var total = parseFloat($("#current-food-event-list-bolus").text());
+	console.log(total);
+	console.log(amount);
+	if(checkboxInstance.is(':checked')==true){
+		total += parseFloat(amount);
+	}
+	else{
+		total -= parseFloat(amount);
+	}
+	total = (Math.round(10 * total) / 10).toFixed(1);	
+	$("#current-food-event-list-bolus").text(total);
+};
 
 //document.addEventListener("deviceready", onDeviceReady, false);//event listener, calls onDeviceReady once phonegap is loaded
 /*
