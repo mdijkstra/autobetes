@@ -418,7 +418,7 @@ function controller() {
 
 		}
 		else{
-			view.toastShortMessage(response.responseText);
+			view.toastShortMessage(UNABLE_TO_LOGIN);
 		}
 
 

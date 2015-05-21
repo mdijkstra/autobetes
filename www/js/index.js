@@ -9,9 +9,10 @@ var DEBUG = false;
 var MOLGENIS_TOKEN_URL_DASH = 'molgenis-token';
 var MOLGENIS_TOKEN_URL = 'molgenisToken';
 //currently only test server in use
-var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.238';//'http://195.169.22.227';
-//var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
-var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.238';//'http://195.169.22.227';
+var SERVER_IP = "195.169.22.238";//production server is: "195.169.22.227", change this variable to change server to connect to
+var MOVES_REDIRECT_URI = "http%3A//"+SERVER_IP+"//plugin/moves/connect%3Ftoken%3D"
+var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
+var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
 
 //get connection statistics
 var CONNECTION_STATS_URL =  SCRIPTS_URL+'raspberry-connection/run'
@@ -23,6 +24,7 @@ var CONNECTION_STATS_URL =  SCRIPTS_URL+'raspberry-connection/run'
 	var COLOR_EDIT_MODE = "#CCFFFF"; // is same as in autobetes theme-a
 //TODO group colors here so we can easily change?
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
+var UNABLE_TO_LOGIN = "Unable to login";
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
 var SERVER_LOGIN_URL = '/plugin/anonymous/login'
@@ -386,7 +388,7 @@ function loadHbA1c(callback, callbackError)
 
 function loadAdvice(callback, callbackError){
 	loadCurrentSettings(callback, callbackError);
-	loadHbA1c(callback, callbackError);
+	loadHbA1c(function(){}, callbackError);
 }
 
 function convertServerdata(startTimes, currentSettings)
