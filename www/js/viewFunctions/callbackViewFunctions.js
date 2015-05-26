@@ -227,6 +227,10 @@ function callbackView() {
 			
 			getCurrentFoodTableInsulin(sumObject.total, view.showFoodTableInsulin);
 		}
+		else{
+			//clear table
+			$('#current-food-event-list').html("");
+		}
 	}
 
 	function showEventInstanceList(inputType, result) {

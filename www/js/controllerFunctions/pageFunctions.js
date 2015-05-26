@@ -13,9 +13,9 @@ $("body").find("div").on('pageshow',function(){
 	$('.joyride-close-tip').click();//ensure guide tour is closed on load of every page
 });
 
-// $(document).on('pageshow', '#bolus-calculator-advice-page', function() {
-// 	controller.getBolusCalculatorData(view.showBolusCalculatorTable);
-// });
+//$(document).on('pageshow', '#bolus-calculator-advice-page', function() {
+//controller.getBolusCalculatorData(view.showBolusCalculatorTable);
+//});
 
 $(document).on('pageshow', '#basal-advice-page', function() {
 	controller.getAdviceTableData("Basal", view.showAdviceTable);
@@ -37,17 +37,17 @@ $(document).on('pageshow', '#autopilot-page',function(){
 
 	$('#sensor-plot').show();
 
-		updateSensorPlot();// and then auto refresh sensor-plot
-		intervalUpdateSensorPlot =  setInterval(function() {
-			updateSensorPlot();
-		}, 10000); // ask server every 10s for new sensor plot	
-	
+	updateSensorPlot();// and then auto refresh sensor-plot
+	intervalUpdateSensorPlot =  setInterval(function() {
+		updateSensorPlot();
+	}, 10000); // ask server every 10s for new sensor plot	
+
 });
 
 $(document).on('pagehide', '#autopilot-page',function(){
 	$('#sensor-plot').hide();
 	clearInterval(intervalUpdateSensorPlot);
-	
+
 });
 
 $(document).on('pageshow', '#event-list-page', function() {
@@ -90,7 +90,7 @@ $(document).on('pageshow', '#user-info-page', function(){
 			$('#bodyWeight').val(controller.setEmptyStringIfFieldIsUndefined(row.bodyWeight));
 			$('#length').val(controller.setEmptyStringIfFieldIsUndefined(row.length));
 			$('#yearOfBirth').val(controller.setEmptyStringIfFieldIsUndefined(row.birthYear));
-			
+
 			if(row.gender === "Male"){
 				$("#radio-choice-h-2a").prop("checked", true);
 				$("#radio-choice-h-2b").prop("checked",false);
@@ -103,9 +103,9 @@ $(document).on('pageshow', '#user-info-page', function(){
 				$("#radio-choice-h-2a").prop("checked", false);
 				$("#radio-choice-h-2b").prop("checked",false);
 			}
-			
+
 			$("input[type='radio']").checkboxradio("refresh");
-			
+
 		}
 	});
 });
@@ -130,7 +130,7 @@ $(document).on('pageshow', '#settings-page', function(){
 	});
 	 $("#settings-page-recordingEventsButton").prop("disabled",true);
 	 */
-	 
+
 });
 
 $(document).on('pageshow', '#home-page', function() {
@@ -138,7 +138,7 @@ $(document).on('pageshow', '#home-page', function() {
 	dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
-		
+
 		homeScreenTour();
 	}
 	else{
@@ -160,11 +160,11 @@ $(document).on('pageshow', '#history-event-instance-page', function() {
 
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
-		
+
 		historyEventInstancePageTour();
 	}
 	else{
-		
+
 		dbHandler.listHistoryEvents(eventType, callbackView.showEventInstanceList);
 
 	}
@@ -211,9 +211,9 @@ function minAgo(now, ts) { // both seconds
 	return Math.round((now - ts) / 60);
 }
 
-// TODO FIX token
+//TODO FIX token
 $(document).on('pageshow', '#report-page', function(){
-	
+
 	if (0 === timestamp_last_seen_server) {
 		// we have never had contact with the server before
 		var never = 'never';
@@ -226,10 +226,10 @@ $(document).on('pageshow', '#report-page', function(){
 		$('#raspberry-last-seen-span').html(minAgo(now, timestamp_last_seen_raspberry) + ' min. ago');
 		$('#sensor-last-seen-span').html(minAgo(now, timestamp_last_seen_sensor) + ' min. ago');		
 	}
-	
+
 	var token = restClient.getToken();
 	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
-	
+
 	$.getJSON( TEST_SERVER_URL + CONNECTION_STATS_URL + '?' + tokenUrl, function(data) {
 		var now =  new Date().getTime() / 1000; // convert to s
 		timestamp_last_seen_server = now;
@@ -255,13 +255,13 @@ $(document).on('pageshow', '#start-event-instance-page', function(){
 	if($(document).data(TOURMODE)){
 		startEventInstancePageTour();
 	}
-	
+
 });
 
 $(document).on('pageshow', '#edit-event-instance-page', function(){
 	if($(document).data(TOURMODE)){
 		editEventInstancePage();
 	}
-	
+
 });
 
