@@ -50,6 +50,7 @@ var ALL = 'All';
 var TRUE = 'True';
 var ENDED = 'ended';
 var EDIT = "Edit";
+var PAUSE_TRACKING = "Pause tracking";
 var EVENT_ALREADY_EXISTS = 'Event already exists';
 var TIME_ADDED_TEXT_ON_HOME_SCREEN = 4000;
 var LOGINDIALOG = "login-page";

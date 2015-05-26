@@ -18,7 +18,15 @@ function view() {
 
 	function showFoodTableInsulin(data)
 	{
-		$('#current-food-event-list-bolus').html(data);
+		if(isNaN(data)){
+			$('#current-food-event-list-bolus').hide();
+			$('#current-food-event-list-bolus-div').hide();
+		}
+		else{
+			$('#current-food-event-list-bolus-div').show();
+			$('#current-food-event-list-bolus').show();
+			$('#current-food-event-list-bolus').html(data);
+		}
 	}
 
 	function showAdviceTable(type, data) {

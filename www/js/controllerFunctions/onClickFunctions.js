@@ -1,13 +1,3 @@
-
-$('#homeStartButton').click(function(){
-	$('#foodAndEventListHelp').html('Please select the food you want to eat, or click "new" if your food is not yet in the list.');
-	$('#newFoodAndEventHelp').html('Please provide the name and carbs of the item you want to consume.');
-});
-$('#homeSpecialButton').click(function(){
-	$('#foodAndEventListHelp').html('Please select the event that affects your sugar level, or click "new" if your event is not yet in the list.');
-	$('#newFoodAndEventHelp').html('Please provide the name of the event or activity that affects your sugar level.');
-});
-
 $('.enterAdvicePassword').click(function(){
 	view.showLoadingWidget();
 	setTimeout(function(){
@@ -92,13 +82,18 @@ $('.help-button').click(function(){
 				if(index === 0){
 					$(this)[0].tipLocation = 'bottom';
 				}
-				if($.mobile.activePage[0].id==="event-list-page" && index === 1){	
-					$(this)[0].tipLocation = 'left';
-				}
-				if($.mobile.activePage[0].id==="event-list-page" && index === 3){	
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 0){	
 					$(this)[0].tipLocation = 'top';
 				}
-
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 1){	
+					$(this)[0].tipLocation = 'bottom';
+				}
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 2){	
+					$(this)[0].tipLocation = 'left';
+				}
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 3){	
+					$(this)[0].tipLocation = 'bottom';
+				}
 				if($.mobile.activePage[0].id==="define-event-page" && index === 4 && EventListType === FOOD){	
 					$(this)[0].tipLocation = 'top';
 				}
@@ -335,6 +330,14 @@ $('#startEventInstanceButton').click(function() {
 
 });
 
+$('#logout-button').click(function(){
+	//user logs out, reset variables and db
+	dbHandler.resetDB();
+	settingsData = undefined;
+	restClient.setToken(undefined);
+	settingsFromServer = undefined;
+	hba1cData = undefined;
+});
 
 $('#loginDialogOkButton').click(function(){
 	view.toastShortMessage(LOGIN);

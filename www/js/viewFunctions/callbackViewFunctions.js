@@ -197,8 +197,6 @@ function callbackView() {
 				dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
 			}, timeFirstEventExpires)
 			
-			$('#current-food-event-list').show();
-			$('#current-food-event-list-bolus-div').show();
 			var sumObject = {total:total};
 			
 			// if(unknownContent){
@@ -230,8 +228,8 @@ function callbackView() {
 			getCurrentFoodTableInsulin(sumObject.total, view.showFoodTableInsulin);
 		}
 		else{
-			$('#current-food-event-list').hide();
-			$('#current-food-event-list-bolus-div').hide();
+			//clear table
+			$('#current-food-event-list').html("");
 		}
 	}
 
