@@ -134,7 +134,8 @@ $(document).on('pageshow', '#settings-page', function(){
 });
 
 $(document).on('pageshow', '#home-page', function() {
-	
+	dbHandler.getCurrentFoodEventInstances(PLUSMINRANGEFOODEVENT, callbackView.showCurrentEventInstanceFood);
+	dbHandler.showCurrentActivityEventInstances(callbackView.showCurrentEventInstanceActivity);
 	if($(document).data(TOURMODE)){
 		//app is in tour modus
 		
