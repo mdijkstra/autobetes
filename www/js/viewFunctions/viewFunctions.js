@@ -15,6 +15,7 @@ function view() {
 	this.showAdviceTable = showAdviceTable;
 	this.showFoodTableInsulin = showFoodTableInsulin;
 
+
 	function showFoodTableInsulin(data)
 	{
 		$('#current-food-event-list-bolus').html(data);

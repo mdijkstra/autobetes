@@ -5,16 +5,17 @@ var view = new view();
 var controller = new controller();
 var restClient = new top.molgenis.RestClient();
 var token;
-var DEBUG = true;
+var DEBUG = false;
 var MOLGENIS_TOKEN_URL_DASH = 'molgenis-token';
 var MOLGENIS_TOKEN_URL = 'molgenisToken';
 //currently only test server in use
-var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237'; //currently use test server, production serverr is:'http://195.169.22.242';
-//var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
-var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://195.169.22.237';
+var SERVER_IP = "195.169.22.238";//production server is: "195.169.22.227", change this variable to change server to connect to
+var MOVES_REDIRECT_URI = "http%3A//"+SERVER_IP+"//plugin/moves/connect%3Ftoken%3D"
+var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
+var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
 
 //get connection statistics
-var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
+var CONNECTION_STATS_URL =  SCRIPTS_URL+'raspberry-connection/run'
 	var timestamp_last_seen_server		= 0 // ms since 1970 in GMT0; 0 means never seen
 	var timestamp_last_seen_raspberry	= 0 // ms since 1970 in GMT0; 0 means never seen
 	var timestamp_last_seen_sensor		= 0 // ms since 1970 in GMT0; 0 means never seen
@@ -23,14 +24,16 @@ var CONNECTION_STATS_URL = '/scripts/raspberry-connection/run'
 	var COLOR_EDIT_MODE = "#CCFFFF"; // is same as in autobetes theme-a
 //TODO group colors here so we can easily change?
 var MOVES_CONNECTED_CHECK_URL = '/plugin/moves/checkIfMovesIsConnected';
+var UNABLE_TO_LOGIN = "Unable to login";
 var SERVER_EVENT_URL = '/api/v1/event';
 var SERVER_CLIENT_EXCEPTION_LOG_URL = "/api/v1/clientexceptionlog";
-var SERVER_LOGIN_URL = '/api/v2/login'
-	var SERVER_LOGOUT_URL = '/api/v1/logout';
+var SERVER_LOGIN_URL = '/plugin/anonymous/login'
+var SERVER_LOGOUT_URL = '/api/v1/logout';
 var SERVER_USER_INFO_URL = '/api/v1/userInfo';
 var SERVER_ACTIVITY_EVENT_INSTANCE_URL = '/api/v1/activityEventInstanceFull';
 var SERVER_FOOD_EVENT_INSTANCE_URL  = '/api/v1/FoodEventInstance/';
 var SYNCHRONISE_URL = '/plugin/anonymous/sync';
+var SCRIPTS_URL = '/plugin/anonymous/scripts/';
 var SYNCHRONISE_USER_INFO_URL =  '/plugin/anonymous/syncUserInfo';
 var REGISTER_URL = "/plugin/anonymous/registerUser";
 var FOODEVENTINSTANCE = "FoodEventInstance";
@@ -261,7 +264,7 @@ function checkMobileBrowser() {
 
 function handleOpenURL(url) {
 	setTimeout(function() {
-		alert("received url: " + url);
+		//alert("received url: " + url);
 	}, 0);
 }
 
@@ -352,7 +355,7 @@ function loadCurrentSettings(callback, callbackError)
 {
 	if(typeof(settingsData) === "undefined")
 	{
-		var url = SERVER_URL + '/scripts/get_pump_settings/run?' + tokenUrl();
+		var url = SERVER_URL + SCRIPTS_URL+'get-settings/run?' + tokenUrl();
 		restClient.get(url, function(data, textStatus, response){
 			//success callback
 			settingsData = {BasalTS: [], SensitivityTS: [], CarbRatioTS: [], Basal :[], Sensitivity:[], Carbs: []}
@@ -375,7 +378,7 @@ function loadCurrentSettings(callback, callbackError)
 
 function loadHbA1c(callback, callbackError)
 {
-	var url_hba1c = SERVER_URL + '/scripts/HbA1c/run?' + tokenUrl();
+	var url_hba1c = SERVER_URL + SCRIPTS_URL+'HbA1c/run?' + tokenUrl();
 	restClient.get(url_hba1c, function(data, textStatus, response){
 		//success callback
 		hba1cData = JSON.parse(data);
@@ -385,7 +388,7 @@ function loadHbA1c(callback, callbackError)
 
 function loadAdvice(callback, callbackError){
 	loadCurrentSettings(callback, callbackError);
-	loadHbA1c(callback, callbackError);
+	loadHbA1c(function(){}, callbackError);
 }
 
 function convertServerdata(startTimes, currentSettings)
@@ -422,7 +425,7 @@ function updateSensorPlot() {
 	gmt_offset = - new Date().getTimezoneOffset() * 60; // offset in seconds
 	var token = restClient.getToken();
 	var tokenUrl = MOLGENIS_TOKEN_URL_DASH + '=' + token + '&' + MOLGENIS_TOKEN_URL + '=' + token;
-	var img_url = TEST_SERVER_URL + '/scripts/plot-sensor/run?gmtoff=' + gmt_offset + '&' + tokenUrl;
+	var img_url = TEST_SERVER_URL + SCRIPTS_URL+'plot-sensor/run?gmtoff=' + gmt_offset + '&' + tokenUrl;
 	//load immage async using ajax
 	$.ajax({ 
 		url : img_url, 
@@ -505,6 +508,7 @@ function onDeviceReady() {
 	}
 	MOBILE_DEVICE = checkMobileBrowser();
 	TestFairy.begin(MY_APP_TESTFAIRY_TOKEN);
+	loadAdvice(function(){},function(){})
 	//add event listeners
 	document.addEventListener("offline", function(e) {
 		$(document).data(CONNECTED_TO_INTERNET, false);
@@ -559,8 +563,6 @@ else {
 
 function recalculateTotal(checkboxInstance, amount){
 	var total = parseFloat($("#current-food-event-list-bolus").text());
-	console.log(total);
-	console.log(amount);
 	if(checkboxInstance.is(':checked')==true){
 		total += parseFloat(amount);
 	}
