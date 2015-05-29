@@ -121,7 +121,6 @@ $('.help-button').click(function(){
 
 
 $('.connectToMoves').click(function(){
-
 	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri='+MOVES_REDIRECT_URI+restClient.getToken();
 	console.log(link);
 	window.open(link, '_system' ,'');
@@ -346,7 +345,13 @@ $('#loginDialogOkButton').click(function(){
 	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val()).toLowerCase();
 	var password = controller.setNullIfFieldIsEmpty($('#loginPassword').val());
 
-	dbHandler.resetDBExceptUserTable();
+	//dbHandler.resetDBExceptUserTable();
+	dbHandler.getUserCredentials(function(inputType, result){
+		if(typeof(result.rows.item(i))!="undefined" && result.rows.item(i).email ===email)
+			{
+				dbHandler.resetDBExceptUserTable();
+			}
+	})
 	restClient.setToken("");//ensure that no token is saved of other account
 
 
@@ -404,8 +409,9 @@ $('#registrationDialogOkButton').click(function(){
 				//get timezone
 				var d = new Date()
 				var timeOffset = -d.getTimezoneOffset()/60;//Time offset (h) added to UTC (= GMT0).
-
-				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
+				setTimeout(function(){
+					dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
+				},100)
 				var userData = {
 						email: email,
 						password: password
