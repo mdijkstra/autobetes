@@ -1,5 +1,5 @@
 //declare all global variables
-var dbHandler = new dbHandler('autoB', '1.2', 'Autobetes', 10000000);
+var dbHandler = new dbHandler('autoB', '0.1', 'Autobetes', 10000000);
 var callbackView = new callbackView();
 var view = new view();
 var controller = new controller();
@@ -9,7 +9,8 @@ var DEBUG = false;
 var MOLGENIS_TOKEN_URL_DASH = 'molgenis-token';
 var MOLGENIS_TOKEN_URL = 'molgenisToken';
 //currently only test server in use
-var SERVER_IP = "195.169.22.238";//production server is: "195.169.22.227", change this variable to change server to connect to
+//var SERVER_IP = "195.169.22.238";//production server is: "195.169.22.227", change this variable to change server to connect to
+var SERVER_IP = "195.169.22.227";
 var MOVES_REDIRECT_URI = "http%3A//"+SERVER_IP+"//plugin/moves/connect%3Ftoken%3D"
 var SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
 var TEST_SERVER_URL = (DEBUG) ? 'http://localhost:8080' : 'http://'+SERVER_IP;
@@ -43,7 +44,7 @@ var FOOD = 'Food';
 var EVENT = "Event";
 var SPECIAL = "Special";
 var INSTANCE = "Instance";
-var ACTIVITY = 'Activity';
+var ACTIVITY = 'activity';
 var RUNNING = "running";
 var SAVE = "Save";
 var ALL = 'All';
