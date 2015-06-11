@@ -292,7 +292,7 @@ function controller() {
 				if(result.rows.length > 0){
 					var row = result.rows.item(0);
 					//try to log in with data
-
+					
 					restClient.login(SERVER_URL+SERVER_LOGIN_URL, row.email, row.password, {
 						success: function(result){
 							view.hideLoadingWidget();
@@ -418,7 +418,7 @@ function controller() {
 
 		}
 		else{
-			view.toastShortMessage(response.responseText);
+			view.toastShortMessage(UNABLE_TO_LOGIN);
 		}
 
 
@@ -452,6 +452,7 @@ function controller() {
 	}
 
 	function getAdviceTableData(type, callback){
+
 		if (type === HBA1C) {
 			if(typeof hba1cData === "undefined")
 			{
@@ -470,7 +471,7 @@ function controller() {
 				callback(type, hba1cData);
 				//load potential new data
 				loadAdvice(function(data){
-					callback(type, data);
+					//callback(type, data);
 				},function(){});
 			}
 		}
@@ -491,9 +492,9 @@ function controller() {
 				//show cached data
 				callback(type, settingsData);
 				//get potential new data
-				// loadAdvice(function(data){
-				// 	callback(type, data);
-				// },function(){});
+				 loadAdvice(function(data){
+				 	//callback(type, data);
+				 },function(){});
 			}
 
 		}

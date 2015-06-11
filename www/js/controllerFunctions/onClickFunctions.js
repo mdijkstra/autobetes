@@ -1,13 +1,3 @@
-
-$('#homeStartButton').click(function(){
-    $('#foodAndEventListHelp').html('Please select the food you want to eat, or click "new" if your food is not yet in the list.');
-	$('#newFoodAndEventHelp').html('Please provide the name and carbs of the item you want to consume.');
-});
-$('#homeSpecialButton').click(function(){
-    $('#foodAndEventListHelp').html('Please select the event that affects your sugar level, or click "new" if your event is not yet in the list.');
-	$('#newFoodAndEventHelp').html('Please provide the name of the event or activity that affects your sugar level.');
-});
-
 $('.enterAdvicePassword').click(function(){
 	view.showLoadingWidget();
 	setTimeout(function(){
@@ -41,14 +31,19 @@ $('.help-button').click(function(){
 	setTimeout(function(){
 		$('#'+currentPage).find(highlightButton).addClass('ui-btn-active');
 	},0)
-	
+
 	if(typeof currentGuideTour !== "undefined"){
 		//user pressed help while guide tour was allready going, we decided to abort the tour if user does this
-		$('.joyride-close-tip').click();//closes 
-		
+		console.log("remove helps")
+		setTimeout(function(){
+			$('.joyride-close-tip').click();//closes 
+			currentGuideTour = undefined;
+			$('#'+currentPage).find(".help-button").removeClass('ui-btn-active');
+		},200)
+
 	}
 	else{
-		
+
 		var guideTourLink = "#"+currentPage+"-tour";
 
 		if(currentPage==="event-list-page"||currentPage==="define-event-page"||currentPage==="start-event-instance-page")
@@ -76,9 +71,9 @@ $('.help-button').click(function(){
 
 				//unhighlight help button
 				setTimeout(function(){
-				$(".help-button").removeClass('ui-btn-active');
-				$(this).joyride("destroy");
-				currentGuideTour = undefined;
+					$(".help-button").removeClass('ui-btn-active');
+					$(this).joyride("destroy");
+					currentGuideTour = undefined;
 				},0);
 
 			},
@@ -87,13 +82,18 @@ $('.help-button').click(function(){
 				if(index === 0){
 					$(this)[0].tipLocation = 'bottom';
 				}
-				if($.mobile.activePage[0].id==="event-list-page" && index === 1){	
-					$(this)[0].tipLocation = 'left';
-				}
-				if($.mobile.activePage[0].id==="event-list-page" && index === 3){	
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 0){	
 					$(this)[0].tipLocation = 'top';
 				}
-
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 1){	
+					$(this)[0].tipLocation = 'bottom';
+				}
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 2){	
+					$(this)[0].tipLocation = 'left';
+				}
+				if($.mobile.activePage[0].id==="event-list-page"&& index === 3){	
+					$(this)[0].tipLocation = 'bottom';
+				}
 				if($.mobile.activePage[0].id==="define-event-page" && index === 4 && EventListType === FOOD){	
 					$(this)[0].tipLocation = 'top';
 				}
@@ -121,8 +121,7 @@ $('.help-button').click(function(){
 
 
 $('.connectToMoves').click(function(){
-
-	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri=http%3A//195.169.22.237//plugin/moves/connect%3Ftoken%3D'+restClient.getToken();
+	var link = 'moves://app/authorize?client_id=Da6TIHoVori74lacfuVk9QxzlIM5xy9E&scope=activity&redirect_uri='+MOVES_REDIRECT_URI+restClient.getToken();
 	console.log(link);
 	window.open(link, '_system' ,'');
 
@@ -330,6 +329,14 @@ $('#startEventInstanceButton').click(function() {
 
 });
 
+$('#logout-button').click(function(){
+	//user logs out, reset variables and db
+	dbHandler.resetDB();
+	settingsData = undefined;
+	restClient.setToken(undefined);
+	settingsFromServer = undefined;
+	hba1cData = undefined;
+});
 
 $('#loginDialogOkButton').click(function(){
 	view.toastShortMessage(LOGIN);
@@ -337,22 +344,21 @@ $('#loginDialogOkButton').click(function(){
 	//window.location.href =  '#home-page';
 	var email = controller.setNullIfFieldIsEmpty($('#loginEmail').val()).toLowerCase();
 	var password = controller.setNullIfFieldIsEmpty($('#loginPassword').val());
-	//check if user switched account
-	dbHandler.getUserCredentials(function(transaction, result){
-		if(result.rows.length > 0 && result.rows.item(0).email !== email){
-			//user switched account, so now reset db
 
-			dbHandler.resetDBExceptUserTable();
-			restClient.setToken("");//ensure that no token is saved of other account
-
-		}
-		dbHandler.updateEmailAndPassword(email, password, function(){
-			controller.login();
-			//window.location.href =  '#home-page';
-		});
-
+	//dbHandler.resetDBExceptUserTable();
+	dbHandler.getUserCredentials(function(inputType, result){
+		if(typeof(result.rows.item(i))!="undefined" && result.rows.item(i).email ===email)
+			{
+				dbHandler.resetDBExceptUserTable();
+			}
 	})
+	restClient.setToken("");//ensure that no token is saved of other account
 
+
+	dbHandler.updateEmailAndPassword(email, password, function(){
+		controller.login();
+		//window.location.href =  '#home-page';
+	});
 
 });
 
@@ -366,7 +372,7 @@ $('#saveUserInfoButton').click(function(){
 
 	//get timezone
 	var d = new Date()
-	var timeOffset = d.getTimezoneOffset();
+	var timeOffset = -d.getTimezoneOffset()/60;//Time offset (h) added to UTC (= GMT0).
 
 	dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
 	controller.syncUserInfo()
@@ -402,9 +408,10 @@ $('#registrationDialogOkButton').click(function(){
 
 				//get timezone
 				var d = new Date()
-				var timeOffset = d.getTimezoneOffset();
-
-				dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
+				var timeOffset = -d.getTimezoneOffset()/60;//Time offset (h) added to UTC (= GMT0).
+				setTimeout(function(){
+					dbHandler.updateUserInfo(idOnPump,gender,bodyWeight,length,birthYear, timeOffset);
+				},100)
 				var userData = {
 						email: email,
 						password: password
