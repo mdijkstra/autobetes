@@ -1,4 +1,4 @@
-Below Dion's instructions on 'run', 'compile' and 'upload to TestFairy':
+Below Dion's instructions on 'run', 'compile' and 'upload to TestFairy' (email 2015-07-13):
 
 How to run:
 - Install Xcode with ios simulator
@@ -63,4 +63,6 @@ Apps>Autobetes.com>Laatste versie>Distribution>Invite testers by email>Email nie
 5) Na het invoeren dien je de IPA opnieuw te maken(zie SOP archiveren IPA)
 6) Upload deze IPA op Testfairy en invite de nieuwe tester.
 
-De tester ontvangt nu een mail met daarin de IPA, hij/zij kan deze nu installeren op zijn telefoon buiten de App Store om, omdat de UDID is gekoppeld aan ons account
+De tester ontvangt nu een mail met daarin de IPA, hij/zij kan deze nu installeren op zijn telefoon buiten de App Store om, omdat de UDID is gekoppeld aan ons account.
+
+PS Build Settings>Architectures>Valid Architectures. Selecteer enkel armv7 en armv7S
